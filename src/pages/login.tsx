@@ -29,7 +29,7 @@ export default function Login() {
         if (user) {
             // 사용자 인증 성공
             localStorage.setItem('theme', user.affiliation);
-            navigate('/hiparking/dashboard');
+            navigate('/' + user.affiliation + '/dashboard');
         } else {
             // 사용자 인증 실패
             if (errorDiv.current) {
