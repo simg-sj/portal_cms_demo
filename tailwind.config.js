@@ -5,10 +5,16 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    fontFamily: {
-      pre: ['Pretendard'],
+    extend: {
+      colors: {
+        'main': 'var(--color-main)',
+        'main-light' : 'var(--color-main-light)',
+        'main-lighter' : 'var(--color-main-lighter)',
+        'sub' : 'var(--color-sub)',
+        'sub-light' : 'var(--color-sub-light)',
+        'sub-lighter' : 'var(--color-sub-lighter)',
+      },
     },
-    extend: {},
   },
   plugins: [],
 
