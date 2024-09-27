@@ -1,6 +1,7 @@
 import React, {useState, useRef} from 'react';
 import '../styles/common.css';
 import {useNavigate} from "react-router-dom";
+import RoundLogo from "../assets/images/logo/simg-round-logo.png"
 
 export default function Login() {
     const [userInfo, setUserInfo] = useState<UserInfo>({
@@ -41,7 +42,7 @@ export default function Login() {
         <>
             <div className={'w-screen h-screen relative flex justify-center items-center bg-gray-50'}>
                 <div className={'w-[670px] px-12 py-36 bg-white flex flex-col items-center absolute shadow-md'}>
-                    <div className={'font-semibold text-center text-3xl pb-8'}>Login</div>
+                    <img src={RoundLogo} alt={'SIMG 로고'} width={80} className={'mb-10'}/>
                     <div className={'text-gray-500 text-center py-3'}>에스아이엠지 업체 관리자 페이지 입니다. <br/> 회원가입 및 아이디 비밀번호 찾기는 관리자에게 문의해주세요.</div>
                     <div className={'w-[80%] my-5'}>
                         <div className={'text-lg mt-3'}>ID</div>
@@ -52,8 +53,8 @@ export default function Login() {
                                name='password' onChange={onChangeHandler}/>
                     </div>
                     <div ref={errorDiv} className={'text-red-500 mt-2 hidden'}>아이디 혹은 비밀번호가 틀립니다. 다시 입력 해주세요</div>
-                    <button className={'text-lg text-white px-10 py-3 rounded-xl bg-[#5C7DED] mt-5 w-[80%]'}
-                            onClick={onClickHandler}>로그인
+                    <button className={'text-xl text-white px-10 py-3 rounded-xl bg-[#5C7DED] mt-5 w-[80%] font-medium'}
+                            onClick={onClickHandler}>Login
                     </button>
                     <div></div>
                 </div>
