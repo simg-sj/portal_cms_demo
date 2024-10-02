@@ -3,7 +3,7 @@ import SimgLogo from '@/assets/images/logo/simg-round-logo.png'
 
 
 
-const themeConfigs: ThemeConfigs = {
+const themeConfigs: ThemeConfig = {
     hiparking: {
         logoSrc: HiparkingLogo,
         menuItems: {
@@ -21,8 +21,8 @@ const themeConfigs: ThemeConfigs = {
     },
 };
 
-export const getThemeConfig = (theme: string): ThemeConfig => {
-    return themeConfigs[theme]; // 기본값으로 simg 테마 사용
+export const getThemeConfig = (theme: string): Theme => {
+    return themeConfigs[theme as keyof ThemeConfig];
 };
 
 export const availableThemes = Object.keys(themeConfigs);
