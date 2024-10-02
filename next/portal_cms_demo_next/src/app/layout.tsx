@@ -3,15 +3,11 @@ import localFont from "next/font/local";
 import "@/styles/common.css";
 import React from "react";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+const pretendard = localFont({
+  src: './fonts/PretendardVariable.woff2',
+  display: "swap",
+  weight: "45 920",
+  variable: "--font-pretendard",
 });
 
 export const metadata: Metadata = {
@@ -20,15 +16,19 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-  children,
-}: Readonly<{
+                                     children,
+                                   }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
-      <body>
-        {children}
+      <html lang="kr" className={`${pretendard.variable}`}>
+      <head>
+        <link rel="icon" type="image/svg+xml" href="./favicon.ico"/>
+      </head>
+      <body className={pretendard.className}>
+      {children}
       </body>
-    </html>
+      </html>
   );
 }
+

@@ -8,15 +8,13 @@ import DashboardIcon from "@/assets/images/icon/dashboard-icon.png";
 import ListIcon from "@/assets/images/icon/list-icon.png";
 import UserIcon from "@/assets/images/icon/user-icon.png";
 import MenuItem from "@/app/components/common/MenuItem";
-import Link from "next/link";
 import Image from "next/image";
-
-
 
 export default function Navigation() {
     const router = useRouter();
     const segment = useSelectedLayoutSegment();
-    const [themeConfig, setThemeConfig] = useState<ThemeConfig | null>(null);
+    const [themeConfig, setThemeConfig] = useState<Theme | null>(null);
+    const [activeLink, setActiveLink] = useState<string | null>(null);
 
     useEffect(() => {
         const storedPlatform = localStorage.getItem('theme');
@@ -27,7 +25,13 @@ export default function Navigation() {
         }
     }, []);
 
-    const getMenuItems = (config: ThemeConfig): MenuItemType[] => {
+    useEffect(() => {
+        if (segment) {
+            setActiveLink(`/${segment}`);
+        }
+    }, [segment]);
+
+    const getMenuItems = (config: Theme): MenuItemType[] => {
         const baseItems = [
             { icon: DashboardIcon, label: "대시보드", link: config.menuItems.dashboard || "" },
             { icon: ListIcon, label: "리스트", link: config.menuItems.list },
@@ -57,7 +61,8 @@ export default function Navigation() {
                     <div key={index}>
                         <MenuItem
                             {...item}
-                            isActive={segment === item.link}
+                            isActive={activeLink === item.link}
+                            onClick={() => setActiveLink(item.link)}
                         />
                     </div>
                 ))}
@@ -67,17 +72,17 @@ export default function Navigation() {
                     <div key={index}>
                         <MenuItem
                             {...item}
-                            isActive={segment === item.link}
+                            isActive={activeLink === item.link}
+                            onClick={() => setActiveLink(item.link)}
                         />
                     </div>
                 ))}
-                <Link
-                    href={'/'}
+                <div
                     onClick={logoutClick}
                     className={'px-1 py-2 flex flex-col items-center my-5 cursor-pointer rounded-md hover:bg-white hover:bg-opacity-30'}>
                     <Image src={LogoutIcon} alt={"로그아웃"} width={35}/>
                     <div className="text-white text-sm mt-2">로그아웃</div>
-                </Link>
+                </div>
                 <Image src={SimgLogo} alt="SIMG로고" className="mb-5 mt-14" priority={true}/>
             </div>
         </div>
