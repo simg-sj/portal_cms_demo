@@ -1,14 +1,7 @@
 import HiparkingLogo from '@/assets/images/logo/hiparking-logo.png'
 import SimgLogo from '@/assets/images/logo/simg-round-logo.png'
 
-export interface ThemeConfig {
-    logoSrc: string;
-    menuItems: {
-        dashboard?: string;
-        list?: string;
-        mypage: string;
-    };
-}
+
 
 const themeConfigs: ThemeConfigs = {
     hiparking: {
@@ -29,7 +22,7 @@ const themeConfigs: ThemeConfigs = {
 };
 
 export const getThemeConfig = (theme: string): ThemeConfig => {
-    return themeConfigs[theme] || themeConfigs.simg; // 기본값으로 simg 테마 사용
+    return themeConfigs[theme]; // 기본값으로 simg 테마 사용
 };
 
 export const availableThemes = Object.keys(themeConfigs);
