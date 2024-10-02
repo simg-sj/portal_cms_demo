@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@font-face {
+    font-family: Pretendard;
+    font-weight: 400;
+    src: local("Pretendard Regular"),
+    url("../assets/fonts/Pretendard-Regular.woff") format('woff'),
+    url("../assets/fonts/Pretendard-Regular.woff2") format('woff2');
+}
+
+@font-face {
+    font-family: Pretendard;
+    font-weight: 500;
+    src: local("Pretendard Medium"),
+    url("../assets/fonts/Pretendard-Medium.woff") format('woff'),
+    url("../assets/fonts/Pretendard-Medium.woff2") format('woff2');
+}
+
+@font-face {
+    font-family: Pretendard;
+    font-weight: 700;
+    src: local("Pretendard Bold"),
+    url("../assets/fonts/Pretendard-Bold.woff") format('woff'),
+    url("../assets/fonts/Pretendard-Bold.woff2") format('woff2');
+}
+
+/*Layout 레이아웃*/
+* {
+    font-family: 'Pretendard';
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+main {
+    height: 100vh;
+}
+
+/*기본세팅 - 입력창*/
+input, textarea, select {
+    border: 1px solid #d0d0d0;
+    padding: 0 15px;
+    border-radius: 10px;
+    height: 42px;
+    width: 100%;
+
+    &::placeholder {
+        color: #aaa;
+    }
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type=file]{
+    border: none;
+    padding: 0;
+}
+input[type=file]::file-selector-button {
+    width: 100px;
+    height: 30px;
+    background: #fff;
+    border: 1px solid #00bc71;
+    border-radius: 10px;
+    cursor: pointer;
+    color: #00bc71;
+    margin-right: 20px;
+}
+
+
+/*스크롤 커스텀*/
+::-webkit-scrollbar {
+    width: 12px; /* 스크롤바의 너비 */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #d9d9d9;
+    border-radius: 10px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #f5f5f5;
+    border-radius: 10px;
+}
+
+/*테마별 색상지정*/
+@layer base {
+    :root {
+        --color-main: #5c7dee;
+        --color-main-light: #92aaf5;
+        --color-main-lighter: #dce3f7;
+        --color-sub: #71c3a8;
+        --color-sub-light: #a2daca;
+        --color-sub-lighter: #e5fff6;
+    }
+    html[data-theme='hiparking'] {
+        --color-main: #f38017;
+        --color-main-light: #ffa54d;
+        --color-main-lighter: #ffcd9a;
+        --color-sub: #f1bc1b;
+        --color-sub-light: #ffdc6c;
+        --color-sub-lighter: #efdca7;
+    }
+}
+
+
+
+
