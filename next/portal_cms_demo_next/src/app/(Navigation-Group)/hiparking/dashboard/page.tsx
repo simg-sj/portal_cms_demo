@@ -10,7 +10,7 @@
 
 export default function Page() {
     return(
-            <div className='w-[600px] h-[200px]'>
+            <div>
                 dashboard
             </div>
     )

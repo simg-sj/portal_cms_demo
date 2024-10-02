@@ -9,14 +9,18 @@
 import Link from "next/link";
 import Image from 'next/image';
 
-export default function MenuItem({icon, label, link, isActive}: MenuItemProps){
+interface MenuItemProps extends MenuItemType {
+    isActive: boolean;
+    onClick: () => void;
+}
+
+export default function MenuItem({icon, label, link, isActive, onClick}: MenuItemProps){
     return (
         <Link
             href={link}
             className={`px-1 py-2 flex flex-col items-center my-5 cursor-pointer rounded-md 
-            ${isActive
-                ? 'bg-white bg-opacity-30'
-                : 'hover:bg-white hover:bg-opacity-30'}`}
+            ${isActive ? 'bg-white bg-opacity-30' : 'hover:bg-white hover:bg-opacity-30'}`}
+            onClick={onClick}
         >
             <Image src={icon} alt={label} width={35} />
             <div className="text-white text-sm mt-2">{label}</div>
