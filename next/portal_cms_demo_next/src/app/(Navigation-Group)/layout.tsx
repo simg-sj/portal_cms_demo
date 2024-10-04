@@ -16,7 +16,7 @@ export default function Layout({children}: {children: ReactNode}) {
             <div className="flex-none">
                 <Navigation/>
             </div>
-            <div className="flex-grow p-10">{children}</div>
+            <div className="flex-grow p-10 bg-gray-50">{children}</div>
         </div>
     );
 }
