@@ -29,7 +29,7 @@ const themeConfigs: ThemeConfigs = {
 };
 
 export const getThemeConfig = (theme: string): ThemeConfig => {
-    return themeConfigs[theme] || themeConfigs.simg; // 기본값으로 simg 테마 사용
+    return themeConfigs[theme]; // 기본값으로 simg 테마 사용
 };
 
 export const availableThemes = Object.keys(themeConfigs);

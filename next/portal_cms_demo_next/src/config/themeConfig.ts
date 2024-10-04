@@ -7,7 +7,7 @@ const themeConfigs: ThemeConfig = {
     hiparking: {
         logoSrc: HiparkingLogo,
         menuItems: {
-            dashboard: "/hiparking/dashboard",
+            dashboard: "/hiparking",
             list: "/hiparking/list",
             mypage: "/hiparking/mypage",
         },

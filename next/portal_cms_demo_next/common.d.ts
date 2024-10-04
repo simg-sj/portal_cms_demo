@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-10-02 15:41:12
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-10-02 16:45:50
+ * @LastEditTime: 2024-10-02 17:35:53
  * @FilePath: portal_cms_demo_next/common.d.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -47,15 +47,10 @@ declare module "next-auth" {
     interface Session {
         user: {
             id: string
-            role: string
+            name: string
+            email : string
             platform: string
         } & DefaultSession["user"]
-    }
-
-    interface User {
-        id: string
-        role: string
-        platform: string
     }
 }
 
@@ -63,6 +58,8 @@ declare module "next-auth/jwt" {
     interface JWT {
         id: string
         role: string
+        name : string
+        email : string
         platform: string
     }
 }

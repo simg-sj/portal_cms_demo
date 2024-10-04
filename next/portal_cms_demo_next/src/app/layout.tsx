@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "@/styles/common.css";
 import React from "react";
+import AuthWrapper from "@/app/auth_wrapper";
 
 const pretendard = localFont({
   src: './fonts/PretendardVariable.woff2',
@@ -26,7 +27,9 @@ export default function RootLayout({
         <link rel="icon" type="image/svg+xml" href="./favicon.ico"/>
       </head>
       <body className={pretendard.className}>
-      {children}
+      <AuthWrapper>
+          {children}
+      </AuthWrapper>
       </body>
       </html>
   );
