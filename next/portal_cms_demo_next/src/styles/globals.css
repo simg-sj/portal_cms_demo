@@ -17,8 +17,8 @@ main {
 input, textarea, select {
     border: 1px solid #d0d0d0;
     padding: 0 15px;
-    border-radius: 10px;
-    height: 42px;
+    border-radius: 8px;
+    height: 30px;
     width: 100%;
 
     &::placeholder {
@@ -75,12 +75,12 @@ input[type=file]::file-selector-button {
         --color-sub-lighter: #e5fff6;
     }
     html[data-theme='hiparking'] {
-        --color-main: #f38017;
-        --color-main-light: #ffa54d;
-        --color-main-lighter: #ffcd9a;
-        --color-sub: #f1bc1b;
-        --color-sub-light: #ffdc6c;
-        --color-sub-lighter: #efdca7;
+        --color-main: #f1923e;
+        --color-main-light: #f8a455;
+        --color-main-lighter: #ffd5b2;
+        --color-sub: #efb944;
+        --color-sub-light: #fcd174;
+        --color-sub-lighter: #fadfaf;
     }
 }
 

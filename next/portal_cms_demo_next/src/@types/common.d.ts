@@ -33,3 +33,15 @@ interface UserData {
     password: string;
     affiliation: string;
 }
+
+interface CounselData {
+    pNo: string;
+    sDay: string;
+    eDay: string;
+    bCount: number;
+    estimateAmt: string;
+    repairAmt: string;
+    total: string;
+    closingAmt: string;
+    lossRatio: string;
+}
