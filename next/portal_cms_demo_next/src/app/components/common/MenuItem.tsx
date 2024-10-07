@@ -9,10 +9,6 @@
 import Link from "next/link";
 import Image from 'next/image';
 
-interface MenuItemProps extends MenuItemType {
-    isActive: boolean;
-    onClick: () => void;
-}
 
 export default function MenuItem({icon, label, link, isActive, onClick}: MenuItemProps){
     return (

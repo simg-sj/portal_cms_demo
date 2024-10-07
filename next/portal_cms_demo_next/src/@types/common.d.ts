@@ -21,6 +21,7 @@ interface MenuItemType {
 
 interface MenuItemProps extends MenuItemType {
     isActive: boolean;
+    onClick: () => void;
 }
 
 interface UserInfo {
@@ -28,20 +29,34 @@ interface UserInfo {
     password: string;
 }
 
-interface UserData {
-    userId: string;
-    password: string;
-    affiliation: string;
-}
 
 interface CounselData {
     pNo: string;
     sDay: string;
     eDay: string;
-    bCount: number;
-    estimateAmt: string;
-    repairAmt: string;
-    total: string;
-    closingAmt: string;
-    lossRatio: string;
+    bCount: number
+    estimateAmt: number;
+    repairAmt: number;
+    total: number;
+    closingAmt: number;
+    lossRatio: number;
 }
+
+interface ChangeCounselData {
+    cNo: number;
+    cDay: string;
+    pNo: string;
+    pAdd: number;
+    pEnd: number;
+    AddAmt: number;
+    EndAmt: number;
+}
+
+interface EditFieldProps {
+    value: string | number;
+    isEditing: boolean;
+    onChange: (value: string) => void;
+    type?: 'text' | 'number';
+    className?: string;
+}
+
