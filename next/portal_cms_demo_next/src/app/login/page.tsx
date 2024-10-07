@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-09-30 15:46:29
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-10-07 16:58:41
+ * @LastEditTime: 2024-10-07 17:27:02
  * @FilePath: portal_cms_demo_next/src/app/login/page.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -30,6 +30,7 @@ export default function Page() {
                 alert(response.message);
                 setError(response.message);
             }else {
+                window.location.reload();
                 if(data){
                     router.push(`/${data.user.platform}`);
                 }
