@@ -29,8 +29,7 @@ interface UserInfo {
     password: string;
 }
 
-
-interface CounselData {
+interface CounselData{
     pNo: string;
     sDay: string;
     eDay: string;
@@ -42,7 +41,7 @@ interface CounselData {
     lossRatio: number;
 }
 
-interface ChangeCounselData {
+interface ChangeCounselData{
     cNo: number;
     cDay: string;
     pNo: string;
@@ -52,11 +51,8 @@ interface ChangeCounselData {
     EndAmt: number;
 }
 
-interface EditFieldProps {
+interface EditableFieldProps {
     value: string | number;
-    isEditing: boolean;
     onChange: (value: string) => void;
-    type?: 'text' | 'number';
     className?: string;
 }
-

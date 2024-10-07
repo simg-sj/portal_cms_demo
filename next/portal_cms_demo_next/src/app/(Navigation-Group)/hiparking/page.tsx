@@ -1,26 +1,45 @@
 'use client'
 import Button from "@/app/components/common/button";
 import Plus from "@/assets/images/icon/plus-icon.png";
-import {useState} from "react";
+import React, {useState} from "react";
+import YearMonthPicker from "@/app/components/common/Datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import {initialCounselData, changeCounselData} from "@/config/data";
 import DoughnutChart from "@/app/components/chart/DoughnutChart";
 import FormatNumber from "@/app/components/common/formatNumber";
 import EditableField from "@/app/components/common/EditField";
 
+interface DataState {
+    counselData: CounselData[];
+    changeData: ChangeCounselData[];
+};
 
 export default function Page() {
-    const [counselData, setCounselData] = useState<CounselData[]>(initialCounselData);
-    const [changeData, setChangeData] = useState<ChangeCounselData[]>(changeCounselData);
+    const [data, setData] = useState<DataState>({
+        counselData: initialCounselData,
+        changeData: changeCounselData,
+    });
+    const [startDate, setStartDate] = useState(new Date());
 
-
-    const handleInputChange = (index: number, field: keyof CounselData, value: string) => {
-        const updatedData = [...counselData];
-        updatedData[index] = {...updatedData[index], [field]: value.replace(/,/g, '')};
-        setCounselData(updatedData);
+    const handleInputChange = (
+        index: number, field: keyof CounselData | keyof ChangeCounselData, value: string) => {
+        const updatedData = { ...data };
+        if (field in updatedData.counselData[index]) {
+            updatedData.counselData[index] = {
+                ...updatedData.counselData[index],
+                [field]: value.replace(/,/g, ''),
+            };
+        } else {
+            updatedData.changeData[index] = {
+                ...updatedData.changeData[index],
+                [field]: value.replace(/,/g, ''),
+            };
+        }
+        setData(updatedData);
     };
 
     //도넛차트
-    const value = counselData[0].lossRatio
+    const value = data.counselData[0].lossRatio
     const dataDoughnut = {
         datasets: [
             {
@@ -56,7 +75,7 @@ export default function Page() {
                         </div>
                         <div className={'mt-4 text-right'}>
                             <div className={'text-gray-600'}>지급보험금</div>
-                            <div className={'text-3xl font-bold'}>{FormatNumber(counselData[0].closingAmt)}</div>
+                            <div className={'text-3xl font-bold'}>{FormatNumber(data.counselData[0].closingAmt)}</div>
                         </div>
                     </div>
                     <div className={'w-full'}>
@@ -91,7 +110,7 @@ export default function Page() {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {counselData.map((counsel, index) => (
+                                {data.counselData.map((counsel, index) => (
                                     <tr key={index}>
                                         <td>{counsel.pNo}</td>
                                         <td>{counsel.sDay + '~' + counsel.eDay}</td>
@@ -139,11 +158,7 @@ export default function Page() {
                     </div>
                     <div className={'w-full'}>
                         <div className={"flex justify-between mb-4"}>
-                            <div className={'flex'}>
-                                <div>2024년 6월</div>
-                                <div>~</div>
-                                <div>2024년 8월</div>
-                            </div>
+                            <YearMonthPicker />
                         </div>
                         <div className={'max-h-[260px] overflow-y-auto'}>
                             <table className={'w-full relative'}>
@@ -173,7 +188,7 @@ export default function Page() {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {changeData.map((changeData, index) => (
+                                {data.changeData.map((changeData, index) => (
                                     <tr key={index}>
                                         <td>{changeData.cNo}</td>
                                         <td>{changeData.cDay}</td>

@@ -3,13 +3,6 @@ import FormatNumber from "@/app/components/common/formatNumber";
 import EditIcon from "@/assets/images/icon/edit-icon.png";
 import CheckIcon from "@/assets/images/icon/check-icon.png";
 
-
-interface EditableFieldProps {
-    value: string | number;
-    onChange: (value: string) => void;
-    className?: string;
-}
-
 const EditableField = ({ value, onChange, className = '' }: EditableFieldProps) => {
     const [internalValue, setInternalValue] = useState<string>(value.toString());
     const [editMode, setEditMode] = useState<boolean>(false);
