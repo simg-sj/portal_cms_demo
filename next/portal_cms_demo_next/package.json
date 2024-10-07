@@ -9,12 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/react-datepicker": "^7.0.0",
     "chart.js": "^4.4.4",
+    "date-fns": "^4.1.0",
     "next": "14.2.13",
     "next-auth": "^5.0.0-beta.22",
     "path-to-regexp": "^8.2.0",
     "react": "^18",
     "react-chartjs-2": "^5.2.0",
+    "react-datepicker": "^7.4.0",
     "react-dom": "^18",
     "sharp": "^0.33.5"
   },
