@@ -11,12 +11,13 @@ import UserIcon from "@/assets/images/icon/user-icon.png";
 import MenuItem from "@/app/components/common/MenuItem";
 import Image from "next/image";
 import {useSession} from "next-auth/react";
-import {signOutWithForm} from "@/app/serverActions/auth";
+import {signInWithCredentials, signOutWithForm} from "@/app/serverActions/auth";
+import {router} from "next/client";
 
 export default function Navigation() {
-    const router = useRouter();
     const segment = useSelectedLayoutSegment();
     const {data } = useSession();
+    const router = useRouter();
     const [themeConfig, setThemeConfig] = useState<Theme | null>(null);
     const [activeLink, setActiveLink] = useState<string | null>(null);
     useEffect(() => {
@@ -51,6 +52,19 @@ export default function Navigation() {
         return null; // or a loading spinner
     }
 
+    const logoutSubmit = async (formData: FormData) => {
+        const result = await signOutWithForm();
+        console.log(result);
+        if (!result.success) {
+            return;
+        }
+
+        // 로그인 성공 시 해당 플랫폼 페이지로 리다이렉트
+        if (result) {
+            router.push('/'); // 플랫폼 정보가 없는 경우 기본 페이지로
+        }
+    };
+
     return (
         <div className="bg-main h-screen w-[100px] p-3 flex flex-col justify-between">
             <div>
@@ -76,7 +90,7 @@ export default function Navigation() {
                     </div>
                 ))}
                 <form
-                    action={signOutWithForm}
+                    action={logoutSubmit}
                     className={'px-1 py-2 flex  flex-col items-center my-5 cursor-pointer rounded-md hover:bg-white hover:bg-opacity-30'}>
                     <button className={'flex flex-col items-center'}>
                         <Image src={LogoutIcon} alt={"로그아웃"} width={35}/>

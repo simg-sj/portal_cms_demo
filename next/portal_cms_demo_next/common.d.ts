@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-10-02 15:41:12
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-10-02 17:35:53
+ * @LastEditTime: 2024-10-04 15:31:22
  * @FilePath: portal_cms_demo_next/common.d.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -56,10 +56,10 @@ declare module "next-auth" {
 
 declare module "next-auth/jwt" {
     interface JWT {
+        platform : string;
         id: string
         role: string
         name : string
         email : string
-        platform: string
     }
 }
