@@ -1,44 +1,27 @@
 'use client'
 import Button from "@/app/components/common/button";
-import Plus from  "@/assets/images/icon/plus-icon.png";
+import Plus from "@/assets/images/icon/plus-icon.png";
 import {useState} from "react";
-import { initialCounselData } from "@/config/data";
-import {Chart as ChartJS, ArcElement} from "chart.js";
-import {Doughnut} from "react-chartjs-2"
+import {initialCounselData, changeCounselData} from "@/config/data";
+import DoughnutChart from "@/app/components/chart/DoughnutChart";
+import FormatNumber from "@/app/components/common/formatNumber";
+import EditableField from "@/app/components/common/EditField";
 
-ChartJS.register(ArcElement);
-
-const formatNumber = (num: string): string => {
-    return num.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-};
 
 export default function Page() {
-    const [editMode, setEditMode] = useState<boolean>(false);
     const [counselData, setCounselData] = useState<CounselData[]>(initialCounselData);
+    const [changeData, setChangeData] = useState<ChangeCounselData[]>(changeCounselData);
 
-    const toggleEditMode = () => {
-        if (editMode) {
-            const params = counselData.map(counsel => ({
-                '가입보험료': counsel.estimateAmt,
-                '변경보험료': counsel.repairAmt,
-                '총보험료': counsel.total,
-                '지급보험료': counsel.closingAmt,
-            }));
-            console.log("수정 보험료:", params);
-        }
-        setEditMode(!editMode);
-    };
 
     const handleInputChange = (index: number, field: keyof CounselData, value: string) => {
         const updatedData = [...counselData];
-        const numericValue = value.replace(/,/g, '');
-        updatedData[index] = { ...updatedData[index], [field]: numericValue };
+        updatedData[index] = {...updatedData[index], [field]: value.replace(/,/g, '')};
         setCounselData(updatedData);
     };
 
     //도넛차트
-    const value = 38;
-    const Data = {
+    const value = counselData[0].lossRatio
+    const dataDoughnut = {
         datasets: [
             {
                 data: [value, 100 - value],
@@ -46,129 +29,184 @@ export default function Page() {
             },
         ],
     };
-
-    const Options = {
+    const optionDoughnut = {
+        plugins: {
+            tooltip: {
+                enabled: false,
+            },
+        },
+        cutout: '75%',
     };
+
 
     return (
         <>
             <div className={'text-xl font-bold'}>현황 대시보드</div>
             <div className={'px-8 py-6 bg-white rounded-xl my-5'}>
-                <div className={'text-lg font-semibold mb-6'}>계약현황</div>
-                <div className={'flex justify-between'}>
-                    <div>
+                <div className={'text-xl font-light mb-6'}>계약현황</div>
+                <div className={'flex'}>
+                    <div className={'w-[200px] mr-16'}>
                         <div className={'relative'}>
-                        <Doughnut data={Data} options={Options} className={'w-[350px] h-[200px]'}>
-                        </Doughnut>
-                        <div className={'absolute top-1/2 left-1/2 text-center'}>
-                            <div className={'text-gray-600 mb-1'}>손해율</div>
-                            <div className={'text-3xl text-main-light font-semibold'}>{value} %</div>
-                        </div>
+                            <DoughnutChart data={dataDoughnut} options={optionDoughnut}></DoughnutChart>
+                            <div
+                                className={'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center'}>
+                                <div className={'text-gray-600 mb-1'}>손해율</div>
+                                <div className={'text-3xl font-semibold'}>{value} %</div>
+                            </div>
                         </div>
                         <div className={'mt-4 text-right'}>
                             <div className={'text-gray-600'}>지급보험금</div>
-                            <div className={'text-3xl font-bold'}>{formatNumber('168178432')}</div>
+                            <div className={'text-3xl font-bold'}>{FormatNumber(counselData[0].closingAmt)}</div>
                         </div>
                     </div>
-                    <div>
+                    <div className={'w-full'}>
                         <div className={"flex justify-end mb-4"}>
-                            <Button
-                                color={"main"}
-                                height={36}
-                                width={120}
-                                className={'mr-5'}
-                                onClick={toggleEditMode}
-                                fill={editMode}
-                            >
-                                {editMode ? '저장' : '수정'}
-                            </Button>
-                            <Button  color={"main"} fill height={36} width={120}>
-                                <img src={Plus.src} alt={'추가'} width={16} className={'mr-1'} />
+                            <Button color={"main"} fill height={36} width={120}>
+                                <img src={Plus.src} alt={'추가'} width={16} className={'mr-1'}/>
                                 사업장 추가
                             </Button>
                         </div>
-                        <table className={'ml-16'}>
-                            <colgroup>
-                                <col style={{width: ""}}/>
-                                <col style={{width: ""}}/>
-                                <col style={{width: ""}}/>
-                                <col style={{width: "200px"}}/>
-                                <col style={{width: "200px"}}/>
-                                <col style={{width: "200px"}}/>
-                                <col style={{width: "200px"}}/>
-                                <col style={{width: ""}}/>
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th>증권번호</th>
-                                <th>보험기간</th>
-                                <th>사업장수</th>
-                                <th>가입보험료</th>
-                                <th>변경보험료</th>
-                                <th>총보험료</th>
-                                <th>지급보험료</th>
-                                <th>손해율</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {counselData.map((counsel, index) => (
-                                <tr key={index}>
-                                    <td>{counsel.pNo}</td>
-                                    <td>{counsel.sDay + '~' + counsel.eDay}</td>
-                                    <td>{counsel.bCount}</td>
-                                    <td className={'text-right'}>
-                                        {editMode ? (
-                                            <input
-                                                className={'text-right'}
-                                                type="text"
-                                                value={formatNumber(counsel.estimateAmt)}
-                                                onChange={(e) => handleInputChange(index, 'estimateAmt', e.target.value)}
-                                            />
-                                        ) : (
-                                            formatNumber(counsel.estimateAmt)
-                                        )}
-                                    </td>
-                                    <td className={'text-right'}>
-                                        {editMode ? (
-                                            <input
-                                                className={'text-right'}
-                                                type="text"
-                                                value={formatNumber(counsel.repairAmt)}
-                                                onChange={(e) => handleInputChange(index, 'repairAmt', e.target.value)}
-                                            />
-                                        ) : (
-                                            formatNumber(counsel.repairAmt)
-                                        )}
-                                    </td>
-                                    <td className={'text-right'}>
-                                        {editMode ? (
-                                            <input
-                                                className={'text-right'}
-                                                type="text"
-                                                value={formatNumber(counsel.total)}
-                                                onChange={(e) => handleInputChange(index, 'total', e.target.value)}
-                                            />
-                                        ) : (
-                                            formatNumber(counsel.total)
-                                        )}
-                                    </td>
-                                    <td className={'text-right'}>
-                                        {editMode ? (
-                                            <input
-                                                className={'text-right'}
-                                                type="text"
-                                                value={formatNumber(counsel.closingAmt)}
-                                                onChange={(e) => handleInputChange(index, 'closingAmt', e.target.value)}
-                                            />
-                                        ) : (
-                                            formatNumber(counsel.closingAmt)
-                                        )}
-                                    </td>
-                                    <td>{counsel.lossRatio}</td>
+                        <div className={'max-h-[205px] overflow-y-auto'}>
+                            <table className={'w-full relative'}>
+                                <colgroup>
+                                    <col style={{width: ""}}/>
+                                    <col style={{width: ""}}/>
+                                    <col style={{width: ""}}/>
+                                    <col style={{width: "200px"}}/>
+                                    <col style={{width: "200px"}}/>
+                                    <col style={{width: "200px"}}/>
+                                    <col style={{width: "200px"}}/>
+                                    <col style={{width: ""}}/>
+                                </colgroup>
+                                <thead className={'sticky left-0 top-0'}>
+                                <tr>
+                                    <th>증권번호</th>
+                                    <th>보험기간</th>
+                                    <th>사업장수</th>
+                                    <th>가입보험료</th>
+                                    <th>변경보험료</th>
+                                    <th>총보험료</th>
+                                    <th>지급보험료</th>
+                                    <th>손해율</th>
                                 </tr>
-                            ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                {counselData.map((counsel, index) => (
+                                    <tr key={index}>
+                                        <td>{counsel.pNo}</td>
+                                        <td>{counsel.sDay + '~' + counsel.eDay}</td>
+                                        <td>{counsel.bCount}</td>
+                                        <td className={'text-right'}>
+                                            <EditableField
+                                                value={counsel.estimateAmt}
+                                                onChange={(value) => handleInputChange(index, 'estimateAmt', value)}
+                                            />
+                                        </td>
+                                        <td className={'text-right'}>
+                                            <EditableField
+                                                value={counsel.repairAmt}
+                                                onChange={(value) => handleInputChange(index, 'repairAmt', value)}
+                                            />
+                                        </td>
+                                        <td className={'text-right'}>
+                                            <EditableField
+                                                value={counsel.total}
+                                                onChange={(value) => handleInputChange(index, 'total', value)}
+                                            />
+                                        </td>
+                                        <td className={'text-right'}>
+                                            <EditableField
+                                                value={counsel.closingAmt}
+                                                onChange={(value) => handleInputChange(index, 'closingAmt', value)}
+                                            />
+                                        </td>
+                                        <td>{counsel.lossRatio}</td>
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div className={'px-8 py-6 bg-white rounded-xl my-5'}>
+                <div className={'text-xl font-light mb-6'}>계약변경현황</div>
+                <div className={'flex'}>
+                    <div className={'w-[1000px] mr-16'}>
+                        그래프
+                    </div>
+                    <div className={'w-full'}>
+                        <div className={"flex justify-between mb-4"}>
+                            <div className={'flex'}>
+                                <div>2024년 6월</div>
+                                <div>~</div>
+                                <div>2024년 8월</div>
+                            </div>
+                        </div>
+                        <div className={'max-h-[260px] overflow-y-auto'}>
+                            <table className={'w-full relative'}>
+                                <colgroup>
+                                    <col style={{width: ""}}/>
+                                    <col style={{width: ""}}/>
+                                    <col style={{width: ""}}/>
+                                    <col style={{width: "200px"}}/>
+                                    <col style={{width: "200px"}}/>
+                                    <col style={{width: "200px"}}/>
+                                    <col style={{width: "200px"}}/>
+                                </colgroup>
+                                <thead className={'sticky left-0 top-0'}>
+                                <tr>
+                                    <th rowSpan={2}>No</th>
+                                    <th rowSpan={2}>변경일</th>
+                                    <th rowSpan={2}>증권번호</th>
+                                    <th colSpan={2}>사업장수</th>
+                                    <th colSpan={2}>변경보험료</th>
+                                </tr>
+                                <tr>
+                                    <th>추가</th>
+                                    <th>종료</th>
+                                    <th>추가</th>
+                                    <th>종료
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {changeData.map((changeData, index) => (
+                                    <tr key={index}>
+                                        <td>{changeData.cNo}</td>
+                                        <td>{changeData.cDay}</td>
+                                        <td>{changeData.pNo}</td>
+                                        <td>
+                                            <EditableField
+                                                value={changeData.pAdd}
+                                                onChange={(value) => handleInputChange(index, 'pAdd', value)}
+                                            />
+                                        </td>
+                                        <td>
+                                            <EditableField
+                                                value={changeData.pEnd}
+                                                onChange={(value) => handleInputChange(index, 'pEnd', value)}
+                                            />
+                                        </td>
+                                        <td className={'text-right'}>
+                                            <EditableField
+                                                value={changeData.AddAmt}
+                                                onChange={(value) => handleInputChange(index, 'AddAmt', value)}
+                                            />
+                                        </td>
+                                        <td className={'text-right'}>
+                                            <EditableField
+                                                value={changeData.EndAmt}
+                                                onChange={(value) => handleInputChange(index, 'EndAmt', value)}
+                                            />
+                                        </td>
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
