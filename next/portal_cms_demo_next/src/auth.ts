@@ -2,13 +2,14 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-10-02 14:13:08
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-10-04 17:53:14
+ * @LastEditTime: 2024-10-07 16:21:16
  * @FilePath: portal_cms_demo_next/src/auth.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials';
+
 export const {
     handlers,
     signIn,
@@ -22,24 +23,25 @@ export const {
                 password : {label : 'password', type : 'password'}
             },
             async authorize(credentials) {
-                try{
                     const res = await fetch('https://center-api.simg.kr/api/portal/auth', {method : 'POST', headers : {"Content-Type": "application/json"}, body : JSON.stringify(credentials)});
                     const data = await res.json();
+                    console.log('data is :::',data);
+
                     if (!res.ok) {
                         throw new Error(data.message || "로그인에 실패했습니다.");
                     }
-                    const user = {
-                        id: data.userId,
-                        platform: data.platform,
-                        name: data.name,
-                        cell: data.cell
-                    };
 
-                    console.log("user" ,user);
+                const user = {
+                    id: data.id,
+                    platform: data.platform,
+                    name: data.name,
+                    email: data.email
+                };
+
+                if (user) {
                     return user;
-                }catch(error){
-                    console.error("로그인 오류 ::", error);
-                    throw error;
+                } else {
+                    return null;
                 }
             }
         }),

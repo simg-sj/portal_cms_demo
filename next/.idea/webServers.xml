@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="51ed58e6-e3ff-4b0c-918b-9b019def016c" name="center">
+        <fileTransfer rootFolder="/home/simg/NODE-SERVER" accessType="SFTP" host="13.124.236.126" port="40022" sshConfigId="3add7994-5e4a-4cba-966f-b1e662add0ee" sshConfig="simg@13.124.236.126:40022 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
