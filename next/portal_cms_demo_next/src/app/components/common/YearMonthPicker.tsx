@@ -10,7 +10,7 @@ const CustomPicker = styled.div`
         border: 0;
         font-size: large;
         font-weight: 500;
-        width: 130px;
+        width: 160px;
         cursor: pointer;
         background: none;
     }
@@ -84,8 +84,8 @@ const StyledSelectIcon = styled.img`
 
 const YearMonthPicker = ({maxDate, minDate, onChange, selected}: YearMonthPickerProps) => {
     return (
-        <CustomPicker>
-            <PickerWrapper>
+        <PickerWrapper>
+            <CustomPicker>
                 <DatePicker
                     selected={selected}
                     onChange={onChange}
@@ -98,9 +98,9 @@ const YearMonthPicker = ({maxDate, minDate, onChange, selected}: YearMonthPicker
                     minDate={minDate}
                     onFocus={(e) => e.target.readOnly = true}
                 />
-            </PickerWrapper>
+            </CustomPicker>
             <StyledSelectIcon src={SelectIcon.src} alt="선택" width={15}/>
-        </CustomPicker>
+        </PickerWrapper>
     );
 };
 
