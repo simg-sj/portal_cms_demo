@@ -76,7 +76,7 @@ input[type=file]::file-selector-button {
     }
     html[data-theme='hiparking'] {
         --color-main: #f1923e;
-        --color-main-light: #f8a455;
+        --color-main-light: #fdae68;
         --color-main-lighter: #ffd5b2;
         --color-sub: #efb944;
         --color-sub-light: #fcd174;

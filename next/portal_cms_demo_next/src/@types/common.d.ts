@@ -56,3 +56,15 @@ interface EditableFieldProps {
     onChange: (value: string) => void;
     className?: string;
 }
+
+interface DataState {
+    counselData: CounselData[];
+    changeData: ChangeCounselData[];
+};
+
+interface YearMonthPickerProps {
+    maxDate?: Date;
+    minDate?: Date;
+    selected: Date | null;
+    onChange: (date: Date | null) => void;
+}
