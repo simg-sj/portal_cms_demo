@@ -9,13 +9,32 @@ import DoughnutChart from "@/app/components/chart/DoughnutChart";
 import BarTwowayChart from "@/app/components/chart/BarTwowayChart";
 import FormatNumber from "@/app/components/common/formatNumber";
 import EditableField from "@/app/components/common/EditField";
+<<<<<<< HEAD
+import useInputChange from "@/app/lib/customHook/inputChange";
+import {optionDoughnut} from "@/config/themeConfig";
+import Image from "next/image";
+interface DataState {
+    counselData: CounselData[];
+    changeData: ChangeCounselData[];
+};
+=======
 
+>>>>>>> main
 
 export default function Page() {
     const [data, setData] = useState<DataState>({
         counselData: initialCounselData,
         changeData: changeCounselData,
     });
+<<<<<<< HEAD
+    const initialData = {
+        counselData: [{ name: '', age: '' }],
+        changeData: [{ status: '' }],
+    };
+    const { param , handleInputChange } = useInputChange(initialData);
+
+
+=======
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
 
@@ -41,6 +60,7 @@ export default function Page() {
             setEndDate(null);
         }
     };
+>>>>>>> main
 
     const handleEndDateChange = (date: Date | null) => {
         setEndDate(date);
@@ -65,6 +85,8 @@ export default function Page() {
             },
         ],
     };
+<<<<<<< HEAD
+=======
     const optionDoughnut = {
         plugins: {
             tooltip: {
@@ -76,6 +98,7 @@ export default function Page() {
 
     //양방향 막대 차트
 
+>>>>>>> main
 
     return (
         <>
@@ -100,7 +123,7 @@ export default function Page() {
                     <div className={'w-full'}>
                         <div className={"flex justify-end mb-4"}>
                             <Button color={"main"} fill height={36} width={120}>
-                                <img src={Plus.src} alt={'추가'} width={16} className={'mr-1'}/>
+                                <Image src={Plus.src} alt={'추가'} width={16} height={16} className={'mr-1'}/>
                                 사업장 추가
                             </Button>
                         </div>

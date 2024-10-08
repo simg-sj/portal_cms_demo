@@ -14,6 +14,9 @@ const pretendard = localFont({
 export const metadata: Metadata = {
   title: "SIMG PORTAL CMS",
   description: "SIMG 통합 CMS",
+  icons : {
+      icon : '/simg-favicon.png',
+  }
 };
 
 export default function RootLayout({
@@ -24,7 +27,7 @@ export default function RootLayout({
   return (
       <html lang="kr" className={`${pretendard.variable}`}>
       <head>
-        <link rel="icon" type="image/svg+xml" href="./favicon.ico"/>
+        <title>SIMG PORTAL CMS</title>
       </head>
       <body className={pretendard.className}>
       <AuthWrapper>

@@ -30,6 +30,16 @@ const themeConfigs: ThemeConfig = {
     },
 };
 
+
+export const optionDoughnut = {
+    plugins: {
+        tooltip: {
+            enabled: false,
+        },
+    },
+    cutout: '75%',
+};
+
 export const getThemeConfig = (theme: string): Theme => {
     return themeConfigs[theme as keyof ThemeConfig];
 };

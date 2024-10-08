@@ -41,7 +41,7 @@ const excludeMatchers = [
 export async function middleware(request: NextRequest) {
     const userInfo = await auth();
     const platFormUrl = userInfo ? `/${userInfo.user.platform}` : '/';
-    let accessUrls = userInfo ? platformUrls[userInfo.user.platform] : '/';
+    const accessUrls = userInfo ? platformUrls[userInfo.user.platform] : '/';
     // 예외 경로는 미들웨어에서 처리하지 않음
     if (isPathMatch(request.nextUrl.pathname, excludeMatchers)) {
         return NextResponse.next();

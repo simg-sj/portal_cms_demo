@@ -2,13 +2,13 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-10-02 14:43:44
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-10-07 16:42:03
- * @FilePath: portal_cms_demo_next/src/app/serverActions/auth.ts
+ * @LastEditTime: 2024-10-08 13:15:54
+ * @FilePath: portal_cms_demo_next/src/app/action/auth.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 
 'use server'
-import { auth, signIn, signOut} from "@/auth";
+import { signIn, signOut} from "@/auth";
 import {AuthError} from "@auth/core/errors";
 
 
