@@ -1,25 +1,23 @@
 'use client'
 import Button from "@/app/components/common/button";
 import Plus from "@/assets/images/icon/plus-icon.png";
-import React, {useState} from "react";
-import YearMonthPicker from "@/app/components/common/Datepicker";
+import React, {useEffect, useState} from "react";
+import YearMonthPicker from "@/app/components/common/YearMonthPicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {initialCounselData, changeCounselData} from "@/config/data";
 import DoughnutChart from "@/app/components/chart/DoughnutChart";
+import BarTwowayChart from "@/app/components/chart/BarTwowayChart";
 import FormatNumber from "@/app/components/common/formatNumber";
 import EditableField from "@/app/components/common/EditField";
 
-interface DataState {
-    counselData: CounselData[];
-    changeData: ChangeCounselData[];
-};
 
 export default function Page() {
     const [data, setData] = useState<DataState>({
         counselData: initialCounselData,
         changeData: changeCounselData,
     });
-    const [startDate, setStartDate] = useState(new Date());
+    const [startDate, setStartDate] = useState<Date | null>(null);
+    const [endDate, setEndDate] = useState<Date | null>(null);
 
     const handleInputChange = (
         index: number, field: keyof CounselData | keyof ChangeCounselData, value: string) => {
@@ -37,13 +35,32 @@ export default function Page() {
         }
         setData(updatedData);
     };
+    const handleStartDateChange = (date: Date | null) => {
+        setStartDate(date);
+        if (date && endDate && date > endDate) {
+            setEndDate(null);
+        }
+    };
 
-    //도넛차트
-    const value = data.counselData[0].lossRatio
+    const handleEndDateChange = (date: Date | null) => {
+        setEndDate(date);
+        if (date && startDate && date < startDate) {
+            setStartDate(null);
+        }
+    };
+
+    useEffect(() => {
+        const threeMonthsAgo = new Date(new Date().getFullYear(), new Date().getMonth() -3, 1);
+        setStartDate(threeMonthsAgo);
+        setEndDate(new Date());
+    }, []);
+
+    //도넛 차트
+    const doughnutValue = data.counselData[0].lossRatio
     const dataDoughnut = {
         datasets: [
             {
-                data: [value, 100 - value],
+                data: [doughnutValue, 100 - doughnutValue],
                 backgroundColor: ["#f8a455", "#eeeeee"],
             },
         ],
@@ -56,6 +73,8 @@ export default function Page() {
         },
         cutout: '75%',
     };
+
+    //양방향 막대 차트
 
 
     return (
@@ -70,7 +89,7 @@ export default function Page() {
                             <div
                                 className={'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center'}>
                                 <div className={'text-gray-600 mb-1'}>손해율</div>
-                                <div className={'text-3xl font-semibold'}>{value} %</div>
+                                <div className={'text-3xl font-semibold'}>{doughnutValue} %</div>
                             </div>
                         </div>
                         <div className={'mt-4 text-right'}>
@@ -154,11 +173,23 @@ export default function Page() {
                 <div className={'text-xl font-light mb-6'}>계약변경현황</div>
                 <div className={'flex'}>
                     <div className={'w-[1000px] mr-16'}>
-                        그래프
+                        <BarTwowayChart data={changeCounselData} />
                     </div>
                     <div className={'w-full'}>
-                        <div className={"flex justify-between mb-4"}>
-                            <YearMonthPicker />
+                        <div className={"flex justify-end mb-4 text-xl"}>
+                            <YearMonthPicker
+                                maxDate={endDate || new Date()}
+                                minDate={undefined}
+                                selected={startDate}
+                                onChange={handleStartDateChange}
+                            />
+                            <div className={'font-bold'}>~</div>
+                            <YearMonthPicker
+                                maxDate={new Date()}
+                                minDate={startDate || undefined}
+                                selected={endDate}
+                                onChange={handleEndDateChange}
+                            />
                         </div>
                         <div className={'max-h-[260px] overflow-y-auto'}>
                             <table className={'w-full relative'}>
