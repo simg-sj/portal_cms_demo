@@ -3,7 +3,6 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartOptions } from 'cha
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-// options 타입을 정의합니다.
 interface DoughnutChartProps {
     data: any;
     options?: ChartOptions<'doughnut'>;

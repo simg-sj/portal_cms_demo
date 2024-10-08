@@ -2,7 +2,7 @@
 import Button from "@/app/components/common/button";
 import Plus from "@/assets/images/icon/plus-icon.png";
 import React, {useState} from "react";
-import YearMonthPicker from "@/app/components/common/Datepicker";
+import YearMonthPicker from "@/app/components/common/YearMonthPicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {initialCounselData, changeCounselData} from "@/config/data";
 import DoughnutChart from "@/app/components/chart/DoughnutChart";
