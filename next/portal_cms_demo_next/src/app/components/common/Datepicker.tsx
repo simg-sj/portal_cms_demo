@@ -101,8 +101,7 @@ const YearMonthPicker: React.FC<YearMonthPickerProps> = ({ maxDate, minDate }) =
                     locale={ko}
                     maxDate={maxDate}
                     minDate={minDate}
-                    readOnly={true}
-                    customInput={<ExampleCustomInput />}
+                    onFocus={(e) => e.target.readOnly = true}
                 />
                 <StyledSelectIcon src={SelectIcon.src} alt="선택" width={15} />
             </PickerWrapper>

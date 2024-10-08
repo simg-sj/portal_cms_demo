@@ -8,6 +8,8 @@ const matchersForAuth = [
     '/',
     '/simg',
     '/simg/*',
+    '/kmpark/*',
+    '/kmpark'
 ]
 
 const platformUrls = {
@@ -19,6 +21,10 @@ const platformUrls = {
         '/simg',
         '/simg/*',
     ],
+    'kmpark' : [
+        '/kmpark',
+        '/kmpark/*'
+    ]
 }
 
 const matchersForSignIn = [

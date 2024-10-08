@@ -53,15 +53,8 @@ export default function Navigation() {
     }
 
     const logoutSubmit = async (formData: FormData) => {
-        const result = await signOutWithForm();
-        console.log(result);
-        if (!result.success) {
-            return;
-        }
-
-        // 로그인 성공 시 해당 플랫폼 페이지로 리다이렉트
-        if (result) {
-            router.push('/'); // 플랫폼 정보가 없는 경우 기본 페이지로
+        if (window.confirm('로그아웃하시겠습니까?')) {
+            await signOutWithForm();
         }
     };
 

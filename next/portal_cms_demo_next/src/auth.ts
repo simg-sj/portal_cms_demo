@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-10-02 14:13:08
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-10-07 16:21:16
+ * @LastEditTime: 2024-10-07 17:49:08
  * @FilePath: portal_cms_demo_next/src/auth.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -49,7 +49,7 @@ export const {
     secret : process.env.AUTH_SECRET,
     session: {
         strategy: 'jwt', // JSON Web Token 사용
-        maxAge: 60 * 60 * 24 // 세션 만료 시간(sec)
+        maxAge: 60 * 60 // 세션 만료 시간(sec)
     },
     pages: {
         signIn: '/login', // Default: '/auth/signin'

@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-09-30 15:46:29
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-10-07 17:27:02
+ * @LastEditTime: 2024-10-07 17:46:47
  * @FilePath: portal_cms_demo_next/src/app/login/page.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -17,6 +17,7 @@ import {useRouter} from "next/navigation";
 
 
 export default function Page() {
+    const errorDiv = useRef<HTMLDivElement | null>(null);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
     const {data} = useSession();
@@ -27,8 +28,10 @@ export default function Page() {
             const response = await signInWithCredentials(formData);
             
             if(!response.success){
-                alert(response.message);
                 setError(response.message);
+                if(errorDiv.current){
+                    errorDiv.current.style.display="block";
+                }
             }else {
                 window.location.reload();
                 if(data){
@@ -53,7 +56,7 @@ export default function Page() {
                     <input type={'password'} className={'px-3 w-full h-10'} placeholder={'비밀번호를 입력해주세요'}
                            name='password'/>
                 </div>
-                {/*<div ref={errorDiv} className={'text-red-500 mt-2 hidden'}>아이디 혹은 비밀번호가 틀립니다. 다시 입력 해주세요</div>*/}
+                <div ref={errorDiv} className={'text-red-500 mt-2 hidden'}>아이디 혹은 비밀번호가 틀립니다. 다시 입력 해주세요</div>
                 <button className={'text-xl text-white px-10 py-3 rounded-xl bg-[#5C7DED] mt-5 w-[80%] font-medium'}>
                     Login
                 </button>
