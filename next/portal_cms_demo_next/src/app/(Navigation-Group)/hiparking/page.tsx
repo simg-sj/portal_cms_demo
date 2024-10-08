@@ -9,7 +9,6 @@ import DoughnutChart from "@/app/components/chart/DoughnutChart";
 import BarTwowayChart from "@/app/components/chart/BarTwowayChart";
 import FormatNumber from "@/app/components/common/formatNumber";
 import EditableField from "@/app/components/common/EditField";
-<<<<<<< HEAD
 import useInputChange from "@/app/lib/customHook/inputChange";
 import {optionDoughnut} from "@/config/themeConfig";
 import Image from "next/image";
@@ -17,50 +16,30 @@ interface DataState {
     counselData: CounselData[];
     changeData: ChangeCounselData[];
 };
-=======
 
->>>>>>> main
 
 export default function Page() {
     const [data, setData] = useState<DataState>({
         counselData: initialCounselData,
         changeData: changeCounselData,
     });
-<<<<<<< HEAD
     const initialData = {
         counselData: [{ name: '', age: '' }],
-        changeData: [{ status: '' }],
-    };
+        changeData: [{ status: '' }]
+    }
     const { param , handleInputChange } = useInputChange(initialData);
 
 
-=======
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
 
-    const handleInputChange = (
-        index: number, field: keyof CounselData | keyof ChangeCounselData, value: string) => {
-        const updatedData = { ...data };
-        if (field in updatedData.counselData[index]) {
-            updatedData.counselData[index] = {
-                ...updatedData.counselData[index],
-                [field]: value.replace(/,/g, ''),
-            };
-        } else {
-            updatedData.changeData[index] = {
-                ...updatedData.changeData[index],
-                [field]: value.replace(/,/g, ''),
-            };
-        }
-        setData(updatedData);
-    };
+
     const handleStartDateChange = (date: Date | null) => {
         setStartDate(date);
         if (date && endDate && date > endDate) {
             setEndDate(null);
         }
     };
->>>>>>> main
 
     const handleEndDateChange = (date: Date | null) => {
         setEndDate(date);
@@ -85,21 +64,8 @@ export default function Page() {
             },
         ],
     };
-<<<<<<< HEAD
-=======
-    const optionDoughnut = {
-        plugins: {
-            tooltip: {
-                enabled: false,
-            },
-        },
-        cutout: '75%',
-    };
 
     //양방향 막대 차트
-
->>>>>>> main
-
     return (
         <>
             <div className={'text-xl font-bold'}>현황 대시보드</div>
