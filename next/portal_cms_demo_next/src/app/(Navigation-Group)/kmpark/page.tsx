@@ -8,6 +8,9 @@ import {initialCounselData, changeCounselData} from "@/config/data";
 import DoughnutChart from "@/app/components/chart/DoughnutChart";
 import FormatNumber from "@/app/components/common/formatNumber";
 import EditableField from "@/app/components/common/EditField";
+import {optionDoughnut} from "@/config/themeConfig";
+import useInputChange from "@/app/lib/customHook/inputChange";
+import Image from "next/image";
 
 interface DataState {
     counselData: CounselData[];
@@ -19,24 +22,12 @@ export default function Page() {
         counselData: initialCounselData,
         changeData: changeCounselData,
     });
-    const [startDate, setStartDate] = useState(new Date());
-
-    const handleInputChange = (
-        index: number, field: keyof CounselData | keyof ChangeCounselData, value: string) => {
-        const updatedData = { ...data };
-        if (field in updatedData.counselData[index]) {
-            updatedData.counselData[index] = {
-                ...updatedData.counselData[index],
-                [field]: value.replace(/,/g, ''),
-            };
-        } else {
-            updatedData.changeData[index] = {
-                ...updatedData.changeData[index],
-                [field]: value.replace(/,/g, ''),
-            };
-        }
-        setData(updatedData);
+    const initialData = {
+        counselData: [{ name: '', age: '' }],
+        changeData: [{ status: '' }],
     };
+    const { param , handleInputChange } = useInputChange(initialData);
+
 
     //도넛차트
     const value = data.counselData[0].lossRatio
@@ -48,15 +39,6 @@ export default function Page() {
             },
         ],
     };
-    const optionDoughnut = {
-        plugins: {
-            tooltip: {
-                enabled: false,
-            },
-        },
-        cutout: '75%',
-    };
-
 
     return (
         <>
@@ -81,7 +63,7 @@ export default function Page() {
                     <div className={'w-full'}>
                         <div className={"flex justify-end mb-4"}>
                             <Button color={"main"} fill height={36} width={120}>
-                                <img src={Plus.src} alt={'추가'} width={16} className={'mr-1'}/>
+                                <Image src={Plus.src} alt={'추가'} width={16} height={16} className={'mr-1'}/>
                                 사업장 추가
                             </Button>
                         </div>

@@ -1,4 +1,4 @@
-import React, {forwardRef, useState} from 'react';
+import React, {useState} from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from "date-fns/locale";
@@ -82,11 +82,6 @@ const YearMonthPicker: React.FC<YearMonthPickerProps> = ({ maxDate, minDate }) =
             setStartDate(date);
         }
     };
-    const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
-        <button className="example-custom-input" onClick={onClick} ref={ref}>
-            {value}
-        </button>
-    ));
 
     return (
         <CustomPicker>
