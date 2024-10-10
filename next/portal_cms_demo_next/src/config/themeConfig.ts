@@ -33,6 +33,7 @@ const themeConfigs: ThemeConfig = {
 
 
 export const optionDoughnut = {
+    responsive: true,
     plugins: {
         tooltip: {
             enabled: false,

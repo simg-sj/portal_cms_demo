@@ -1,10 +1,11 @@
 'use client'
 import Button from "@/app/components/common/button";
 import Plus from "@/assets/images/icon/plus-icon.png";
+import Download from "@/assets/images/icon/download-icon.png";
 import React, {useEffect, useState} from "react";
 import YearMonthPicker from "@/app/components/common/YearMonthPicker";
 import "react-datepicker/dist/react-datepicker.css";
-import {initialCounselData, changeCounselData} from "@/config/data";
+import {initialCounselData, changeCounselData, monthAccidentData} from "@/config/data";
 import DoughnutChart from "@/app/components/chart/DoughnutChart";
 import BarTwowayChart from "@/app/components/chart/BarTwowayChart";
 import FormatNumber from "@/app/components/common/formatNumber";
@@ -42,7 +43,7 @@ export default function Page() {
     }
     const {param, handleInputChange} = useInputChange(initialData);
 
-
+    //기간 시작일, 종료일 조건지정
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
 
@@ -61,6 +62,7 @@ export default function Page() {
         }
     };
 
+    //기간 3개월단위
     useEffect(() => {
         const threeMonthsAgo = new Date(new Date().getFullYear(), new Date().getMonth() - 2, 1);
         setStartDate(threeMonthsAgo);
@@ -100,13 +102,13 @@ export default function Page() {
         {
             label: '지급보험금',
             content: (
-                <BarHorizonChart data={topCounselData} />
+                <BarHorizonChart data={topCounselData}/>
             ),
         },
         {
             label: '사고발생업소',
             content: (
-                <BarHorizonChart data={topBusinessData} />
+                <BarHorizonChart data={topBusinessData}/>
             ),
         },
     ]
@@ -291,29 +293,122 @@ export default function Page() {
                 </div>
             </div>
 
+            <div className={'flex'}>
+                <div className={'px-8 py-6 bg-white rounded-xl my-5 w-1/4'}>
+                    <div className={'flex justify-between'}>
+                        <div className={'text-xl font-light mb-6'}>Top 5</div>
+                        <div className={"flex justify-end mb-4 text-xl"}>
+                            <YearMonthPicker
+                                maxDate={endDate || new Date()}
+                                minDate={undefined}
+                                selected={startDate}
+                                onChange={handleStartDateChange}
+                            />
+                            <div className={'font-bold'}>~</div>
+                            <YearMonthPicker
+                                maxDate={new Date()}
+                                minDate={startDate || undefined}
+                                selected={endDate}
+                                onChange={handleEndDateChange}
+                            />
+                        </div>
+                    </div>
+                    <Tab tabs={tabs}/>
+                </div>
 
-            <div className={'px-8 py-6 bg-white rounded-xl my-5 w-1/4'}>
-                <div className={'flex justify-between'}>
-                    <div className={'text-xl font-light mb-6'}>Top 5</div>
-                    <div className={"flex justify-end mb-4 text-xl"}>
-                        <YearMonthPicker
-                            maxDate={endDate || new Date()}
-                            minDate={undefined}
-                            selected={startDate}
-                            onChange={handleStartDateChange}
-                        />
-                        <div className={'font-bold'}>~</div>
-                        <YearMonthPicker
-                            maxDate={new Date()}
-                            minDate={startDate || undefined}
-                            selected={endDate}
-                            onChange={handleEndDateChange}
-                        />
+                <div className={'px-8 py-6 bg-white rounded-xl my-5 w-1/4 mx-8'}>
+                    <div>
+                        <div className={'text-xl font-light mb-6'}>월 누적</div>
+                        <div className={'flex justify-between'}>
+                            <div className={'w-3/5'}>
+                                <div className={'flex justify-between'}>
+                                    <div className={'text-gray-700'}>지급보험금</div>
+                                    <div className={'text-blue-500 font-medium'}>+ 23%</div>
+                                </div>
+                                <div className={'text-3xl font-bold mt-2 text-end'}>168,178,432 <span
+                                    className={'text-xl font-semibold'}>원</span></div>
+                            </div>
+
+                        </div>
+                        <div className={'flex justify-between mt-10'}>
+                            <div className={'w-3/5'}>
+                                <div className={'flex justify-between'}>
+                                    <div className={'text-gray-700'}>사고접수</div>
+                                    <div className={'text-red-500 font-medium'}>- 10%</div>
+                                </div>
+                                <div className={'text-3xl font-bold mt-2 text-end'}>7 <span
+                                    className={'text-xl font-semibold'}>건</span></div>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
-                <Tab tabs={tabs} />
-            </div>
 
+                <div className={'px-8 py-6 bg-white rounded-xl my-5 w-2/4'}>
+                    <div>
+                        <div className={'flex justify-between'}>
+                            <div className={'text-xl font-light mb-6'}>월별 사고접수현황</div>
+                            <div className={"flex justify-end mb-4 text-xl"}>
+                                <YearMonthPicker
+                                    maxDate={endDate || new Date()}
+                                    minDate={undefined}
+                                    selected={startDate}
+                                    onChange={handleStartDateChange}
+                                />
+                                <div className={'font-bold'}>~</div>
+                                <YearMonthPicker
+                                    maxDate={new Date()}
+                                    minDate={startDate || undefined}
+                                    selected={endDate}
+                                    onChange={handleEndDateChange}
+                                />
+                            </div>
+                        </div>
+                        <div className={'w-full'}>
+                            <div className={"flex justify-end mb-4"}>
+                                <Button color={"green"} fill height={36} width={120}>
+                                    <Image src={Download.src} alt={'다운로드'} width={16} height={16} className={'mr-2'}/>
+                                    엑셀다운
+                                </Button>
+                            </div>
+                            <div className={'max-h-[205px] overflow-y-auto'}>
+                                <table className={'w-full relative'}>
+                                    <colgroup>
+                                        <col style={{width: ""}}/>
+                                        <col style={{width: ""}}/>
+                                        <col style={{width: ""}}/>
+                                        <col style={{width: ""}}/>
+                                        <col style={{width: ""}}/>
+                                        <col style={{width: ""}}/>
+                                    </colgroup>
+                                    <thead className={'sticky left-0 top-0'}>
+                                    <tr>
+                                        <th>변경일</th>
+                                        <th>접수건수</th>
+                                        <th>종결건수</th>
+                                        <th>보험금</th>
+                                        <th>면책건수</th>
+                                        <th>미결건수</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {monthAccidentData.map((month, index) => (
+                                        <tr key={index}>
+                                            <td>{month.changeDay}</td>
+                                            <td>{month.acceptNum}</td>
+                                            <td>{month.endNum}</td>
+                                            <td>{month.counselConst}</td>
+                                            <td>{month.disclaimerNum}</td>
+                                            <td>{month.suspense}</td>
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </>
     )
 }

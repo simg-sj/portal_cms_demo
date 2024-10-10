@@ -119,3 +119,30 @@ export const changeCounselData: ChangeCounselData[] = [
         EndAmt: 228544,
     },
 ];
+
+export const monthAccidentData: MonthAccidentData[] = [
+    {
+        changeDay: "2024-08",
+        acceptNum: 7,
+        endNum: 4,
+        counselConst: 6615000,
+        disclaimerNum: 1,
+        suspense: 1,
+    },
+    {
+        changeDay: "2024-07",
+        acceptNum: 8,
+        endNum: 4,
+        counselConst: 5431000,
+        disclaimerNum: 2,
+        suspense: 2,
+    },
+    {
+        changeDay: "2024-06",
+        acceptNum: 4,
+        endNum: 0,
+        counselConst: 0,
+        disclaimerNum: 0,
+        suspense: 4,
+    },
+]
