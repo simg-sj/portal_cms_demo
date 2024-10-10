@@ -57,7 +57,7 @@ export default function Navigation() {
     };
 
     return (
-        <div className="bg-main h-screen w-[100px] p-3 flex flex-col justify-between">
+        <div className="bg-main h-screen fixed w-[100px] p-3 flex flex-col justify-between">
             <div>
                 <Image src={themeConfig.logoSrc} alt="업체로고" height={50} className="mt-5 mb-14" priority={true}/>
                 {menuItems.slice(0, -1).map((item, index) => (

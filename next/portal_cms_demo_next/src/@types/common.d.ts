@@ -51,6 +51,15 @@ interface ChangeCounselData{
     EndAmt: number;
 }
 
+interface MonthAccidentData{
+    changeDay: string;
+    acceptNum: number;
+    endNum: number;
+    counselConst: number;
+    disclaimerNum: number;
+    suspense: number;
+}
+
 interface EditableFieldProps {
     value: string | number;
     onChange: (value: string) => void;
