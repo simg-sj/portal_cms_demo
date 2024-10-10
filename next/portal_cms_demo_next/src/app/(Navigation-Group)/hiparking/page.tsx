@@ -1,7 +1,7 @@
 'use client'
 import Button from "@/app/components/common/button";
 import Plus from "@/assets/images/icon/plus-icon.png";
-import Download from "@/assets/images/icon/download-icon.png";
+import Excel from "@/assets/images/icon/excel-icon.png";
 import React, {useEffect, useState} from "react";
 import YearMonthPicker from "@/app/components/common/YearMonthPicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -15,6 +15,7 @@ import Tab from "@/app/components/common/tab";
 import {optionDoughnut, optionTwowayBar} from "@/config/themeConfig";
 import Image from "next/image";
 import BarHorizonChart from "@/app/components/chart/BarHorizonChart";
+import PieChart from "@/app/components/chart/PieChart";
 
 interface DataState {
     counselData: CounselData[];
@@ -97,18 +98,44 @@ export default function Page() {
         ],
     };
 
+    //원형차트
+    const dataPieCounsel = {
+        labels: ['정곡빌딩', '부산사학연금', '청주성모병원', '기타'],
+        datasets: [
+            {
+                data: [38, 26, 11, 25],
+                backgroundColor: ['#f1923e', '#fdae68', '#efb944', '#fcd174'],
+            },
+        ],
+    };
+    const dataPieAccident = {
+        labels: ['제2주차장', '청주공항주차장', '서울스퀘어', '기타'],
+        datasets: [
+            {
+                data: [21, 16, 14, 49],
+                backgroundColor: ['#f1923e', '#fdae68', '#efb944', '#fcd174'],
+            },
+        ],
+    };
+
     //tab
     const tabs = [
         {
             label: '지급보험금',
             content: (
-                <BarHorizonChart data={topCounselData}/>
+                <>
+                    <div className={'my-5 font-medium text-lg'}>지급보험금 TOP 5</div>
+                    <BarHorizonChart data={topCounselData}/>
+                </>
             ),
         },
         {
             label: '사고발생업소',
             content: (
-                <BarHorizonChart data={topBusinessData}/>
+                <>
+                    <div className={'my-5 font-medium text-lg'}>사고발생업소 TOP 5</div>
+                    <BarHorizonChart data={topBusinessData}/>
+                </>
             ),
         },
     ]
@@ -209,10 +236,11 @@ export default function Page() {
                 <div className={'text-xl font-light mb-6'}>계약변경현황</div>
                 <div className={'flex'}>
                     <div className={'w-[1000px] mr-16'}>
+                        <div className={'mb-5 font-medium text-lg'}>최근 6개월 계약변경현황</div>
                         <BarTwowayChart data={dataTwowayBar} options={optionTwowayBar}/>
                     </div>
                     <div className={'w-full'}>
-                        <div className={"flex justify-end mb-4 text-xl"}>
+                    <div className={"flex justify-end mb-4 text-xl"}>
                             <YearMonthPicker
                                 maxDate={endDate || new Date()}
                                 minDate={undefined}
@@ -319,27 +347,27 @@ export default function Page() {
                 <div className={'px-8 py-6 bg-white rounded-xl my-5 w-1/4 mx-8'}>
                     <div>
                         <div className={'text-xl font-light mb-6'}>월 누적</div>
-                        <div className={'flex justify-between'}>
-                            <div className={'w-3/5'}>
+                        <div className={'flex justify-between relative'}>
+                            <div className={'absolute w-[220px]'}>
                                 <div className={'flex justify-between'}>
-                                    <div className={'text-gray-700'}>지급보험금</div>
+                                    <div className={'text-gray-700'}>월 누적 지급보험금</div>
                                     <div className={'text-blue-500 font-medium'}>+ 23%</div>
                                 </div>
                                 <div className={'text-3xl font-bold mt-2 text-end'}>168,178,432 <span
                                     className={'text-xl font-semibold'}>원</span></div>
                             </div>
-
+                            <PieChart data={dataPieCounsel}></PieChart>
                         </div>
-                        <div className={'flex justify-between mt-10'}>
-                            <div className={'w-3/5'}>
+                        <div className={'flex justify-between relative'}>
+                            <div className={'absolute w-[220px]'}>
                                 <div className={'flex justify-between'}>
-                                    <div className={'text-gray-700'}>사고접수</div>
+                                    <div className={'text-gray-700'}>월 누적 사고접수</div>
                                     <div className={'text-red-500 font-medium'}>- 10%</div>
                                 </div>
                                 <div className={'text-3xl font-bold mt-2 text-end'}>7 <span
                                     className={'text-xl font-semibold'}>건</span></div>
                             </div>
-
+                            <PieChart data={dataPieAccident}></PieChart>
                         </div>
                     </div>
                 </div>
@@ -366,8 +394,8 @@ export default function Page() {
                         </div>
                         <div className={'w-full'}>
                             <div className={"flex justify-end mb-4"}>
-                                <Button color={"green"} fill height={36} width={120}>
-                                    <Image src={Download.src} alt={'다운로드'} width={16} height={16} className={'mr-2'}/>
+                                <Button color={"green"} height={36} width={120}>
+                                    <Image src={Excel.src} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
                                     엑셀다운
                                 </Button>
                             </div>
