@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-10-02 14:13:08
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-10-07 17:49:08
+ * @LastEditTime: 2024-10-08 17:43:37
  * @FilePath: portal_cms_demo_next/src/auth.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -34,6 +34,8 @@ export const {
                 const user = {
                     id: data.id,
                     platform: data.platform,
+                    work : data.work,
+                    bName : data.bName,
                     name: data.name,
                     email: data.email
                 };
@@ -61,6 +63,8 @@ export const {
                     ...token,
                     id: user.id,
                     platform: user.platform,
+                    bName : user.bName,
+                    work : user.work,
                     name: user.name,
                 }
             }
@@ -69,6 +73,9 @@ export const {
         session: async ({ session, token }) => {
             if(token){
                 session.user.platform = token.platform;
+                session.user.work = token.work;
+                session.user.bName = token.bName;
+                session.user.id = token.id;
             }
             return session
         },
