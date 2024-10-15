@@ -11,15 +11,16 @@ interface ChartData {
 
 interface BarHorizonChartProps {
     data: ChartData;
+    bgClass : string;
 }
 
-const BarHorizonChart = ({ data }: BarHorizonChartProps) => {
+const BarHorizonChart = ({ data, bgClass }: BarHorizonChartProps) => {
     const chartData = {
         labels: data.labels,
         datasets: [
             {
                 data: data.values,
-                backgroundColor: '#fdae68',
+                backgroundColor: bgClass,
             },
         ],
     };
@@ -69,7 +70,7 @@ const BarHorizonChart = ({ data }: BarHorizonChartProps) => {
 
     const plugins = [{
         id: 'valueLabels',
-        afterDraw: (chart: any) => {
+        afterDraw: (chart: ChartJS) => {
             const ctx = chart.ctx;
             chart.data.datasets[0].data.forEach((value: number, index: number) => {
                 const meta = chart.getDatasetMeta(0);

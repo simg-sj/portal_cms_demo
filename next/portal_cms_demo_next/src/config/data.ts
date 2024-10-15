@@ -1,3 +1,5 @@
+
+
 export const initialCounselData: CounselData[] = [
     {
         pNo: "FA20235204423000",
@@ -146,3 +148,4 @@ export const monthAccidentData: MonthAccidentData[] = [
         suspense: 4,
     },
 ]
+

@@ -6,7 +6,7 @@ import {
     BarElement,
     Title,
     Tooltip,
-    Legend, Chart, ChartOptions,
+    Legend, ChartData, ChartOptions,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 
@@ -22,7 +22,7 @@ ChartJS.register(
 
 
 interface BarTwowayChartProps {
-    data: any;
+    data: ChartData<'bar'>;
     options?: ChartOptions<'bar'>;
 }
 const BarTwowayChart = ({ data, options }: BarTwowayChartProps) => {

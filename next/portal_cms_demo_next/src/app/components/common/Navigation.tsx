@@ -1,6 +1,6 @@
 "use client"
 
-import { useSelectedLayoutSegment } from 'next/navigation';
+import { useSelectedLayoutSegment} from 'next/navigation';
 import LogoutIcon from "@/assets/images/icon/logout-icon.png";
 import SimgLogo from "@/assets/images/logo/simg-white-logo.png";
 import { useEffect, useState } from "react";
@@ -12,6 +12,7 @@ import MenuItem from "@/app/components/common/MenuItem";
 import Image from "next/image";
 import {useSession} from "next-auth/react";
 import {signOutWithForm} from "@/app/lib/action/auth";
+import Loading from "@/app/(Navigation-Group)/loading";
 
 export default function Navigation() {
     const segment = useSelectedLayoutSegment();
@@ -39,15 +40,13 @@ export default function Navigation() {
             { icon: ListIcon, label: "리스트", link: config.menuItems.list },
             { icon: UserIcon, label: `${data?.user?.name}님`, link: config.menuItems.mypage },
         ];
-
         return baseItems.filter(item => item.link !== "");
     };
 
     const menuItems = themeConfig ? getMenuItems(themeConfig) : [];
 
-
     if (!themeConfig) {
-        return null; // or a loading spinner
+        return <Loading/>;
     }
 
     const logoutSubmit = async () => {

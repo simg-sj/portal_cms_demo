@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-10-02 14:13:08
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-10-08 17:43:37
+ * @LastEditTime: 2024-10-15 14:53:40
  * @FilePath: portal_cms_demo_next/src/auth.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -30,14 +30,15 @@ export const {
                     if (!res.ok) {
                         throw new Error(data.message || "로그인에 실패했습니다.");
                     }
-
                 const user = {
-                    id: data.id,
+                    id: data.userId,
                     platform: data.platform,
                     work : data.work,
                     bName : data.bName,
                     name: data.name,
-                    email: data.email
+                    email: data.mail,
+                    phone : data.phone,
+                    auth : data.auth,
                 };
 
                 if (user) {
@@ -59,6 +60,7 @@ export const {
     callbacks: {
         jwt: async ({ token, user }) => {
             if(user){
+                console.log(user);
                 return {
                     ...token,
                     id: user.id,
@@ -66,6 +68,9 @@ export const {
                     bName : user.bName,
                     work : user.work,
                     name: user.name,
+                    auth : user.auth,
+                    phone : user.phone,
+                    email : user.email
                 }
             }
             return token
@@ -75,7 +80,10 @@ export const {
                 session.user.platform = token.platform;
                 session.user.work = token.work;
                 session.user.bName = token.bName;
+                session.user.email = token.email;
+                session.user.phone = token.phone;
                 session.user.id = token.id;
+                session.user.auth = token.auth;
             }
             return session
         },

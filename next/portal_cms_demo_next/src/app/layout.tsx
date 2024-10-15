@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "@/styles/common.css";
-import React from "react";
+import React, {Suspense} from "react";
 import AuthWrapper from "@/app/auth_wrapper";
+import Loading from "@/app/(Navigation-Group)/loading";
 
 const pretendard = localFont({
   src: './fonts/PretendardVariable.woff2',
@@ -31,6 +32,7 @@ export default function RootLayout({
       </head>
       <body className={pretendard.className}>
       <AuthWrapper>
+          <Suspense fallback={<Loading/>}></Suspense>
           {children}
       </AuthWrapper>
       </body>

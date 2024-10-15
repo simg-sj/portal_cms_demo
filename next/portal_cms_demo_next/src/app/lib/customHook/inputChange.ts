@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-10-08 13:19:02
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-10-08 13:23:23
+ * @LastEditTime: 2024-10-15 15:29:14
  * @FilePath: portal_cms_demo_next/src/app/lib/customHook/inputChange.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -11,11 +11,11 @@
 import { useState } from 'react';
 
 interface CounselData {
-    [key: string]: any;
+    [key: string]: string;
 }
 
 interface ChangeCounselData {
-    [key: string]: any;
+    [key: string]: string;
 }
 
 interface Data {

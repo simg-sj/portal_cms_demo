@@ -2,8 +2,22 @@ import HiparkingLogo from '@/assets/images/logo/hiparking-logo.png'
 import SimgLogo from '@/assets/images/logo/simg-round-logo.png'
 import KmparkLogo from '@/assets/images/logo/kmpark-logo.svg'
 import {changeCounselData} from "@/config/data";
+import {StaticImageData} from "next/image";
+import {TooltipItem } from 'chart.js';
 
 
+interface Theme {
+    logoSrc: StaticImageData;
+    menuItems: {
+        dashboard?: string;
+        list?: string;
+        mypage?: string;
+    };
+}
+
+interface ThemeConfig {
+    [key: string]: Theme;
+}
 
 const themeConfigs: ThemeConfig = {
     hiparking: {
@@ -31,17 +45,6 @@ const themeConfigs: ThemeConfig = {
     },
 };
 
-
-export const optionDoughnut = {
-    responsive: true,
-    plugins: {
-        tooltip: {
-            enabled: false,
-        },
-    },
-    cutout: '75%',
-};
-
 export const optionTwowayBar = {
     responsive: true,
     scales: {
@@ -61,21 +64,19 @@ export const optionTwowayBar = {
     plugins: {
         legend: {
             display: true,
-            position: 'left',
-            align: 'start',
         },
         tooltip: {
             backgroundColor: 'white',
             titleColor: 'black',
             bodyColor: 'black',
-            borderWidth: '1',
+            borderWidth: 1,
             borderColor: '#e7e7e7',
             bodyAlign: 'center' as const,
             titleAlign: 'center' as const,
             position: 'average' as const,
             yAlign: 'bottom' as const,
             callbacks: {
-                label: (context: any) => {
+                label: (context: TooltipItem<'bar'>) => {
                     const dataIndex = context.dataIndex;
                     const datasetIndex = context.datasetIndex;
                     if (datasetIndex === 0) {
@@ -94,6 +95,18 @@ export const optionTwowayBar = {
         },
     },
 };
+
+
+export const optionDoughnut = {
+    responsive: true,
+    plugins: {
+        tooltip: {
+            enabled: false,
+        },
+    },
+    cutout: '75%',
+};
+
 
 export const getThemeConfig = (theme: string): Theme => {
     return themeConfigs[theme as keyof ThemeConfig];

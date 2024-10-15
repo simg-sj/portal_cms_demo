@@ -1,10 +1,10 @@
 import { Doughnut } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartOptions } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend,ChartData, ChartOptions } from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface DoughnutChartProps {
-    data: any;
+    data: ChartData<'doughnut'>;
     options?: ChartOptions<'doughnut'>;
 }
 

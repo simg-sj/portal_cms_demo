@@ -83,7 +83,96 @@ td:last-child, th:last-child{
     }
 }
 
+@layer components {
+    @-webkit-keyframes flip-to-square {
+        0% {
+            -webkit-transform: rotateX(-90deg);
+            transform: rotateX(-90deg);
+        }
+        50%,
+        75% {
+            -webkit-transform: rotateX(0);
+            transform: rotateX(0);
+        }
+        100% {
+            opacity: 0;
+            -webkit-transform: rotateX(0);
+            transform: rotateX(0);
+        }
+    }
+    @keyframes flip-to-square {
+        0% {
+            -webkit-transform: rotateX(-90deg);
+            transform: rotateX(-90deg);
+        }
+        50%,
+        75% {
+            -webkit-transform: rotateX(0);
+            transform: rotateX(0);
+        }
+        100% {
+            opacity: 0;
+            -webkit-transform: rotateX(0);
+            transform: rotateX(0);
+        }
+    }
 
+    .flip-to-square {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        height: 70px;
+        width: 70px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+    }
+
+    .flip-to-square div {
+        -webkit-animation: flip-to-square 2.5s calc(var(--delay) * 2s) infinite backwards;
+        animation: flip-to-square 2.5s calc(var(--delay) * 2s) infinite backwards;
+        background-color: var(--color-main);
+        box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.41);
+    }
+
+    .flip-to-square div:nth-child(1) {
+        --delay: 0.01;
+    }
+
+    .flip-to-square div:nth-child(2) {
+        --delay: 0.02;
+    }
+
+    .flip-to-square div:nth-child(3) {
+        --delay: 0.03;
+    }
+
+    .flip-to-square div:nth-child(4) {
+        --delay: 0.04;
+    }
+
+    .flip-to-square div:nth-child(5) {
+        --delay: 0.05;
+    }
+
+    .flip-to-square div:nth-child(6) {
+        --delay: 0.06;
+    }
+
+    .flip-to-square div:nth-child(7) {
+        --delay: 0.07;
+    }
+
+    .flip-to-square div:nth-child(8) {
+        --delay: 0.8;
+    }
+
+    .flip-to-square div:nth-child(9) {
+        --delay: 0.9;
+    }
+}
 
 /*반응형 CSS*/
 @media (max-width: 1800px) {
