@@ -1,31 +1,20 @@
 'use client'
 import Button from "@/app/components/common/ui/button";
 import Plus from "@/assets/images/icon/plus-icon.png";
-<<<<<<< HEAD
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import YearMonthPicker from "@/app/components/common/ui/yearMonthPicker";
-=======
-import Download from "@/assets/images/icon/download-icon.png";
-import React, {useEffect, useState} from "react";
-import YearMonthPicker from "@/app/components/common/YearMonthPicker";
->>>>>>> main
 import "react-datepicker/dist/react-datepicker.css";
 import {initialCounselData, changeCounselData, monthAccidentData} from "@/config/data";
 import DoughnutChart from "@/app/components/chart/DoughnutChart";
-<<<<<<< HEAD
 import FormatNumber from "@/app/components/common/ui/formatNumber";
 import EditableField from "@/app/components/common/ui/editField";
-import {optionDoughnut} from "@/config/themeConfig";
-=======
-import BarTwowayChart from "@/app/components/chart/BarTwowayChart";
-import FormatNumber from "@/app/components/common/formatNumber";
-import EditableField from "@/app/components/common/EditField";
->>>>>>> main
 import useInputChange from "@/app/lib/customHook/inputChange";
-import Tab from "@/app/components/common/tab";
-import {optionDoughnut, optionTwowayBar} from "@/config/themeConfig";
+import Tab from "@/app/components/common/ui/tab";
+import {optionHiparkingDoughnut, optionHiparkingTwowayBar} from "@/config/themeConfig";
 import Image from "next/image";
 import BarHorizonChart from "@/app/components/chart/BarHorizonChart";
+import BarTwowayChart from "@/app/components/chart/BarTwowayChart";
+import Download from '@/assets/images/icon/excel-icon.png';
 
 interface DataState {
     counselData: CounselData[];
@@ -35,11 +24,13 @@ interface DataState {
 const topCounselData = {
     labels: ['정곡빌딩', '부산 사학연금', '청주성모병원', '서울스퀘어', '일산국립암센터'],
     values: [2535000, 2282000, 1650000, 1609000, 1150000],
+    color : '#4a7ff7'
 };
 
 const topBusinessData = {
     labels: ['F1963 1 주차장', '가든호텔', '그랜드하얏인천', '그레이츠판교', '명지병원'],
     values: [4, 3, 3, 2, 1],
+    color : '#4a7ff7'
 };
 
 
@@ -113,13 +104,13 @@ export default function Page() {
         {
             label: '지급보험금',
             content: (
-                <BarHorizonChart data={topCounselData} bgClass={'#4a7ff7'}/>
+                <BarHorizonChart data={topCounselData} />
             ),
         },
         {
             label: '사고발생업소',
             content: (
-                <BarHorizonChart data={topBusinessData} bgClass={'#4a7ff7'}/>
+                <BarHorizonChart data={topBusinessData} />
             ),
         },
     ]
@@ -132,7 +123,7 @@ export default function Page() {
                 <div className={'flex'}>
                     <div className={'w-[200px] mr-16'}>
                         <div className={'relative'}>
-                            <DoughnutChart data={dataDoughnut} options={optionDoughnut}></DoughnutChart>
+                            <DoughnutChart data={dataDoughnut} options={optionHiparkingDoughnut}></DoughnutChart>
                             <div
                                 className={'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center'}>
                                 <div className={'text-gray-600 mb-1'}>손해율</div>
@@ -224,7 +215,7 @@ export default function Page() {
                 <div className={'text-xl font-light mb-6'}>계약변경현황</div>
                 <div className={'flex'}>
                     <div className={'w-[1000px] mr-16'}>
-                        <BarTwowayChart data={dataTwowayBar} options={optionTwowayBar}/>
+                        <BarTwowayChart data={dataTwowayBar} options={optionHiparkingTwowayBar}/>
                     </div>
                     <div className={'w-full'}>
                         <div className={"flex justify-end mb-4 text-xl"}>

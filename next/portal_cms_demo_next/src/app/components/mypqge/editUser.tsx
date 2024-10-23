@@ -1,4 +1,4 @@
-import EditableField from "@/app/components/common/EditField";
+import EditableField from "@/app/components/common/ui/editField";
 import React from "react";
 import useInputChange from "@/app/lib/customHook/inputChange";
 

@@ -6,11 +6,7 @@ import {
     BarElement,
     Title,
     Tooltip,
-<<<<<<< HEAD
     Legend, ChartOptions, ChartData,
-=======
-    Legend, ChartData, ChartOptions,
->>>>>>> main
 } from 'chart.js';
 import {Bar} from 'react-chartjs-2';
 

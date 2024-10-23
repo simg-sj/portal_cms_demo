@@ -40,7 +40,6 @@ interface ButtonConfig {
 
 
 export default function Page() {
-<<<<<<< HEAD
     const [isOpen, setIsOpen] = useState(false);
 
     const openPopup = () => {
@@ -71,12 +70,9 @@ export default function Page() {
     ];
 
     const [data, setData] = useState<DataState>({
-=======
-    const data :DataState = {
->>>>>>> main
         counselData: initialCounselData,
         changeData: changeCounselData,
-    };
+    });
     const initialData = {
         counselData: [{name: '', age: ''}],
         changeData: [{status: ''}]
@@ -138,27 +134,19 @@ export default function Page() {
         {
             label: '지급보험금',
             content: (
-<<<<<<< HEAD
                 <>
                     <div className={'my-5 font-medium text-lg'}>지급보험금 TOP 5</div>
                     <BarHorizonChart data={topCounselData} options={optionHiparkingBarHorizon}/>
                 </>
-=======
-                <BarHorizonChart data={topCounselData} bgClass={'#fcd174'}/>
->>>>>>> main
             ),
         },
         {
             label: '사고발생업소',
             content: (
-<<<<<<< HEAD
                 <>
                     <div className={'my-5 font-medium text-lg'}>사고발생업소 TOP 5</div>
                     <BarHorizonChart data={topBusinessData}/>
                 </>
-=======
-                <BarHorizonChart data={topBusinessData} bgClass={'#fcd174'}/>
->>>>>>> main
             ),
         },
     ]
