@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import FormatNumber from "@/app/components/common/formatNumber";
+import FormatNumber from "@/app/components/common/ui/formatNumber";
 import EditIcon from "@/assets/images/icon/edit-icon.png";
 import CheckIcon from "@/assets/images/icon/check-icon.png";
 import Image from 'next/image';

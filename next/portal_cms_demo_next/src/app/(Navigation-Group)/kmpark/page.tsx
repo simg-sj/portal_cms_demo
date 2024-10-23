@@ -1,13 +1,13 @@
 'use client'
-import Button from "@/app/components/common/button";
+import Button from "@/app/components/common/ui/button";
 import Plus from "@/assets/images/icon/plus-icon.png";
 import React, {useState} from "react";
-import YearMonthPicker from "@/app/components/common/YearMonthPicker";
+import YearMonthPicker from "@/app/components/common/ui/yearMonthPicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {initialCounselData, changeCounselData} from "@/config/data";
 import DoughnutChart from "@/app/components/chart/DoughnutChart";
-import FormatNumber from "@/app/components/common/formatNumber";
-import EditableField from "@/app/components/common/EditField";
+import FormatNumber from "@/app/components/common/ui/formatNumber";
+import EditableField from "@/app/components/common/ui/editField";
 import {optionDoughnut} from "@/config/themeConfig";
 import useInputChange from "@/app/lib/customHook/inputChange";
 import Image from "next/image";
