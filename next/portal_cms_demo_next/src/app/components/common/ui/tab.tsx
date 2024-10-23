@@ -7,7 +7,7 @@ interface TabProps {
     }[];
 }
 
-const Tab = ({ tabs }: TabProps) => {
+const Tab = ({ tabs }: TabProps | undefined) => {
     const [activeTab, setActiveTab] = useState(0);
 
     return (

@@ -40,6 +40,7 @@ interface ButtonConfig {
 
 
 export default function Page() {
+<<<<<<< HEAD
     const [isOpen, setIsOpen] = useState(false);
 
     const openPopup = () => {
@@ -70,14 +71,17 @@ export default function Page() {
     ];
 
     const [data, setData] = useState<DataState>({
+=======
+    const data :DataState = {
+>>>>>>> main
         counselData: initialCounselData,
         changeData: changeCounselData,
-    });
+    };
     const initialData = {
         counselData: [{name: '', age: ''}],
         changeData: [{status: ''}]
     }
-    const {param, handleInputChange} = useInputChange(initialData);
+    const {handleInputChange} = useInputChange(initialData);
 
     //도넛 차트
     const doughnutValue = data.counselData[0].lossRatio
@@ -134,19 +138,27 @@ export default function Page() {
         {
             label: '지급보험금',
             content: (
+<<<<<<< HEAD
                 <>
                     <div className={'my-5 font-medium text-lg'}>지급보험금 TOP 5</div>
                     <BarHorizonChart data={topCounselData} options={optionHiparkingBarHorizon}/>
                 </>
+=======
+                <BarHorizonChart data={topCounselData} bgClass={'#fcd174'}/>
+>>>>>>> main
             ),
         },
         {
             label: '사고발생업소',
             content: (
+<<<<<<< HEAD
                 <>
                     <div className={'my-5 font-medium text-lg'}>사고발생업소 TOP 5</div>
                     <BarHorizonChart data={topBusinessData}/>
                 </>
+=======
+                <BarHorizonChart data={topBusinessData} bgClass={'#fcd174'}/>
+>>>>>>> main
             ),
         },
     ]
@@ -218,24 +230,28 @@ export default function Page() {
                                         <td>{counsel.bCount}</td>
                                         <td className={'text-right'}>
                                             <EditableField
+                                                type={'number'}
                                                 value={counsel.estimateAmt}
                                                 onChange={(value) => handleInputChange(index, 'estimateAmt', value)}
                                             />
                                         </td>
                                         <td className={'text-right'}>
                                             <EditableField
+                                                type={'number'}
                                                 value={counsel.repairAmt}
                                                 onChange={(value) => handleInputChange(index, 'repairAmt', value)}
                                             />
                                         </td>
                                         <td className={'text-right'}>
                                             <EditableField
+                                                type={'number'}
                                                 value={counsel.total}
                                                 onChange={(value) => handleInputChange(index, 'total', value)}
                                             />
                                         </td>
                                         <td className={'text-right'}>
                                             <EditableField
+                                                type={'number'}
                                                 value={counsel.closingAmt}
                                                 onChange={(value) => handleInputChange(index, 'closingAmt', value)}
                                             />
@@ -303,24 +319,28 @@ export default function Page() {
                                         <td>{changeData.pNo}</td>
                                         <td>
                                             <EditableField
+                                                type={'number'}
                                                 value={changeData.pAdd}
                                                 onChange={(value) => handleInputChange(index, 'pAdd', value)}
                                             />
                                         </td>
                                         <td>
                                             <EditableField
+                                                type={'number'}
                                                 value={changeData.pEnd}
                                                 onChange={(value) => handleInputChange(index, 'pEnd', value)}
                                             />
                                         </td>
                                         <td className={'text-right'}>
                                             <EditableField
+                                                type={'number'}
                                                 value={changeData.AddAmt}
                                                 onChange={(value) => handleInputChange(index, 'AddAmt', value)}
                                             />
                                         </td>
                                         <td className={'text-right'}>
                                             <EditableField
+                                                type={'number'}
                                                 value={changeData.EndAmt}
                                                 onChange={(value) => handleInputChange(index, 'EndAmt', value)}
                                             />

@@ -1,3 +1,5 @@
+
+
 export const initialCounselData: CounselData[] = [
     {
         pNo: "FA20235204423000",
@@ -151,6 +153,7 @@ export const monthAccidentData: MonthAccidentData[] = [
     },
 ]
 
+<<<<<<< HEAD
 export const topCounselData = {
     labels: ['정곡빌딩', '부산 사학연금', '청주성모병원', '서울스퀘어', '일산국립암센터'],
     values: [2535000, 2282000, 1650000, 1609000, 1150000],
@@ -374,3 +377,5 @@ export const listData: ListData[] = [
         vCarNum: "18바5214",
     },
 ]
+=======
+>>>>>>> main

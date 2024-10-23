@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-10-02 15:41:12
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-10-04 15:31:22
+ * @LastEditTime: 2024-10-15 15:47:37
  * @FilePath: portal_cms_demo_next/common.d.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -41,25 +41,13 @@ interface ThemeConfig {
     };
 }
 
-declare module "next-auth" {
-    import {DefaultSession} from "@auth/core/types";
-    import { JWT } from "next-auth/jwt"
-    interface Session {
-        user: {
-            id: string
-            name: string
-            email : string
-            platform: string
-        } & DefaultSession["user"]
-    }
-}
-
-declare module "next-auth/jwt" {
-    interface JWT {
-        platform : string;
-        id: string
-        role: string
-        name : string
-        email : string
-    }
+interface UserType {
+    auth: string | null;
+    name: string | null;
+    platform: string | null;
+    password?: string;
+    userId: string;
+    email: string | null;
+    phone: string | null;
+    work: string | null;
 }

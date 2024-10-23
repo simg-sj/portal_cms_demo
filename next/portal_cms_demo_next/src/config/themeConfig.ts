@@ -4,7 +4,10 @@ import KmparkLogo from '@/assets/images/logo/kmpark-logo.svg'
 import {changeCounselData} from "@/config/data";
 import {StaticImageData} from "next/image";
 import {TooltipItem } from 'chart.js';
+<<<<<<< HEAD
 import {Context} from "chartjs-plugin-datalabels";
+=======
+>>>>>>> main
 
 
 interface Theme {
@@ -46,6 +49,7 @@ const themeConfigs: ThemeConfig = {
     },
 };
 
+<<<<<<< HEAD
 
 export const getThemeConfig = (theme: string): Theme => {
     return themeConfigs[theme as keyof ThemeConfig];
@@ -55,6 +59,9 @@ export const availableThemes = Object.keys(themeConfigs);
 
 //그래프옵션
 export const optionHiparkingTwowayBar = {
+=======
+export const optionTwowayBar = {
+>>>>>>> main
     responsive: true,
     scales: {
         x: {
@@ -105,6 +112,7 @@ export const optionHiparkingTwowayBar = {
     },
 };
 
+<<<<<<< HEAD
 export const optionHiparkingBarHorizon = {
     indexAxis: 'y' as const,
     responsive: true,
@@ -112,10 +120,17 @@ export const optionHiparkingBarHorizon = {
         legend: {
             display: false,
         },
+=======
+
+export const optionDoughnut = {
+    responsive: true,
+    plugins: {
+>>>>>>> main
         tooltip: {
             enabled: false,
         },
     },
+<<<<<<< HEAD
     scales: {
         x: {
             beginAtZero: true,
@@ -142,6 +157,14 @@ export const optionHiparkingBarHorizon = {
             right: 60,
         },
     },
+=======
+    cutout: '75%',
+};
+
+
+export const getThemeConfig = (theme: string): Theme => {
+    return themeConfigs[theme as keyof ThemeConfig];
+>>>>>>> main
 };
 
 

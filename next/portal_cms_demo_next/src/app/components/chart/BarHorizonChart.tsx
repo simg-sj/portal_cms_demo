@@ -12,26 +12,41 @@ interface ChartData {
 
 interface BarHorizonChartProps {
     data: ChartData;
+<<<<<<< HEAD
     options?: ChartOptions<'bar'>;
 }
 
 
 const BarHorizonChart = ({data, options}: BarHorizonChartProps) => {
+=======
+    bgClass : string;
+}
+
+const BarHorizonChart = ({ data, bgClass }: BarHorizonChartProps) => {
+>>>>>>> main
     const chartData = {
         labels: data.labels,
         datasets: [
             {
                 data: data.values,
+<<<<<<< HEAD
                 backgroundColor: data.color,
                 barThickness: 30,
                 categoryPercentage: 0.5,
+=======
+                backgroundColor: bgClass,
+>>>>>>> main
             },
         ],
     };
 
     const plugins = [{
         id: 'valueLabels',
+<<<<<<< HEAD
         afterDraw: (chart: Chart<'bar'>) => {
+=======
+        afterDraw: (chart: ChartJS) => {
+>>>>>>> main
             const ctx = chart.ctx;
             const dataset = chart.data.datasets[0];
             if (!dataset) return;

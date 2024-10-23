@@ -1,44 +1,128 @@
 'use client'
 import Button from "@/app/components/common/ui/button";
 import Plus from "@/assets/images/icon/plus-icon.png";
+<<<<<<< HEAD
 import React, {useState} from "react";
 import YearMonthPicker from "@/app/components/common/ui/yearMonthPicker";
+=======
+import Download from "@/assets/images/icon/download-icon.png";
+import React, {useEffect, useState} from "react";
+import YearMonthPicker from "@/app/components/common/YearMonthPicker";
+>>>>>>> main
 import "react-datepicker/dist/react-datepicker.css";
-import {initialCounselData, changeCounselData} from "@/config/data";
+import {initialCounselData, changeCounselData, monthAccidentData} from "@/config/data";
 import DoughnutChart from "@/app/components/chart/DoughnutChart";
+<<<<<<< HEAD
 import FormatNumber from "@/app/components/common/ui/formatNumber";
 import EditableField from "@/app/components/common/ui/editField";
 import {optionDoughnut} from "@/config/themeConfig";
+=======
+import BarTwowayChart from "@/app/components/chart/BarTwowayChart";
+import FormatNumber from "@/app/components/common/formatNumber";
+import EditableField from "@/app/components/common/EditField";
+>>>>>>> main
 import useInputChange from "@/app/lib/customHook/inputChange";
+import Tab from "@/app/components/common/tab";
+import {optionDoughnut, optionTwowayBar} from "@/config/themeConfig";
 import Image from "next/image";
+import BarHorizonChart from "@/app/components/chart/BarHorizonChart";
 
 interface DataState {
     counselData: CounselData[];
     changeData: ChangeCounselData[];
 };
 
+const topCounselData = {
+    labels: ['정곡빌딩', '부산 사학연금', '청주성모병원', '서울스퀘어', '일산국립암센터'],
+    values: [2535000, 2282000, 1650000, 1609000, 1150000],
+};
+
+const topBusinessData = {
+    labels: ['F1963 1 주차장', '가든호텔', '그랜드하얏인천', '그레이츠판교', '명지병원'],
+    values: [4, 3, 3, 2, 1],
+};
+
+
 export default function Page() {
-    const [data, setData] = useState<DataState>({
+    const data : DataState = {
         counselData: initialCounselData,
         changeData: changeCounselData,
-    });
-    const initialData = {
-        counselData: [{ name: '', age: '' }],
-        changeData: [{ status: '' }],
     };
-    const { param , handleInputChange } = useInputChange(initialData);
+    const initialData = {
+        counselData: [{name: '', age: ''}],
+        changeData: [{status: ''}]
+    }
+    const { handleInputChange} = useInputChange(initialData);
+
+    //기간 시작일, 종료일 조건지정
+    const [startDate, setStartDate] = useState<Date | null>(null);
+    const [endDate, setEndDate] = useState<Date | null>(null);
 
 
-    //도넛차트
-    const value = data.counselData[0].lossRatio
+    const handleStartDateChange = (date: Date | null) => {
+        setStartDate(date);
+        if (date && endDate && date > endDate) {
+            setEndDate(null);
+        }
+    };
+
+    const handleEndDateChange = (date: Date | null) => {
+        setEndDate(date);
+        if (date && startDate && date < startDate) {
+            setStartDate(null);
+        }
+    };
+
+    //기간 3개월단위
+    useEffect(() => {
+        const threeMonthsAgo = new Date(new Date().getFullYear(), new Date().getMonth() - 2, 1);
+        setStartDate(threeMonthsAgo);
+        setEndDate(new Date());
+    }, []);
+
+    //도넛 차트
+    const doughnutValue = data.counselData[0].lossRatio
     const dataDoughnut = {
         datasets: [
             {
-                data: [value, 100 - value],
+                data: [doughnutValue, 100 - doughnutValue],
                 backgroundColor: ["#4a7ff7", "#eeeeee"],
             },
         ],
     };
+
+    //양방향 막대차트
+    const dataTwowayBar = {
+        labels: changeCounselData.map((d) => d.cDay),
+        datasets: [
+            {
+                label: '추가',
+                data: changeCounselData.map((d) => d.pAdd),
+                backgroundColor: '#4a7ff7',
+            },
+            {
+                label: '종료',
+                data: changeCounselData.map((d) => -d.pEnd),
+                backgroundColor: '#4a7ff7',
+            },
+        ],
+    };
+
+    //tab
+    const tabs = [
+        {
+            label: '지급보험금',
+            content: (
+                <BarHorizonChart data={topCounselData} bgClass={'#4a7ff7'}/>
+            ),
+        },
+        {
+            label: '사고발생업소',
+            content: (
+                <BarHorizonChart data={topBusinessData} bgClass={'#4a7ff7'}/>
+            ),
+        },
+    ]
 
     return (
         <>
@@ -52,7 +136,7 @@ export default function Page() {
                             <div
                                 className={'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center'}>
                                 <div className={'text-gray-600 mb-1'}>손해율</div>
-                                <div className={'text-3xl font-semibold'}>{value} %</div>
+                                <div className={'text-3xl font-semibold'}>{doughnutValue} %</div>
                             </div>
                         </div>
                         <div className={'mt-4 text-right'}>
@@ -99,24 +183,28 @@ export default function Page() {
                                         <td>{counsel.bCount}</td>
                                         <td className={'text-right'}>
                                             <EditableField
+                                                type={'number'}
                                                 value={counsel.estimateAmt}
                                                 onChange={(value) => handleInputChange(index, 'estimateAmt', value)}
                                             />
                                         </td>
                                         <td className={'text-right'}>
                                             <EditableField
+                                                type={'number'}
                                                 value={counsel.repairAmt}
                                                 onChange={(value) => handleInputChange(index, 'repairAmt', value)}
                                             />
                                         </td>
                                         <td className={'text-right'}>
                                             <EditableField
+                                                type={'number'}
                                                 value={counsel.total}
                                                 onChange={(value) => handleInputChange(index, 'total', value)}
                                             />
                                         </td>
                                         <td className={'text-right'}>
                                             <EditableField
+                                                type={'number'}
                                                 value={counsel.closingAmt}
                                                 onChange={(value) => handleInputChange(index, 'closingAmt', value)}
                                             />
@@ -136,11 +224,23 @@ export default function Page() {
                 <div className={'text-xl font-light mb-6'}>계약변경현황</div>
                 <div className={'flex'}>
                     <div className={'w-[1000px] mr-16'}>
-                        그래프
+                        <BarTwowayChart data={dataTwowayBar} options={optionTwowayBar}/>
                     </div>
                     <div className={'w-full'}>
-                        <div className={"flex justify-between mb-4"}>
-                            <YearMonthPicker />
+                        <div className={"flex justify-end mb-4 text-xl"}>
+                            <YearMonthPicker
+                                maxDate={endDate || new Date()}
+                                minDate={undefined}
+                                selected={startDate}
+                                onChange={handleStartDateChange}
+                            />
+                            <div className={'font-bold'}>~</div>
+                            <YearMonthPicker
+                                maxDate={new Date()}
+                                minDate={startDate || undefined}
+                                selected={endDate}
+                                onChange={handleEndDateChange}
+                            />
                         </div>
                         <div className={'max-h-[260px] overflow-y-auto'}>
                             <table className={'w-full relative'}>
@@ -177,24 +277,28 @@ export default function Page() {
                                         <td>{changeData.pNo}</td>
                                         <td>
                                             <EditableField
+                                                type={'number'}
                                                 value={changeData.pAdd}
                                                 onChange={(value) => handleInputChange(index, 'pAdd', value)}
                                             />
                                         </td>
                                         <td>
                                             <EditableField
+                                                type={'number'}
                                                 value={changeData.pEnd}
                                                 onChange={(value) => handleInputChange(index, 'pEnd', value)}
                                             />
                                         </td>
                                         <td className={'text-right'}>
                                             <EditableField
+                                                type={'number'}
                                                 value={changeData.AddAmt}
                                                 onChange={(value) => handleInputChange(index, 'AddAmt', value)}
                                             />
                                         </td>
                                         <td className={'text-right'}>
                                             <EditableField
+                                                type={'number'}
                                                 value={changeData.EndAmt}
                                                 onChange={(value) => handleInputChange(index, 'EndAmt', value)}
                                             />
@@ -203,6 +307,123 @@ export default function Page() {
                                 ))}
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className={'flex'}>
+                <div className={'px-8 py-6 bg-white rounded-xl my-5 w-1/4'}>
+                    <div className={'flex justify-between'}>
+                        <div className={'text-xl font-light mb-6'}>Top 5</div>
+                        <div className={"flex justify-end mb-4 text-xl"}>
+                            <YearMonthPicker
+                                maxDate={endDate || new Date()}
+                                minDate={undefined}
+                                selected={startDate}
+                                onChange={handleStartDateChange}
+                            />
+                            <div className={'font-bold'}>~</div>
+                            <YearMonthPicker
+                                maxDate={new Date()}
+                                minDate={startDate || undefined}
+                                selected={endDate}
+                                onChange={handleEndDateChange}
+                            />
+                        </div>
+                    </div>
+                    <Tab tabs={tabs}/>
+                </div>
+
+                <div className={'px-8 py-6 bg-white rounded-xl my-5 w-1/4 mx-8'}>
+                    <div>
+                        <div className={'text-xl font-light mb-6'}>월 누적</div>
+                        <div className={'flex justify-between'}>
+                            <div className={'w-3/5'}>
+                                <div className={'flex justify-between'}>
+                                    <div className={'text-gray-700'}>지급보험금</div>
+                                    <div className={'text-blue-500 font-medium'}>+ 23%</div>
+                                </div>
+                                <div className={'text-3xl font-bold mt-2 text-end'}>168,178,432 <span
+                                    className={'text-xl font-semibold'}>원</span></div>
+                            </div>
+
+                        </div>
+                        <div className={'flex justify-between mt-10'}>
+                            <div className={'w-3/5'}>
+                                <div className={'flex justify-between'}>
+                                    <div className={'text-gray-700'}>사고접수</div>
+                                    <div className={'text-red-500 font-medium'}>- 10%</div>
+                                </div>
+                                <div className={'text-3xl font-bold mt-2 text-end'}>7 <span
+                                    className={'text-xl font-semibold'}>건</span></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div className={'px-8 py-6 bg-white rounded-xl my-5 w-2/4'}>
+                    <div>
+                        <div className={'flex justify-between'}>
+                            <div className={'text-xl font-light mb-6'}>월별 사고접수현황</div>
+                            <div className={"flex justify-end mb-4 text-xl"}>
+                                <YearMonthPicker
+                                    maxDate={endDate || new Date()}
+                                    minDate={undefined}
+                                    selected={startDate}
+                                    onChange={handleStartDateChange}
+                                />
+                                <div className={'font-bold'}>~</div>
+                                <YearMonthPicker
+                                    maxDate={new Date()}
+                                    minDate={startDate || undefined}
+                                    selected={endDate}
+                                    onChange={handleEndDateChange}
+                                />
+                            </div>
+                        </div>
+                        <div className={'w-full'}>
+                            <div className={"flex justify-end mb-4"}>
+                                <Button color={"green"} fill height={36} width={120}>
+                                    <Image src={Download.src} alt={'다운로드'} width={16} height={16} className={'mr-2'}/>
+                                    엑셀다운
+                                </Button>
+                            </div>
+                            <div className={'max-h-[205px] overflow-y-auto'}>
+                                <table className={'w-full relative'}>
+                                    <colgroup>
+                                        <col style={{width: ""}}/>
+                                        <col style={{width: ""}}/>
+                                        <col style={{width: ""}}/>
+                                        <col style={{width: ""}}/>
+                                        <col style={{width: ""}}/>
+                                        <col style={{width: ""}}/>
+                                    </colgroup>
+                                    <thead className={'sticky left-0 top-0'}>
+                                    <tr>
+                                        <th>변경일</th>
+                                        <th>접수건수</th>
+                                        <th>종결건수</th>
+                                        <th>보험금</th>
+                                        <th>면책건수</th>
+                                        <th>미결건수</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {monthAccidentData.map((month, index) => (
+                                        <tr key={index}>
+                                            <td>{month.changeDay}</td>
+                                            <td>{month.acceptNum}</td>
+                                            <td>{month.endNum}</td>
+                                            <td>{month.counselConst}</td>
+                                            <td>{month.disclaimerNum}</td>
+                                            <td>{month.suspense}</td>
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
