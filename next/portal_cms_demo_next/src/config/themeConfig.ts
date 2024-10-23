@@ -4,6 +4,10 @@ import KmparkLogo from '@/assets/images/logo/kmpark-logo.svg'
 import {changeCounselData} from "@/config/data";
 import {StaticImageData} from "next/image";
 import {TooltipItem } from 'chart.js';
+<<<<<<< HEAD
+import {Context} from "chartjs-plugin-datalabels";
+=======
+>>>>>>> main
 
 
 interface Theme {
@@ -45,7 +49,19 @@ const themeConfigs: ThemeConfig = {
     },
 };
 
+<<<<<<< HEAD
+
+export const getThemeConfig = (theme: string): Theme => {
+    return themeConfigs[theme as keyof ThemeConfig];
+};
+
+export const availableThemes = Object.keys(themeConfigs);
+
+//그래프옵션
+export const optionHiparkingTwowayBar = {
+=======
 export const optionTwowayBar = {
+>>>>>>> main
     responsive: true,
     scales: {
         x: {
@@ -96,8 +112,63 @@ export const optionTwowayBar = {
     },
 };
 
+<<<<<<< HEAD
+export const optionHiparkingBarHorizon = {
+    indexAxis: 'y' as const,
+    responsive: true,
+    plugins: {
+        legend: {
+            display: false,
+        },
+=======
 
 export const optionDoughnut = {
+    responsive: true,
+    plugins: {
+>>>>>>> main
+        tooltip: {
+            enabled: false,
+        },
+    },
+<<<<<<< HEAD
+    scales: {
+        x: {
+            beginAtZero: true,
+            grid: {
+                display: false,
+            },
+            ticks: {
+                display: false,
+            },
+        },
+        y: {
+            grid: {
+                display: false,
+            },
+            ticks: {
+                font: {
+                    size: 15,
+                },
+            },
+        },
+    },
+    layout: {
+        padding: {
+            right: 60,
+        },
+    },
+=======
+    cutout: '75%',
+};
+
+
+export const getThemeConfig = (theme: string): Theme => {
+    return themeConfigs[theme as keyof ThemeConfig];
+>>>>>>> main
+};
+
+
+export const optionHiparkingDoughnut = {
     responsive: true,
     plugins: {
         tooltip: {
@@ -107,9 +178,38 @@ export const optionDoughnut = {
     cutout: '75%',
 };
 
-
-export const getThemeConfig = (theme: string): Theme => {
-    return themeConfigs[theme as keyof ThemeConfig];
+export const optionHiparkingPie = {
+    plugins: {
+        legend: {
+            display: false,
+        },
+        tooltip: {
+            backgroundColor: 'white',
+            titleColor: 'black',
+            bodyColor: 'black',
+            borderWidth: 1,
+            borderColor: '#e7e7e7',
+            bodyAlign: 'center',
+            titleAlign: 'center',
+            position: 'nearest',
+            yAlign: 'bottom',
+        },
+        datalabels: {
+            formatter: function (value: number, context: Context) {
+                const dataset = context.chart.data.datasets[0];
+                const total = dataset.data.reduce((acc: number, val: unknown) => acc + (typeof val === 'number' ? val : 0), 0);
+                if (total === 0) return '0%';
+                const percentage = ((value / total) * 100).toFixed(0) + "%";
+                return percentage;
+            },
+            color: '#fff',
+            anchor: 'center',
+            align: 'center',
+            font: {
+                size: 15,
+                weight: 'normal',
+            },
+        },
+    },
+    responsive: false,
 };
-
-export const availableThemes = Object.keys(themeConfigs);

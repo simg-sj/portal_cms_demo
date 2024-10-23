@@ -3,36 +3,52 @@
 @tailwind utilities;
 
 
-/*테이블스타일*/
+/* ---------------------------------------
+    테이블 table
+   ---------------------------------------
+*/
 thead th, thead td{
     padding: 16px 20px;
-    background: #f5f5f5;
+    background: #fafafa;
 }
-thead tr:first-child th:first-child{
-    border-top-left-radius: 10px;
+thead tr{
+    border-bottom: 0px;
 }
-thead tr:first-child th:last-child{
-    border-top-right-radius: 10px;
-}
-thead tr:last-child{
-    border-bottom: 2px solid #d0d0d0;
-}
+
 tbody th, tbody td {
     padding: 8px 20px;
     text-align: center;
 }
 tr {
-    border-bottom: 1px solid #d0d0d0;
+    border-bottom: 1px solid #e1e1e1;
     height: 48px;
 }
-tr th, tr td {
-    border-right: 1px solid #d0d0d0;
-}
-td:last-child, th:last-child{
-    border-right: 0;
+tbody tr:last-child {
+    border: 0;
 }
 
-/*날짜테마*/
+.colTable {
+    width: 100%;
+}
+
+.colTable tbody th, .colTable tbody td {
+    padding: 10px 20px;
+    text-align: left;
+}
+
+.colTable tbody th {
+    background: #fafafa;
+    font-weight: 600;
+}
+
+.colTable tr {
+    height: 50px;
+}
+
+/* ---------------------------------------
+    날짜 Datepicker
+   ---------------------------------------
+*/
 .react-datepicker__input-container > input {
     border: 0;
     font-size: large;
@@ -83,6 +99,62 @@ td:last-child, th:last-child{
     }
 }
 
+<<<<<<< HEAD
+/* ---------------------------------------
+    페이지 넘버 pagination
+   ---------------------------------------
+*/
+.pagenumBox {
+    text-align: center;
+}
+
+.page_num {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.page_num li {
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    line-height: 40px;
+    color: #494949;
+    border-radius: 50%;
+    border: 1px solid #e8e8e8;
+    overflow: hidden;
+    vertical-align: middle;
+    font-weight: 600;
+    margin: 0 3px;
+}
+
+.page_num li:first-child {
+    opacity: 0.6;
+}
+
+.page_num li:last-child {
+    opacity: 0.6;
+}
+
+.page_num li:hover {
+    background-color: #f1f1f1;
+}
+
+.page_num .selected {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    border-color: var(--color-main);
+    color: #fff;
+    background: var(--color-main);
+}
+
+.page_num li a {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+}
+=======
 @layer components {
     @-webkit-keyframes flip-to-square {
         0% {
@@ -116,6 +188,7 @@ td:last-child, th:last-child{
             transform: rotateX(0);
         }
     }
+>>>>>>> main
 
     .flip-to-square {
         display: grid;
@@ -174,7 +247,11 @@ td:last-child, th:last-child{
     }
 }
 
-/*반응형 CSS*/
+
+/* ---------------------------------------
+    반응형 CSS
+   ---------------------------------------
+*/
 @media (max-width: 1800px) {
 }
 @media (max-width: 1300px) {

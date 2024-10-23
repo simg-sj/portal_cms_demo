@@ -9,10 +9,15 @@ import DashboardIcon from "@/assets/images/icon/dashboard-icon.png";
 import ListIcon from "@/assets/images/icon/list-icon.png";
 import UserIcon from "@/assets/images/icon/user-icon.png";
 import MenuItem from "@/app/components/common/MenuItem";
-import Image from "next/image";
+import Image, {StaticImageData} from "next/image";
 import {useSession} from "next-auth/react";
 import {signOutWithForm} from "@/app/lib/action/auth";
 import Loading from "@/app/(Navigation-Group)/loading";
+
+interface Theme {
+    logoSrc: StaticImageData;
+    menuItems: MenuItems;
+}
 
 export default function Navigation() {
     const segment = useSelectedLayoutSegment();
@@ -20,8 +25,8 @@ export default function Navigation() {
     const [themeConfig, setThemeConfig] = useState<Theme | null>(null);
     const [activeLink, setActiveLink] = useState<string | null>(null);
     useEffect(() => {
-        if (data) {
-            const {platform} = data.user;
+        if (data && data.user) {
+            const { platform } = data.user; // data.user가 존재하는지 확인
             const config = getThemeConfig(platform);
             setThemeConfig(config);
             document.documentElement.setAttribute('data-theme', platform);
@@ -56,7 +61,7 @@ export default function Navigation() {
     };
 
     return (
-        <div className="bg-main h-screen fixed w-[100px] p-3 flex flex-col justify-between">
+        <div className="bg-main h-screen fixed w-[100px] p-3 flex flex-col justify-between z-50">
             <div>
                 <Image src={themeConfig.logoSrc} alt="업체로고" height={50} className="mt-5 mb-14" priority={true}/>
                 {menuItems.slice(0, -1).map((item, index) => (

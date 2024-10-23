@@ -4,14 +4,6 @@ interface MenuItems {
     mypage: string;
 }
 
-interface Theme {
-    logoSrc: StaticImageData;
-    menuItems: MenuItems;
-}
-
-interface ThemeConfig {
-    [key: string]: Theme;
-}
 
 interface MenuItemType {
     icon: StaticImageData;
@@ -38,6 +30,7 @@ interface CounselData{
     repairAmt: number;
     total: number;
     closingAmt: number;
+    repairCost: number;
     lossRatio: number;
 }
 
@@ -76,4 +69,21 @@ interface YearMonthPickerProps {
     minDate?: Date;
     selected: Date | null;
     onChange: (date: Date | null) => void;
+}
+
+interface DataState {
+    counselData: CounselData[];
+    changeData: ChangeCounselData[];
+};
+
+interface ListData {
+    ppk: number;
+    irpk: number;
+    createdYMD: string;
+    accidentDate: string;
+    closingAmt: number;
+    accidentLocation: string;
+    wName: string;
+    wCell: string;
+    vCarNum: string;
 }

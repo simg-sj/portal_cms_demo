@@ -6,9 +6,13 @@ import {
     BarElement,
     Title,
     Tooltip,
+<<<<<<< HEAD
+    Legend, ChartOptions, ChartData,
+=======
     Legend, ChartData, ChartOptions,
+>>>>>>> main
 } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
+import {Bar} from 'react-chartjs-2';
 
 ChartJS.register(
     CategoryScale,
@@ -20,14 +24,14 @@ ChartJS.register(
 );
 
 
-
 interface BarTwowayChartProps {
     data: ChartData<'bar'>;
     options?: ChartOptions<'bar'>;
 }
-const BarTwowayChart = ({ data, options }: BarTwowayChartProps) => {
 
-    return <Bar options={options} data={data} />;
+const BarTwowayChart = ({data, options}: BarTwowayChartProps) => {
+
+    return <Bar options={options} data={data}/>;
 };
 
 export default BarTwowayChart;
