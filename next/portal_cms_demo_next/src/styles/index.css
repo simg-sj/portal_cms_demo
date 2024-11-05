@@ -46,61 +46,6 @@ tbody tr:last-child {
 }
 
 /* ---------------------------------------
-    날짜 Datepicker
-   ---------------------------------------
-*/
-.react-datepicker__input-container > input {
-    border: 0;
-    font-size: large;
-    font-weight: 500;
-    width: 160px;
-    cursor: pointer;
-    background: none;
-}
-.react-datepicker__input-container > input[readonly] {
-    pointer-events: visible;
-}
-.react-datepicker__input-container > input:focus {
-    outline: none;
-}
-.react-datepicker-popper .react-datepicker{
-    font-family: Pretendard;
-    border: 0;
-    box-shadow: 0 3px 7px 1px rgb(0 0 0 / 0.1);
-    border-radius: 12px;
-    width: 180px;
-
-    .react-datepicker__header{
-        background: none;
-        border: 0;
-        padding: 14px;
-        color: var(--color-main);
-        font-size: medium;
-    }
-    .react-datepicker__navigation{
-        top: 9px;
-    }
-    .react-datepicker__month .react-datepicker__month-text{
-        width: 40px;
-        padding: 12px 4px;
-        margin: 2px 7px;
-        border-radius: 100px;
-    }
-    .react-datepicker__month-text:hover, .react-datepicker__month-text--keyboard-selected:hover{
-        background: var(--color-main-lighter);
-    }
-    .react-datepicker__month-text--keyboard-selected{
-        background: var(--color-main-lighter);
-        font-weight: bold;
-    }
-    .react-datepicker__month-text--today{
-        font-weight: normal;
-        background: #eeeeee;
-    }
-}
-
-<<<<<<< HEAD
-/* ---------------------------------------
     페이지 넘버 pagination
    ---------------------------------------
 */
@@ -154,7 +99,13 @@ tbody tr:last-child {
     width: 100%;
     height: 100%;
 }
-=======
+
+
+/* ---------------------------------------
+    로딩화면
+   ---------------------------------------
+*/
+
 @layer components {
     @-webkit-keyframes flip-to-square {
         0% {
@@ -188,7 +139,6 @@ tbody tr:last-child {
             transform: rotateX(0);
         }
     }
->>>>>>> main
 
     .flip-to-square {
         display: grid;
@@ -239,11 +189,11 @@ tbody tr:last-child {
     }
 
     .flip-to-square div:nth-child(8) {
-        --delay: 0.8;
+        --delay: 0.08;
     }
 
     .flip-to-square div:nth-child(9) {
-        --delay: 0.9;
+        --delay: 0.09;
     }
 }
 

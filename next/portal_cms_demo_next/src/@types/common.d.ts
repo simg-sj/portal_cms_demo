@@ -70,6 +70,10 @@ interface YearMonthPickerProps {
     selected: Date | null;
     onChange: (date: Date | null) => void;
 }
+interface DatePickerProps {
+    maxDate?: Date;
+    minDate?: Date;
+}
 
 interface DataState {
     counselData: CounselData[];
@@ -86,4 +90,50 @@ interface ListData {
     wName: string;
     wCell: string;
     vCarNum: string;
+}
+
+interface UserInfo {
+    userId: string;
+    password: string;
+}
+
+interface UserData {
+    userId: string;
+    password: string;
+    affiliation: string;
+}
+
+interface MenuItemType {
+    icon: string,
+    label: string,
+    link: string,
+}
+
+interface MenuItemProps extends MenuItemType {
+    isActive: boolean;
+}
+
+interface ThemeConfigs {
+    [key: string]: ThemeConfig;
+}
+
+
+interface ThemeConfig {
+    logoSrc: string;
+    menuItems: {
+        dashboard?: string;
+        list?: string;
+        mypage: string;
+    };
+}
+
+interface UserType {
+    auth: string | null;
+    name: string | null;
+    platform: string | null;
+    password?: string;
+    userId: string;
+    email: string | null;
+    phone: string | null;
+    work: string | null;
 }

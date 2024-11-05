@@ -24,8 +24,9 @@ interface SlidePopupProps {
 const SlidePopup = ({isOpen, onClose, title, Content, buttons }: SlidePopupProps) => {
     const [shouldRender, setShouldRender] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
-
+    const [isEditing, setIsEditing
+    ] = useState(false);
+    //팝업화면 렌더링, 애니메이션 효과
     useEffect(() => {
         if (isOpen) {
             setShouldRender(true);
@@ -40,29 +41,30 @@ const SlidePopup = ({isOpen, onClose, title, Content, buttons }: SlidePopupProps
         }
     }, [isOpen]);
 
+    //팝업 외부 클릭
     const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
         if (e.target === e.currentTarget) {
             onClose();
         }
     };
-
+    //삭제버튼 클릭
     const handleDelete = () => {
         if (window.confirm('삭제하시겠습니까?')) {
             onClose();
         }
     };
-
+    //편집버튼 클릭
     const handleEdit = () => {
         setIsEditing(true);
     };
-
+    //저장버튼 클릭
     const handleSave = (data: any) => {
         if (window.confirm('저장하시겠습니까?')) {
             console.log('변경된 데이터:', data);
             setIsEditing(false);
         }
     };
-
+    //**버튼 기능 추가 혹은 버튼종류 추가시 사용
     const modifiedButtons = buttons.map(button => {
         if (button.label === "삭제") {
             return { ...button, onClick: handleDelete };
@@ -121,3 +123,5 @@ const SlidePopup = ({isOpen, onClose, title, Content, buttons }: SlidePopupProps
 };
 
 export default SlidePopup;
+
+//상단타이틀, 버튼종류+기능, 내부내용 변경하여 사용
