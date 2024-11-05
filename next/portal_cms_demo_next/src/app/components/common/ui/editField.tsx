@@ -37,14 +37,22 @@ const EditableField = ({ type, value, onChange, className = '' }: EditableFieldP
                 type="text"
                 value={internalValue}
                 onChange={handleChange}
-                className="w-full px-2 py-1 border rounded text-right"
+                className={`w-full px-2 py-1 border rounded ${
+                    type === 'number'
+                        ? 'text-right'
+                        : ''
+                }`}
             />
             <button onClick={handleConfirm} className="ml-2 bg-main-light text-white px-1.5 py-2 rounded-full">
                 <Image src={CheckIcon} alt={'확인'} height={18} width={18} />
             </button>
         </div>
     ) : (
-        <div className={`flex items-center justify-end ${className}`}>
+        <div className={`flex items-center ${
+            type === 'number'
+                ? 'justify-end'
+                : 'justify-between'
+        }`}>
             {
                 type === 'number' ? <span>{FormatNumber(Number(value ?? 0))}</span>
                     :

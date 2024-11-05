@@ -1,8 +1,8 @@
 "use client"
 import React, {useState, useEffect} from "react";
 import ImageUploader from "@/app/components/common/ui/fileUpload";
-import YearMonthPicker from "@/app/components/common/ui/yearMonthPicker";
 import DayTerm from "@/app/components/common/ui/dayTerm";
+import CalenderPicker from "@/app/components/common/ui/calenderPicker";
 
 interface HiparkingListProps {
     isEditing: boolean;
@@ -87,22 +87,21 @@ const HiparkingList = ({isEditing, onSave, isNew = false }: HiparkingListProps) 
             });
         }
     }, [isNew]);
+    const [selectDate, setSelectDate] = useState(new Date());
+    const [images, setImages] = useState([]);
 
+    //필드값 변경시 formdata 업데이트
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
-
-    const handleDateChange = (name: string, date: Date | null) => {
-        setFormData({ ...formData, [name]: date });
-    };
-
+    //dayterm 업데이트
     const handleDayTermChange = (startDate: Date | null, endDate: Date | null) => {
         setFormData({
             ...formData,
             sDate: { startDate, endDate }
         });
     };
-
+    //편집모드 입력필드
     const renderCell = (key: string, value: string) => {
         return isEditing || isNew ? (
             <input
@@ -114,8 +113,8 @@ const HiparkingList = ({isEditing, onSave, isNew = false }: HiparkingListProps) 
             />
         ) : value;
     };
-
-    const renderField = (key: string, value: any, type: 'text' | 'select' | 'date' | 'dayterm' = 'text', options?: string[]) => {
+    //입력필드 타입
+    const renderField = (key: string, value: any, type: 'text' | 'select' | 'date' | 'dayterm' | 'textarea' = 'text', options?: string[]) => {
         if (!isEditing && !isNew) {
             if (type === 'date') {
                 return value ? value.toLocaleDateString() : '';
@@ -143,11 +142,7 @@ const HiparkingList = ({isEditing, onSave, isNew = false }: HiparkingListProps) 
                 );
             case 'date':
                 return (
-                    <YearMonthPicker
-                        selected={value}
-                        onChange={(date) => handleDateChange(key, date)}
-                        maxDate={new Date()}
-                    />
+                    <CalenderPicker selected={selectDate} onChange={(date: Date | null) => setSelectDate(date)}/>
                 );
             case 'dayterm':
                 return (
@@ -155,6 +150,15 @@ const HiparkingList = ({isEditing, onSave, isNew = false }: HiparkingListProps) 
                         startDate={value.startDate}
                         endDate={value.endDate}
                         onChange={handleDayTermChange}
+                    />
+                );
+            case 'textarea':
+                return (
+                    <textarea
+                        name={key}
+                        value={value}
+                        onChange={handleChange}
+                        className={"w-full p-1 border rounded h-[100px]"}
                     />
                 );
             default:
@@ -170,11 +174,12 @@ const HiparkingList = ({isEditing, onSave, isNew = false }: HiparkingListProps) 
         }
     };
 
-    const [images, setImages] = useState([]);
 
     const handleImageChange = (newImages) => {
         setImages(newImages);
     };
+
+
 
     return(
         <>
@@ -251,9 +256,7 @@ const HiparkingList = ({isEditing, onSave, isNew = false }: HiparkingListProps) 
                     <tr>
                         <th>비고</th>
                         <td colSpan={3}>
-                            <div className={'max-h-[150px] overflow-y-auto'}>
-                            {renderCell('wOpnion', formData.wOpnion)}
-                            </div>
+                            {renderField('wOpnion', formData.wOpnion, 'textarea')}
                         </td>
                     </tr>
                     <tr>

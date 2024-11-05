@@ -2,7 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-/*Layout 레이아웃*/
+
+/* ---------------------------------------
+    레이아웃 Layout
+   ---------------------------------------
+*/
 * {
     margin: 0;
     padding: 0;
@@ -13,7 +17,11 @@ main {
     height: 100vh;
 }
 
-/*기본세팅 - 입력창*/
+
+/* ---------------------------------------
+    기본세팅 입력창
+   ---------------------------------------
+*/
 table input {
     height: 30px;
 }
@@ -27,6 +35,11 @@ input, textarea, select {
         color: #aaa;
     }
 }
+input:focus, textarea:focus, select:focus{
+    outline: none;
+    background-color: var(--color-main-lighter);
+}
+
 
 table input[type="checkbox"] {
     width: 18px;
@@ -54,9 +67,14 @@ input[type=file]::file-selector-button {
 }
 
 
-/*스크롤 커스텀*/
+
+/* ---------------------------------------
+    스크롤 커스텀
+   ---------------------------------------
+*/
+
 ::-webkit-scrollbar {
-    width: 12px; /* 스크롤바의 너비 */
+    width: 12px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -71,7 +89,11 @@ input[type=file]::file-selector-button {
     border-radius: 12px;
 }
 
-/*테마별 색상지정*/
+
+/* ---------------------------------------
+    테마별 색상 Theme color
+   ---------------------------------------
+*/
 @layer base {
     :root {
         --color-main: #5c7dee;

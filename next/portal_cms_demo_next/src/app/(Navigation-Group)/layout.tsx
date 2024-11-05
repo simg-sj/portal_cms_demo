@@ -11,11 +11,11 @@ import Navigation from "@/app/components/common/Navigation";
     
 export default function Layout({children}: {children: ReactNode}) {
     return (
-        <div className="flex h-full min-h-screen">
+        <div className="flex h-full min-h-screen min-w-[2200px]">
             <div className="flex-none">
                 <Navigation/>
             </div>
-                <div className="flex-grow p-10 bg-gray-50 ml-[100px]">{children}</div>
+                <div className="flex-grow p-5 bg-gray-50 ml-[100px]">{children}</div>
         </div>
     );
 }

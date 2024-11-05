@@ -376,3 +376,46 @@ export const listData: ListData[] = [
         vCarNum: "18바5214",
     },
 ]
+
+export const UserSet: UserType[] = [
+    {
+        auth: '관리자',
+        name: '홍홍홍',
+        platform: '하이파킹',
+        password: '1234',
+        userId: 'hongildong',
+        email: 'hong@hiparking.com',
+        phone: '010-0000-0000',
+        work: '팀장'
+    },
+    {
+        auth: '사용자',
+        name: '어쩌구',
+        platform: '하이파킹',
+        password: '1234',
+        userId: 'hongildong',
+        email: 'hong@hiparking.com',
+        phone: '010-0000-0000',
+        work: '팀장'
+    },
+    {
+        auth: '사용자',
+        name: '저쩌구',
+        platform: '하이파킹',
+        password: '1234',
+        userId: 'hongildong',
+        email: 'hong@hiparking.com',
+        phone: '010-0000-0000',
+        work: '팀장'
+    },
+    {
+        auth: '관리자',
+        name: '샤샤샥',
+        platform: '하이파킹',
+        password: '1234',
+        userId: 'hongildong',
+        email: 'hong@hiparking.com',
+        phone: '010-0000-0000',
+        work: '팀장'
+    },
+]

@@ -20,7 +20,7 @@ const CustomPicker = styled.div`
     }
 
     .react-datepicker__input-container > input:focus {
-        outline: none;
+        outline: 1px solid #eeeeee;
     }
 
     .react-datepicker-popper .react-datepicker {
@@ -96,10 +96,13 @@ const YearMonthPicker = ({maxDate, minDate, onChange, selected}: YearMonthPicker
                     locale={ko}
                     maxDate={maxDate}
                     minDate={minDate}
-                    onFocus={(e) => e.target.readOnly = true}
+                    onFocus={(e) => {
+                        const target = e.target as HTMLInputElement;
+                        target.readOnly = true;
+                    }}
                 />
             </CustomPicker>
-            <StyledSelectIcon src={SelectIcon.src} alt="선택" width={15}/>
+            <StyledSelectIcon src={SelectIcon.src} alt="선택" width={12} height={12}/>
         </PickerWrapper>
     );
 };

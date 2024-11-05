@@ -157,13 +157,13 @@ export default function Page() {
             </div>
 
             <div className={'border border-gray-100 p-6 rounded-lg bg-white mt-5'}>
-                <div className={'flex justify-between'}>
+                <div className={'flex justify-end space-x-4'}>
+                    <Button color={"red"} fill={false} height={36} width={120}>
+                        삭제
+                    </Button>
                     <Button color={"main"} fill height={36} width={120} onClick={handleNewEntry}>
                         <Image src={Plus.src} alt={'추가'} width={16} height={16} className={'mr-1'}/>
                         신규등록
-                    </Button>
-                    <Button color={"red"} fill={false} height={36} width={120}>
-                        삭제
                     </Button>
                 </div>
                 <SlidePopup

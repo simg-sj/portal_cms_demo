@@ -2,7 +2,7 @@
 import Button from "@/app/components/common/ui/button";
 import Plus from "@/assets/images/icon/plus-icon.png";
 import Excel from "@/assets/images/icon/excel-icon.png";
-import React, {useState} from "react";
+import React, {useState, useRef} from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import {initialCounselData, changeCounselData, monthAccidentData, topCounselData, topBusinessData} from "@/config/data";
 import DoughnutChart from "@/app/components/chart/DoughnutChart";
@@ -22,8 +22,7 @@ import BarHorizonChart from "@/app/components/chart/BarHorizonChart";
 import PieChart from "@/app/components/chart/PieChart";
 import DayTerm from "@/app/components/common/ui/dayTerm";
 import CenterPopup from "@/app/components/popup/CenterPopup";
-import {AddBusiness} from "@/app/components/page/hiparking/add-business";
-import Date from "@/app/components/common/ui/date";
+import AddBusiness, { AddBusinessRef } from "@/app/components/page/hiparking/add-business";
 
 
 interface ButtonConfig {
@@ -40,30 +39,55 @@ interface ButtonConfig {
 
 
 export default function Page() {
+    //사업장추가팝업
     const [isOpen, setIsOpen] = useState(false);
+    const businessRef = useRef<AddBusinessRef>(null);
 
-    const openPopup = () => {
-        setIsOpen(true);
+    const handleConfirm = async () => {
+        if (businessRef.current) {
+            const isValid = await businessRef.current.validateForm();
+
+            if (isValid) {
+                const formData = businessRef.current.getFormData();
+                if (window.confirm(`${formData.parkingName}사업장을 추가하시겠습니까?`)) {
+                    const param = {
+                        '로그아웃사용자': formData.parkingName,
+                        '주차장주소:': formData.parkingAddress,
+                        '옥내:': formData.indoor.checked ? formData.indoor.value : '',
+                        '옥외:': formData.outdoor.checked ? formData.outdoor.value : '',
+                        '기계식:': formData.mechanical.checked ? formData.mechanical.value : '',
+                        '카리프트:': formData.carLift.checked ? formData.carLift.value : ''
+                    };
+                    console.log(param);
+                    setIsOpen(false);
+                } else {
+                    setIsOpen(true);
+                    console.log('저장취소');
+                }
+            }
+        }
     };
 
-    const closePopup = () => {
+    const handleClose = () => {
+        if (businessRef.current) {
+            businessRef.current.clearForm();
+        }
         setIsOpen(false);
     };
 
-
-    const popupButton: ButtonConfig[] = [
+    const popupButton = [
         {
             label: "확인",
-            onClick: () => closePopup(),
-            color: "main",
+            onClick: handleConfirm,
+            color: "main" as const,
             fill: true,
             width: 130,
             height: 40
         },
         {
             label: "취소",
-            onClick: () => closePopup(),
-            color: "gray",
+            onClick: handleClose,
+            color: "gray" as const,
             width: 130,
             height: 40
         }
@@ -78,6 +102,7 @@ export default function Page() {
         changeData: [{status: ''}]
     }
     const {handleInputChange} = useInputChange(initialData);
+
 
     //도넛 차트
     const doughnutValue = data.counselData[0].lossRatio
@@ -172,17 +197,17 @@ export default function Page() {
                     </div>
                     <div className={'w-full'}>
                         <div className={"flex justify-end mb-4"}>
-                            <Button color={"main"} fill height={36} width={120} onClick={() => openPopup()}>
+                            <Button color={"main"} fill height={36} width={120} onClick={() => setIsOpen(true)}>
                                 <Image src={Plus.src} alt={'추가'} width={16} height={16} className={'mr-1'}/>
                                 사업장 추가
                             </Button>
                         </div>
                         <CenterPopup
                             isOpen={isOpen}
-                            onClose={closePopup}
-                             title={"사업장 추가"}
+                            onClose={handleClose}
+                            title="사업장 추가"
+                            Content={() => <AddBusiness ref={businessRef} />}
                             buttons={popupButton}
-                            Content={AddBusiness}
                         />
                         <div className={'max-h-[205px] overflow-y-auto'}>
                             <table className={'w-full relative'}>
@@ -246,6 +271,7 @@ export default function Page() {
                                         </td>
                                         <td className={'text-right'}>
                                             <EditableField
+                                                type={'number'}
                                                 value={counsel.repairCost}
                                                 onChange={(value) => handleInputChange(index, 'repairCost', value)}
                                             />
@@ -264,13 +290,13 @@ export default function Page() {
             <div className={'px-8 py-6 bg-white rounded-xl my-5'}>
                 <div className={'text-xl font-light mb-6'}>계약변경현황</div>
                 <div className={'flex'}>
-                <div className={'w-[1000px] mr-16'}>
+                    <div className={'w-[1000px] mr-16'}>
                         <div className={'mb-5 font-medium text-lg'}>최근 6개월 계약변경현황</div>
                         <BarTwowayChart data={dataTwowayBar} options={optionHiparkingTwowayBar}/>
                     </div>
                     <div className={'w-full'}>
-                    <div className={"flex justify-end mb-4 text-xl"}>
-                        <DayTerm></DayTerm>
+                        <div className={"flex justify-end mb-4 text-xl"}>
+                            <DayTerm type="month"></DayTerm>
                         </div>
                         <div className={'max-h-[260px] overflow-y-auto'}>
                             <table className={'w-full relative'}>
@@ -347,7 +373,7 @@ export default function Page() {
                     <div className={'flex justify-between'}>
                         <div className={'text-xl font-light mb-6'}>Top 5</div>
                         <div className={"flex justify-end mb-4 text-xl"}>
-                            <DayTerm></DayTerm>
+                            <DayTerm type="month"></DayTerm>
                         </div>
                     </div>
                     <Tab tabs={tabs}/>
@@ -386,8 +412,7 @@ export default function Page() {
                         <div className={'flex justify-between'}>
                             <div className={'text-xl font-light mb-6'}>월별 사고접수현황</div>
                             <div className={"flex justify-end mb-4 text-xl"}>
-                                <Date></Date>
-                                <DayTerm></DayTerm>
+                                <DayTerm type="month"></DayTerm>
                             </div>
                         </div>
                         <div className={'w-full'}>
