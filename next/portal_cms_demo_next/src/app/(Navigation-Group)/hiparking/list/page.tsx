@@ -2,12 +2,12 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-10-02 11:05:37
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-10-02 11:07:08
+ * @LastEditTime: 2024-11-05 17:39:18
  * @FilePath: portal_cms_demo_next/src/app/(Navigation-Group)/hiparking/list/page.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 "use client"
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import DayTerm from "@/app/components/common/ui/dayTerm";
 import Button from "@/app/components/common/ui/button";
 import Image from "next/image";
@@ -18,26 +18,26 @@ import SlidePopup from "@/app/components/popup/SlidePopup";
 import HiparkingList from "@/app/components/page/hiparking/list";
 import Checkbox from "@/app/components/common/ui/checkbox";
 import Pagination from "@/app/components/common/ui/pagination";
+import dayjs from "dayjs";
+import {getClaim} from "@/app/(Navigation-Group)/hiparking/action";
 
-interface ButtonConfig {
-    label: string;
-    onClick: () => void;
-    color: "main" | "sub" | "blue" | "green" | "red" | "gray" | "dark-gray";
-    fill?: boolean;
-    rounded?: boolean;
-    textSize?: number;
-    fontWeight?: "font-medium" | "font-bold";
-    width?: number;
-    height?: number;
-}
 
 
 export default function Page() {
     const [isOpen, setIsOpen] = useState(false);
     const [isNew, setIsNew] = useState(false);
     const [selectedRow, setSelectedRow] = useState<number | null>(null);
+    const [data, setData] = useState<[ClaimType]>();
+    const [rowData, setRowData] = useState<ClaimType>();
     const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
-
+    const [param, setParam] = useState<ParamType>({
+        bpk : 2,
+        condition: "wCell",
+        endDate: "",
+        startDate: "",
+        text : ''
+    });
+    
     const closePopup = () => {
         setIsOpen(false);
         setSelectedRow(null);
@@ -51,10 +51,11 @@ export default function Page() {
         }
     };
 
-    const handleRowClick = (index: number) => {
+    const handleRowClick = (idx, index: number) => {
         setIsNew(false);
         setSelectedRow(index);
         setIsOpen(true);
+        setRowData(idx);
         document.body.style.overflow = 'hidden';
     };
 
@@ -133,22 +134,45 @@ export default function Page() {
     const isAllSelected = selectedItems.size === listData.length;
     const isSomeSelected = selectedItems.size > 0 && selectedItems.size < listData.length;
 
+    const onSearchClick = async () => {
+        let result =  await getClaim(param);
+        console.log(result);
+        
+        setData(result);
+    }
+    
     return (
         <>
             <div className={'border border-gray-100 p-6 rounded-lg bg-white flex items-center justify-between'}>
                 <div className={'flex items-center'}>
                     <div className={'text-gray-700 font-medium pt-1 mr-2'}>기간</div>
-                    <DayTerm/>
+                    <DayTerm setParam={setParam}/>
                     <div className={'text-gray-700 font-medium pt-1 ml-2 mr-5'}>검색조건</div>
-                    <select className={'w-[200px]'}>
-                        <option>피해자 연락처</option>
-                        <option>피해 차량번호</option>
-                        <option>주차장명</option>
+                    <select className={'w-[200px]'} onChange={(e : React.ChangeEvent<HTMLSelectElement>) => {
+                        setParam((prev: ParamType) => ({
+                            ...prev,
+                            condition: e.target.value,
+                        }))}
+                    }>
+                        <option value={'wCell'}>피해자 연락처</option>
+                        <option value={'vCarType'}>피해 차량번호</option>
+                        <option value={'pklName'}>주차장명</option>
                     </select>
                     <input type={'text'} placeholder={'검색조건 설정 후 검색해주세요'}
-                           className={'w-[300px] h-[35px] rounded-tr-none rounded-br-none ml-5'}/>
+                           className={'w-[300px] h-[35px] rounded-tr-none rounded-br-none ml-5'}
+                           onChange={(e : React.ChangeEvent<HTMLInputElement>) => {
+                               setParam((prev: ParamType) => ({
+                                   ...prev,
+                                   text: e.target.value,
+                               }))
+                           }}
+                    />
                     <Button color={'main'} width={100} height={35} fill
-                            className={'rounded-tl-none rounded-bl-none'}>조회</Button>
+                            className={'rounded-tl-none rounded-bl-none'}
+                            onClick={onSearchClick}
+                    >
+                        조회
+                    </Button>
                 </div>
                 <Button color={"green"} height={36} width={120} className={'ml-5'}>
                     <Image src={Excel.src} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
@@ -170,7 +194,7 @@ export default function Page() {
                     isOpen={isOpen}
                     onClose={closePopup}
                     title={isNew ? "신규 등록" : "상세보기"}
-                    Content={(props) => <HiparkingList {...props} isNew={isNew} />}
+                    Content={(props) => <HiparkingList {...props} isNew={isNew} rowData={rowData} />}
                     buttons={popupButtons}
                 />
                 <div className={'mt-4'}>
@@ -190,20 +214,20 @@ export default function Page() {
                         </tr>
                         </thead>
                         <tbody>
-                        {listData.map(item => (
-                            <tr key={item.ppk} className={`cursor-pointer ${selectedRow === item.ppk ? 'bg-main-lighter' : 'hover:bg-main-lighter'}`} onClick={() => handleRowClick(item.ppk)}>
+                        {data?.map((item, index) => (
+                            <tr key={item.irpk} className={`cursor-pointer ${selectedRow === item.irpk ? 'bg-main-lighter' : 'hover:bg-main-lighter'}`} onClick={() => handleRowClick(item, index)}>
                                 <td onClick={event => event.stopPropagation()}>
                                     <Checkbox
-                                        checked={selectedItems.has(item.ppk)}
-                                        onChange={() => toggleSelectItem(item.ppk)}
+                                        checked={selectedItems.has(item.irpk)}
+                                        onChange={() => toggleSelectItem(item.irpk)}
                                     />
                                 </td>
-                                <td>{item.ppk}</td>
                                 <td>{item.irpk}</td>
-                                <td>{item.createdYMD}</td>
+                                <td>{item.insuNum}</td>
+                                <td>{dayjs(item.accidentDate).format('YYYY-MM-DD')}</td>
                                 <td>{item.accidentDate}</td>
                                 <td>{item.closingAmt}</td>
-                                <td>{item.accidentLocation}</td>
+                                <td>{item.pklAddress}</td>
                                 <td>{item.wName}</td>
                                 <td>{item.wCell}</td>
                                 <td>{item.vCarNum}</td>

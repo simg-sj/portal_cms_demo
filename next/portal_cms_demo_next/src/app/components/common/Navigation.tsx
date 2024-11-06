@@ -1,6 +1,6 @@
 "use client"
 
-import { useSelectedLayoutSegment} from 'next/navigation';
+import {usePathname, useRouter, useSelectedLayoutSegment} from 'next/navigation';
 import LogoutIcon from "@/assets/images/icon/logout-icon.png";
 import SimgLogo from "@/assets/images/logo/simg-white-logo.png";
 import { useEffect, useState } from "react";
@@ -13,15 +13,13 @@ import Image, {StaticImageData} from "next/image";
 import {useSession} from "next-auth/react";
 import {signOutWithForm} from "@/app/lib/action/auth";
 import Loading from "@/app/(Navigation-Group)/loading";
+import {MenuItemType, Theme} from "@/@types/common";
 
-interface Theme {
-    logoSrc: StaticImageData;
-    menuItems: MenuItems;
-}
 
 export default function Navigation() {
-    const segment = useSelectedLayoutSegment();
+    const pathname = usePathname();
     const {data } = useSession();
+    const router = useRouter();
     const [themeConfig, setThemeConfig] = useState<Theme | null>(null);
     const [activeLink, setActiveLink] = useState<string | null>(null);
     useEffect(() => {
@@ -34,10 +32,11 @@ export default function Navigation() {
     }, [data]);
 
     useEffect(() => {
-        if (segment) {
-            setActiveLink(`/${segment}`);
+        const segments = pathname.split('/').filter(Boolean); // 빈 문자열 제거
+        if (segments.length > 0) {
+            setActiveLink(`/${segments.join('/')}`);
         }
-    }, [segment]);
+    }, [pathname]);
 
     const getMenuItems = (config: Theme): MenuItemType[] => {
         const baseItems = [
@@ -63,7 +62,7 @@ export default function Navigation() {
     return (
         <div className="bg-main h-screen fixed w-[100px] p-3 flex flex-col justify-between z-50">
             <div>
-                <Image src={themeConfig.logoSrc} alt="업체로고" height={50} className="mt-5 mb-14" priority={true}/>
+                <Image src={themeConfig.logoSrc} alt="업체로고" height={50} className="mt-5 mb-14" priority={true} />
                 {menuItems.slice(0, -1).map((item, index) => (
                     <div key={index}>
                         <MenuItem

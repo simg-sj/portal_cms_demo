@@ -1,16 +1,18 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import Image from "next/image";
 import NoneFile from "@/assets/images/icon/nonefile-icon.png";
 import Upload from "@/assets/images/icon/upload-icon.png";
+import {getImage} from "@/app/(Navigation-Group)/hiparking/action";
 
 interface ImageUploaderProps {
-    initialImages: number[];
+    initialImages: ImageType[];
     isEditing: boolean;
     onChange: () => void;
 }
 
-const ImageUploader = ({initialImages = [], isEditing, onChange}: ImageUploaderProps) => {
-    const [images, setImages] = useState(initialImages);
+const ImageUploader = ({initialImages, isEditing, onChange}: ImageUploaderProps) => {
+    const [images, setImages] = useState<ImageType[]>(initialImages);
+
 
     const handleFileChange = useCallback((event) => {
         const file = event.target.files[0];
@@ -35,7 +37,14 @@ const ImageUploader = ({initialImages = [], isEditing, onChange}: ImageUploaderP
             });
         }
     }, [onChange]);
+    useEffect(() => {
+        if (initialImages) {
+            setImages(initialImages);
+        }
 
+    }, [initialImages]);
+
+    console.log(images)
     if (!isEditing && images.length === 0) {
         return (
             <div className="flex items-center justify-center w-48 h-48 bg-[#fafafa]">
@@ -47,11 +56,12 @@ const ImageUploader = ({initialImages = [], isEditing, onChange}: ImageUploaderP
         );
     }
 
+
     return (
         <div className="flex flex-wrap gap-4">
             {images.map((image, index) => (
                 <div key={index} className="relative w-48 h-48">
-                    <Image src={NoneFile.src} alt={`Uploaded ${index + 1}`} className="w-full h-full object-cover" width={15} height={15} />
+                    <Image src={image.location} alt={`Uploaded ${index + 1}`} className="w-full h-full object-cover" width={200} height={200} quality={90} />
                     {isEditing && (
                         <button
                             onClick={() => handleDelete(index)}

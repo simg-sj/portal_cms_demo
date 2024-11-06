@@ -23,6 +23,7 @@ import PieChart from "@/app/components/chart/PieChart";
 import DayTerm from "@/app/components/common/ui/dayTerm";
 import CenterPopup from "@/app/components/popup/CenterPopup";
 import AddBusiness, { AddBusinessRef } from "@/app/components/page/hiparking/add-business";
+import {DataState} from "@/@types/common";
 
 
 interface ButtonConfig {
@@ -42,6 +43,7 @@ export default function Page() {
     //사업장추가팝업
     const [isOpen, setIsOpen] = useState(false);
     const businessRef = useRef<AddBusinessRef>(null);
+    const [param ,setParam] = useState();
 
     const handleConfirm = async () => {
         if (businessRef.current) {
@@ -296,7 +298,7 @@ export default function Page() {
                     </div>
                     <div className={'w-full'}>
                         <div className={"flex justify-end mb-4 text-xl"}>
-                            <DayTerm type="month"></DayTerm>
+                            <DayTerm type="month" setParam={setParam}></DayTerm>
                         </div>
                         <div className={'max-h-[260px] overflow-y-auto'}>
                             <table className={'w-full relative'}>
@@ -373,7 +375,7 @@ export default function Page() {
                     <div className={'flex justify-between'}>
                         <div className={'text-xl font-light mb-6'}>Top 5</div>
                         <div className={"flex justify-end mb-4 text-xl"}>
-                            <DayTerm type="month"></DayTerm>
+                            <DayTerm type="month" setParam={setParam}></DayTerm>
                         </div>
                     </div>
                     <Tab tabs={tabs}/>
@@ -412,7 +414,7 @@ export default function Page() {
                         <div className={'flex justify-between'}>
                             <div className={'text-xl font-light mb-6'}>월별 사고접수현황</div>
                             <div className={"flex justify-end mb-4 text-xl"}>
-                                <DayTerm type="month"></DayTerm>
+                                <DayTerm type="month" setParam={setParam}></DayTerm>
                             </div>
                         </div>
                         <div className={'w-full'}>

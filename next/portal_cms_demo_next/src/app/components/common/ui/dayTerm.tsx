@@ -1,12 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, {SetStateAction, useEffect, useState} from "react";
 import YearMonthPicker from "@/app/components/common/ui/yearMonthPicker";
 import CalenderPicker from "@/app/components/common/ui/calenderPicker";
+import dayjs from "dayjs";
 
 interface DayTermProps {
     type?: 'month' | 'day';
+    setParam : React.Dispatch<SetStateAction<ParamType>>
 }
 
-const DayTerm = ({ type = 'day' }: DayTermProps) => {
+interface ParamType {
+    startDate : string;
+    endDate : string;
+    bpk ?: number;
+    condition ?: string;
+}
+
+const DayTerm = ({ type = 'day', setParam }: DayTermProps) => {
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
 
@@ -15,11 +24,21 @@ const DayTerm = ({ type = 'day' }: DayTermProps) => {
         if (type === 'month') {
             // 월별 선택시: 3개월 전부터 현재까지
             const threeMonthsAgo = new Date(new Date().getFullYear(), new Date().getMonth() - 2, 1);
+            setParam((prev: ParamType) => ({
+                ...prev,
+                startDate: dayjs(threeMonthsAgo).format('YYYY-MM-DD'),
+                endDate : dayjs().format('YYYY-MM-DD')
+            }));
             setStartDate(threeMonthsAgo);
             setEndDate(new Date());
         } else {
             // 일별 선택시: 오늘 날짜
             const today = new Date();
+            setParam((prev: ParamType) => ({
+                ...prev,
+                startDate: dayjs().format('YYYY-MM-DD'),
+                endDate : dayjs().format('YYYY-MM-DD')
+            }));
             setStartDate(today);
             setEndDate(today);
         }
@@ -27,6 +46,10 @@ const DayTerm = ({ type = 'day' }: DayTermProps) => {
 
     const handleStartDateChange = (date: Date | null) => {
         setStartDate(date);
+        setParam((prev: ParamType) => ({
+            ...prev,
+            startDate: dayjs(date).format('YYYY-MM-DD'),
+        }));
         if (date && endDate && date > endDate) {
             setEndDate(null);
         }
@@ -34,6 +57,10 @@ const DayTerm = ({ type = 'day' }: DayTermProps) => {
 
     const handleEndDateChange = (date: Date | null) => {
         setEndDate(date);
+        setParam((prev: ParamType) => ({
+            ...prev,
+            endDate: dayjs(date).format('YYYY-MM-DD'),
+        }));
         if (date && startDate && date < startDate) {
             setStartDate(null);
         }

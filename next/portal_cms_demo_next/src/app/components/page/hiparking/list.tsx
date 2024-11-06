@@ -3,11 +3,15 @@ import React, {useState, useEffect} from "react";
 import ImageUploader from "@/app/components/common/ui/fileUpload";
 import DayTerm from "@/app/components/common/ui/dayTerm";
 import CalenderPicker from "@/app/components/common/ui/calenderPicker";
+import dayjs from "dayjs";
+import {ClosingCode} from "@/config/data";
+import {getImage} from "@/app/(Navigation-Group)/hiparking/action";
 
 interface HiparkingListProps {
     isEditing: boolean;
     onSave: (data: any) => void;
     isNew?: boolean;
+    rowData : ClaimType;
 }
 
 const STATE_OPTIONS = ['확인중', '접수', '접수취소', '보류', '면책', '종결', '추산', '합의', '부재'];
@@ -16,7 +20,8 @@ const ACCIDENT_TYPE_OPTIONS = ['주차장배상', '재물배상'];
 const ACCIDENT_DETAIL_TYPE_OPTIONS = ['차대차', '시설물사고', '건물자체사고', '치료비', '기타'];
 
 
-const HiparkingList = ({isEditing, onSave, isNew = false }: HiparkingListProps) => {
+
+const HiparkingList = ({isEditing, onSave, isNew = false, rowData }: HiparkingListProps) => {
     //input 빈값으로 변경
     const [formData, setFormData] = useState({
         irpk: '',
@@ -51,44 +56,23 @@ const HiparkingList = ({isEditing, onSave, isNew = false }: HiparkingListProps) 
     });
 
     useEffect(() => {
-        if (!isNew) {
-            setFormData({
-                //임의 데이터
-                ...formData,
-                irpk: '24081915363',
-                state: '접수',
-                total: '0',
-                accidentWDateTime: new Date('2024-02-02'),
-                approvalYN: '승인',
-                accidentDateTime: new Date('2024-02-01'),
-                accidentType: '보유불명',
-                accidentDT: '차량사고',
-                wName: '홍길동',
-                inCargeName: '백무시',
-                inCargePhone: '010-5555-5555',
-                pklName: '서판교점',
-                accidentDetail: 'CCTV 사각지대 내 차량 사고 건',
-                wOpnion: '경찰서 측에서 CCTV 영상만으로는 의심차량 있으나 확실한 가해자차량 특정 불가함을 확인 및 차주에 보험접수 진행 안내',
-                aName: '홍길동',
-                aPhone: '010-0000-0000',
-                vCarNum: '11바4025',
-                vCarType: 'SUV',
-                vCarColor: '검정',
-                pNo: 'FA20235204423000',
-                sDate: {
-                    startDate: new Date('2024-02-02'),
-                    endDate: new Date('2024-02-02')
-                },
-                bName: '하이파킹',
-                bNumer: '23526336812',
-                bCargeName: '이파킹',
-                bCell: '029965421',
-                bMail: 'lee@parking.com'
-            });
+        if (!isNew && rowData.irpk) {
+            const fetchImage = async () => {
+                try {
+                    const fetchedImage = await getImage(rowData.irpk);
+
+                    setImages(fetchedImage);
+                } catch (error) {
+                    console.error("Failed to fetch image:", error);
+                }
+            };
+            fetchImage();
+
         }
-    }, [isNew]);
+    }, [isNew, rowData.irpk]);
+
     const [selectDate, setSelectDate] = useState(new Date());
-    const [images, setImages] = useState([]);
+    const [images, setImages] = useState<ImageType[]>([]);
 
     //필드값 변경시 formdata 업데이트
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -198,17 +182,17 @@ const HiparkingList = ({isEditing, onSave, isNew = false }: HiparkingListProps) 
                     <tbody>
                     <tr>
                         <th>접수번호</th>
-                        <td colSpan={3}>{renderCell('irpk', formData.irpk)}</td>
+                        <td colSpan={3}>{renderCell('insuNum', rowData.insuNum)}</td>
                     </tr>
                     <tr>
                         <th>상태</th>
-                        <td>{renderField('state', formData.state, 'select', STATE_OPTIONS)}</td>
+                        <td>{renderField('closingCode', ClosingCode[rowData.closingCode], 'select', STATE_OPTIONS)}</td>
                         <th>지급보험금</th>
-                        <td>{renderField('total', formData.total)}</td>
+                        <td>{renderField('total', rowData.total)}</td>
                     </tr>
                     <tr>
                         <th>사고접수일</th>
-                        <td>{renderField('accidentWDateTime', formData.accidentWDateTime, 'date')}</td>
+                        <td>{renderField('requestDate', dayjs(rowData.requestDate).toDate(), 'date')}</td>
                         <th>내부결재 여부</th>
                         <td>{renderField('approvalYN', formData.approvalYN, 'select', APPROVAL_OPTIONS)}</td>
                     </tr>
@@ -228,35 +212,35 @@ const HiparkingList = ({isEditing, onSave, isNew = false }: HiparkingListProps) 
                     <tbody>
                     <tr>
                         <th>사고일시</th>
-                        <td>{renderField('accidentDateTime', formData.accidentDateTime, 'date')}</td>
+                        <td>{renderField('accidentDate',dayjs(rowData.accidentDate).toDate(), 'date')}</td>
                         <th>사고유형</th>
-                        <td>{renderField('accidentType', formData.accidentType, 'select', ACCIDENT_TYPE_OPTIONS)}</td>
+                        <td>{renderField('accidentType', rowData.accidentType, 'select', ACCIDENT_TYPE_OPTIONS)}</td>
                     </tr>
                     <tr>
                         <th>사고세부유형</th>
-                        <td>{renderField('accidentDT', formData.accidentDT, 'select', ACCIDENT_DETAIL_TYPE_OPTIONS)}</td>
+                        <td>{renderField('accidentDetailType', rowData.accidentDetailType, 'select', ACCIDENT_DETAIL_TYPE_OPTIONS)}</td>
                         <th>접수자 성함</th>
-                        <td>{renderCell('wName', formData.wName)}</td>
+                        <td>{renderCell('wName', rowData.wName)}</td>
 
                     </tr>
                     <tr>
                         <th>현장담당자</th>
-                        <td>{renderCell('inCargeName', formData.inCargeName)}</td>
+                        <td>{renderCell('inCargeName', rowData.inCargeName)}</td>
                         <th>현장담당자 연락처</th>
-                        <td>{renderCell('inCargePhone', formData.inCargePhone)}</td>
+                        <td>{renderCell('inCargePhone', rowData.inCargePhone)}</td>
                     </tr>
                     <tr>
                         <th>사업소명(주차장명)</th>
-                        <td>{renderCell('pklName', formData.pklName)}</td>
+                        <td>{renderCell('pklName', rowData.pklName)}</td>
                     </tr>
                     <tr>
                         <th>사고내용</th>
-                        <td colSpan={3}>{renderCell('accidentDetail', formData.accidentDetail)}</td>
+                        <td colSpan={3}>{renderCell('accidentDetail', rowData.accidentDetail)}</td>
                     </tr>
                     <tr>
                         <th>비고</th>
                         <td colSpan={3}>
-                            {renderField('wOpnion', formData.wOpnion, 'textarea')}
+                            {renderField('wOpinion', rowData.wOpinion, 'textarea')}
                         </td>
                     </tr>
                     <tr>
@@ -287,13 +271,13 @@ const HiparkingList = ({isEditing, onSave, isNew = false }: HiparkingListProps) 
                     <tbody>
                     <tr>
                         <th>피해자 이름</th>
-                        <td>{renderCell('aName', formData.aName)}</td>
+                        <td>{renderCell('wName', rowData.wName)}</td>
                         <th>피해자 연락처</th>
-                        <td>{renderCell('aPhone', formData.aPhone)}</td>
+                        <td>{renderCell('wCell', rowData.wCell)}</td>
                     </tr>
                     <tr>
                         <th>피해자 차량번호</th>
-                        <td colSpan={3}>{renderCell('vCarNum', formData.vCarNum)}</td>
+                        <td colSpan={3}>{renderCell('vCarNum', rowData.vCarNum)}</td>
                     </tr>
                     <tr>
                         <th>차종</th>
@@ -317,15 +301,15 @@ const HiparkingList = ({isEditing, onSave, isNew = false }: HiparkingListProps) 
                     <tbody>
                     <tr>
                         <th>증권번호</th>
-                        <td>{renderCell('pNo', formData.pNo)}</td>
+                        <td>{renderCell('pNo', rowData.pNo)}</td>
                         <th>보험기간</th>
-                        <td>{renderField('sDate', formData.sDate, 'dayterm')}</td>
+                        <td>{renderField('sDate',{startDate : dayjs(rowData.sDay).toDate(), endDate : dayjs(rowData.eDay).toDate()}, 'dayterm')}</td>
                     </tr>
                     <tr>
                         <th>피보험자 상호</th>
-                        <td>{renderCell('bName', formData.bName)}</td>
+                        <td>{renderCell('bName', rowData.platform)}</td>
                         <th>피보험자 사업자등록번호</th>
-                        <td>{renderCell('bNumer', formData.bNumer)}</td>
+                        <td>{renderCell('bNumer', rowData.bNumber)}</td>
                     </tr>
                     </tbody>
                 </table>

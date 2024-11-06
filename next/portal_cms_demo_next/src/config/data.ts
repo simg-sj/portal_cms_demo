@@ -377,6 +377,18 @@ export const listData: ListData[] = [
     },
 ]
 
+export const ClosingCode= {
+    '00' : '확인중',
+    '01' : '접수',
+    '02' : '접수 취소',
+    '03' : '보류',
+    '04' : '면책',
+    '05' : '종결',
+    '06' : '추산',
+    '07' : '합의'
+}
+
+
 export const UserSet: UserType[] = [
     {
         auth: '관리자',
