@@ -4,8 +4,11 @@ import CalenderPicker from "@/app/components/common/ui/calenderPicker";
 import dayjs from "dayjs";
 
 interface DayTermProps {
+    sDay ?: Date;
+    eDay ?: Date;
     type?: 'month' | 'day';
-    setParam : React.Dispatch<SetStateAction<ParamType>>
+    setParam ?: React.Dispatch<SetStateAction<ParamType>>
+
 }
 
 interface ParamType {
@@ -15,9 +18,12 @@ interface ParamType {
     condition ?: string;
 }
 
-const DayTerm = ({ type = 'day', setParam }: DayTermProps) => {
-    const [startDate, setStartDate] = useState<Date | null>(null);
-    const [endDate, setEndDate] = useState<Date | null>(null);
+const DayTerm = ({sDay, eDay, type = 'day', setParam }: DayTermProps) => {
+    const [startDate, setStartDate] = useState<Date | null>(sDay);
+    const [endDate, setEndDate] = useState<Date | null>(eDay);
+
+    console.log(sDay, eDay)
+    console.log("@@@str", startDate)
     //타입 월달력, 전체달력 지정 : 월달력 3달단위 전체달력 오늘날짜 기본값
     useEffect(() => {
         // 월달력: 3개월 전부터 현재까지
@@ -38,8 +44,6 @@ const DayTerm = ({ type = 'day', setParam }: DayTermProps) => {
                 startDate: dayjs().format('YYYY-MM-DD'),
                 endDate : dayjs().format('YYYY-MM-DD')
             }));
-            setStartDate(today);
-            setEndDate(today);
         }
     }, [type]);
 
@@ -79,6 +83,10 @@ const DayTerm = ({ type = 'day', setParam }: DayTermProps) => {
             console.log("종료 날짜:", formatDate(newEndDate));
         } else {
             setEndDate(date);
+            setParam((prev: ParamType) => ({
+                ...prev,
+                endDate: dayjs(date).format('YYYY-MM-DD'),
+            }));
             if (date && startDate && date < startDate) {
                 setStartDate(null);
             }

@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-10-02 11:05:37
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-11-05 17:39:18
+ * @LastEditTime: 2024-11-06 13:54:49
  * @FilePath: portal_cms_demo_next/src/app/(Navigation-Group)/hiparking/list/page.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -146,7 +146,7 @@ export default function Page() {
             <div className={'border border-gray-100 p-6 rounded-lg bg-white flex items-center justify-between'}>
                 <div className={'flex items-center'}>
                     <div className={'text-gray-700 font-medium pt-1 mr-2'}>기간</div>
-                    <DayTerm setParam={setParam}/>
+                    <DayTerm setParam={setParam} sDay={new Date()} eDay={new Date()}/>
                     <div className={'text-gray-700 font-medium pt-1 ml-2 mr-5'}>검색조건</div>
                     <select className={'w-[200px]'} onChange={(e : React.ChangeEvent<HTMLSelectElement>) => {
                         setParam((prev: ParamType) => ({

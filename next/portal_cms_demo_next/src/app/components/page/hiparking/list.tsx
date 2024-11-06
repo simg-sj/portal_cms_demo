@@ -23,7 +23,7 @@ const ACCIDENT_DETAIL_TYPE_OPTIONS = ['차대차', '시설물사고', '건물자
 
 const HiparkingList = ({isEditing, onSave, isNew = false, rowData }: HiparkingListProps) => {
     //input 빈값으로 변경
-    const [formData, setFormData] = useState({
+    /*const [formData, setFormData] = useState({
         irpk: '',
         state: '',
         total: '',
@@ -53,8 +53,8 @@ const HiparkingList = ({isEditing, onSave, isNew = false, rowData }: HiparkingLi
         bCargeName: '',
         bCell: '',
         bMail: ''
-    });
-
+    });*/
+    const [formData, setFormData] = useState({});
     useEffect(() => {
         if (!isNew && rowData.irpk) {
             const fetchImage = async () => {
@@ -126,13 +126,14 @@ const HiparkingList = ({isEditing, onSave, isNew = false, rowData }: HiparkingLi
                 );
             case 'date':
                 return (
-                    <CalenderPicker selected={selectDate} onChange={(date: Date | null) => setSelectDate(date)}/>
+                    <CalenderPicker selected={key === 'requestDate' ? dayjs(rowData.requestDate).toDate() : dayjs(rowData.accidentDate).toDate()} onChange={(date: Date | null) => setSelectDate(date)}/>
                 );
             case 'dayterm':
                 return (
                     <DayTerm
-                        startDate={value.startDate}
-                        endDate={value.endDate}
+                        sDay={dayjs(rowData.sDay).toDate()}
+                        eDay={dayjs(rowData.eDay).toDate()}
+                        setParam={setFormData}
                         onChange={handleDayTermChange}
                     />
                 );

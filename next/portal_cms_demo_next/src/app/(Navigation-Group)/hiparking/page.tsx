@@ -208,7 +208,6 @@ export default function Page() {
                                     <col style={{width: "200px"}}/>
                                     <col style={{width: "200px"}}/>
                                     <col style={{width: "200px"}}/>
-                                    <col style={{width: "200px"}}/>
                                     <col style={{width: ""}}/>
                                 </colgroup>
                                 <thead className={'sticky left-0 top-0'}>
@@ -216,10 +215,9 @@ export default function Page() {
                                     <th>증권번호</th>
                                     <th>보험기간</th>
                                     <th>사업장수</th>
-                                    <th>가입보험료</th>
                                     <th>변경보험료</th>
                                     <th>총보험료</th>
-                                    <th>지급보험료</th>
+                                    <th>지급보험금</th>
                                     <th>손조비용</th>
                                     <th>손해율</th>
                                 </tr>
@@ -230,13 +228,6 @@ export default function Page() {
                                         <td>{counsel.pNo}</td>
                                         <td>{counsel.sDay + '~' + counsel.eDay}</td>
                                         <td>{counsel.bCount}</td>
-                                        <td className={'text-right'}>
-                                            <EditableField
-                                                type={'number'}
-                                                value={counsel.estimateAmt}
-                                                onChange={(value) => handleInputChange(index, 'estimateAmt', value)}
-                                            />
-                                        </td>
                                         <td className={'text-right'}>
                                             <EditableField
                                                 type={'number'}
