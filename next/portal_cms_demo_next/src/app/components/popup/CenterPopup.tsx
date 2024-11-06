@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Button from "@/app/components/common/ui/button";
 import Image from "next/image";
 import Close from "@/assets/images/icon/close-icon.png";
@@ -22,19 +22,24 @@ interface CenterPopupProps {
     Content: React.ComponentType;
     buttons: ButtonConfig[];
     onConfirm?: () => void;
+    onDelete?: () => void;
 }
 
 
-const CenterPopup = ({isOpen, onClose, title, Content, buttons, onConfirm}: CenterPopupProps) => {
+const CenterPopup = ({isOpen, onClose, title, Content, buttons, onConfirm, onDelete}: CenterPopupProps) => {
 
     if (!isOpen) return null;
 
-    //확인 클릭시 데이터전달, 나머지 닫기
+    //확인 클릭시 데이터전달, 삭제 클릭시 데이터전달 나머지 닫기
     //** center 팝업 하단 버튼 기능 추가시 label 따라 분류하여 추가가능
+
     const handleButtonClick = (button: ButtonConfig) => {
         if (button.label === '확인' && onConfirm) {
             onConfirm();
-        } else {
+        }  if (button.label === '삭제' && onDelete) {
+            onDelete();
+        }
+        else {
             button.onClick();
         }
     };

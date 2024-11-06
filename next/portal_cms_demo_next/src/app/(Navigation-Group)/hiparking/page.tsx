@@ -25,19 +25,6 @@ import CenterPopup from "@/app/components/popup/CenterPopup";
 import AddBusiness, { AddBusinessRef } from "@/app/components/page/hiparking/add-business";
 
 
-interface ButtonConfig {
-    label: string;
-    onClick: () => void;
-    color: "main" | "sub" | "blue" | "green" | "red" | "gray" | "dark-gray";
-    fill?: boolean;
-    rounded?: boolean;
-    textSize?: number;
-    fontWeight?: "font-medium" | "font-bold";
-    width?: number;
-    height?: number;
-}
-
-
 export default function Page() {
     //사업장추가팝업
     const [isOpen, setIsOpen] = useState(false);
@@ -51,7 +38,7 @@ export default function Page() {
                 const formData = businessRef.current.getFormData();
                 if (window.confirm(`${formData.parkingName}사업장을 추가하시겠습니까?`)) {
                     const param = {
-                        '로그아웃사용자': formData.parkingName,
+                        '주차장명': formData.parkingName,
                         '주차장주소:': formData.parkingAddress,
                         '옥내:': formData.indoor.checked ? formData.indoor.value : '',
                         '옥외:': formData.outdoor.checked ? formData.outdoor.value : '',

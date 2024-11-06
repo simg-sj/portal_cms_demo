@@ -1,8 +1,6 @@
 import EditableField from "@/app/components/common/ui/editField";
 import React from "react";
 import useInputChange from "@/app/lib/customHook/inputChange";
-import {UserSet} from "@/config/data";
-import FormatNumber from "@/app/components/common/ui/formatNumber";
 
 
 export default function EditUser({userInfo}: UserType) {
@@ -42,6 +40,13 @@ export default function EditUser({userInfo}: UserType) {
                         type={'text'}
                         onChange={(value) => handleInputChange(0, 'EndAmt', value)}
                         value={userInfo.email}/>
+                </div>
+                <h2 className='leading-[40px] text-gray-500 text-lg border-b mb-2'>직책</h2>
+                <div>
+                    <EditableField
+                        type={'text'}
+                        onChange={(value) => handleInputChange(0, 'EndAmt', value)}
+                        value={userInfo.work}/>
                 </div>
                 <h2 className='leading-[40px] text-gray-500 text-lg border-b mb-2'>권한</h2>
                 <div>{userInfo.auth}</div>

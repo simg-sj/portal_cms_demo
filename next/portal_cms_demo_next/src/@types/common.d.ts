@@ -128,6 +128,7 @@ interface ThemeConfig {
 }
 
 interface UserType {
+    index?: number;
     auth: string | null;
     name: string | null;
     platform: string | null;
@@ -135,5 +136,5 @@ interface UserType {
     userId: string;
     email: string | null;
     phone: string | null;
-    work: string | null;
+    work?: string | null;
 }
