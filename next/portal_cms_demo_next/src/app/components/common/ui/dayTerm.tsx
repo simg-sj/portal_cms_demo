@@ -1,12 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, {SetStateAction, useEffect, useState} from "react";
 import YearMonthPicker from "@/app/components/common/ui/yearMonthPicker";
 import CalenderPicker from "@/app/components/common/ui/calenderPicker";
+import dayjs from "dayjs";
 
 interface DayTermProps {
     type?: 'month' | 'day';
+    setParam : React.Dispatch<SetStateAction<ParamType>>
 }
 
-const DayTerm = ({ type = 'day' }: DayTermProps) => {
+interface ParamType {
+    startDate : string;
+    endDate : string;
+    bpk ?: number;
+    condition ?: string;
+}
+
+const DayTerm = ({ type = 'day', setParam }: DayTermProps) => {
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
     //타입 월달력, 전체달력 지정 : 월달력 3달단위 전체달력 오늘날짜 기본값
@@ -14,11 +23,21 @@ const DayTerm = ({ type = 'day' }: DayTermProps) => {
         // 월달력: 3개월 전부터 현재까지
         if (type === 'month') {
             const threeMonthsAgo = new Date(new Date().getFullYear(), new Date().getMonth() - 2, 1);
+            setParam((prev: ParamType) => ({
+                ...prev,
+                startDate: dayjs(threeMonthsAgo).format('YYYY-MM-DD'),
+                endDate : dayjs().format('YYYY-MM-DD')
+            }));
             setStartDate(threeMonthsAgo);
             setEndDate(new Date());
         } // 일달력: 오늘 날짜
         else {
             const today = new Date();
+            setParam((prev: ParamType) => ({
+                ...prev,
+                startDate: dayjs().format('YYYY-MM-DD'),
+                endDate : dayjs().format('YYYY-MM-DD')
+            }));
             setStartDate(today);
             setEndDate(today);
         }
@@ -38,6 +57,10 @@ const DayTerm = ({ type = 'day' }: DayTermProps) => {
 
     const handleStartDateChange = (date: Date | null) => {
         setStartDate(date);
+        setParam((prev: ParamType) => ({
+            ...prev,
+            startDate: dayjs(date).format('YYYY-MM-DD'),
+        }));
         if (date && endDate && date > endDate) {
             setEndDate(null);
         }
@@ -49,6 +72,10 @@ const DayTerm = ({ type = 'day' }: DayTermProps) => {
             const lastDay = getLastDayOfMonth(date.getFullYear(), date.getMonth());
             const newEndDate = new Date(date.getFullYear(), date.getMonth(), lastDay);
             setEndDate(newEndDate);
+           setParam((prev: ParamType) => ({
+            ...prev,
+            endDate: dayjs(newEndDate).format('YYYY-MM-DD'),
+        }));
             console.log("종료 날짜:", formatDate(newEndDate));
         } else {
             setEndDate(date);

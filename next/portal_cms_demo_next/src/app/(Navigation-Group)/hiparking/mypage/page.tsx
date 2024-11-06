@@ -6,6 +6,7 @@ import UserIcon from '@/assets/images/icon/user-icon.png';
 import React, { useEffect, useState } from "react";
 import MyPageTabs from "@/app/components/common/myPageTabs";
 import Loading from "@/app/(Navigation-Group)/loading";
+import {UserType} from "@/@types/common";
 
 
 export default function Page() {
