@@ -50,10 +50,10 @@ export default function Page() {
                             {userInfo.platform}
                         </h2>
                         <h2 className='leading-[40px] text-gray-500 text-lg border-b mb-2 mt-14'>
-                            직책
+                            권한
                         </h2>
                         <h2 className={'text-2xl'}>
-                            {userInfo.work}
+                            {userInfo.auth}
                         </h2>
                         <h2 className='leading-[40px] text-gray-500 text-lg border-b mb-2 mt-14'>
                             성함

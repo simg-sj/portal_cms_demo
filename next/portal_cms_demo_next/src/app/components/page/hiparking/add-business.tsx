@@ -31,7 +31,6 @@ export interface AddBusinessRef {
 const AddBusiness = forwardRef<AddBusinessRef>((props, ref) => {
     const {
         register,
-        handleSubmit,
         watch,
         reset,
         trigger,

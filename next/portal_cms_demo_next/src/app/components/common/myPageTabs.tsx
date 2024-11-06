@@ -2,12 +2,6 @@
 import React, {useState, useEffect} from "react";
 import EditUser from "@/app/components/page/mypqge/editUser";
 import Loading from "@/app/(Navigation-Group)/loading";
-import Button from "@/app/components/common/ui/button";
-import Image from "next/image";
-import Plus from "@/assets/images/icon/plus-icon.png";
-import Checkbox from "@/app/components/common/ui/checkbox";
-import {listData, UserSet} from "@/config/data";
-import Pagination from "@/app/components/common/ui/pagination";
 import UserList from "@/app/components/page/mypqge/userList";
 
 

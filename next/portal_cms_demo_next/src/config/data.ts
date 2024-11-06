@@ -391,6 +391,7 @@ export const ClosingCode= {
 
 export const UserSet: UserType[] = [
     {
+        index: 1,
         auth: '관리자',
         name: '홍홍홍',
         platform: '하이파킹',
@@ -401,6 +402,7 @@ export const UserSet: UserType[] = [
         work: '팀장'
     },
     {
+        index: 2,
         auth: '사용자',
         name: '어쩌구',
         platform: '하이파킹',
@@ -411,6 +413,7 @@ export const UserSet: UserType[] = [
         work: '팀장'
     },
     {
+        index: 3,
         auth: '사용자',
         name: '저쩌구',
         platform: '하이파킹',
@@ -421,6 +424,7 @@ export const UserSet: UserType[] = [
         work: '팀장'
     },
     {
+        index: 4,
         auth: '관리자',
         name: '샤샤샥',
         platform: '하이파킹',

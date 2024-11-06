@@ -24,8 +24,7 @@ interface SlidePopupProps {
 const SlidePopup = ({isOpen, onClose, title, Content, buttons }: SlidePopupProps) => {
     const [shouldRender, setShouldRender] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
-    const [isEditing, setIsEditing
-    ] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
     //팝업화면 렌더링, 애니메이션 효과
     useEffect(() => {
         if (isOpen) {
