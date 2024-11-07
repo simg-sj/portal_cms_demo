@@ -7,12 +7,11 @@
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 "use client"
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import DayTerm from "@/app/components/common/ui/dayTerm";
 import Button from "@/app/components/common/ui/button";
 import Image from "next/image";
 import Excel from "@/assets/images/icon/excel-icon.png";
-import {listData} from "@/config/data";
 import Plus from "@/assets/images/icon/plus-icon.png";
 import SlidePopup from "@/app/components/popup/SlidePopup";
 import HiparkingList from "@/app/components/page/hiparking/list";
@@ -20,16 +19,35 @@ import Checkbox from "@/app/components/common/ui/checkbox";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
 import {getClaim} from "@/app/(Navigation-Group)/hiparking/action";
+import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
 
+interface ClaimType {
+    irpk: number;
+    index: number;
+    insuNum: string;
+    accidentDate: string;
+    closingAmt: number;
+    pklAddress: string;
+    wName: string;
+    wCell: string;
+    vCarNum: string;
+}
 
+interface ParamType {
+    bpk: number;
+    condition: string;
+    endDate: string;
+    startDate: string;
+    text: string;
+}
 
 export default function Page() {
     const [isOpen, setIsOpen] = useState(false);
     const [isNew, setIsNew] = useState(false);
     const [selectedRow, setSelectedRow] = useState<number | null>(null);
-    const [data, setData] = useState<[ClaimType]>();
+    // const [data, setData] = useState<[ClaimType]>();
+    const [data, setData] = useState<ClaimType[]>([]);
     const [rowData, setRowData] = useState<ClaimType>();
-    const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
     const [param, setParam] = useState<ParamType>({
         bpk : 2,
         condition: "wCell",
@@ -108,11 +126,8 @@ export default function Page() {
             },
         ];
 
-    const columns = [
-        "고유번호", "접수번호",	"접수일",	"사고일", "지급보험금",	"사고장소",	"피해자명",	"피해자연락처", "차량번호"
-    ];
 
-    const toggleSelectAll = (checked: boolean) => {
+    /*const toggleSelectAll = (checked: boolean) => {
         if (checked) {
             const allIds = new Set(listData.map(item => item.ppk));
             setSelectedItems(allIds);
@@ -132,13 +147,33 @@ export default function Page() {
     };
 
     const isAllSelected = selectedItems.size === listData.length;
-    const isSomeSelected = selectedItems.size > 0 && selectedItems.size < listData.length;
+    const isSomeSelected = selectedItems.size > 0 && selectedItems.size < listData.length;*/
+
+    //체크박스
+    const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
+    const columns = [
+        "고유번호", "접수번호",	"접수일",	"사고일", "지급보험금",	"사고장소",	"피해자명",	"피해자연락처", "차량번호"
+    ];
+
+    //사용자 선택 삭제
+    const handleDeleteGroup = () => {
+        if (selectedItems.size === 0) {
+            alert('삭제할 항목을 선택해주세요.');
+            return;
+        }
+        if (window.confirm(`선택한 ${selectedItems.size}개의 항목을 삭제하시겠습니까?`)) {
+            console.log('삭제할 항목 인덱스:', Array.from(selectedItems));
+            return;
+        }
+    };
+
 
     const onSearchClick = async () => {
         let result =  await getClaim(param);
         console.log(result);
         
-        setData(result);
+        // setData(result);
+        setData(result || []);
     }
     
     return (
@@ -182,7 +217,7 @@ export default function Page() {
 
             <div className={'border border-gray-100 p-6 rounded-lg bg-white mt-5'}>
                 <div className={'flex justify-end space-x-4'}>
-                    <Button color={"red"} fill={false} height={36} width={120}>
+                    <Button color={"red"} fill={false} height={36} width={120} onClick={handleDeleteGroup}>
                         삭제
                     </Button>
                     <Button color={"main"} fill height={36} width={120} onClick={handleNewEntry}>
@@ -198,7 +233,36 @@ export default function Page() {
                     buttons={popupButtons}
                 />
                 <div className={'mt-4'}>
-                        <table className="w-full">
+                    <CheckboxContainer
+                        items={data}
+                        getItemId={(item) => item.irpk}
+                        columns={columns}
+                        renderItem={(item, isSelected, onToggle) => (
+                            <tr
+                                key={item.irpk}
+                                className={`cursor-pointer ${selectedRow === item.irpk ? 'bg-main-lighter' : 'hover:bg-main-lighter'}`}
+                                onClick={() => handleRowClick(item)}
+                            >
+                                <td onClick={e => e.stopPropagation()}>
+                                    <Checkbox
+                                        checked={isSelected}
+                                        onChange={() => onToggle(item.irpk)}
+                                    />
+                                </td>
+                                <td>{item.irpk}</td>
+                                <td>{item.insuNum}</td>
+                                <td>{dayjs(item.accidentDate).format('YYYY-MM-DD')}</td>
+                                <td>{item.accidentDate}</td>
+                                <td>{item.closingAmt}</td>
+                                <td>{item.pklAddress}</td>
+                                <td>{item.wName}</td>
+                                <td>{item.wCell}</td>
+                                <td>{item.vCarNum}</td>
+                            </tr>
+                        )}
+                        onSelectionChange={setSelectedItems}
+                    />
+                    {/*<table className="w-full">
                         <thead>
                         <tr>
                             <th>
@@ -234,7 +298,7 @@ export default function Page() {
                             </tr>
                         ))}
                         </tbody>
-                    </table>
+                    </table>*/}
                     <Pagination maxNumber={10} onChange={(page) => console.log(`Page changed to ${page + 1}`)} />
                 </div>
             </div>

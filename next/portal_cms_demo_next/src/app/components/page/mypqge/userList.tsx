@@ -9,9 +9,12 @@ import Pagination from "@/app/components/common/ui/pagination";
 import CenterPopup from "@/app/components/popup/CenterPopup";
 import AddUser, {AddUserRef} from "@/app/components/page/hiparking/user-add";
 import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
-import DayTerm from "@/app/components/common/ui/dayTerm";
-import Excel from "@/assets/images/icon/excel-icon.png";
 
+interface SearchParams {
+    authority: string;
+    searchCondition: string;
+    searchKeyword: string;
+}
 
 
 export default function UserList() {
@@ -99,6 +102,25 @@ export default function UserList() {
         }
     };
 
+    //조회
+
+    const [searchParams, setSearchParams] = useState<SearchParams>({
+        authority: '전체',
+        searchCondition: '아이디',
+        searchKeyword: ''
+    });
+
+    const handleParamChange = (key: keyof SearchParams, value: string) => {
+        setSearchParams(prev => ({
+            ...prev,
+            [key]: value
+        }));
+    };
+
+    const onSearchClick = () => {
+        console.log("검색 데이터:", searchParams);
+    }
+
     const getPopupButtons = () => {
         if (mode === 'add') {
             return [
@@ -149,29 +171,46 @@ export default function UserList() {
         <>
             <div className={'border border-gray-100 p-6 rounded-lg bg-white flex items-center justify-between'}>
                 <div className={'flex items-center'}>
-                    <div className={'text-gray-700 font-medium pt-1 ml-7 mr-5'}>권한</div>
-                    <select className={'w-[200px]'}>
-                        <option>전체</option>
-                        <option>관리자</option>
-                        <option>사용자</option>
+                    <div className={'text-gray-700 font-medium pt-1 mr-5'}>권한</div>
+                    <select
+                        className={'w-[200px]'}
+                        value={searchParams.authority}
+                        onChange={(e) => handleParamChange('authority', e.target.value)}
+                    >
+                        <option value={'전체'}>전체</option>
+                        <option value={'관리자'}>관리자</option>
+                        <option value={'사용자'}>사용자</option>
                     </select>
-                    <div className={'text-gray-700 font-medium pt-1 ml-2 mr-5'}>검색조건</div>
-                    <select className={'w-[200px]'}>
-                        <option>아이디</option>
-                        <option>이름</option>
-                        <option>연락처</option>
+                    <div className={'text-gray-700 font-medium pt-1 ml-7 mr-5'}>검색조건</div>
+                    <select
+                        className={'w-[200px]'}
+                        value={searchParams.searchCondition}
+                        onChange={(e) => handleParamChange('searchCondition', e.target.value)}
+                    >
+                        <option value={'아이디'}>아이디</option>
+                        <option value={'이름'}>이름</option>
+                        <option value={'연락처'}>연락처</option>
                     </select>
-                    <input type={'text'} placeholder={'검색조건 설정 후 검색해주세요'}
-                           className={'w-[300px] h-[35px] rounded-tr-none rounded-br-none ml-5'}/>
-                    <Button color={'main'} width={100} height={35} fill
-                            className={'rounded-tl-none rounded-bl-none'}>조회</Button>
+                    <input
+                        type={'text'}
+                        placeholder={'검색조건 설정 후 검색해주세요'}
+                        className={'w-[300px] h-[35px] rounded-tr-none rounded-br-none ml-5'}
+                        value={searchParams.searchKeyword}
+                        onChange={(e) => handleParamChange('searchKeyword', e.target.value)}
+                    />
+                    <Button
+                        color={'main'}
+                        width={100}
+                        height={35}
+                        fill
+                        className={'rounded-tl-none rounded-bl-none'}
+                        onClick={onSearchClick}
+                    >
+                        조회
+                    </Button>
                 </div>
-                <Button color={"green"} height={36} width={120} className={'ml-5'}>
-                    <Image src={Excel.src} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
-                    엑셀다운
-                </Button>
             </div>
-            <div className={'flex justify-end space-x-4'}>
+            <div className={'flex justify-end space-x-4 mt-4'}>
                 <Button color={"red"} fill={false} height={36} width={120} onClick={handleDeleteGroup}>
                     삭제
                 </Button>
