@@ -4,6 +4,9 @@
     "allowJs": true,
     "noEmit": false,
     "esModuleInterop": true,
+    "strictFunctionTypes": false,
+    "noImplicitThis": false,
+    "alwaysStrict": false,
     "skipLibCheck": true,      // 라이브러리 파일의 타입 검사를 건너뜀
     "strict": false,           // 타입 검사 엄격 모드를 비활성화
     "noImplicitAny": false,

@@ -1,6 +1,6 @@
 "use client"
 
-import {usePathname, useRouter, useSelectedLayoutSegment} from 'next/navigation';
+import {usePathname} from 'next/navigation';
 import LogoutIcon from "@/assets/images/icon/logout-icon.png";
 import SimgLogo from "@/assets/images/logo/simg-white-logo.png";
 import { useEffect, useState } from "react";
@@ -9,7 +9,7 @@ import DashboardIcon from "@/assets/images/icon/dashboard-icon.png";
 import ListIcon from "@/assets/images/icon/list-icon.png";
 import UserIcon from "@/assets/images/icon/user-icon.png";
 import MenuItem from "@/app/components/common/MenuItem";
-import Image, {StaticImageData} from "next/image";
+import Image from "next/image";
 import {useSession} from "next-auth/react";
 import {signOutWithForm} from "@/app/lib/action/auth";
 import Loading from "@/app/(Navigation-Group)/loading";
@@ -19,7 +19,6 @@ import {MenuItemType, Theme} from "@/@types/common";
 export default function Navigation() {
     const pathname = usePathname();
     const {data } = useSession();
-    const router = useRouter();
     const [themeConfig, setThemeConfig] = useState<Theme | null>(null);
     const [activeLink, setActiveLink] = useState<string | null>(null);
     useEffect(() => {

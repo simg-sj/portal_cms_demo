@@ -156,13 +156,13 @@ export const monthAccidentData: MonthAccidentData[] = [
 export const topCounselData = {
     labels: ['정곡빌딩', '부산 사학연금', '청주성모병원', '서울스퀘어', '일산국립암센터'],
     values: [2535000, 2282000, 1650000, 1609000, 1150000],
-    color: '#fdae68'
+    color: '#4a7ff7'
 };
 
 export const topBusinessData = {
     labels: ['F1963 1 주차장', '가든호텔', '그랜드하얏인천', '그레이츠판교', '명지병원'],
     values: [4, 3, 3, 2, 1],
-    color: '#fdae68'
+    color: '#4a7ff7'
 };
 
 export const listData: ListData[] = [
