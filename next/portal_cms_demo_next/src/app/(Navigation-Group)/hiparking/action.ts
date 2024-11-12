@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-11-05 16:27:57
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-11-11 14:15:52
+ * @LastEditTime: 2024-11-12 15:38:21
  * @FilePath: portal_cms_demo_next/src/app/(Navigation-Group)/hiparking/action.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -10,7 +10,7 @@
 
 'use server';
 
-import {ClaimType, DashBoardType, ParamType} from "@/@types/common";
+import {ClaimType, DashBoardType, ParamDashType, ParamType} from "@/@types/common";
 
 interface ImageType {
     location : string;
@@ -64,7 +64,7 @@ export async function getClaim(param: ParamType): Promise<ClaimType[]> {
 }
 
 
-export async function getDashBoard(param: ParamType): Promise<DashBoardType[]> {
+export async function getDashBoard(param: ParamDashType): Promise<DashBoardType[]> {
     try {
         const response = await fetch(`https://center-api.simg.kr/api/portal/getDashBoard`, {
             method: 'POST',

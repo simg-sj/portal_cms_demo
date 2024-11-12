@@ -223,5 +223,11 @@ interface ButtonConfig {
 
 
 interface DashBoardType {
-
+        str
+}
+interface ParamDashType {
+    job : string;
+    bpk : string;
+    sDay : string;
+    eDay : string;
 }

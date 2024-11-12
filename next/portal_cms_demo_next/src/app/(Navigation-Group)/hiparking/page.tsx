@@ -2,7 +2,7 @@
 import Button from "@/app/components/common/ui/button";
 import Plus from "@/assets/images/icon/plus-icon.png";
 import Excel from "@/assets/images/icon/excel-icon.png";
-import React, {useState, useRef} from "react";
+import React, {useState, useRef, useEffect} from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import {initialCounselData, changeCounselData, monthAccidentData, topCounselData, topBusinessData} from "@/config/data";
 import DoughnutChart from "@/app/components/chart/DoughnutChart";
@@ -23,15 +23,15 @@ import PieChart from "@/app/components/chart/PieChart";
 import DayTerm from "@/app/components/common/ui/dayTerm";
 import CenterPopup from "@/app/components/popup/CenterPopup";
 import AddBusiness, { AddBusinessRef } from "@/app/components/page/hiparking/add-business";
-import {DataState} from "@/@types/common";
+import {DataState, ParamDashType} from "@/@types/common";
+import {getDashBoard} from "@/app/(Navigation-Group)/hiparking/action";
 
 
 export default function Page() {
     //사업장추가팝업
     const [isOpen, setIsOpen] = useState(false);
     const businessRef = useRef<AddBusinessRef>(null);
-    const [param ,setParam] = useState();
-
+    const [param ,setParam] = useState<ParamDashType>();
     const handleConfirm = async () => {
         if (businessRef.current) {
             const isValid = await businessRef.current.validateForm();
@@ -165,6 +165,19 @@ export default function Page() {
         },
     ]
 
+    useEffect(() => {
+        async function fetchData(){
+            try {
+                console.log(param);
+                let result = await getDashBoard({'job' : 'dash','bpk' : '2','sDay': '2024-09', 'eDay' :'2024-11'});
+                console.log(result);
+            }   catch(e){
+                console.log(e);
+            }
+        }
+
+        fetchData();
+    }, []);
     return (
         <>
             <div className={'px-8 py-6 bg-white rounded-xl'}>

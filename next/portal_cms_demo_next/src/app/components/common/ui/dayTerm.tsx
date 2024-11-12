@@ -22,8 +22,6 @@ const DayTerm = ({sDay, eDay, type = 'day', setParam }: DayTermProps) => {
     const [startDate, setStartDate] = useState<Date | null>(sDay);
     const [endDate, setEndDate] = useState<Date | null>(eDay);
 
-    console.log(sDay, eDay)
-    console.log("@@@str", startDate)
     //타입 월달력, 전체달력 지정 : 월달력 3달단위 전체달력 오늘날짜 기본값
     useEffect(() => {
         // 월달력: 3개월 전부터 현재까지
