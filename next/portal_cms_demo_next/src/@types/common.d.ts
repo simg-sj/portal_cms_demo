@@ -220,3 +220,8 @@ interface ButtonConfig {
     width?: number;
     height?: number;
 }
+
+
+interface DashBoardType {
+
+}
