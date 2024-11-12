@@ -20,6 +20,7 @@ import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
 import {getClaim} from "@/app/(Navigation-Group)/hiparking/action";
 import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
+import {ButtonConfig} from "@/@types/common";
 
 interface ClaimType {
     irpk: number;

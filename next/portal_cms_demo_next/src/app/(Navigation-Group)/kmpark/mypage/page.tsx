@@ -11,7 +11,7 @@
 import {useSession} from "next-auth/react";
 import Image from "next/image";
 import UserIcon from '@/assets/images/icon/user-icon.png';
-import Tab from "@/app/components/common/tab";
+import Tab from "@/app/components/common/ui/tab";
 import React, {useEffect, useState} from "react";
 import MyPageTabs from "@/app/components/common/myPageTabs";
 import Loading from "@/app/(Navigation-Group)/loading";

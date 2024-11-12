@@ -112,12 +112,12 @@ input[type=file]::file-selector-button {
         --color-sub-lighter: #fadfaf;
     }
     html[data-theme='kmpark'] {
-        --color-main: #4a7ff7;
-        --color-main-light: #4a7ff7;
-        --color-main-lighter: #4a7ff7;
-        --color-sub: #efb944;
-        --color-sub-light: #fcd174;
-        --color-sub-lighter: #fadfaf;
+        --color-main: #4a80f7;
+        --color-main-light: #79a2fc;
+        --color-main-lighter: #e0e9ff;
+        --color-sub: #868686;
+        --color-sub-light: #c0c0c0;
+        --color-sub-lighter: #dcdcdc;
     }
 }
 

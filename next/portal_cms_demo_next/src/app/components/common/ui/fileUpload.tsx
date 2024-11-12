@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import Image from "next/image";
 import NoneFile from "@/assets/images/icon/nonefile-icon.png";
 import Upload from "@/assets/images/icon/upload-icon.png";
-import {getImage} from "@/app/(Navigation-Group)/hiparking/action";
+import {ImageType} from "@/@types/common";
 
 interface ImageUploaderProps {
     initialImages: ImageType[];
