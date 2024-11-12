@@ -1,10 +1,12 @@
 import React, { forwardRef, useImperativeHandle } from 'react';
 import { useForm } from "react-hook-form";
+import {UserType} from "@/@types/common";
 
 export interface AddUserRef {
     getFormData: () => UserType;
     clearForm: () => void;
     validateForm: () => Promise<boolean>;
+    setFormData: (data: UserType) => void;
 }
 
 const AddUser = forwardRef<AddUserRef>((props, ref) => {
@@ -42,10 +44,15 @@ const AddUser = forwardRef<AddUserRef>((props, ref) => {
         return watch();
     };
 
+    const setFormData = (data: UserType) => {
+        reset(data);
+    }
+
     useImperativeHandle(ref, () => ({
         getFormData,
         clearForm,
         validateForm,
+        setFormData,
     }));
 
     return (
@@ -146,8 +153,8 @@ const AddUser = forwardRef<AddUserRef>((props, ref) => {
                         })}
                     >
                         <option disabled={true} hidden={true} value={'placeholder'}>플랫폼을 선택해주세요</option>
-                        <option value={'hiparking'}>하이파킹</option>
-                        <option value={'kmpark'}>케이엠파크</option>
+                        <option value={'하이파킹'}>하이파킹</option>
+                        <option value={'케이엠파크'}>케이엠파크</option>
                     </select>
                     {errors.platform && (
                         <p className={'text-red-500 text-sm mt-1'}>{errors.platform.message}</p>

@@ -7,7 +7,7 @@
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 "use client"
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import DayTerm from "@/app/components/common/ui/dayTerm";
 import Button from "@/app/components/common/ui/button";
 import Image from "next/image";
@@ -41,6 +41,8 @@ interface ParamType {
     text: string;
 }
 
+const itemsPerPage = 15; //페이지당 항목 수
+
 export default function Page() {
     const [isOpen, setIsOpen] = useState(false);
     const [isNew, setIsNew] = useState(false);
@@ -48,6 +50,8 @@ export default function Page() {
     // const [data, setData] = useState<[ClaimType]>();
     const [data, setData] = useState<ClaimType[]>([]);
     const [rowData, setRowData] = useState<ClaimType>();
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
     const [param, setParam] = useState<ParamType>({
         bpk : 2,
         condition: "wCell",
@@ -55,7 +59,23 @@ export default function Page() {
         startDate: "",
         text : ''
     });
-    
+
+    const getPaginatedData = () => {
+        const startIndex = currentPage * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        return data.slice(startIndex, endIndex)
+    }
+
+    useEffect(() => {
+        if(data.length > 0) {
+            setTotalPages(Math.ceil(data.length / itemsPerPage));
+        }
+    }, [data]);
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    }
+
     const closePopup = () => {
         setIsOpen(false);
         setSelectedRow(null);
@@ -127,28 +147,6 @@ export default function Page() {
         ];
 
 
-    /*const toggleSelectAll = (checked: boolean) => {
-        if (checked) {
-            const allIds = new Set(listData.map(item => item.ppk));
-            setSelectedItems(allIds);
-        } else {
-            setSelectedItems(new Set());
-        }
-    };
-
-    const toggleSelectItem = (id: number) => {
-        const newSelectedItems = new Set(selectedItems);
-        if (newSelectedItems.has(id)) {
-            newSelectedItems.delete(id);
-        } else {
-            newSelectedItems.add(id);
-        }
-        setSelectedItems(newSelectedItems);
-    };
-
-    const isAllSelected = selectedItems.size === listData.length;
-    const isSomeSelected = selectedItems.size > 0 && selectedItems.size < listData.length;*/
-
     //체크박스
     const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
     const columns = [
@@ -169,13 +167,14 @@ export default function Page() {
 
 
     const onSearchClick = async () => {
-        let result =  await getClaim(param);
+        const result =  await getClaim(param);
         console.log(result);
-        
+
         // setData(result);
         setData(result || []);
+        setCurrentPage(0);
     }
-    
+
     return (
         <>
             <div className={'border border-gray-100 p-6 rounded-lg bg-white flex items-center justify-between'}>
@@ -234,7 +233,7 @@ export default function Page() {
                 />
                 <div className={'mt-4'}>
                     <CheckboxContainer
-                        items={data}
+                        items={getPaginatedData()}
                         getItemId={(item) => item.irpk}
                         columns={columns}
                         renderItem={(item, isSelected, onToggle) => (
@@ -262,44 +261,9 @@ export default function Page() {
                         )}
                         onSelectionChange={setSelectedItems}
                     />
-                    {/*<table className="w-full">
-                        <thead>
-                        <tr>
-                            <th>
-                                <Checkbox
-                                    checked={isAllSelected}
-                                    indeterminate={isSomeSelected}
-                                    onChange={toggleSelectAll}
-                                />
-                            </th>
-                            {columns.map((column, index) => (
-                                <th key={index}>{column}</th>
-                            ))}
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {data?.map((item, index) => (
-                            <tr key={item.irpk} className={`cursor-pointer ${selectedRow === item.irpk ? 'bg-main-lighter' : 'hover:bg-main-lighter'}`} onClick={() => handleRowClick(item, index)}>
-                                <td onClick={event => event.stopPropagation()}>
-                                    <Checkbox
-                                        checked={selectedItems.has(item.irpk)}
-                                        onChange={() => toggleSelectItem(item.irpk)}
-                                    />
-                                </td>
-                                <td>{item.irpk}</td>
-                                <td>{item.insuNum}</td>
-                                <td>{dayjs(item.accidentDate).format('YYYY-MM-DD')}</td>
-                                <td>{item.accidentDate}</td>
-                                <td>{item.closingAmt}</td>
-                                <td>{item.pklAddress}</td>
-                                <td>{item.wName}</td>
-                                <td>{item.wCell}</td>
-                                <td>{item.vCarNum}</td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>*/}
-                    <Pagination maxNumber={10} onChange={(page) => console.log(`Page changed to ${page + 1}`)} />
+                    {totalPages > 0 && (
+                    <Pagination maxNumber={totalPages} onChange={handlePageChange} />
+                        )}
                 </div>
             </div>
         </>

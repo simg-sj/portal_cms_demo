@@ -1,9 +1,13 @@
 import EditableField from "@/app/components/common/ui/editField";
 import React from "react";
 import useInputChange from "@/app/lib/customHook/inputChange";
+import {UserType} from "@/@types/common";
 
+interface EditUserProps {
+    userInfo: UserType;
+}
 
-export default function EditUser({userInfo}: UserType) {
+export default function EditUser({userInfo}: EditUserProps) {
     const initialData = {
         counselData: [{name: '', age: ''}],
         changeData: [{status: ''}]
@@ -16,7 +20,7 @@ export default function EditUser({userInfo}: UserType) {
                     <h2 className='leading-[40px] text-gray-500 text-lg border-b mb-2'>ID</h2>
                     <EditableField
                         type={'text'}
-                        onChange={(value) => handleInputChange(0, 'EndAmt', value)}
+                        onChange={(value) => handleInputChange(0, 'userId', value)}
                         value={userInfo.userId}
                     />
                 </div>
@@ -24,28 +28,28 @@ export default function EditUser({userInfo}: UserType) {
                     <h2 className='leading-[40px] text-gray-500 text-lg border-b mb-2'>성함</h2>
                     <EditableField
                         type={'text'}
-                        onChange={(value) => handleInputChange(0, 'EndAmt', value)}
+                        onChange={(value) => handleInputChange(0, 'name', value)}
                         value={userInfo.name}/>
                 </div>
                 <div>
                     <h2 className='leading-[40px] text-gray-500 text-lg border-b mb-2'>연락처</h2>
                     <EditableField
                         type={'text'}
-                        onChange={(value) => handleInputChange(0, 'EndAmt', value)}
+                        onChange={(value) => handleInputChange(0, 'phone', value)}
                         value={userInfo.phone}/>
                 </div>
                 <h2 className='leading-[40px] text-gray-500 text-lg border-b mb-2'>이메일</h2>
                 <div>
                     <EditableField
                         type={'text'}
-                        onChange={(value) => handleInputChange(0, 'EndAmt', value)}
+                        onChange={(value) => handleInputChange(0, 'email', value)}
                         value={userInfo.email}/>
                 </div>
                 <h2 className='leading-[40px] text-gray-500 text-lg border-b mb-2'>직책</h2>
                 <div>
                     <EditableField
                         type={'text'}
-                        onChange={(value) => handleInputChange(0, 'EndAmt', value)}
+                        onChange={(value) => handleInputChange(0, 'work', value)}
                         value={userInfo.work}/>
                 </div>
                 <h2 className='leading-[40px] text-gray-500 text-lg border-b mb-2'>권한</h2>
