@@ -1,5 +1,5 @@
 'use client'
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import Button from "@/app/components/common/ui/button";
 import Image from "next/image";
 import Plus from "@/assets/images/icon/plus-icon.png";
@@ -7,8 +7,9 @@ import Checkbox from "@/app/components/common/ui/checkbox";
 import {UserSet} from "@/config/data";
 import Pagination from "@/app/components/common/ui/pagination";
 import CenterPopup from "@/app/components/popup/CenterPopup";
-import AddUser, {AddUserRef} from "@/app/components/page/hiparking/user-add";
+import AddUser, {AddUserRef} from "@/app/components/page/hiparking/add-user";
 import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
+import {UserType} from "@/@types/common";
 
 interface SearchParams {
     authority: string;
@@ -16,11 +17,33 @@ interface SearchParams {
     searchKeyword: string;
 }
 
-
 export default function UserList() {
-    //체크박스
     const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
     const columns = ["이름", "연락처", "이메일", "아이디", "권한"];
+    const addUserRef = useRef<AddUserRef>(null);
+    const [isOpen, setIsOpen] = useState(false);
+    const [mode, setMode] = useState<'add' | 'edit'>('add');
+    const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const itemsPerPage = 10; //페이지당 항목수
+    const totalItems = UserSet.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    // pagination 페이지
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const displayedUsers = UserSet.slice(startIndex, startIndex + itemsPerPage);
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page + 1);
+        setSelectedItems(new Set()); // 페이지 변경 시 선택된 항목 초기화
+    };
+
+    useEffect(() => {
+        if (isOpen && mode === 'edit' && selectedUser && addUserRef.current) {
+            addUserRef.current.setFormData(selectedUser);
+        }
+    }, [isOpen, mode, selectedUser]);
 
     //사용자 선택 삭제
     const handleDeleteGroup = () => {
@@ -28,15 +51,12 @@ export default function UserList() {
             alert('삭제할 항목을 선택해주세요.');
             return;
         }
+        const selectedUsers = UserSet.filter((user, index) => selectedItems.has(index));
         if (window.confirm(`선택한 ${selectedItems.size}개의 항목을 삭제하시겠습니까?`)) {
-            console.log('삭제할 항목 인덱스:', Array.from(selectedItems));
+            console.log('삭제할 항목:', selectedUsers.map(user => ({ id: user.userId, name: user.name , index: user.index })));
             return;
         }
     };
-    //팝업
-    const [isOpen, setIsOpen] = useState(false);
-    const [mode, setMode] = useState<'add' | 'edit' >('add');
-    const addUserRef = useRef<AddUserRef>(null);
 
     const handleAdd = async () => {
         if (addUserRef.current) {
@@ -72,10 +92,12 @@ export default function UserList() {
     };
 
     const handleDeleteSingle = () => {
-        const formData = addUserRef.current.getFormData();
-        if (window.confirm(`${formData.name} ${formData.auth} 를 삭제하시겠습니까?`)) {
-            alert('삭제하였습니다');
-            setIsOpen(false);
+        if (addUserRef.current) {
+            const formData = addUserRef.current.getFormData();
+            if (window.confirm(`${formData.name} ${formData.auth} 를 삭제하시겠습니까?`)) {
+                alert('삭제하였습니다');
+                setIsOpen(false);
+            }
         }
     };
 
@@ -83,19 +105,20 @@ export default function UserList() {
         if (addUserRef.current) {
             addUserRef.current.clearForm();
         }
+        setSelectedUser(null);
         setIsOpen(false);
     };
 
-    const handleRowClick = () => {
+    const handleRowClick = (user: UserType) => {
+        console.log("선택한 사용자 데이터:", user);
+        setSelectedUser(user);
         setMode('edit');
         setIsOpen(true);
-        if (addUserRef.current) {
-            //테이블 데이터 불러오기
-        }
     }
 
     const handleAddClick = () => {
         setMode('add');
+        setSelectedUser(null);
         setIsOpen(true);
         if (addUserRef.current) {
             addUserRef.current.clearForm();
@@ -103,7 +126,6 @@ export default function UserList() {
     };
 
     //조회
-
     const [searchParams, setSearchParams] = useState<SearchParams>({
         authority: '전체',
         searchCondition: '아이디',
@@ -119,6 +141,7 @@ export default function UserList() {
 
     const onSearchClick = () => {
         console.log("검색 데이터:", searchParams);
+        setCurrentPage(1); // 검색 시 첫 페이지로 이동
     }
 
     const getPopupButtons = () => {
@@ -228,12 +251,12 @@ export default function UserList() {
             />
             <div className={'mt-4'}>
                 <CheckboxContainer<UserType>
-                    items={UserSet}
+                    items={displayedUsers}
                     getItemId={(item) => item.index}
                     columns={columns}
                     renderItem={(item, isSelected, onToggle) => (
                         <tr className={'cursor-pointer hover:bg-main-lighter'}
-                            onClick={() => handleRowClick()}>
+                            onClick={() => handleRowClick(item)}>
                             <td onClick={event => event.stopPropagation()}>
                                 <Checkbox
                                     checked={isSelected}
@@ -249,7 +272,10 @@ export default function UserList() {
                     )}
                     onSelectionChange={setSelectedItems}
                 />
-                <Pagination maxNumber={10} onChange={(page) => console.log(`Page changed to ${page + 1}`)}/>
+                <Pagination
+                    maxNumber={totalPages}
+                    onChange={handlePageChange}
+                />
             </div>
         </>
     );
