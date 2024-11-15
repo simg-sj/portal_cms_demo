@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-10-02 11:05:37
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-11-06 13:54:49
+ * @LastEditTime: 2024-11-12 17:22:52
  * @FilePath: portal_cms_demo_next/src/app/(Navigation-Group)/hiparking/list/page.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -20,11 +20,11 @@ import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
 import {getClaim} from "@/app/(Navigation-Group)/hiparking/action";
 import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
-import {ButtonConfig} from "@/@types/common";
+import {ButtonConfig, ClaimRowType} from "@/@types/common";
 
 interface ClaimType {
     irpk: number;
-    index: number;
+    index?: number;
     insuNum: string;
     accidentDate: string;
     closingAmt: number;
@@ -48,9 +48,8 @@ export default function Page() {
     const [isOpen, setIsOpen] = useState(false);
     const [isNew, setIsNew] = useState(false);
     const [selectedRow, setSelectedRow] = useState<number | null>(null);
-    // const [data, setData] = useState<[ClaimType]>();
-    const [data, setData] = useState<ClaimType[]>([]);
-    const [rowData, setRowData] = useState<ClaimType>();
+    const [data, setData] = useState<ClaimRowType[] | []>([]);
+    const [rowData, setRowData] = useState<ClaimRowType>();
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [param, setParam] = useState<ParamType>({
@@ -90,7 +89,7 @@ export default function Page() {
         }
     };
 
-    const handleRowClick = (idx, index: number) => {
+    const handleRowClick = (index: number, idx) => {
         setIsNew(false);
         setSelectedRow(index);
         setIsOpen(true);
@@ -241,7 +240,7 @@ export default function Page() {
                             <tr
                                 key={item.irpk}
                                 className={`cursor-pointer ${selectedRow === item.irpk ? 'bg-main-lighter' : 'hover:bg-main-lighter'}`}
-                                onClick={() => handleRowClick(item)}
+                                onClick={() => handleRowClick(item.irpk, item)}
                             >
                                 <td onClick={e => e.stopPropagation()}>
                                     <Checkbox

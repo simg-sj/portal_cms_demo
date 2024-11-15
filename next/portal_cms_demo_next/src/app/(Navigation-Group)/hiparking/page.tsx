@@ -23,7 +23,7 @@ import PieChart from "@/app/components/chart/PieChart";
 import DayTerm from "@/app/components/common/ui/dayTerm";
 import CenterPopup from "@/app/components/popup/CenterPopup";
 import AddBusiness, { AddBusinessRef } from "@/app/components/page/hiparking/add-business";
-import {DataState, ParamDashType} from "@/@types/common";
+import {DataState, ParamDashType, ParamType} from "@/@types/common";
 import {getDashBoard} from "@/app/(Navigation-Group)/hiparking/action";
 
 
@@ -31,7 +31,7 @@ export default function Page() {
     //사업장추가팝업
     const [isOpen, setIsOpen] = useState(false);
     const businessRef = useRef<AddBusinessRef>(null);
-    const [param ,setParam] = useState<ParamDashType>();
+    const [param ,setParam] = useState<ParamType>();
     const handleConfirm = async () => {
         if (businessRef.current) {
             const isValid = await businessRef.current.validateForm();
@@ -169,7 +169,7 @@ export default function Page() {
         async function fetchData(){
             try {
                 console.log(param);
-                let result = await getDashBoard({'job' : 'dash','bpk' : '2','sDay': '2024-09', 'eDay' :'2024-11'});
+                const result = await getDashBoard({'job' : 'dash','bpk' : '2','sDay': '2024-09', 'eDay' :'2024-11'});
                 console.log(result);
             }   catch(e){
                 console.log(e);

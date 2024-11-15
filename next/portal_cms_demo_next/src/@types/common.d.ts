@@ -159,7 +159,7 @@ interface Theme {
     menuItems: MenuItems;
 }
 
-interface ClaimType {
+interface ClaimRowType {
     irpk: number;                       // Primary key, auto-increment
     bpk?: number | null;                // 업체키
     pNo : string;
@@ -226,6 +226,13 @@ interface DashBoardType {
         str
 }
 interface ParamDashType {
+    job ?: string;
+    bpk ?: string;
+    startDate : string;
+    endDate : string;
+}
+
+interface ParamDashType2 {
     job : string;
     bpk : string;
     sDay : string;
