@@ -7,7 +7,7 @@ import Checkbox from "@/app/components/common/ui/checkbox";
 import {UserSet} from "@/config/data";
 import Pagination from "@/app/components/common/ui/pagination";
 import CenterPopup from "@/app/components/popup/CenterPopup";
-import AddUser, {AddUserRef} from "@/app/components/page/hiparking/add-user";
+import AddUser, {AddUserRef} from "@/app/components/pageComponents/parking/add-user";
 import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
 import {UserType} from "@/@types/common";
 

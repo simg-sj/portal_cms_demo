@@ -1,6 +1,7 @@
 import React from 'react';
 import {Bar} from 'react-chartjs-2';
 import {Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, ChartOptions, Chart} from 'chart.js';
+import Loading from "@/app/(Navigation-Group)/loading";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip);
 
@@ -16,6 +17,10 @@ interface BarHorizonChartProps {
 }
 
 const BarHorizonChart = ({data, options}: BarHorizonChartProps) => {
+    if (!data) {
+        console.error("data prop is required.");
+        return <div>데이터를 불러올 수 없습니다.</div>;
+    }
     const chartData = {
         labels: data.labels,
         datasets: [
