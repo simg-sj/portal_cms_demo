@@ -1,8 +1,8 @@
 "use client";
 import React, {useState, useEffect} from "react";
-import EditUser from "@/app/components/page/mypqge/editUser";
+import EditUser from "@/app/components/pageComponents/mypqge/editUser";
 import Loading from "@/app/(Navigation-Group)/loading";
-import UserList from "@/app/components/page/mypqge/userList";
+import UserList from "@/app/components/pageComponents/mypqge/userList";
 
 
 interface UserParam {

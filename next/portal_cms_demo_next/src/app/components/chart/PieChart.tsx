@@ -11,6 +11,10 @@ interface PieChartProps {
 }
 
 function PieChart({ data, options }: PieChartProps) {
+    if (!data) {
+        console.error("data prop is required.");
+        return <div>데이터를 불러올 수 없습니다.</div>;
+    }
     return (
         <div className={'flex justify-between w-full'}>
             <div className={'flex flex-col justify-center mt-16'}>

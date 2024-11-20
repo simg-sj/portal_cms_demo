@@ -26,7 +26,10 @@ interface BarTwowayChartProps {
 }
 
 const BarTwowayChart = ({data, options}: BarTwowayChartProps) => {
-
+    if (!data) {
+        console.error("data prop is required.");
+        return <div>데이터를 불러올 수 없습니다.</div>;
+    }
     return <Bar options={options} data={data}/>;
 };
 
