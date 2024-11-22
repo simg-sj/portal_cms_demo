@@ -2,8 +2,9 @@ import {StaticImageData} from "next/image";
 
 interface MenuItems {
     dashboard?: string;
-    list: string;
-    mypage: string;
+    accidentList?: string;
+    parkingList?: string;
+    mypage?: string;
 }
 
 
