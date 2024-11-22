@@ -6,6 +6,8 @@ import CalenderPicker from "@/app/components/common/ui/calenderPicker";
 import dayjs from "dayjs";
 import {ClosingCode} from "@/config/data";
 import {getImage} from "@/app/(Navigation-Group)/hiparking/action";
+import RenderField from "@/app/components/common/ui/renderField";
+import {ImageType} from "@/@types/common";
 
 interface ClaimType {
     irpk: number;
@@ -24,6 +26,7 @@ interface HiparkingListProps {
     onSave: (data: any) => void;
     isNew?: boolean;
     rowData : ClaimType;
+    setRowData : React.Dispatch<React.SetStateAction<ClaimType>>;
 }
 
 const STATE_OPTIONS = ['확인중', '접수', '접수취소', '보류', '면책', '종결', '추산', '합의', '부재'];
@@ -33,7 +36,7 @@ const ACCIDENT_DETAIL_TYPE_OPTIONS = ['차대차', '시설물사고', '건물자
 
 
 
-const HiparkingList = ({isEditing, isNew = false, rowData }: HiparkingListProps) => {
+const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: HiparkingListProps) => {
     //input 빈값으로 변경
     const [formData, setFormData] = useState({
         irpk: 0 ,
@@ -138,13 +141,12 @@ const HiparkingList = ({isEditing, isNew = false, rowData }: HiparkingListProps)
             }
             return value;
         }
-
         switch (type) {
             case 'select':
                 return (
                     <select
                         name={key}
-                        value={value}
+                        defaultValue={value}
                         onChange={handleChange}
                         className="w-full p-1 border rounded"
                     >
@@ -156,7 +158,12 @@ const HiparkingList = ({isEditing, isNew = false, rowData }: HiparkingListProps)
                 );
             case 'date':
                 return (
-                    <CalenderPicker selected={key === 'requestDate' ? dayjs(rowData.requestDate).toDate() : dayjs(rowData.accidentDate).toDate()} onChange={(date: Date | null) => setSelectDate(date)}/>
+                    <CalenderPicker selected={dayjs(rowData[key]).toDate()} onChange={(date: Date | null) =>
+                        setRowData((prevState) => ({
+                        ...prevState,
+                        [key] : date
+                    }))
+                    }/>
                 );
             case 'dayterm':
                 return (
@@ -171,7 +178,7 @@ const HiparkingList = ({isEditing, isNew = false, rowData }: HiparkingListProps)
                 return (
                     <textarea
                         name={key}
-                        value={value}
+                        defaultValue={value}
                         onChange={handleChange}
                         className={"w-full p-1 border rounded h-[100px]"}
                     />
@@ -181,7 +188,7 @@ const HiparkingList = ({isEditing, isNew = false, rowData }: HiparkingListProps)
                     <input
                         type="text"
                         name={key}
-                        value={value}
+                        defaultValue={value}
                         onChange={handleChange}
                         className="w-full p-1 border rounded"
                     />
@@ -213,13 +220,14 @@ const HiparkingList = ({isEditing, isNew = false, rowData }: HiparkingListProps)
                     <tbody>
                     <tr>
                         <th>접수번호</th>
-                        <td colSpan={3}>{renderCell('insuNum', rowData.insuNum)}</td>
+                        <td colSpan={3}>{renderField('insuNum', rowData.insuNum, 'text')}</td>
                     </tr>
                     <tr>
                         <th>상태</th>
                         <td>{renderField('closingCode', ClosingCode[rowData.closingCode], 'select', STATE_OPTIONS)}</td>
                         <th>지급보험금</th>
-                        <td>{renderField('total', rowData.total)}</td>
+                        <td>{renderField('total', rowData.total, 'text')}</td>
+                        {/*<td><RenderField key={'total'} value={rowData.total} type={'text'}/></td>*/}
                     </tr>
                     <tr>
                         <th>사고접수일</th>

@@ -314,7 +314,7 @@ export default function Page() {
                     isOpen={isOpen}
                     onClose={closePopup}
                     title={isNew ? "신규 등록" : "상세보기"}
-                    Content={(props) => <HiparkingList {...props} isNew={isNew} rowData={rowData || {}}/>}
+                    Content={(props) => <HiparkingList {...props} isNew={isNew} rowData={rowData || {}} setRowData={setRowData}/>}
                     buttons={popupButtons}
                 />
                 <div className={'mt-4'}>

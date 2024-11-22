@@ -13,7 +13,6 @@ interface ImageUploaderProps {
 const ImageUploader = ({initialImages, isEditing, onChange}: ImageUploaderProps) => {
     const [images, setImages] = useState<ImageType[]>(initialImages);
 
-
     const handleFileChange = useCallback((event) => {
         const file = event.target.files[0];
         if (file) {
@@ -25,6 +24,7 @@ const ImageUploader = ({initialImages, isEditing, onChange}: ImageUploaderProps)
             };
             reader.readAsDataURL(file);
         }
+
     }, [images, onChange]);
 
     const handleDelete = useCallback((index: number) => {
@@ -44,7 +44,7 @@ const ImageUploader = ({initialImages, isEditing, onChange}: ImageUploaderProps)
 
     }, [initialImages]);
 
-    console.log(images)
+
     if (!isEditing && images.length === 0) {
         return (
             <div className="flex items-center justify-center w-48 h-48 bg-[#fafafa]">
@@ -73,7 +73,7 @@ const ImageUploader = ({initialImages, isEditing, onChange}: ImageUploaderProps)
             ))}
             {isEditing && (
                 <label className="flex items-center justify-center w-48 h-48 bg-[#fafafa] cursor-pointer">
-                    <input type="file" className="hidden" onChange={handleFileChange} accept="image/*" />
+                    <input type="file" className="hidden" onChange={handleFileChange} accept="image/*" multiple={true}/>
                     <div className="text-center">
                         <Image src={Upload.src} alt={'upload'} className="mx-auto mb-2" width={24} height={24} />
                         <p>파일 업로드</p>
