@@ -8,7 +8,8 @@ interface Theme {
     logoSrc: StaticImageData;
     menuItems: {
         dashboard?: string;
-        list?: string;
+        accidentList?: string;
+        parkingList?: string;
         mypage?: string;
     };
 }
@@ -22,14 +23,16 @@ const themeConfigs: ThemeConfig = {
         logoSrc: HiparkingLogo,
         menuItems: {
             dashboard: "/hiparking",
-            list: "/hiparking/list",
+            accidentList: "/hiparking/accidentList",
+            parkingList: "/hiparking/parkingList",
             mypage: "/hiparking/mypage",
         },
     },
     simg: {
         logoSrc: SimgLogo,
         menuItems: {
-            list: "/simg/list",
+            accidentList: "/simg/accidentList",
+            parkingList: "/simg/parkingList",
             mypage: "/simg/mypage",
         },
     },
@@ -37,7 +40,8 @@ const themeConfigs: ThemeConfig = {
         logoSrc: KmparkLogo,
         menuItems: {
             dashboard: "/kmpark",
-            list: "/kmpark/list",
+            accidentList: "/kmpark/accidentList",
+            parkingList: "/kmpark/parkingList",
             mypage: "/kmpark/mypage",
         },
     },

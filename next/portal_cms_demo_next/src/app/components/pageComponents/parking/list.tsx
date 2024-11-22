@@ -7,6 +7,18 @@ import dayjs from "dayjs";
 import {ClosingCode} from "@/config/data";
 import {getImage} from "@/app/(Navigation-Group)/hiparking/action";
 
+interface ClaimType {
+    irpk: number;
+    index?: number;
+    insuNum: string;
+    accidentDate: string;
+    closingAmt: number;
+    pklAddress: string;
+    wName: string;
+    wCell: string;
+    vCarNum: string;
+}
+
 interface HiparkingListProps {
     isEditing: boolean;
     onSave: (data: any) => void;
@@ -21,40 +33,58 @@ const ACCIDENT_DETAIL_TYPE_OPTIONS = ['차대차', '시설물사고', '건물자
 
 
 
-const HiparkingList = ({isEditing, onSave, isNew = false, rowData }: HiparkingListProps) => {
+const HiparkingList = ({isEditing, isNew = false, rowData }: HiparkingListProps) => {
     //input 빈값으로 변경
-    /*const [formData, setFormData] = useState({
-        irpk: '',
-        state: '',
-        total: '',
-        accidentWDateTime: null,
-        approvalYN: '',
-        accidentDateTime: null,
-        accidentType: '',
-        accidentDT: '',
-        wName: '',
-        inCargeName: '',
-        inCargePhone: '',
-        pklName: '',
-        accidentDetail: '',
-        wOpnion: '',
-        aName: '',
-        aPhone: '',
-        vCarNum: '',
-        vCarType: '',
-        vCarColor: '',
+    const [formData, setFormData] = useState({
+        irpk: 0 ,
+        bpk: null,
         pNo: '',
-        sDate: {
-            startDate: null,
-            endDate: null
-        },
-        bName: '',
-        bNumer: '',
-        bCargeName: '',
-        bCell: '',
-        bMail: ''
-    });*/
-    const [formData, setFormData] = useState({});
+        bNumber: '',
+        platform : '',
+        sDay : '',
+        eDay : '',
+        cpk: null,
+        insuNum: null,
+        pklName:null,
+        wName: null,
+        wCell: null,
+        inCargeName: null,
+        inCargePhone: null,
+        wEmail: null,
+        PJTcode: null,
+        pklAddress: null,
+        vCarType: null,
+        vCarColor: null,
+        vCarNum: null,
+        accidentType: null,
+        accidentDetailType: null,
+        accidentDetail: null,
+        requestDate: null,
+        accidentDate: null,
+        accidentDateTime: null,
+        wOpinion: null,
+        memo: null,
+        closingCode: null,
+        closingStatus: null,
+        estimateAmt: null,
+        closingAmt: null,
+        repairAmt: null,
+        total: null,
+        rentPay: null,
+        selfPay: null,
+        vat: null,
+        selfTotal: null,
+        selfYN: null,
+        depositYN: null,
+        payDate: null,
+        infoUseAgree: null,
+        infoOfferAgree: null,
+        approvalYN: null,
+        useYNull: null,
+        createdYMD: null,
+    });
+    // const [formData, setFormData] = useState({});
+
     useEffect(() => {
         if (!isNew && rowData.irpk) {
             const fetchImage = async () => {
