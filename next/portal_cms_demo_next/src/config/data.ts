@@ -117,7 +117,7 @@ export const monthAccidentData: MonthAccidentData[] = [
         endNum: 4,
         counselConst: 6615000,
         disclaimerNum: 1,
-        suspense: 1,
+        suspense: 4,
     },
     {
         changeDay: "2024-07",

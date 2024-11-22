@@ -16,8 +16,7 @@ import PieChart from "@/app/components/chart/PieChart";
 import DayTerm from "@/app/components/common/ui/dayTerm";
 import CenterPopup from "@/app/components/popup/CenterPopup";
 import AddBusiness, { AddBusinessRef } from "@/app/components/pageComponents/parking/add-business";
-import {ChangeCounselData, CounselData, MonthAccidentData, ParamType} from "@/@types/common";
-import {getDashBoard} from "@/app/(Navigation-Group)/hiparking/action";
+import {ChangeCounselData, ChangeGraph, CounselData, MonthAccidentData, ParamType} from "@/@types/common";
 import CountUp from "@/app/components/common/ui/countUp";
 import {TooltipItem} from "chart.js";
 import {Context} from "chartjs-plugin-datalabels";
@@ -36,6 +35,7 @@ interface DashboardProps {
         counselData: CounselData[];
         changeData: ChangeCounselData[];
         monthAccidentData: MonthAccidentData[];
+        changeGraphData: ChangeGraph[];
     }
 }
 
@@ -100,7 +100,6 @@ export default function DashboardComponent({
     ];
 
     //table 데이터
-    const [data, setData] = useState(tableData);
     const {handleInputChange} = useInputChange({
         counselData: [{name: '', age: ''}],
         changeData: [{status: ''}]
@@ -143,17 +142,20 @@ export default function DashboardComponent({
                     label: (context: TooltipItem<'bar'>) => {
                         const dataIndex = context.dataIndex;
                         const datasetIndex = context.datasetIndex;
-                        if (datasetIndex === 0) {
-                            return [
-                                `추가 사업장: ${data.changeData[dataIndex].pAdd}`,
-                                `추가 보험금: ${data.changeData[dataIndex].AddAmt.toLocaleString()} 원`,
-                            ];
-                        } else {
-                            return [
-                                `종료 사업장: ${data.changeData[dataIndex].pEnd}`,
-                                `감소 보험금: ${data.changeData[dataIndex].EndAmt.toLocaleString()} 원`,
-                            ];
+                        if(tableData.changeGraphData[dataIndex]){
+                            if (datasetIndex === 0) {
+                                return [
+                                    `추가 사업장: ${tableData.changeGraphData[dataIndex].pAdd}`,
+                                    `추가 보험금: ${tableData.changeGraphData[dataIndex].AddAmt.toLocaleString()} 원`,
+                                ];
+                            } else {
+                                return [
+                                    `종료 사업장: ${tableData.changeGraphData[dataIndex].pEnd}`,
+                                    `감소 보험금: ${tableData.changeGraphData[dataIndex].EndAmt.toLocaleString()} 원`,
+                                ];
+                            }
                         }
+                        return '데이터 없음'
                     },
                 },
             },
@@ -271,19 +273,7 @@ export default function DashboardComponent({
         },
     ]
 
-    useEffect(() => {
-        async function fetchData(){
-            try {
-                console.log(param);
-                const result = await getDashBoard({'job' : 'dash','bpk' : '2','sDay': '2024-09', 'eDay' :'2024-11'});
-                console.log(result);
-            }   catch(e){
-                console.log(e);
-            }
-        }
 
-        fetchData();
-    }, []);
     return (
         <>
             <div className={'px-8 py-6 bg-white rounded-xl'}>
@@ -300,7 +290,7 @@ export default function DashboardComponent({
                         </div>
                         <div className={'mt-4 text-right'}>
                             <div className={'text-gray-600'}>지급보험금</div>
-                            <CountUp end={FormatNumber(data.counselData[0].closingAmt)} duration={2} className={'text-3xl font-semibold'} suffix={'원'}/>
+                            <CountUp end={tableData.counselData[0]?.closingAmt  ? FormatNumber(tableData.counselData[0].closingAmt) : 0} duration={2} className={'text-3xl font-semibold'} suffix={'원'}/>
                         </div>
                     </div>
                     <div className={'w-full'}>
@@ -342,7 +332,7 @@ export default function DashboardComponent({
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {data.counselData.map((counsel, index) => (
+                                {tableData.counselData.map((counsel, index) => (
                                     <tr key={index}>
                                         <td>{counsel.pNo}</td>
                                         <td>{counsel.sDay + '~' + counsel.eDay}</td>
@@ -390,7 +380,7 @@ export default function DashboardComponent({
                 <div className={'text-xl font-light mb-6'}>계약변경현황</div>
                 <div className={'flex'}>
                     <div className={'w-[1000px] mr-16'}>
-                        <div className={'mb-5 font-medium text-lg'}>최근 6개월 계약변경현황</div>
+                        <div className={'mb-5 font-medium text-lg'}>{`최근 ${tableData.changeGraphData.length}개월 계약변경현황`}</div>
                         <BarTwowayChart data={chartData.twowayBar} options={optionTwowayBar}/>
                     </div>
                     <div className={'w-full'}>
@@ -425,38 +415,22 @@ export default function DashboardComponent({
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {data.changeData.map((changeData, index) => (
+                                {tableData.changeData.map((changeData, index) => (
                                     <tr key={index}>
-                                        <td>{changeData.cNo}</td>
+                                        <td>{index + 1}</td>
                                         <td>{changeData.cDay}</td>
                                         <td>{changeData.pNo}</td>
                                         <td>
-                                            <EditableField
-                                                type={'number'}
-                                                value={changeData.pAdd}
-                                                onChange={(value) => handleInputChange(index, 'pAdd', value)}
-                                            />
+                                            {changeData.pAdd}
                                         </td>
                                         <td>
-                                            <EditableField
-                                                type={'number'}
-                                                value={changeData.pEnd}
-                                                onChange={(value) => handleInputChange(index, 'pEnd', value)}
-                                            />
+                                            {changeData.pEnd}
                                         </td>
                                         <td className={'text-right'}>
-                                            <EditableField
-                                                type={'number'}
-                                                value={changeData.AddAmt}
-                                                onChange={(value) => handleInputChange(index, 'AddAmt', value)}
-                                            />
+                                             {changeData.AddAmt > 0 ? FormatNumber(changeData.AddAmt) : 0}원
                                         </td>
                                         <td className={'text-right'}>
-                                            <EditableField
-                                                type={'number'}
-                                                value={changeData.EndAmt}
-                                                onChange={(value) => handleInputChange(index, 'EndAmt', value)}
-                                            />
+                                            {changeData.EndAmt > 0 ? FormatNumber(changeData.EndAmt) : 0}원
                                         </td>
                                     </tr>
                                 ))}
@@ -487,7 +461,7 @@ export default function DashboardComponent({
                                     <div className={'text-gray-700'}>월 누적 지급보험금</div>
                                     <div className={'text-blue-500 font-medium'}>+ 23%</div>
                                 </div>
-                                <CountUp end={FormatNumber(data.counselData[0].closingAmt)} duration={2} className={'text-3xl font-semibold'}/>
+                                <CountUp end={tableData.counselData[0]?.closingAmt ? FormatNumber(tableData.counselData[0].closingAmt) : 0} duration={2} className={'text-3xl font-semibold'}/>
                                 <span className={'text-xl font-semibold'}> 원</span>
                             </div>
                             <PieChart data={chartData.pieCounsel} options={optionPie}></PieChart>
@@ -542,7 +516,7 @@ export default function DashboardComponent({
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {data.monthAccidentData.map((month, index) => (
+                                    {tableData.monthAccidentData.map((month, index) => (
                                         <tr key={index}>
                                             <td>{month.changeDay}</td>
                                             <td>{month.acceptNum}</td>

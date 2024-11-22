@@ -34,6 +34,7 @@ interface CounselData{
     closingAmt: number;
     repairCost: number;
     lossRatio: number;
+    dPremiums ?: number;
 }
 
 interface ChangeCounselData{
@@ -44,6 +45,40 @@ interface ChangeCounselData{
     pEnd: number;
     AddAmt: number;
     EndAmt: number;
+}
+
+interface ChangeCounselGraphType{
+    label: string;
+    data: number[];
+    backgroundColor: string;
+}
+interface ChangeGraph{
+    cNo: number;
+    cDay: string;
+    pNo: string;
+    pAdd: number;
+    pEnd: number;
+    AddAmt: number;
+    EndAmt: number;
+}
+interface TopCounselData {
+    pklName : string;
+    total_sum : string;
+}
+interface TopBusinessData {
+    pklName : string;
+    count : number;
+}
+type TableType = {
+    monthAccidentData: MonthAccidentData[];
+    counselData: CounselData[]; // 배열로 정의
+    changeData: ChangeCounselData[];
+    changeGraphData : ChangeGraph[];
+};
+
+interface DataTwowayBarType {
+    labels: string[];
+    datasets: ChangeCounselGraphType[];
 }
 
 interface MonthAccidentData{
@@ -223,7 +258,10 @@ interface ButtonConfig {
 
 
 interface DashBoardType {
-        str
+    length: number;
+    counselData: CounselData[];
+    changeCounselData: ChangeCounselData[];
+
 }
 interface ParamDashType {
     job ?: string;
