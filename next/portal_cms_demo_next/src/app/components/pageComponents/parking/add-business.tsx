@@ -2,8 +2,8 @@ import React, { forwardRef, useImperativeHandle } from 'react';
 import { useForm, UseFormRegister } from "react-hook-form";
 
 interface ParkingFormData {
-    parkingName: string;
-    parkingAddress: string;
+    pkName: string;
+    pkAddress: string;
     indoor: {
         checked: boolean;
         value: string;
@@ -20,6 +20,9 @@ interface ParkingFormData {
         checked: boolean;
         value: string;
     };
+    pkArea: number;
+    pkDetail: string;
+    pkMemo: string;
 }
 
 export interface AddBusinessRef {
@@ -37,12 +40,15 @@ const AddBusiness = forwardRef<AddBusinessRef>((props, ref) => {
         formState: { errors },
     } = useForm<ParkingFormData>({
         defaultValues: {
-            parkingName: '',
-            parkingAddress: '',
+            pkName: '',
+            pkAddress: '',
             indoor: { checked: false, value: '' },
             outdoor: { checked: false, value: '' },
             mechanical: { checked: false, value: '' },
             carLift: { checked: false, value: '' },
+            pkArea: null,
+            pkDetail: '',
+            pkMemo: '',
         }
     });
 
@@ -121,37 +127,37 @@ const AddBusiness = forwardRef<AddBusinessRef>((props, ref) => {
     );
 
     return (
-        <form className="space-y-4">
-            <div className={'flex my-3'}>
-                <div className={'w-[150px]'}>주차장명 <span className={'text-red-500'}>*</span></div>
-                <div className="flex-1">
-                    <input
-                        type="text"
-                        placeholder={'주차장명을 입력하세요'}
-                        className={'w-full border rounded px-2 py-1'}
-                        {...register('parkingName', {
-                            required: "주차장명을 입력해주세요"
+            <form className="space-y-4">
+                <div className={'flex my-3'}>
+                    <div className={'w-[110px]'}>주차장명 <span className={'text-red-500'}>*</span></div>
+                    <div className="flex-1">
+                        <input
+                            type="text"
+                            placeholder={'주차장명을 입력하세요'}
+                            className={'w-full border rounded px-2 py-1'}
+                            {...register('pkName', {
+                                required: "주차장명을 입력해주세요"
                         })}
                     />
-                    {errors.parkingName && (
-                        <p className={'text-red-500 text-sm mt-1'}>{errors.parkingName.message}</p>
+                    {errors.pkName && (
+                        <p className={'text-red-500 text-sm mt-1'}>{errors.pkName.message}</p>
                     )}
                 </div>
             </div>
 
             <div className={'flex my-3'}>
-                <div className={'w-[150px]'}>주차장주소 <span className={'text-red-500'}>*</span></div>
+                <div className={'w-[110px]'}>주차장주소 <span className={'text-red-500'}>*</span></div>
                 <div className="flex-1">
                     <input
                         type="text"
                         placeholder={'주차장주소를 입력하세요'}
                         className={'w-full border rounded px-2 py-1'}
-                        {...register('parkingAddress', {
+                        {...register('pkAddress', {
                             required: "주차장주소를 입력해주세요"
                         })}
                     />
-                    {errors.parkingAddress && (
-                        <p className={'text-red-500 text-sm mt-1'}>{errors.parkingAddress.message}</p>
+                    {errors.pkAddress && (
+                        <p className={'text-red-500 text-sm mt-1'}>{errors.pkAddress.message}</p>
                     )}
                 </div>
             </div>
@@ -193,6 +199,45 @@ const AddBusiness = forwardRef<AddBusinessRef>((props, ref) => {
                     />
                 </div>
             </div>
+
+            <div className={'flex my-3'}>
+                <div className={'w-[110px]'}>면수</div>
+                <div className="flex items-center">
+                    <input
+                        type="text"
+                        placeholder={'면수를 입력하세요'}
+                        className={'border rounded px-2 py-1 w-[331px]'}
+                        {...register('pkArea', {
+                            pattern: {
+                                value: /^[0-9]*$/,
+                                message: "숫자만 입력 가능합니다."
+                            }
+                        })}
+                    />
+                    <div className={'ml-3'}>면</div>
+                </div>
+            </div>
+            <div className={'flex my-3'}>
+                <div className={'w-[110px]'}>세부내역</div>
+                <div className="flex-1">
+                    <input
+                        type="text"
+                        placeholder={'ex) 옥내10면, 옥외10면'}
+                        className={'w-full border rounded px-2 py-1'}
+                    />
+                </div>
+            </div>
+            <div className={'flex my-3'}>
+                <div className={'w-[110px]'}>메모</div>
+                <div className="flex-1">
+                    <input
+                        type="text"
+                        placeholder={'ex) 공동피보험자 : 000-00-0000 에스아이엠지'}
+                        className={'w-full border rounded px-2 py-1'}
+                    />
+                </div>
+            </div>
+
         </form>
     );
 });

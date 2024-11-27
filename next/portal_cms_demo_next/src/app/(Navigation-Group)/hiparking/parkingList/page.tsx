@@ -1,35 +1,27 @@
 "use client"
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import DayTerm from "@/app/components/common/ui/dayTerm";
 import Button from "@/app/components/common/ui/button";
 import Image from "next/image";
 import Excel from "@/assets/images/icon/excel-icon.png";
 import Plus from "@/assets/images/icon/plus-icon.png";
+import ExcelUpload from "@/assets/images/icon/upload-white-icon.png";
 import SlidePopup from "@/app/components/popup/SlidePopup";
-import HiparkingList from "@/app/components/pageComponents/parking/list";
+import List from "@/app/components/pageComponents/parking/parkingDetail";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
 import {getClaim} from "@/app/(Navigation-Group)/hiparking/action";
 import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
 import {ButtonConfig, ClaimRowType} from "@/@types/common";
+import CenterPopup from "@/app/components/popup/CenterPopup";
+import AddBusiness, {AddBusinessRef} from "@/app/components/pageComponents/parking/add-business";
+import AddExcelUpload from "@/app/components/pageComponents/parking/add-excel-upload";
 
 interface ColumnDefinition<T> {
     key: keyof T;
     header: string;
     defaultValue?: string;
     render?: (item: T) => string | number;
-}
-
-interface ClaimType {
-    irpk: number;
-    index?: number;
-    insuNum: string;
-    accidentDate: string;
-    closingAmt: number;
-    pklAddress: string;
-    wName: string;
-    wCell: string;
-    vCarNum: string;
 }
 
 interface ParamType {
@@ -43,8 +35,10 @@ interface ParamType {
 const itemsPerPage = 15;
 
 export default function Page() {
-    const [isOpen, setIsOpen] = useState(false);
-    const [isNew, setIsNew3] = useState(false);
+    const [slideOpen, setSlideOpen] = useState(false);
+    const [addOpen, setAddOpen] = useState(false);
+    const [excelOpen, setExcelOpen] = useState(false);
+    const businessRef = useRef<AddBusinessRef>(null);
     const [selectedRow, setSelectedRow] = useState<number | null>(null);
     const [data, setData] = useState<ClaimRowType[]>([]);
     const [rowData, setRowData] = useState<ClaimRowType | undefined>();
@@ -58,6 +52,7 @@ export default function Page() {
         text : ''
     });
 
+    //페이지
     const getPaginatedData = () => {
         const startIndex = currentPage * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
@@ -74,45 +69,21 @@ export default function Page() {
         setCurrentPage(page);
     }
 
-    const closePopup = () => {
-        setIsOpen(false);
+    //슬라이드팝업
+    const slideClose = () => {
+        setSlideOpen(false);
         setSelectedRow(null);
         document.body.style.removeProperty('overflow');
     };
 
-    const handleSave = (data: any) => {
-        if (window.confirm('저장하시겠습니까?')) {
-            console.log('변경된 데이터:', data);
-            closePopup();
-        }
+    const slideSave = (data: any) => {
+            window.confirm('저장하시겠습니까?')
+            console.log('수정된 데이터:', data);
+        slideClose();
     };
 
-    const handleNewEntry = () => {
-        setIsNew(true);
-        setSelectedRow(null);
-        setIsOpen(true);
-        document.body.style.overflow = 'hidden';
-    };
-
-    const popupButtons: ButtonConfig[] = isNew
-        ? [
-            {
-                label: "저장",
-                onClick: () => handleSave({}),
-                color: "blue",
-                fill: true,
-                width: 100,
-                height: 35,
-            },
-            {
-                label: "취소",
-                onClick: closePopup,
-                color: "gray",
-                width: 100,
-                height: 35,
-            },
-        ]
-        : [
+    const SlideButtons: ButtonConfig[] =
+            [
             {
                 label: "편집",
                 onClick: () => {},
@@ -129,11 +100,95 @@ export default function Page() {
             },
             {
                 label: "닫기",
-                onClick: closePopup,
+                onClick: slideClose,
                 color: "gray",
                 width: 100,
                 height: 35,
             },
+        ];
+
+    //센터팝업(사업장추가)
+    const addSave = async () => {
+        if (businessRef.current) {
+            const isValid = await businessRef.current.validateForm();
+
+            if (isValid) {
+                const formData = businessRef.current.getFormData();
+                if (window.confirm(`${formData.pkName}사업장을 추가하시겠습니까?`)) {
+                    const param = {
+                        '주차장명': formData.pkName,
+                        '주차장주소:': formData.pkAddress,
+                        '옥내:': formData.indoor.checked ? formData.indoor.value : '',
+                        '옥외:': formData.outdoor.checked ? formData.outdoor.value : '',
+                        '기계식:': formData.mechanical.checked ? formData.mechanical.value : '',
+                        '카리프트:': formData.carLift.checked ? formData.carLift.value : '',
+                        '면수': formData.pkArea,
+                        '세부내역': formData.pkDetail,
+                        '메모': formData.pkMemo
+                    };
+                    console.log(param);
+                    setSlideOpen(false);
+                } else {
+                    setSlideOpen(true);
+                    console.log('저장취소');
+                }
+            }
+        }
+    };
+
+    const addClose = () => {
+        if (businessRef.current) {
+            businessRef.current.clearForm();
+        }
+        setAddOpen(false);
+    };
+
+    const AddButtons = [
+        {
+            label: "확인",
+            onClick: addSave,
+            color: "main" as const,
+            fill: true,
+            width: 130,
+            height: 40
+        },
+        {
+            label: "취소",
+            onClick: addClose,
+            color: "gray" as const,
+            width: 130,
+            height: 40
+        }
+    ];
+
+    //센터팝업(엑셀업로드)
+    const excelClose = () => {
+        setExcelOpen(false);
+    };
+
+    const excelSave = (data: any) => {
+        window.confirm('추가: 몇건 삭제: 몇건 엑셀을 업로드 하시겠습니까?')
+        console.log('업로드 데이터:', data);
+        excelClose();
+    };
+
+    const ExcelButton: ButtonConfig[] =
+        [
+            {
+                label: "확인",
+                onClick: excelSave,
+                color: "main" as const,
+                fill: true,
+                width: 130,
+                height: 40
+            },
+            {
+                label: "취소",
+                onClick: excelClose,
+                color: "gray" as const,
+                width: 130,
+                height: 40
+            }
         ];
 
     const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
@@ -216,9 +271,8 @@ export default function Page() {
                             }))}
                         }
                     >
-                        <option value={'wCell'}>피해자 연락처</option>
-                        <option value={'vCarType'}>피해 차량번호</option>
-                        <option value={'pklName'}>주차장명</option>
+                        <option value={'pkName'}>주차장명</option>
+                        <option value={'pkAddress'}>주차장주소</option>
                     </select>
                     <input
                         type={'text'}
@@ -253,21 +307,35 @@ export default function Page() {
                     <Button color={"red"} fill={false} height={36} width={120} onClick={handleDeleteGroup}>
                         삭제
                     </Button>
-                    <Button color={"green"} height={36} width={120} className={'ml-5'}>
-                        <Image src={Excel.src} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
+                    <Button color={"green"} fill height={36} width={120} onClick={() => setExcelOpen(true)}>
+                        <Image src={ExcelUpload.src} alt={'업로드'} width={15} height={15} className={'mr-2'}/>
                         엑셀업로드
                     </Button>
-                    <Button color={"main"} fill height={36} width={120} onClick={handleNewEntry}>
+                    <Button color={"main"} fill height={36} width={120} onClick={() => setAddOpen(true)}>
                         <Image src={Plus.src} alt={'추가'} width={16} height={16} className={'mr-1'}/>
                         사업장추가
                     </Button>
                 </div>
+                <CenterPopup
+                    isOpen={addOpen}
+                    onClose={addClose}
+                    title="사업장 추가"
+                    Content={() => <AddBusiness ref={businessRef} />}
+                    buttons={AddButtons}
+                />
+                <CenterPopup
+                    isOpen={excelOpen}
+                    onClose={excelClose}
+                    title="엑셀업로드"
+                    Content={AddExcelUpload}
+                    buttons={ExcelButton}
+                />
                 <SlidePopup
-                    isOpen={isOpen}
-                    onClose={closePopup}
-                    title={isNew ? "신규 등록" : "상세보기"}
-                    Content={(props) => <HiparkingList {...props} isNew={isNew} rowData={rowData} />}
-                    buttons={popupButtons}
+                    isOpen={slideOpen}
+                    onClose={slideClose}
+                    title={"상세보기"}
+                    Content={(props) => <List {...props} rowData={rowData} onSave={slideSave} />}
+                    buttons={SlideButtons}
                 />
                 <div className={'mt-4'}>
                     <CheckboxContainer
@@ -277,9 +345,8 @@ export default function Page() {
                         selectedRow={selectedRow}
                         onSelectionChange={setSelectedItems}
                         onRowClick={(item) => {
-                            setIsNew(false);
                             setSelectedRow(item.irpk);
-                            setIsOpen(true);
+                            setSlideOpen(true);
                             setRowData(item);
                             document.body.style.overflow = 'hidden';
                         }}

@@ -14,7 +14,7 @@ import Image from "next/image";
 import Excel from "@/assets/images/icon/excel-icon.png";
 import Plus from "@/assets/images/icon/plus-icon.png";
 import SlidePopup from "@/app/components/popup/SlidePopup";
-import HiparkingList from "@/app/components/pageComponents/parking/list";
+import HiparkingList from "@/app/components/pageComponents/parking/accidentDetail";
 import Checkbox from "@/app/components/common/ui/checkbox";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
