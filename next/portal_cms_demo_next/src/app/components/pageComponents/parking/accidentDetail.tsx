@@ -6,8 +6,7 @@ import CalenderPicker from "@/app/components/common/ui/calenderPicker";
 import dayjs from "dayjs";
 import {ClosingCode} from "@/config/data";
 import {getImage} from "@/app/(Navigation-Group)/hiparking/action";
-import RenderField from "@/app/components/common/ui/renderField";
-import {ImageType} from "@/@types/common";
+import {ClaimRowType, ImageType} from "@/@types/common";
 
 interface ClaimType {
     irpk: number;
@@ -25,8 +24,8 @@ interface HiparkingListProps {
     isEditing: boolean;
     onSave: (data: any) => void;
     isNew?: boolean;
-    rowData : ClaimType;
-    setRowData : React.Dispatch<React.SetStateAction<ClaimType>>;
+    rowData : ClaimRowType;
+    setRowData : React.Dispatch<React.SetStateAction<ClaimRowType>>;
 }
 
 const STATE_OPTIONS = ['확인중', '접수', '접수취소', '보류', '면책', '종결', '추산', '합의', '부재'];
@@ -39,7 +38,7 @@ const ACCIDENT_DETAIL_TYPE_OPTIONS = ['차대차', '시설물사고', '건물자
 const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: HiparkingListProps) => {
     //input 빈값으로 변경
     const [formData, setFormData] = useState({
-        irpk: 0 ,
+        irpk: 0,
         bpk: null,
         pNo: '',
         bNumber: '',
@@ -47,44 +46,44 @@ const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: Hiparki
         sDay : '',
         eDay : '',
         cpk: null,
-        insuNum: null,
-        pklName:null,
-        wName: null,
-        wCell: null,
-        inCargeName: null,
-        inCargePhone: null,
-        wEmail: null,
-        PJTcode: null,
-        pklAddress: null,
-        vCarType: null,
-        vCarColor: null,
-        vCarNum: null,
-        accidentType: null,
-        accidentDetailType: null,
-        accidentDetail: null,
-        requestDate: null,
-        accidentDate: null,
-        accidentDateTime: null,
-        wOpinion: null,
-        memo: null,
-        closingCode: null,
-        closingStatus: null,
-        estimateAmt: null,
-        closingAmt: null,
-        repairAmt: null,
-        total: null,
-        rentPay: null,
-        selfPay: null,
-        vat: null,
-        selfTotal: null,
-        selfYN: null,
-        depositYN: null,
-        payDate: null,
-        infoUseAgree: null,
-        infoOfferAgree: null,
-        approvalYN: null,
-        useYNull: null,
-        createdYMD: null,
+        insuNum: '',
+        pklName:'',
+        wName: '',
+        wCell: '',
+        inCargeName: '',
+        inCargePhone: '',
+        wEmail: '',
+        PJTcode: '',
+        pklAddress: '',
+        vCarType: '',
+        vCarColor: '',
+        vCarNum: '',
+        accidentType: '',
+        accidentDetailType: '',
+        accidentDetail: '',
+        requestDate: '',
+        accidentDate: '',
+        accidentDateTime: '',
+        wOpinion: '',
+        memo: '',
+        closingCode: '',
+        closingStatus: '',
+        estimateAmt: '',
+        closingAmt: '',
+        repairAmt: '',
+        total: '',
+        rentPay: '',
+        selfPay: '',
+        vat: '',
+        selfTotal: '',
+        selfYN: '',
+        depositYN: '',
+        payDate: '',
+        infoUseAgree: '',
+        infoOfferAgree: '',
+        approvalYN: '',
+        useYNull: '',
+        createdYMD: new Date(),
     });
     // const [formData, setFormData] = useState({});
 
@@ -117,18 +116,6 @@ const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: Hiparki
             ...formData,
             sDate: { startDate, endDate }
         });
-    };
-    //편집모드 입력필드
-    const renderCell = (key: string, value: string) => {
-        return isEditing || isNew ? (
-            <input
-                type="text"
-                name={key}
-                value={value}
-                onChange={handleChange}
-                className="w-full p-1 border rounded"
-            />
-        ) : value;
     };
     //입력필드 타입
     const renderField = (key: string, value: any, type: 'text' | 'select' | 'date' | 'dayterm' | 'textarea' = 'text', options?: string[]) => {
@@ -259,22 +246,22 @@ const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: Hiparki
                         <th>사고세부유형</th>
                         <td>{renderField('accidentDetailType', rowData.accidentDetailType, 'select', ACCIDENT_DETAIL_TYPE_OPTIONS)}</td>
                         <th>접수자 성함</th>
-                        <td>{renderCell('wName', rowData.wName)}</td>
+                        <td>{renderField('wName', rowData.wName)}</td>
 
                     </tr>
                     <tr>
                         <th>현장담당자</th>
-                        <td>{renderCell('inCargeName', rowData.inCargeName)}</td>
+                        <td>{renderField('inCargeName', rowData.inCargeName)}</td>
                         <th>현장담당자 연락처</th>
-                        <td>{renderCell('inCargePhone', rowData.inCargePhone)}</td>
+                        <td>{renderField('inCargePhone', rowData.inCargePhone)}</td>
                     </tr>
                     <tr>
                         <th>사업소명(주차장명)</th>
-                        <td>{renderCell('pklName', rowData.pklName)}</td>
+                        <td>{renderField('pklName', rowData.pklName)}</td>
                     </tr>
                     <tr>
                         <th>사고내용</th>
-                        <td colSpan={3}>{renderCell('accidentDetail', rowData.accidentDetail)}</td>
+                        <td colSpan={3}>{renderField('accidentDetail', rowData.accidentDetail)}</td>
                     </tr>
                     <tr>
                         <th>비고</th>
@@ -310,19 +297,19 @@ const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: Hiparki
                     <tbody>
                     <tr>
                         <th>피해자 이름</th>
-                        <td>{renderCell('wName', rowData.wName)}</td>
+                        <td>{renderField('wName', rowData.wName)}</td>
                         <th>피해자 연락처</th>
-                        <td>{renderCell('wCell', rowData.wCell)}</td>
+                        <td>{renderField('wCell', rowData.wCell)}</td>
                     </tr>
                     <tr>
                         <th>피해자 차량번호</th>
-                        <td colSpan={3}>{renderCell('vCarNum', rowData.vCarNum)}</td>
+                        <td colSpan={3}>{renderField('vCarNum', rowData.vCarNum)}</td>
                     </tr>
                     <tr>
                         <th>차종</th>
-                        <td>{renderCell('vCarType', formData.vCarType)}</td>
+                        <td>{renderField('vCarType', formData.vCarType)}</td>
                         <th>차랑색상</th>
-                        <td>{renderCell('vCarColor', formData.vCarColor)}</td>
+                        <td>{renderField('vCarColor', formData.vCarColor)}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -340,15 +327,15 @@ const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: Hiparki
                     <tbody>
                     <tr>
                         <th>증권번호</th>
-                        <td>{renderCell('pNo', rowData.pNo)}</td>
+                        <td>{rowData.pNo}</td>
                         <th>보험기간</th>
-                        <td>{renderField('sDate',{startDate : dayjs(rowData.sDay).toDate(), endDate : dayjs(rowData.eDay).toDate()}, 'dayterm')}</td>
+                        <td>{rowData.sDay} ~ {rowData.eDay}</td>
                     </tr>
                     <tr>
                         <th>피보험자 상호</th>
-                        <td>{renderCell('bName', rowData.platform)}</td>
+                        <td>{rowData.platform}</td>
                         <th>피보험자 사업자등록번호</th>
-                        <td>{renderCell('bNumer', rowData.bNumber)}</td>
+                        <td>{rowData.bNumber}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -366,13 +353,13 @@ const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: Hiparki
                     <tbody>
                     <tr>
                         <th>업무 담당자 성함</th>
-                        <td colSpan={3}>{renderCell('bCargeName', formData.bCargeName)}</td>
+                        <td colSpan={3}>{renderField('bCargeName', formData.bCargeName)}</td>
                     </tr>
                     <tr>
                         <th>업무 담당자 연락처</th>
-                        <td>{renderCell('bCell', formData.bCell)}</td>
+                        <td>{renderField('bCell', formData.bCell)}</td>
                         <th>업무 담당자 메일</th>
-                        <td>{renderCell('bMail', formData.bMail)}</td>
+                        <td>{renderField('bMail', formData.bMail)}</td>
                     </tr>
                     </tbody>
                 </table>
