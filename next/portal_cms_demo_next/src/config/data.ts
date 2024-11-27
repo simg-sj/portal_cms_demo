@@ -53,6 +53,8 @@ export const initialCounselData: CounselData[] = [
 ];
 
 
+
+
 export const changeCounselData: ChangeCounselData[] = [
     {
         cNo: 6,

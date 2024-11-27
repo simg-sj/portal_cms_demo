@@ -2,42 +2,44 @@ import React, {SetStateAction, useEffect, useState} from "react";
 import YearMonthPicker from "@/app/components/common/ui/yearMonthPicker";
 import CalenderPicker from "@/app/components/common/ui/calenderPicker";
 import dayjs from "dayjs";
+import {ParamDashType2} from "@/@types/common";
 
 interface DayTermProps {
     sDay ?: Date;
     eDay ?: Date;
     type?: 'month' | 'day';
-    setParam ?: React.Dispatch<SetStateAction<ParamType>>
+    setParam: (newParams: Partial<ParamDashType2>) => void;
 
 }
 
 interface ParamType {
-    startDate : string;
-    endDate : string;
+    sDay : string;
+    eDay : string;
     bpk ?: number;
     condition ?: string;
 }
 
-const DayTerm = ({sDay, eDay, type = 'day', setParam }: DayTermProps) => {
+const DayTerm = ({sDay, eDay, type , setParam }: DayTermProps) => {
     const [startDate, setStartDate] = useState<Date | null>(sDay);
     const [endDate, setEndDate] = useState<Date | null>(eDay);
 
     //타입 월달력, 전체달력 지정 : 월달력 3달단위 전체달력 오늘날짜 기본값
     useEffect(() => {
+        console.log("type is@@@",type)
         // 월달력: 3개월 전부터 현재까지
         if (type === 'month') {
+            console.log('@@@')
             const threeMonthsAgo = new Date(new Date().getFullYear(), new Date().getMonth() - 2, 1);
-            setParam((prev: ParamType) => ({
+            setParam((prev: ParamDashType2) => ({
                 ...prev,
-                startDate: dayjs(threeMonthsAgo).format('YYYY-MM-DD'),
-                endDate : dayjs().format('YYYY-MM-DD')
+                sDay: dayjs(threeMonthsAgo).format('YYYY-MM'),
+                eDay : dayjs().format('YYYY-MM')
             }));
             setStartDate(threeMonthsAgo);
             setEndDate(new Date());
         } // 일달력: 오늘 날짜
         else {
-            const today = new Date();
-            setParam((prev: ParamType) => ({
+            setParam((prev:  ParamDashType2) => ({
                 ...prev,
                 startDate: dayjs().format('YYYY-MM-DD'),
                 endDate : dayjs().format('YYYY-MM-DD')
@@ -59,14 +61,23 @@ const DayTerm = ({sDay, eDay, type = 'day', setParam }: DayTermProps) => {
 
     const handleStartDateChange = (date: Date | null) => {
         setStartDate(date);
-        setParam((prev: ParamType) => ({
-            ...prev,
-            startDate: dayjs(date).format('YYYY-MM-DD'),
-        }));
+        if (type === 'month' && date) {
+            setParam((prev: ParamDashType2) => ({
+                ...prev,
+                sDay: dayjs(date).format('YYYY-MM'),
+            }));
+        } else {
+            setParam((prev: ParamType) => ({
+                ...prev,
+                startDate: dayjs(date).format('YYYY-MM-DD'),
+            }));
+            if (date && endDate && date > endDate) {
+                setEndDate(null);
+            }
+        }
         if (date && endDate && date > endDate) {
             setEndDate(null);
         }
-        console.log("시작 날짜:", formatDate(date));
     };
 
     const handleEndDateChange = (date: Date | null) => {
@@ -76,9 +87,8 @@ const DayTerm = ({sDay, eDay, type = 'day', setParam }: DayTermProps) => {
             setEndDate(newEndDate);
            setParam((prev: ParamType) => ({
             ...prev,
-            endDate: dayjs(newEndDate).format('YYYY-MM-DD'),
-        }));
-            console.log("종료 날짜:", formatDate(newEndDate));
+            eDay: dayjs(newEndDate).format('YYYY-MM'),
+            }));
         } else {
             setEndDate(date);
             setParam((prev: ParamType) => ({
@@ -88,7 +98,6 @@ const DayTerm = ({sDay, eDay, type = 'day', setParam }: DayTermProps) => {
             if (date && startDate && date < startDate) {
                 setStartDate(null);
             }
-            console.log("종료 날짜:", formatDate(date));
         }
     };
 

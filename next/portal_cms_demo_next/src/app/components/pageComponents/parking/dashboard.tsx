@@ -2,7 +2,7 @@
 import Button from "@/app/components/common/ui/button";
 import Plus from "@/assets/images/icon/plus-icon.png";
 import Excel from "@/assets/images/icon/excel-icon.png";
-import React, {useState, useRef, useEffect} from "react";
+import React, {useState, useRef} from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import DoughnutChart from "@/app/components/chart/DoughnutChart";
 import BarTwowayChart from "@/app/components/chart/BarTwowayChart";
@@ -12,11 +12,16 @@ import useInputChange from "@/app/lib/customHook/inputChange";
 import Tab from "@/app/components/common/ui/tab";
 import Image from "next/image";
 import BarHorizonChart from "@/app/components/chart/BarHorizonChart";
-import PieChart from "@/app/components/chart/PieChart";
 import DayTerm from "@/app/components/common/ui/dayTerm";
 import CenterPopup from "@/app/components/popup/CenterPopup";
 import AddBusiness, { AddBusinessRef } from "@/app/components/pageComponents/parking/add-business";
-import {ChangeCounselData, ChangeGraph, CounselData, MonthAccidentData, ParamType} from "@/@types/common";
+import {
+    ChangeCounselData,
+    ChangeGraph,
+    CounselData,
+    MonthAccidentData,
+    MonthCumulativeData, ParamDashType2,
+} from "@/@types/common";
 import CountUp from "@/app/components/common/ui/countUp";
 import {TooltipItem} from "chart.js";
 import {Context} from "chartjs-plugin-datalabels";
@@ -36,18 +41,19 @@ interface DashboardProps {
         changeData: ChangeCounselData[];
         monthAccidentData: MonthAccidentData[];
         changeGraphData: ChangeGraph[];
+        monthCumulativeData: MonthCumulativeData[];
     }
+    setParam: (newParams: Partial<ParamDashType2>) => void;
 }
 
 
 export default function DashboardComponent({
                                             chartData,
-                                            tableData
+                                            tableData, setParam,
                                            }: DashboardProps) {
     //사업장추가팝업
     const [isOpen, setIsOpen] = useState(false);
     const businessRef = useRef<AddBusinessRef>(null);
-    const [param ,setParam] = useState<ParamType>();
 
     const handleConfirm = async () => {
         if (businessRef.current) {
@@ -290,7 +296,7 @@ export default function DashboardComponent({
                         </div>
                         <div className={'mt-4 text-right'}>
                             <div className={'text-gray-600'}>지급보험금</div>
-                            <CountUp end={tableData.counselData[0]?.closingAmt  ? FormatNumber(tableData.counselData[0].closingAmt) : 0} duration={2} className={'text-3xl font-semibold'} suffix={'원'}/>
+                            <CountUp end={(tableData) && (tableData.counselData[0].closingAmt)  ? FormatNumber(tableData.counselData[0].closingAmt) : 0} duration={2} className={'text-3xl font-semibold'} suffix={'원'}/>
                         </div>
                     </div>
                     <div className={'w-full'}>
@@ -324,7 +330,7 @@ export default function DashboardComponent({
                                     <th>증권번호</th>
                                     <th>보험기간</th>
                                     <th>사업장수</th>
-                                    <th>변경보험료</th>
+                                   {/* <th>변경보험료</th>*/}
                                     <th>총보험료</th>
                                     <th>지급보험금</th>
                                     <th>손조비용</th>
@@ -337,13 +343,13 @@ export default function DashboardComponent({
                                         <td>{counsel.pNo}</td>
                                         <td>{counsel.sDay + '~' + counsel.eDay}</td>
                                         <td>{counsel.bCount}</td>
-                                        <td className={'text-right'}>
+                                        {/*<td className={'text-right'}>
                                             <EditableField
                                                 type={'number'}
                                                 value={counsel.repairAmt}
                                                 onChange={(value) => handleInputChange(index, 'repairAmt', value)}
                                             />
-                                        </td>
+                                        </td>*/}
                                         <td className={'text-right'}>
                                             <EditableField
                                                 type={'number'}
@@ -453,29 +459,29 @@ export default function DashboardComponent({
                 </div>
 
                 <div className={'px-8 py-6 bg-white rounded-xl my-5 w-1/4 mx-8'}>
-                    <div>
-                        <div className={'text-xl font-light mb-6'}>월 누적</div>
-                        <div className={'flex justify-between relative'}>
-                            <div className={'absolute w-[220px]'}>
+                    <div className={'text-xl font-light mb-6'}>월 누적</div>
+                    <div className='flex justify-between'>
+                        <div className={'flex justify-between'}>
+                            <div className={'w-[220px]'}>
                                 <div className={'flex justify-between'}>
                                     <div className={'text-gray-700'}>월 누적 지급보험금</div>
-                                    <div className={'text-blue-500 font-medium'}>+ 23%</div>
+                                    <div className={'text-blue-500 font-medium'}>{tableData.monthCumulativeData[0].total_percent_change}</div>
                                 </div>
-                                <CountUp end={tableData.counselData[0]?.closingAmt ? FormatNumber(tableData.counselData[0].closingAmt) : 0} duration={2} className={'text-3xl font-semibold'}/>
+                                <CountUp
+                                    end={tableData.monthCumulativeData[0]?.total ? FormatNumber(tableData.monthCumulativeData[0].total) : 0}
+                                    duration={2} className={'text-3xl font-semibold'}/>
                                 <span className={'text-xl font-semibold'}> 원</span>
                             </div>
-                            <PieChart data={chartData.pieCounsel} options={optionPie}></PieChart>
                         </div>
-                        <div className={'flex justify-between relative'}>
-                            <div className={'absolute w-[220px]'}>
+                        <div className={'flex justify-between'}>
+                            <div className={'w-[220px]'}>
                                 <div className={'flex justify-between'}>
                                     <div className={'text-gray-700'}>월 누적 사고접수</div>
-                                    <div className={'text-red-500 font-medium'}>- 10%</div>
+                                    <div className={'text-red-500 font-medium'}>{tableData.monthCumulativeData[0].counts_percent_change}</div>
                                 </div>
-                                <CountUp end={7} duration={5} className={'text-3xl font-semibold'}/>
+                                <CountUp end={tableData.monthCumulativeData[0]?.counts ? FormatNumber(tableData.monthCumulativeData[0].counts) : 0} duration={5} className={'text-3xl font-semibold'}/>
                                 <span className={'text-xl font-semibold'}>건</span>
                             </div>
-                            <PieChart data={chartData.pieAccident} options={optionPie}></PieChart>
                         </div>
                     </div>
                 </div>

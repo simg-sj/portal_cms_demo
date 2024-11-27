@@ -97,19 +97,20 @@ const SlidePopup = ({isOpen, onClose, title, Content, buttons }: SlidePopupProps
                     <h2 className="text-xl font-semibold">{title}</h2>
                     <div className="flex justify-end space-x-5">
                         {modifiedButtons.map((button, index) => (
-                            <Button
-                                key={index}
-                                onClick={button.onClick}
-                                color={button.color}
-                                fill={button.fill}
-                                rounded={button.rounded}
-                                textSize={button.textSize}
-                                fontWeight={button.fontWeight}
-                                width={button.width}
-                                height={button.height}
-                            >
-                                {button.label}
-                            </Button>
+                            <div key={index}>
+                                <Button
+                                    onClick={button.onClick}
+                                    color={button.color}
+                                    fill={button.fill}
+                                    rounded={button.rounded}
+                                    textSize={button.textSize}
+                                    fontWeight={button.fontWeight}
+                                    width={button.width}
+                                    height={button.height}
+                                >
+                                    {button.label}
+                                </Button>
+                            </div>
                         ))}
                     </div>
                 </div>

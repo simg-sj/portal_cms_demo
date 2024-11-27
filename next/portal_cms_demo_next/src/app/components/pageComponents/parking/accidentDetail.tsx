@@ -24,8 +24,8 @@ interface HiparkingListProps {
     isEditing: boolean;
     onSave: (data: any) => void;
     isNew?: boolean;
-    rowData : ClaimRowType;
-    setRowData : React.Dispatch<React.SetStateAction<ClaimRowType>>;
+    rowData : ClaimType | {};
+    setRowData : (value: (((prevState: ClaimRowType) => ClaimRowType) | ClaimRowType)) => void
 }
 
 const STATE_OPTIONS = ['확인중', '접수', '접수취소', '보류', '면책', '종결', '추산', '합의', '부재'];
@@ -103,7 +103,6 @@ const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: Hiparki
         }
     }, [isNew, rowData.irpk]);
 
-    const [selectDate, setSelectDate] = useState(new Date());
     const [images, setImages] = useState<ImageType[]>([]);
 
     //필드값 변경시 formdata 업데이트
