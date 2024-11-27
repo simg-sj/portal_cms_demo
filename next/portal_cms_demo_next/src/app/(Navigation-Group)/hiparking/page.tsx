@@ -1,140 +1,72 @@
-'use client'
+'use client';
 
-import React, {useState,useEffect} from "react";
+import React from 'react';
 import Dashboard from "@/app/components/pageComponents/parking/dashboard";
-import {getDashBoard} from "@/app/(Navigation-Group)/hiparking/action";
-import {
-    ChangeCounselData,
-    ChangeGraph,
-    CounselData,
-    DataTwowayBarType,
-    MonthAccidentData, TopBusinessData, TopCounselData
-} from "@/@types/common";
-type TableType = {
-    monthAccidentData: MonthAccidentData[];
-    counselData: CounselData[]; // 배열로 정의
-    changeData: ChangeCounselData[];
-    changeGraphData : ChangeGraph[];
-    topCounselData : TopCounselData[];
-    topBusinessData : TopBusinessData[];
-};
-export default function Page() {
-    //table 테이블 데이터
-    const [tableData, setTableData] = useState<TableType>({
-        counselData: [], //계약현황
-        changeData: [], //계약변경현황
-        monthAccidentData: [], //월별사고접수현황
-        changeGraphData : [], // 6개월  계약변경 현황
-        topCounselData : [],
-        topBusinessData : [],
-    });
+import useFetchDashboard from "@/app/hooks/useFetchDashboard";
+import Loading from "@/app/(Navigation-Group)/loading";
 
-    //도넛차트 데이터
-    const [doughnutValue, setDoughnutValue] = useState<Number>(0) //손해율데이터
+export default function Page() {
+    const { tableData, doughnutValue, loading, error, updateParams } = useFetchDashboard();
+
+    if (error) {
+        return <div>Error: {error.message}</div>;
+    }
+
+    // 도넛 차트 데이터
     const dataDoughnut = {
         datasets: [
             {
-                data: [doughnutValue, 100 - doughnutValue],
-                backgroundColor: ["#f8a455", "#eeeeee"], //color-main
+                data: [doughnutValue || 0, 100 - (doughnutValue || 0)],
+                backgroundColor: ["#f8a455", "#eeeeee"], // color-main
             },
         ],
     };
 
-    //양방향막대 데이터
-    const dataTwowayBar : DataTwowayBarType = {
-        labels: tableData.changeGraphData.map((d) => d.cDay), //최근6개월 계약변경 날짜
-        datasets: [
-            {
-                label: '추가',
-                data: tableData.changeGraphData.map((d) => d.pAdd), //최근6개월 추가사업장데이터
-                backgroundColor: '#fdae68', //color-main-light
+    // 양방향 막대 데이터
+    const dataTwowayBar = loading
+        ? { labels: [], datasets: [] }
+        : {
+            labels: tableData?.changeGraphData?.map((d) => d.cDay) || [],
+            datasets: [
+                {
+                    label: '추가',
+                    data: tableData?.changeGraphData?.map((d) => d.pAdd) || [],
+                    backgroundColor: '#fdae68',
+                },
+                {
+                    label: '종료',
+                    data: tableData?.changeGraphData?.map((d) => -d.pEnd) || [],
+                    backgroundColor: '#fcd174',
+                },
+            ],
+        };
+
+    // 차트 데이터
+    const chartData = loading
+        ? null
+        : {
+            doughnut: dataDoughnut,
+            doughnutValue: doughnutValue || 0,
+            twowayBar: dataTwowayBar,
+            topCounsel: {
+                labels: tableData?.topCounselData?.map((d) => d.pklName) || [],
+                values: tableData?.topCounselData?.map((d) => d.total_sum) || [],
+                color: '#fdae68',
             },
-            {
-                label: '종료',
-                data: tableData.changeGraphData.map((d) => -d.pEnd), //최근6개월 종료사업장데이터
-                backgroundColor: '#fcd174', //color-sub-light
+            topBusiness: {
+                labels: tableData?.topBusinessData?.map((d) => d.pklName) || [],
+                values: tableData?.topBusinessData?.map((d) => d.count) || [],
+                color: '#fdae68',
             },
-        ],
-    };
-
-    //원형차트 데이터
-    const dataPieCounsel = {
-        //labels: ['정곡빌딩', '부산사학연금', '청주성모병원', '기타'], //월누적보험료 top5 업체명
-        datasets: [
-            {
-                data: [38, 26, 11, 25], //월누적보험료 top5 비율 %
-                backgroundColor: ['#f1923e', '#fdae68', '#efb944', '#fcd174'], //color-main, color-main-light, color-sub, color-sub-light
-            },
-        ],
-    };
-    const dataPieAccident = {
-        labels: ['제2주차장', '청주공항주차장', '서울스퀘어', '기타'], //월누적사고접수 top5 업체명
-        datasets: [
-            {
-                data: [21, 16, 14, 49], //월누적사고접수 top5 업체 비율 %
-                backgroundColor: ['#f1923e', '#fdae68', '#efb944', '#fcd174'], //color-main, color-main-light, color-sub, color-sub-light
-            },
-        ],
-    };
-
-    //가로막대 데이터
-    const topCounselData = {
-        labels: tableData.topCounselData.map((d) => d.pklName), //지급보험료 top5 업체명
-        values: tableData.topCounselData.map((d) => d.total_sum), //지급보험료 top5 지급보험금액
-        color: '#fdae68' //color-main-light
-    };
-
-    const topBusinessData = {
-        labels: tableData.topBusinessData.map((d) => d.pklName), //사고발생업소 top5 업체명
-        values: tableData.topBusinessData.map((d) => d.count), //사고발생업소 top5 사고횟수
-        color: '#fdae68' //color-main-light
-    };
-
-    const chartData = {
-        doughnut: dataDoughnut,
-        doughnutValue: doughnutValue,
-        twowayBar: dataTwowayBar,
-        topCounsel: topCounselData,
-        topBusiness: topBusinessData,
-        pieCounsel: dataPieCounsel,
-        pieAccident: dataPieAccident
-    };
-
-    useEffect(() => {
-        async function fetchData(){
-            try {
-                const result = await getDashBoard({'job' : 'dash','bpk' : '2','sDay': '2024-09', 'eDay' :'2025-09'});
-
-                console.log(result);
-                // 상태 업데이트
-                setTableData((prevState) => ({
-                    ...prevState,
-                    counselData: result[0],
-                    changeData: result[1],
-                    topBusinessData : result[2],
-                    topCounselData : result[3],
-                    monthAccidentData: result[4],
-                    changeGraphData: result[5],
-                }));
-
-                if (result[0] && result[0].length > 0) {
-                    const lastValue = result[0][result[0].length - 1];
-                    setDoughnutValue(lastValue.lossRatio);
-                }
-            } catch (e) {
-                console.log(e); // 에러 출력
-            }
-        }
-
-        fetchData();
-    }, []);
-
+        };
 
     return (
-        <Dashboard
-            chartData={chartData}
-            tableData={tableData}
-        >
-        </Dashboard>
-    )
+        <>
+            {loading ? (
+                <Loading />
+            ) : (
+                <Dashboard chartData={chartData} tableData={tableData} setParam={updateParams}/>
+            )}
+        </>
+    );
 }

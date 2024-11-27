@@ -62,6 +62,14 @@ interface ChangeGraph{
     AddAmt: number;
     EndAmt: number;
 }
+interface MonthCumulativeData {
+    bpk : number
+    changeDay : string
+    counts : number
+    total : number
+    counts_percent_change : number
+    total_percent_change : number
+}
 interface TopCounselData {
     pklName : string;
     total_sum : string;

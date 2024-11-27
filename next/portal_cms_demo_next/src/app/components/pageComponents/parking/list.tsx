@@ -6,8 +6,7 @@ import CalenderPicker from "@/app/components/common/ui/calenderPicker";
 import dayjs from "dayjs";
 import {ClosingCode} from "@/config/data";
 import {getImage} from "@/app/(Navigation-Group)/hiparking/action";
-import RenderField from "@/app/components/common/ui/renderField";
-import {ImageType} from "@/@types/common";
+import {ClaimRowType, ImageType} from "@/@types/common";
 
 interface ClaimType {
     irpk: number;
@@ -25,8 +24,8 @@ interface HiparkingListProps {
     isEditing: boolean;
     onSave: (data: any) => void;
     isNew?: boolean;
-    rowData : ClaimType;
-    setRowData : React.Dispatch<React.SetStateAction<ClaimType>>;
+    rowData : ClaimType | {};
+    setRowData : (value: (((prevState: ClaimRowType) => ClaimRowType) | ClaimRowType)) => void
 }
 
 const STATE_OPTIONS = ['확인중', '접수', '접수취소', '보류', '면책', '종결', '추산', '합의', '부재'];
@@ -104,7 +103,6 @@ const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: Hiparki
         }
     }, [isNew, rowData.irpk]);
 
-    const [selectDate, setSelectDate] = useState(new Date());
     const [images, setImages] = useState<ImageType[]>([]);
 
     //필드값 변경시 formdata 업데이트
