@@ -26,7 +26,7 @@ import {TooltipItem} from "chart.js";
 interface DashboardProps {
     chartData: {
         doughnut: any;
-        doughnutValue: number; //손해율 데이터 props 전달 수정
+        doughnutValue: number;
         twowayBar: any;
         topCounsel: any;
         topBusiness: any;
@@ -77,6 +77,8 @@ export default function DashboardComponent({
         plugins: {
             legend: {
                 display: true,
+                position: 'left',
+                align: 'end'
             },
             tooltip: {
                 backgroundColor: 'white',
@@ -207,7 +209,7 @@ export default function DashboardComponent({
                         </div>
                     </div>
                     <div className={'w-full'}>
-                        <div className={'max-h-[205px] overflow-y-auto'}>
+                        <div className={'max-h-[250px] overflow-y-auto'}>
                             <table className={'w-full relative'}>
                                 <colgroup>
                                     <col style={{width: ""}}/>
@@ -310,8 +312,7 @@ export default function DashboardComponent({
                                     <th>추가</th>
                                     <th>종료</th>
                                     <th>추가</th>
-                                    <th>종료
-                                    </th>
+                                    <th>종료</th>
                                 </tr>
                                 </thead>
                                 <tbody>

@@ -127,10 +127,9 @@ export default function Page() {
                         '메모': formData.pkMemo
                     };
                     console.log(param);
-                    setSlideOpen(false);
+                    setAddOpen(false);
                 } else {
-                    setSlideOpen(true);
-                    console.log('저장취소');
+                    setAddOpen(true);
                 }
             }
         }
