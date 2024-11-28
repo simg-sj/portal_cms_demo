@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Button from "@/app/components/common/ui/button";
+import {ClaimRowType} from "@/@types/common";
 
 interface ButtonConfig {
     label: string;
@@ -19,9 +20,10 @@ interface SlidePopupProps {
     title: string;
     Content: React.ComponentType<{ isEditing: boolean, onSave: (data: any) => void }>;
     buttons: ButtonConfig[];
+    rowData : ClaimRowType;
 }
 
-const SlidePopup = ({isOpen, onClose, title, Content, buttons }: SlidePopupProps) => {
+const SlidePopup = ({isOpen, onClose, title, Content, buttons, rowData }: SlidePopupProps) => {
     const [shouldRender, setShouldRender] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
@@ -59,7 +61,7 @@ const SlidePopup = ({isOpen, onClose, title, Content, buttons }: SlidePopupProps
     //저장버튼 클릭
     const handleSave = (data: any) => {
         if (window.confirm('저장하시겠습니까?')) {
-            console.log('변경된 데이터:', data);
+            console.log('변경된 데이터:', rowData);
             setIsEditing(false);
         }
     };
@@ -115,7 +117,7 @@ const SlidePopup = ({isOpen, onClose, title, Content, buttons }: SlidePopupProps
                     </div>
                 </div>
                 <div className="px-8 pb-8">
-                    <Content isEditing={isEditing} onSave={handleSave} />
+                    <Content isEditing={isEditing}  />
                 </div>
             </div>
         </div>

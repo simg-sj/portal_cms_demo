@@ -1,5 +1,5 @@
 "use client"
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useCallback} from "react";
 import ImageUploader from "@/app/components/common/ui/fileUpload";
 import DayTerm from "@/app/components/common/ui/dayTerm";
 import CalenderPicker from "@/app/components/common/ui/calenderPicker";
@@ -36,86 +36,32 @@ const ACCIDENT_DETAIL_TYPE_OPTIONS = ['차대차', '시설물사고', '건물자
 
 
 const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: HiparkingListProps) => {
-    //input 빈값으로 변경
-    const [formData, setFormData] = useState({
-        irpk: 0,
-        bpk: null,
-        pNo: '',
-        bNumber: '',
-        platform : '',
-        sDay : '',
-        eDay : '',
-        cpk: null,
-        insuNum: '',
-        pklName:'',
-        wName: '',
-        wCell: '',
-        inCargeName: '',
-        inCargePhone: '',
-        wEmail: '',
-        PJTcode: '',
-        pklAddress: '',
-        vCarType: '',
-        vCarColor: '',
-        vCarNum: '',
-        accidentType: '',
-        accidentDetailType: '',
-        accidentDetail: '',
-        requestDate: '',
-        accidentDate: '',
-        accidentDateTime: '',
-        wOpinion: '',
-        memo: '',
-        closingCode: '',
-        closingStatus: '',
-        estimateAmt: '',
-        closingAmt: '',
-        repairAmt: '',
-        total: '',
-        rentPay: '',
-        selfPay: '',
-        vat: '',
-        selfTotal: '',
-        selfYN: '',
-        depositYN: '',
-        payDate: '',
-        infoUseAgree: '',
-        infoOfferAgree: '',
-        approvalYN: '',
-        useYNull: '',
-        createdYMD: new Date(),
-    });
-    // const [formData, setFormData] = useState({});
+    const [images, setImages] = useState<ImageType[]>([]);
+    /*const handleImageChange = (newImages) => {
+       setImages(newImages);
+   };*/
+
+    const fetchImageData = useCallback(async (irpk: number) => {
+        try {
+            const fetchedImage = await getImage(irpk);
+            setImages(fetchedImage);
+        } catch (error) {
+            console.error("Failed to fetch:", error);
+        }
+    }, []);
 
     useEffect(() => {
-        if (!isNew && rowData.irpk) {
-            const fetchImage = async () => {
-                try {
-                    const fetchedImage = await getImage(rowData.irpk);
-
-                    setImages(fetchedImage);
-                } catch (error) {
-                    console.error("Failed to fetch image:", error);
-                }
-            };
-            fetchImage();
-
+        if (!isNew && rowData.irpk && isEditing) {
+            fetchImageData(rowData.irpk);
         }
-    }, [isNew, rowData.irpk]);
+    }, []);
 
-    const [images, setImages] = useState<ImageType[]>([]);
 
     //필드값 변경시 formdata 업데이트
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setRowData((prev ) => ({...prev, [e.target.name] : e.target.value}));
     };
-    //dayterm 업데이트
-    const handleDayTermChange = (startDate: Date | null, endDate: Date | null) => {
-        setFormData({
-            ...formData,
-            sDate: { startDate, endDate }
-        });
-    };
+
     //입력필드 타입
     const renderField = (key: string, value: any, type: 'text' | 'select' | 'date' | 'dayterm' | 'textarea' = 'text', options?: string[]) => {
         if (!isEditing && !isNew) {
@@ -146,9 +92,9 @@ const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: Hiparki
                 return (
                     <CalenderPicker selected={dayjs(rowData[key]).toDate()} onChange={(date: Date | null) =>
                         setRowData((prevState) => ({
-                        ...prevState,
-                        [key] : date
-                    }))
+                            ...prevState,
+                            [key]: dayjs(date).format('YYYY-MM-DD')
+                        }))
                     }/>
                 );
             case 'dayterm':
@@ -157,7 +103,6 @@ const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: Hiparki
                         sDay={dayjs(rowData.sDay).toDate()}
                         eDay={dayjs(rowData.eDay).toDate()}
                         setParam={setFormData}
-                        onChange={handleDayTermChange}
                     />
                 );
             case 'textarea':
@@ -182,10 +127,6 @@ const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: Hiparki
         }
     };
 
-
-    const handleImageChange = (newImages) => {
-        setImages(newImages);
-    };
 
 
 
@@ -212,14 +153,14 @@ const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: Hiparki
                         <th>상태</th>
                         <td>{renderField('closingCode', ClosingCode[rowData.closingCode], 'select', STATE_OPTIONS)}</td>
                         <th>지급보험금</th>
-                        <td>{renderField('total', rowData.total, 'text')}</td>
+                        <td>{rowData.total ? renderField('total', rowData.total, 'text')+'원': '-'}</td>
                         {/*<td><RenderField key={'total'} value={rowData.total} type={'text'}/></td>*/}
                     </tr>
                     <tr>
                         <th>사고접수일</th>
                         <td>{renderField('requestDate', dayjs(rowData.requestDate).toDate(), 'date')}</td>
                         <th>내부결재 여부</th>
-                        <td>{renderField('approvalYN', formData.approvalYN, 'select', APPROVAL_OPTIONS)}</td>
+                        <td>{renderField('approvalYN', rowData.approvalYN, 'select', APPROVAL_OPTIONS)}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -275,7 +216,6 @@ const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: Hiparki
                                 <ImageUploader
                                     initialImages={images}
                                     isEditing={isEditing || isNew}
-                                    onChange={handleImageChange}
                                 />
                             </div>
                         </td>
@@ -306,9 +246,9 @@ const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: Hiparki
                     </tr>
                     <tr>
                         <th>차종</th>
-                        <td>{renderField('vCarType', formData.vCarType)}</td>
+                        <td>{renderField('vCarType', rowData.vCarType)}</td>
                         <th>차랑색상</th>
-                        <td>{renderField('vCarColor', formData.vCarColor)}</td>
+                        <td>{renderField('vCarColor', rowData.vCarColor)}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -352,13 +292,13 @@ const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: Hiparki
                     <tbody>
                     <tr>
                         <th>업무 담당자 성함</th>
-                        <td colSpan={3}>{renderField('bCargeName', formData.bCargeName)}</td>
+                        <td colSpan={3}>{renderField('bCargeName', rowData.bCargeName)}</td>
                     </tr>
                     <tr>
                         <th>업무 담당자 연락처</th>
-                        <td>{renderField('bCell', formData.bCell)}</td>
+                        <td>{renderField('bCell', rowData.bCell)}</td>
                         <th>업무 담당자 메일</th>
-                        <td>{renderField('bMail', formData.bMail)}</td>
+                        <td>{renderField('bMail', rowData.bMail)}</td>
                     </tr>
                     </tbody>
                 </table>

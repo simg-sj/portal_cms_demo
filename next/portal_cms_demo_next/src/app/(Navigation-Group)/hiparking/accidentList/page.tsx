@@ -1,5 +1,5 @@
 "use client"
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import DayTerm from "@/app/components/common/ui/dayTerm";
 import Button from "@/app/components/common/ui/button";
 import Image from "next/image";
@@ -9,7 +9,7 @@ import SlidePopup from "@/app/components/popup/SlidePopup";
 import HiparkingList from "@/app/components/pageComponents/parking/accidentDetail";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
-import {getClaim} from "@/app/(Navigation-Group)/hiparking/action";
+import {getClaim, getImage} from "@/app/(Navigation-Group)/hiparking/action";
 import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
 import {ButtonConfig, ClaimRowType} from "@/@types/common";
 
@@ -205,6 +205,23 @@ export default function Page() {
         },
     ];
 
+   /* const fetchImageData = useCallback(async (irpk: number) => {
+        try {
+            const fetchedImage = await getImage(irpk);
+            console.log("@@@")
+            console.log("@@@@@@",fetchedImage)
+            setRowData((prev ) => ({...prev, images : fetchedImage}));
+        } catch (error) {
+            console.error("Failed to fetch:", error);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!isNew && data.irpk) {
+            fetchImageData(data.irpk);
+        }
+    }, [isNew, data.irpk ]);*/
+
     return (
         <>
             <div className={'border border-gray-100 p-6 rounded-lg bg-white flex items-center justify-between'}>
@@ -267,6 +284,7 @@ export default function Page() {
                     isOpen={isOpen}
                     onClose={closePopup}
                     title={isNew ? "신규 등록" : "상세보기"}
+                    rowData={rowData}
                     Content={(props) => <HiparkingList {...props} isNew={isNew} rowData={rowData || {}} setRowData={setRowData}/>}
                     buttons={popupButtons}
                 />

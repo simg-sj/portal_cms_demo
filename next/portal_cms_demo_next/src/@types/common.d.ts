@@ -250,6 +250,7 @@ interface ClaimRowType {
     approvalYN?: string | null;         // 내부 결재 여부
     useYNull?: string | null;           // 사용 여부
     createdYMD?: Date | null;           // 생성일자 (datetime)
+    images ?: ImageType[];
 }
 
 
