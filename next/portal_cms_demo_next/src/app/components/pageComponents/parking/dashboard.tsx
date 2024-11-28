@@ -1,8 +1,6 @@
 'use client'
 import Button from "@/app/components/common/ui/button";
-import Plus from "@/assets/images/icon/plus-icon.png";
 import Excel from "@/assets/images/icon/excel-icon.png";
-import React, {useState, useRef} from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import DoughnutChart from "@/app/components/chart/DoughnutChart";
 import BarTwowayChart from "@/app/components/chart/BarTwowayChart";
@@ -11,10 +9,10 @@ import EditableField from "@/app/components/common/ui/editField";
 import useInputChange from "@/app/lib/customHook/inputChange";
 import Tab from "@/app/components/common/ui/tab";
 import Image from "next/image";
+import CarIcon from "@/assets/images/icon/car-icon.png";
+import ChargeIcon from "@/assets/images/icon/charge-icon.png";
 import BarHorizonChart from "@/app/components/chart/BarHorizonChart";
 import DayTerm from "@/app/components/common/ui/dayTerm";
-import CenterPopup from "@/app/components/popup/CenterPopup";
-import AddBusiness, { AddBusinessRef } from "@/app/components/pageComponents/parking/add-business";
 import {
     ChangeCounselData,
     ChangeGraph,
@@ -24,7 +22,6 @@ import {
 } from "@/@types/common";
 import CountUp from "@/app/components/common/ui/countUp";
 import {TooltipItem} from "chart.js";
-import {Context} from "chartjs-plugin-datalabels";
 
 interface DashboardProps {
     chartData: {
@@ -51,59 +48,6 @@ export default function DashboardComponent({
                                             chartData,
                                             tableData, setParam,
                                            }: DashboardProps) {
-    //사업장추가팝업
-    const [isOpen, setIsOpen] = useState(false);
-    const businessRef = useRef<AddBusinessRef>(null);
-
-    const handleConfirm = async () => {
-        if (businessRef.current) {
-            const isValid = await businessRef.current.validateForm();
-
-            if (isValid) {
-                const formData = businessRef.current.getFormData();
-                if (window.confirm(`${formData.parkingName}사업장을 추가하시겠습니까?`)) {
-                    const param = {
-                        '주차장명': formData.parkingName,
-                        '주차장주소:': formData.parkingAddress,
-                        '옥내:': formData.indoor.checked ? formData.indoor.value : '',
-                        '옥외:': formData.outdoor.checked ? formData.outdoor.value : '',
-                        '기계식:': formData.mechanical.checked ? formData.mechanical.value : '',
-                        '카리프트:': formData.carLift.checked ? formData.carLift.value : ''
-                    };
-                    console.log(param);
-                    setIsOpen(false);
-                } else {
-                    setIsOpen(true);
-                    console.log('저장취소');
-                }
-            }
-        }
-    };
-
-    const handleClose = () => {
-        if (businessRef.current) {
-            businessRef.current.clearForm();
-        }
-        setIsOpen(false);
-    };
-
-    const popupButton = [
-        {
-            label: "확인",
-            onClick: handleConfirm,
-            color: "main" as const,
-            fill: true,
-            width: 130,
-            height: 40
-        },
-        {
-            label: "취소",
-            onClick: handleClose,
-            color: "gray" as const,
-            width: 130,
-            height: 40
-        }
-    ];
 
     //table 데이터
     const {handleInputChange} = useInputChange({
@@ -203,7 +147,7 @@ export default function DashboardComponent({
         },
         layout: {
             padding: {
-                right: 60,
+                right: 120,
             },
         },
         cutout: '75%',
@@ -218,43 +162,6 @@ export default function DashboardComponent({
             },
         },
         cutout: '75%',
-    };
-
-     //원형차트 옵션
-    const optionPie = {
-        plugins: {
-            legend: {
-                display: false,
-            },
-            tooltip: {
-                backgroundColor: 'white',
-                titleColor: 'black',
-                bodyColor: 'black',
-                borderWidth: 1,
-                borderColor: '#e7e7e7',
-                bodyAlign: 'center',
-                titleAlign: 'center',
-                position: 'nearest',
-                yAlign: 'bottom',
-            },
-            datalabels: {
-                formatter: function (value: number, context: Context) {
-                    const dataset = context.chart.data.datasets[0];
-                    const total = dataset.data.reduce((acc: number, val: unknown) => acc + (typeof val === 'number' ? val : 0), 0);
-                    if (total === 0) return '0%';
-                    const percentage = ((value / total) * 100).toFixed(0) + "%";
-                    return percentage;
-                },
-                color: '#fff',
-                anchor: 'center',
-                align: 'center',
-                font: {
-                    size: 15,
-                    weight: 'normal',
-                },
-            },
-        },
-        responsive: false,
     };
 
 
@@ -300,19 +207,6 @@ export default function DashboardComponent({
                         </div>
                     </div>
                     <div className={'w-full'}>
-                        <div className={"flex justify-end mb-4"}>
-                            <Button color={"main"} fill height={36} width={120} onClick={() => setIsOpen(true)}>
-                                <Image src={Plus.src} alt={'추가'} width={16} height={16} className={'mr-1'}/>
-                                사업장 추가
-                            </Button>
-                        </div>
-                        <CenterPopup
-                            isOpen={isOpen}
-                            onClose={handleClose}
-                            title="사업장 추가"
-                            Content={() => <AddBusiness ref={businessRef} />}
-                            buttons={popupButton}
-                        />
                         <div className={'max-h-[205px] overflow-y-auto'}>
                             <table className={'w-full relative'}>
                                 <colgroup>
@@ -448,7 +342,47 @@ export default function DashboardComponent({
             </div>
 
             <div className={'flex'}>
-                <div className={'px-8 py-6 bg-white rounded-xl my-5 w-1/4'}>
+                <div className={'px-8 py-6 bg-white rounded-xl my-5 w-1/6'}>
+                    <div className={'text-xl font-light mb-6'}>월 누적 현황</div>
+                    <div>
+                        <div className={'my-10 bg-white shadow-lg px-5 py-5 rounded-xl'}>
+                            <div className={'w-full'}>
+                                <Image src={ChargeIcon} alt={'보험금아이콘'} width={30} height={30} className={'my-4'}/>
+                                <div className={'text-gray-700 mb-2'}>월 누적 지급보험금</div>
+                                <div className={'flex justify-end'}>
+                                    <div
+                                        className={tableData.monthCumulativeData[0].total_percent_change > 0 ? 'text-blue-500 font-medium' : 'text-red-500 font-medium'}
+                                    >{tableData.monthCumulativeData[0].total_percent_change}</div>
+                                </div>
+                                <div className={'flex justify-between items-end'}>
+                                    <CountUp
+                                        end={tableData.monthCumulativeData[0]?.total ? FormatNumber(tableData.monthCumulativeData[0].total) : 0}
+                                        duration={2} className={'text-3xl font-semibold'}/>
+                                    <span className={'text-xl font-semibold ml-5'}> 원</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className={'my-10 bg-white shadow-lg px-5 py-5 rounded-xl'}>
+                            <div className={'w-full'}>
+                                <Image src={CarIcon} alt={'사고아이콘'} width={30} height={30} className={'my-4'}/>
+                                <div className={'text-gray-700 mb-2'}>월 누적 사고접수</div>
+                                <div className={'flex justify-end'}>
+                                    <div
+                                        className={tableData.monthCumulativeData[0].counts_percent_change > 0 ? 'text-blue-500 font-medium' : 'text-red-500 font-medium'}
+                                    >{tableData.monthCumulativeData[0].counts_percent_change}</div>
+                                </div>
+                                <div className={'flex justify-between items-end'}>
+                                    <CountUp
+                                        end={tableData.monthCumulativeData[0]?.counts ? FormatNumber(tableData.monthCumulativeData[0].counts) : 0}
+                                        duration={5} className={'text-3xl font-semibold'}/>
+                                    <span className={'text-xl font-semibold ml-5'}> 건</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className={'px-8 py-6 bg-white rounded-xl my-5 w-2/6 mx-8'}>
                     <div className={'flex justify-between'}>
                         <div className={'text-xl font-light mb-6'}>Top 5</div>
                         <div className={"flex justify-end mb-4 text-xl"}>
@@ -458,35 +392,7 @@ export default function DashboardComponent({
                     <Tab tabs={tabs}/>
                 </div>
 
-                <div className={'px-8 py-6 bg-white rounded-xl my-5 w-1/4 mx-8'}>
-                    <div className={'text-xl font-light mb-6'}>월 누적</div>
-                    <div className='flex justify-between'>
-                        <div className={'flex justify-between'}>
-                            <div className={'w-[220px]'}>
-                                <div className={'flex justify-between'}>
-                                    <div className={'text-gray-700'}>월 누적 지급보험금</div>
-                                    <div className={'text-blue-500 font-medium'}>{tableData.monthCumulativeData[0].total_percent_change}</div>
-                                </div>
-                                <CountUp
-                                    end={tableData.monthCumulativeData[0]?.total ? FormatNumber(tableData.monthCumulativeData[0].total) : 0}
-                                    duration={2} className={'text-3xl font-semibold'}/>
-                                <span className={'text-xl font-semibold'}> 원</span>
-                            </div>
-                        </div>
-                        <div className={'flex justify-between'}>
-                            <div className={'w-[220px]'}>
-                                <div className={'flex justify-between'}>
-                                    <div className={'text-gray-700'}>월 누적 사고접수</div>
-                                    <div className={'text-red-500 font-medium'}>{tableData.monthCumulativeData[0].counts_percent_change}</div>
-                                </div>
-                                <CountUp end={tableData.monthCumulativeData[0]?.counts ? FormatNumber(tableData.monthCumulativeData[0].counts) : 0} duration={5} className={'text-3xl font-semibold'}/>
-                                <span className={'text-xl font-semibold'}>건</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className={'px-8 py-6 bg-white rounded-xl my-5 w-2/4'}>
+                <div className={'px-8 py-6 bg-white rounded-xl my-5 w-1/2'}>
                     <div>
                         <div className={'flex justify-between'}>
                             <div className={'text-xl font-light mb-6'}>월별 사고접수현황</div>
