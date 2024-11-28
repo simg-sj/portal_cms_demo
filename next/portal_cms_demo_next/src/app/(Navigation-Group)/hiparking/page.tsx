@@ -29,12 +29,12 @@ export default function Page() {
             labels: tableData?.changeGraphData?.map((d) => d.cDay) || [],
             datasets: [
                 {
-                    label: '추가',
+                    label: '추가 사업장',
                     data: tableData?.changeGraphData?.map((d) => d.pAdd) || [],
                     backgroundColor: '#fdae68',
                 },
                 {
-                    label: '종료',
+                    label: '종료 사업장',
                     data: tableData?.changeGraphData?.map((d) => -d.pEnd) || [],
                     backgroundColor: '#fcd174',
                 },

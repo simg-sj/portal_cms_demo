@@ -1,7 +1,8 @@
 import React from 'react';
 import {Bar} from 'react-chartjs-2';
 import {Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, ChartOptions, Chart} from 'chart.js';
-import Loading from "@/app/(Navigation-Group)/loading";
+import Image from "next/image";
+import Error from '@/assets/images/icon/error-icon.png';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip);
 
@@ -17,9 +18,13 @@ interface BarHorizonChartProps {
 }
 
 const BarHorizonChart = ({data, options}: BarHorizonChartProps) => {
-    if (!data) {
-        console.error("data prop is required.");
-        return <div>데이터를 불러올 수 없습니다.</div>;
+    if (!data || !data.values || data.values.length === 0 || data.values.every(value => value === 0)) {
+        return(
+            <div className={'flex items-centers justify-center my-[150px]'}>
+                <Image src={Error.src} alt={'에러'} width={30} height={30} className={'mr-5'}/>
+                <div className={'text-gray-700 text-lg'}>데이터를 불러올 수 없습니다.</div>
+            </div>
+            )
     }
     const chartData = {
         labels: data.labels,

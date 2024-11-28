@@ -8,7 +8,7 @@ import { getThemeConfig } from "@/config/themeConfig";
 import DashboardIcon from "@/assets/images/icon/dashboard-icon.png";
 import ListIcon from "@/assets/images/icon/list-icon.png";
 import UserIcon from "@/assets/images/icon/user-icon.png";
-import CarIcon from "@/assets/images/icon/car-icon.png";
+import CarIcon from "@/assets/images/icon/parking-icon.png";
 import MenuItem from "@/app/components/common/MenuItem";
 import Image from "next/image";
 import {useSession} from "next-auth/react";
