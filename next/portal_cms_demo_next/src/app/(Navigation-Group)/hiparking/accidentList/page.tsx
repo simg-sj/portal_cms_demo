@@ -9,9 +9,9 @@ import SlidePopup from "@/app/components/popup/SlidePopup";
 import HiparkingList from "@/app/components/pageComponents/parking/accidentDetail";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
-import {getClaim, getImage} from "@/app/(Navigation-Group)/hiparking/action";
+import {getClaim, getImage, updateClaimData} from "@/app/(Navigation-Group)/hiparking/action";
 import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
-import {ButtonConfig, ClaimRowType} from "@/@types/common";
+import {ButtonConfig, ClaimRowType, UptClaim} from "@/@types/common";
 
 interface ColumnDefinition<T> {
     key: keyof T;
@@ -80,15 +80,29 @@ export default function Page() {
         document.body.style.removeProperty('overflow');
     };
 
-    const handleSave = (data: any) => {
-        if (isNew) {
-            window.confirm('등록하시겠습니까?')
-            console.log('신규등록 데이터:', data);
-        } else {
-            window.confirm('저장하시겠습니까?')
-            console.log('수정된 데이터:', data);
+    const handleSave = async (data: UptClaim) => {
+        try{
+            if (isNew) {
+                window.confirm('등록하시겠습니까?')
+                console.log('신규등록 데이터:', data);
+            } else {
+                window.confirm('저장하시겠습니까?')
+                data.job = 'UPT';
+                data.requestDate = dayjs(data.requestDate).format('YYYY-MM-DD HH:mm:ss');
+                data.accidentDateTime = dayjs(data.accidentDateTime).format('YYYY-MM-DD HH:mm:ss');
+
+                let result = await updateClaimData(data);
+
+                if(result[0].code === '200'){
+
+                    closePopup();
+                }else {
+                    alert('서비스 오류')
+                }
+            }
+        }catch(e){
+            console.log(e);
         }
-        closePopup();
     };
 
     const handleNewEntry = () => {
@@ -101,14 +115,14 @@ export default function Page() {
 
     const popupButtons: ButtonConfig[] = isNew
         ? [
-            {
+            /*{
                 label: "저장",
                 onClick: () => handleSave({}),
                 color: "blue",
                 fill: true,
                 width: 100,
                 height: 35,
-            },
+            },*/
             {
                 label: "취소",
                 onClick: closePopup,
@@ -156,7 +170,6 @@ export default function Page() {
 
     const onSearchClick = async () => {
         const result = await getClaim(param);
-        console.log(result);
 
         setData(result || []);
         setCurrentPage(0);
@@ -205,22 +218,7 @@ export default function Page() {
         },
     ];
 
-   /* const fetchImageData = useCallback(async (irpk: number) => {
-        try {
-            const fetchedImage = await getImage(irpk);
-            console.log("@@@")
-            console.log("@@@@@@",fetchedImage)
-            setRowData((prev ) => ({...prev, images : fetchedImage}));
-        } catch (error) {
-            console.error("Failed to fetch:", error);
-        }
-    }, []);
 
-    useEffect(() => {
-        if (!isNew && data.irpk) {
-            fetchImageData(data.irpk);
-        }
-    }, [isNew, data.irpk ]);*/
 
     return (
         <>
@@ -285,7 +283,7 @@ export default function Page() {
                     onClose={closePopup}
                     title={isNew ? "신규 등록" : "상세보기"}
                     rowData={rowData}
-                    Content={(props) => <HiparkingList {...props} isNew={isNew} rowData={rowData || {}} setRowData={setRowData}/>}
+                    Content={(props) => <HiparkingList {...props} isNew={isNew} rowData={rowData || {}} onSave={handleSave}/>}
                     buttons={popupButtons}
                 />
                 <div className={'mt-4'}>

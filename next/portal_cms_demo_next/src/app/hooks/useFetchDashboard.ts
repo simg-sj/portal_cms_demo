@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-11-26 13:27:27
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-11-26 15:32:35
+ * @LastEditTime: 2024-12-04 09:15:23
  * @FilePath: portal_cms_demo_next/src/app/hooks/useFetchDashboard.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -29,14 +29,14 @@ type DashboardData = {
     monthCumulativeData: MonthCumulativeData[];
 };
 
-const useFetchDashboard = () => {
+const useFetchDashboard = (bpk : string) => {
     const [tableData, setTableData] = useState<DashboardData | null>(null);
     const [doughnutValue, setDoughnutValue] = useState<number | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<any>(null);
     const [params, setParams] = useState<ParamDashType2>({
         job: 'dash',
-        bpk: '2',
+        bpk: bpk,
         sDay: '2024-09',
         eDay: '2025-09',
     });
@@ -74,7 +74,6 @@ const useFetchDashboard = () => {
     }, [params.job, params.bpk, params.sDay, params.eDay]);
 
     const updateParams = (newParams ) => {
-        console.log("@@@")
         setParams((prevParams) => ({
             ...prevParams,
             ...newParams,

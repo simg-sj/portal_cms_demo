@@ -4,9 +4,16 @@ import ImageUploader from "@/app/components/common/ui/fileUpload";
 import DayTerm from "@/app/components/common/ui/dayTerm";
 import CalenderPicker from "@/app/components/common/ui/calenderPicker";
 import dayjs from "dayjs";
-import {ClosingCode} from "@/config/data";
+import {
+    ACCIDENT_DETAIL_TYPE_OPTIONS,
+    ACCIDENT_TYPE_OPTIONS,
+    APPROVAL_OPTIONS,
+    ClosingCode,
+    STATE_OPTIONS
+} from "@/config/data";
 import {getImage} from "@/app/(Navigation-Group)/hiparking/action";
 import {ClaimRowType, ImageType} from "@/@types/common";
+import Button from "@/app/components/common/ui/button";
 
 interface ClaimType {
     irpk: number;
@@ -22,25 +29,17 @@ interface ClaimType {
 
 interface HiparkingListProps {
     isEditing: boolean;
-    onSave: (data: any) => void;
     isNew?: boolean;
-    rowData : ClaimType | {};
-    setRowData : (value: (((prevState: ClaimRowType) => ClaimRowType) | ClaimRowType)) => void
+    rowData : ClaimRowType | {};
+    onSave: (data: ClaimRowType) => void;
+
 }
 
-const STATE_OPTIONS = ['확인중', '접수', '접수취소', '보류', '면책', '종결', '추산', '합의', '부재'];
-const APPROVAL_OPTIONS = ['승인', '미승인'];
-const ACCIDENT_TYPE_OPTIONS = ['주차장배상', '재물배상'];
-const ACCIDENT_DETAIL_TYPE_OPTIONS = ['차대차', '시설물사고', '건물자체사고', '치료비', '기타'];
 
 
-
-const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: HiparkingListProps) => {
+const ParkingList = ({isEditing, isNew = false, rowData, onSave }: HiparkingListProps) => {
     const [images, setImages] = useState<ImageType[]>([]);
-    /*const handleImageChange = (newImages) => {
-       setImages(newImages);
-   };*/
-
+    const [editData, setEditData] = useState<ClaimRowType | {}>(rowData);
     const fetchImageData = useCallback(async (irpk: number) => {
         try {
             const fetchedImage = await getImage(irpk);
@@ -50,19 +49,29 @@ const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: Hiparki
         }
     }, []);
 
+
     useEffect(() => {
-        if (!isNew && rowData.irpk && isEditing) {
+        // 이미지 데이터를 처음 로드하거나 irpk가 변경될 때만 호출
+        if (!isNew && rowData.irpk) {
             fetchImageData(rowData.irpk);
         }
-    }, []);
+
+    }, [rowData.irpk]);
 
 
-    //필드값 변경시 formdata 업데이트
+    // 필드값 변경시 formdata 업데이트
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        setRowData((prev ) => ({...prev, [e.target.name] : e.target.value}));
+        setEditData((prev) => {
+            const updatedValue = { ...prev, [e.target.name]: e.target.value };
+            return updatedValue;
+        });
     };
+    const handleSave = (e : React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        onSave(editData);
 
-    //입력필드 타입
+    }
+    // 입력필드 타입
     const renderField = (key: string, value: any, type: 'text' | 'select' | 'date' | 'dayterm' | 'textarea' = 'text', options?: string[]) => {
         if (!isEditing && !isNew) {
             if (type === 'date') {
@@ -90,8 +99,8 @@ const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: Hiparki
                 );
             case 'date':
                 return (
-                    <CalenderPicker selected={dayjs(rowData[key]).toDate()} onChange={(date: Date | null) =>
-                        setRowData((prevState) => ({
+                    <CalenderPicker selected={dayjs(editData[key]).toDate()} onChange={(date: Date | null) =>
+                        setEditData((prevState) => ({
                             ...prevState,
                             [key]: dayjs(date).format('YYYY-MM-DD')
                         }))
@@ -100,9 +109,9 @@ const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: Hiparki
             case 'dayterm':
                 return (
                     <DayTerm
-                        sDay={dayjs(rowData.sDay).toDate()}
-                        eDay={dayjs(rowData.eDay).toDate()}
-                        setParam={setFormData}
+                        sDay={dayjs(editData.sDay).toDate()}
+                        eDay={dayjs(editData.eDay).toDate()}
+                        setParam={setEditData}
                     />
                 );
             case 'textarea':
@@ -127,12 +136,17 @@ const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: Hiparki
         }
     };
 
-
-
-
     return(
         <>
             <div>
+                {isEditing
+                    &&
+                    <div className='flex w-full justify-end'>
+                        <Button color={"blue"} fill={true} height={35} width={100} onClick={handleSave}>
+                            저장
+                        </Button>
+                    </div>
+                }
                 <div className={'w-full font-semibold text-[17px] mx-2 py-3 flex items-center'}>
                     <div className={'bg-main w-1.5 h-4 mr-2'}></div>
                     접수현황
@@ -153,8 +167,7 @@ const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: Hiparki
                         <th>상태</th>
                         <td>{renderField('closingCode', ClosingCode[rowData.closingCode], 'select', STATE_OPTIONS)}</td>
                         <th>지급보험금</th>
-                        <td>{rowData.total ? renderField('total', rowData.total, 'text')+'원': '-'}</td>
-                        {/*<td><RenderField key={'total'} value={rowData.total} type={'text'}/></td>*/}
+                        <td>{rowData.total ? renderField('total', rowData.total+'원', 'text'): '-'}</td>
                     </tr>
                     <tr>
                         <th>사고접수일</th>
@@ -170,7 +183,7 @@ const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: Hiparki
                 </div>
                 <table className={'colTable text-[15px]'}>
                     <colgroup>
-                    <col style={{width: "200px"}}/>
+                        <col style={{width: "200px"}}/>
                         <col style={{width: "250px"}}/>
                         <col style={{width: "200px"}}/>
                         <col style={{width: "250px"}}/>
@@ -187,7 +200,6 @@ const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: Hiparki
                         <td>{renderField('accidentDetailType', rowData.accidentDetailType, 'select', ACCIDENT_DETAIL_TYPE_OPTIONS)}</td>
                         <th>접수자 성함</th>
                         <td>{renderField('wName', rowData.wName)}</td>
-
                     </tr>
                     <tr>
                         <th>현장담당자</th>
@@ -201,7 +213,7 @@ const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: Hiparki
                     </tr>
                     <tr>
                         <th>사고내용</th>
-                        <td colSpan={3}>{renderField('accidentDetail', rowData.accidentDetail)}</td>
+                        <td colSpan={3}>{renderField('accidentDetail', rowData.accidentDetail, 'textarea')}</td>
                     </tr>
                     <tr>
                         <th>비고</th>
@@ -227,7 +239,7 @@ const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: Hiparki
                     피해자정보
                 </div>
                 <table className={'colTable text-[15px]'}>
-                <colgroup>
+                    <colgroup>
                         <col style={{width: "200px"}}/>
                         <col style={{width: "250px"}}/>
                         <col style={{width: "200px"}}/>
@@ -308,4 +320,4 @@ const HiparkingList = ({isEditing, isNew = false, rowData, setRowData }: Hiparki
         ;
 };
 
-export default HiparkingList;
+export default ParkingList;

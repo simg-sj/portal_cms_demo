@@ -12,7 +12,6 @@ interface ImageUploaderProps {
 
 const ImageUploader = ({ initialImages, isEditing, onChange }: ImageUploaderProps) => {
     const [images, setImages] = useState<ImageType[]>(initialImages);
-    console.log(initialImages);
     const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
         if (files && files.length > 0) {

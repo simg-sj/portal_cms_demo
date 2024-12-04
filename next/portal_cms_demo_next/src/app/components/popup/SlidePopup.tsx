@@ -20,10 +20,9 @@ interface SlidePopupProps {
     title: string;
     Content: React.ComponentType<{ isEditing: boolean, onSave: (data: any) => void }>;
     buttons: ButtonConfig[];
-    rowData : ClaimRowType;
 }
 
-const SlidePopup = ({isOpen, onClose, title, Content, buttons, rowData }: SlidePopupProps) => {
+const SlidePopup = ({isOpen, onClose, title, Content, buttons }: SlidePopupProps) => {
     const [shouldRender, setShouldRender] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
@@ -58,27 +57,21 @@ const SlidePopup = ({isOpen, onClose, title, Content, buttons, rowData }: SlideP
     const handleEdit = () => {
         setIsEditing(true);
     };
-    //저장버튼 클릭
-    const handleSave = (data: any) => {
-        if (window.confirm('저장하시겠습니까?')) {
-            console.log('변경된 데이터:', rowData);
-            setIsEditing(false);
-        }
-    };
+
     //**버튼 기능 추가 혹은 버튼종류 추가시 사용
     const modifiedButtons = buttons.map(button => {
         if (button.label === "삭제") {
             return { ...button, onClick: handleDelete };
         }
         if (button.label === "편집") {
-            if (isEditing) {
+            /*if (isEditing) {
                 return {
                     ...button,
                     label: "저장",
                     onClick: () => handleSave({}),
                     fill: true
                 };
-            }
+            }*/
             return { ...button, onClick: handleEdit };
         }
         return button;

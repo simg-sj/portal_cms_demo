@@ -9,8 +9,8 @@ import EditableField from "@/app/components/common/ui/editField";
 import useInputChange from "@/app/lib/customHook/inputChange";
 import Tab from "@/app/components/common/ui/tab";
 import Image from "next/image";
-import CarIcon from "@/assets/images/icon/car-icon.png";
-import ChargeIcon from "@/assets/images/icon/charge-icon.png";
+import CarIcon from '@/assets/images/icon/car-icon.png'
+import ChargeIcon from '@/assets/images/icon/charge-icon.png'
 import BarHorizonChart from "@/app/components/chart/BarHorizonChart";
 import DayTerm from "@/app/components/common/ui/dayTerm";
 import {
@@ -22,6 +22,7 @@ import {
 } from "@/@types/common";
 import CountUp from "@/app/components/common/ui/countUp";
 import {TooltipItem} from "chart.js";
+import {optionBarHorizon, optionDoughnut} from "@/config/data";
 
 interface DashboardProps {
     chartData: {
@@ -114,57 +115,7 @@ export default function DashboardComponent({
         },
     };
 
-     //가로막대 옵션
-     const optionBarHorizon = {
-        indexAxis: 'y' as const,
-        responsive: true,
-        plugins: {
-            legend: {
-                display: false,
-            },
-            tooltip: {
-                enabled: false,
-            },
-        },
-        scales: {
-            x: {
-                beginAtZero: true,
-                grid: {
-                    display: false,
-                },
-                ticks: {
-                    display: false,
-                },
-            },
-            y: {
-                grid: {
-                    display: false,
-                },
-                ticks: {
-                    font: {
-                        size: 15,
-                    },
-                },
-            },
-        },
-        layout: {
-            padding: {
-                right: 120,
-            },
-        },
-        cutout: '75%',
-    };
 
-     //도넛차트 옵션
-     const optionDoughnut = {
-        responsive: true,
-        plugins: {
-            tooltip: {
-                enabled: false,
-            },
-        },
-        cutout: '75%',
-    };
 
 
     const tabs = [
@@ -410,14 +361,6 @@ export default function DashboardComponent({
                             </div>
                             <div className={'max-h-[205px] overflow-y-auto'}>
                                 <table className={'w-full relative'}>
-                                    <colgroup>
-                                        <col style={{width: ""}}/>
-                                        <col style={{width: ""}}/>
-                                        <col style={{width: ""}}/>
-                                        <col style={{width: ""}}/>
-                                        <col style={{width: ""}}/>
-                                        <col style={{width: ""}}/>
-                                    </colgroup>
                                     <thead className={'sticky left-0 top-0'}>
                                     <tr>
                                         <th>변경일</th>
