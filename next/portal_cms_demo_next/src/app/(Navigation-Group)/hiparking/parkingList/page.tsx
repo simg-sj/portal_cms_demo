@@ -14,7 +14,7 @@ import {getClaim, getParking} from "@/app/(Navigation-Group)/hiparking/action";
 import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
 import {ButtonConfig, ClaimRowType, ParamType, ParkingParamType, ParkingType} from "@/@types/common";
 import CenterPopup from "@/app/components/popup/CenterPopup";
-import AddBusiness, {AddBusinessRef} from "@/app/components/pageComponents/parking/add-business";
+import AddBusiness, {AddBusinessRef} from "@/app/components/pageComponents/parking/add-business-hiparking";
 import AddExcelUpload from "@/app/components/pageComponents/parking/add-excel-upload";
 
 interface ColumnDefinition<T> {

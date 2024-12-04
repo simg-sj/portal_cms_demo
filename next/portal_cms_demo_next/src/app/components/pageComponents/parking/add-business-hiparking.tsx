@@ -31,7 +31,7 @@ export interface AddBusinessRef {
     validateForm: () => Promise<boolean>;
 }
 
-const AddBusiness = forwardRef<AddBusinessRef>((props, ref) => {
+const AddBusinessHiparking = forwardRef<AddBusinessRef>((props, ref) => {
     const {
         register,
         watch,
@@ -242,6 +242,6 @@ const AddBusiness = forwardRef<AddBusinessRef>((props, ref) => {
     );
 });
 
-AddBusiness.displayName = 'AddBusiness';
+AddBusinessHiparking.displayName = 'AddBusiness';
 
-export default AddBusiness;
+export default AddBusinessHiparking;
