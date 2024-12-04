@@ -17,7 +17,7 @@ const DoughnutChart = ({ data, options }: DoughnutChartProps) => {
         return(
             <div className={'flex items-centers justify-center my-[150px]'}>
                 <Image src={Error.src} alt={'에러'} width={30} height={30} className={'mr-5'}/>
-                <div className={'text-gray-700 text-lg'}>데이터를 불러올 수 없습니다.</div>
+                <div className={'text-gray-700 text-lg'}>데이터가 없습니다.</div>
             </div>
         )
     }
