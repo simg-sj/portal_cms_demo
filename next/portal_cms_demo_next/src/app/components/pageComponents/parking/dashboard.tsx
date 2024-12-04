@@ -23,6 +23,8 @@ import {
 import CountUp from "@/app/components/common/ui/countUp";
 import {TooltipItem} from "chart.js";
 import {optionBarHorizon, optionDoughnut} from "@/config/data";
+import Error from "@/assets/images/icon/error-icon.png";
+import React from "react";
 
 interface DashboardProps {
     chartData: {
@@ -108,14 +110,17 @@ export default function DashboardComponent({
                                 ];
                             }
                         }
-                        return '데이터 없음'
+                        return (
+                            <div className={'flex items-centers justify-center my-[150px]'}>
+                                <Image src={Error.src} alt={'에러'} width={30} height={30} className={'mr-5'}/>
+                                <div className={'text-gray-700 text-lg'}>데이터를 불러올 수 없습니다.</div>
+                            </div>
+                        )
                     },
                 },
             },
         },
-    };
-
-
+     };
 
 
     const tabs = [
