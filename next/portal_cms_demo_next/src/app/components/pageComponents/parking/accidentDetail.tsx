@@ -38,7 +38,7 @@ interface HiparkingListProps {
 
 const ParkingList = ({isEditing, isNew = false, rowData, onSave }: HiparkingListProps) => {
     const [images, setImages] = useState<ImageType[]>([]);
-    const [editData, setEditData] = useState<ClaimRowType>(rowData);
+    const [editData, setEditData] = useState<ClaimRowType | ''>(rowData || '');
     const fetchImageData = useCallback(async (irpk: number) => {
         try {
             const fetchedImage = await getImage(irpk);
@@ -55,7 +55,7 @@ const ParkingList = ({isEditing, isNew = false, rowData, onSave }: HiparkingList
             fetchImageData(rowData.irpk);
         }
 
-    }, [rowData.irpk]);
+    }, [rowData]);
 
 
     // 필드값 변경시 formdata 업데이트
@@ -161,19 +161,19 @@ const ParkingList = ({isEditing, isNew = false, rowData, onSave }: HiparkingList
                     <tbody>
                     <tr>
                         <th>접수번호</th>
-                        <td colSpan={3}>{renderField('insuNum', rowData.insuNum, 'text')}</td>
+                        <td colSpan={3}>{renderField('insuNum', editData.insuNum, 'text')}</td>
                     </tr>
                     <tr>
                         <th>상태</th>
-                        <td>{renderField('closingCode', ClosingCode[rowData.closingCode], 'select', STATE_OPTIONS)}</td>
+                        <td>{renderField('closingCode', ClosingCode[editData.closingCode], 'select', STATE_OPTIONS)}</td>
                         <th>지급보험금</th>
-                        <td>{rowData.total ? renderField('total', rowData.total+'원', 'text'): '-'}</td>
+                        <td>{editData.total ? renderField('total', editData.total+'원', 'text'): '-'}</td>
                     </tr>
                     <tr>
                         <th>사고접수일</th>
-                        <td>{renderField('requestDate', dayjs(rowData.requestDate).toDate(), 'date')}</td>
+                        <td>{renderField('requestDate', dayjs(editData.requestDate).toDate(), 'date')}</td>
                         <th>내부결재 여부</th>
-                        <td>{renderField('approvalYN', rowData.approvalYN, 'select', APPROVAL_OPTIONS)}</td>
+                        <td>{renderField('approvalYN', editData.approvalYN, 'select', APPROVAL_OPTIONS)}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -191,34 +191,34 @@ const ParkingList = ({isEditing, isNew = false, rowData, onSave }: HiparkingList
                     <tbody>
                     <tr>
                         <th>사고일시</th>
-                        <td>{renderField('accidentDate',dayjs(rowData.accidentDate).toDate(), 'date')}</td>
+                        <td>{renderField('accidentDate',dayjs(editData.accidentDate).toDate(), 'date')}</td>
                         <th>사고유형</th>
-                        <td>{renderField('accidentType', rowData.accidentType, 'select', ACCIDENT_TYPE_OPTIONS)}</td>
+                        <td>{renderField('accidentType', editData.accidentType, 'select', ACCIDENT_TYPE_OPTIONS)}</td>
                     </tr>
                     <tr>
                         <th>사고세부유형</th>
-                        <td>{renderField('accidentDetailType', rowData.accidentDetailType, 'select', ACCIDENT_DETAIL_TYPE_OPTIONS)}</td>
+                        <td>{renderField('accidentDetailType', editData.accidentDetailType, 'select', ACCIDENT_DETAIL_TYPE_OPTIONS)}</td>
                         <th>접수자 성함</th>
-                        <td>{renderField('wName', rowData.wName)}</td>
+                        <td>{renderField('wName', editData.wName)}</td>
                     </tr>
                     <tr>
                         <th>현장담당자</th>
-                        <td>{renderField('inCargeName', rowData.inCargeName)}</td>
+                        <td>{renderField('inCargeName', editData.inCargeName)}</td>
                         <th>현장담당자 연락처</th>
-                        <td>{renderField('inCargePhone', rowData.inCargePhone)}</td>
+                        <td>{renderField('inCargePhone', editData.inCargePhone)}</td>
                     </tr>
                     <tr>
                         <th>사업소명(주차장명)</th>
-                        <td>{renderField('pklName', rowData.pklName)}</td>
+                        <td>{renderField('pklName', editData.pklName)}</td>
                     </tr>
                     <tr>
                         <th>사고내용</th>
-                        <td colSpan={3}>{renderField('accidentDetail', rowData.accidentDetail, 'textarea')}</td>
+                        <td colSpan={3}>{renderField('accidentDetail', editData.accidentDetail, 'textarea')}</td>
                     </tr>
                     <tr>
                         <th>비고</th>
                         <td colSpan={3}>
-                            {renderField('wOpinion', rowData.wOpinion, 'textarea')}
+                            {renderField('wOpinion', editData.wOpinion, 'textarea')}
                         </td>
                     </tr>
                     <tr>
@@ -248,19 +248,19 @@ const ParkingList = ({isEditing, isNew = false, rowData, onSave }: HiparkingList
                     <tbody>
                     <tr>
                         <th>피해자 이름</th>
-                        <td>{renderField('wName', rowData.wName)}</td>
+                        <td>{renderField('wName', editData.wName)}</td>
                         <th>피해자 연락처</th>
-                        <td>{renderField('wCell', rowData.wCell)}</td>
+                        <td>{renderField('wCell', editData.wCell)}</td>
                     </tr>
                     <tr>
                         <th>피해자 차량번호</th>
-                        <td colSpan={3}>{renderField('vCarNum', rowData.vCarNum)}</td>
+                        <td colSpan={3}>{renderField('vCarNum', editData.vCarNum)}</td>
                     </tr>
                     <tr>
                         <th>차종</th>
-                        <td>{renderField('vCarType', rowData.vCarType)}</td>
+                        <td>{renderField('vCarType', editData.vCarType)}</td>
                         <th>차랑색상</th>
-                        <td>{renderField('vCarColor', rowData.vCarColor)}</td>
+                        <td>{renderField('vCarColor', editData.vCarColor)}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -278,15 +278,15 @@ const ParkingList = ({isEditing, isNew = false, rowData, onSave }: HiparkingList
                     <tbody>
                     <tr>
                         <th>증권번호</th>
-                        <td>{rowData.pNo}</td>
+                        <td>{editData.pNo}</td>
                         <th>보험기간</th>
-                        <td>{rowData.sDay} ~ {rowData.eDay}</td>
+                        <td>{editData.sDay} ~ {editData.eDay}</td>
                     </tr>
                     <tr>
                         <th>피보험자 상호</th>
-                        <td>{rowData.platform}</td>
+                        <td>{editData.platform}</td>
                         <th>피보험자 사업자등록번호</th>
-                        <td>{rowData.bNumber}</td>
+                        <td>{editData.bNumber}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -304,13 +304,13 @@ const ParkingList = ({isEditing, isNew = false, rowData, onSave }: HiparkingList
                     <tbody>
                     <tr>
                         <th>업무 담당자 성함</th>
-                        <td colSpan={3}>{renderField('bCargeName', rowData.bCargeName)}</td>
+                        <td colSpan={3}>{renderField('bCargeName', editData.bCargeName)}</td>
                     </tr>
                     <tr>
                         <th>업무 담당자 연락처</th>
-                        <td>{renderField('bCell', rowData.bCell)}</td>
+                        <td>{renderField('bCell', editData.bCell)}</td>
                         <th>업무 담당자 메일</th>
-                        <td>{renderField('bMail', rowData.bMail)}</td>
+                        <td>{renderField('bMail', editData.bMail)}</td>
                     </tr>
                     </tbody>
                 </table>

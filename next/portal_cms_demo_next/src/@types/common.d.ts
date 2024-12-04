@@ -1,4 +1,5 @@
 import {StaticImageData} from "next/image";
+import React from "react";
 
 interface MenuItems {
     dashboard?: string;
@@ -247,6 +248,9 @@ interface ClaimRowType {
     rentPay?: string | null;            // 렌트비
     selfPay?: string | null;            // 자기부담금
     vat?: string | null;                // 부가세
+    bCargeName ?: string
+    bCell ?: string
+    bMail ?: string
     selfTotal?: string | null;          // 합계(자기부담금)
     selfYN?: string | null;             // 정산여부(자기부담금)
     depositYN?: string | null;          // 입금 여부

@@ -13,6 +13,7 @@ import {deleteClaimData, getClaim, getImage, updateClaimData} from "@/app/(Navig
 import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
 import {ButtonConfig, ClaimRowType, UptClaim} from "@/@types/common";
 import Error from "@/assets/images/icon/error-icon.png";
+import ParkingList from "@/app/components/pageComponents/parking/accidentDetail";
 
 interface ColumnDefinition<T> {
     key: keyof T;
@@ -76,19 +77,22 @@ export default function Page() {
                 window.confirm('등록하시겠습니까?')
                 console.log('신규등록 데이터:', data);
             } else {
-                window.confirm('저장하시겠습니까?')
-                data.job = 'UPT';
-                data.requestDate = dayjs(data.requestDate).format('YYYY-MM-DD HH:mm:ss');
-                data.accidentDateTime = dayjs(data.accidentDateTime).format('YYYY-MM-DD HH:mm:ss');
+                if(window.confirm('저장하시겠습니까?')){
+                    data.job = 'UPT';
+                    data.requestDate = dayjs(data.requestDate).format('YYYY-MM-DD HH:mm:ss');
+                    data.accidentDateTime = dayjs(data.accidentDateTime).format('YYYY-MM-DD HH:mm:ss');
 
-                let result = await updateClaimData(data);
+                    let result = await updateClaimData(data);
 
-                if (result[0].code === '200') {
-                    let reload = await getClaim(param);
-                    setData(reload || []);
-                    closePopup();
-                } else {
-                    alert('서비스 오류')
+                    if (result[0].code === '200') {
+                        let reload = await getClaim(param);
+                        setData(reload || []);
+                        closePopup();
+                    } else {
+                        alert('서비스 오류')
+                    }
+                }else {
+                    return;
                 }
             }
         } catch (e) {
@@ -294,7 +298,7 @@ export default function Page() {
                     title={isNew ? "신규 등록" : "상세보기"}
                     rowData={rowData}
                     onDelete={handleDelete}
-                    Content={(props) => <HiparkingList {...props} isNew={isNew} rowData={rowData} onSave={handleSave} />}
+                    Content={(props) => <ParkingList {...props} isNew={isNew} rowData={rowData} onSave={handleSave} />}
                     buttons={popupButtons}
                 />
                 <div className={'mt-4'}>

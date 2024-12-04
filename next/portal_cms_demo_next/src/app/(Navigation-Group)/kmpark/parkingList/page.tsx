@@ -10,9 +10,9 @@ import SlidePopup from "@/app/components/popup/SlidePopup";
 import List from "@/app/components/pageComponents/parking/parkingDetail";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
-import {getClaim} from "@/app/(Navigation-Group)/hiparking/action";
+import {getClaim, getParking} from "@/app/(Navigation-Group)/hiparking/action";
 import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
-import {ButtonConfig, ClaimRowType} from "@/@types/common";
+import {ButtonConfig, ClaimRowType, ParkingParamType, ParkingType} from "@/@types/common";
 import CenterPopup from "@/app/components/popup/CenterPopup";
 import AddBusiness, {AddBusinessRef} from "@/app/components/pageComponents/parking/add-business-kmpark";
 import AddExcelUpload from "@/app/components/pageComponents/parking/add-excel-upload";
@@ -40,15 +40,13 @@ export default function Page() {
     const [excelOpen, setExcelOpen] = useState(false);
     const businessRef = useRef<AddBusinessRef>(null);
     const [selectedRow, setSelectedRow] = useState<number | null>(null);
-    const [data, setData] = useState<ClaimRowType[]>([]);
+    const [data, setData] = useState<ParkingType[]>([]);
     const [rowData, setRowData] = useState<ClaimRowType | undefined>();
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
-    const [param, setParam] = useState<ParamType>({
-        bpk : 2,
-        condition: "wCell",
-        endDate: "",
-        startDate: "",
+    const [param, setParam] = useState<ParkingParamType>({
+        bpk : 3,
+        condition: "pklName",
         text : ''
     });
 
@@ -118,11 +116,7 @@ export default function Page() {
                     const param = {
                         '주차장명': formData.pkName,
                         '주차장주소:': formData.pkAddress,
-                        '옥내:': formData.indoor.checked ? formData.indoor.value : '',
-                        '옥외:': formData.outdoor.checked ? formData.outdoor.value : '',
-                        '기계식:': formData.mechanical.checked ? formData.mechanical.value : '',
-                        '카리프트:': formData.carLift.checked ? formData.carLift.value : '',
-                        '면수': formData.pkArea,
+                        '면적(m2)': formData.area,
                         '세부내역': formData.pkDetail,
                         '메모': formData.pkMemo
                     };
@@ -204,53 +198,38 @@ export default function Page() {
     };
 
     const onSearchClick = async () => {
-        const result = await getClaim(param);
-        console.log(result);
+        const result = await getParking(param);
 
-        setData(result || []);
+        setData(result);
         setCurrentPage(0);
     }
 
     // 사고접수 리스트 컬럼
-    const columns: ColumnDefinition<ClaimRowType>[] = [
+    const columns: ColumnDefinition<ParkingType>[] = [
         {
-            key: 'irpk',
+            key: 'pklName',
             header: '사업장명',
             defaultValue: '-'
         },
         {
-            key: 'insuNum',
-            header: '사업장주소'
-        },
-        {
-            key: 'accidentDate',
-            header: '형태',
-            render: (item) => item.accidentDate
-                ? dayjs(item.accidentDate).format('YYYY-MM-DD')
-                : '-'
-        },
-        {
-            key: 'closingAmt',
-            header: '면수',
-            render: (item) => item.closingAmt
-                ? `${item.closingAmt.toLocaleString()}원`
-                : '-'
+            key: 'PJTcode',
+            header: '주차장코드'
         },
         {
             key: 'pklAddress',
-            header: '옥외(㎡)'
+            header: '사업장주소'
         },
         {
-            key: 'wName',
-            header: '옥내(㎡)'
+            key: 'insuType',
+            header: '보험적용',
         },
         {
-            key: 'wCell',
-            header: '기계식(면)'
+            key: 'form',
+            header: '형태',
         },
         {
-            key: 'vCarNum',
-            header: '카리프트(대)'
+            key: 'area',
+            header: '면적',
         },
     ];
 

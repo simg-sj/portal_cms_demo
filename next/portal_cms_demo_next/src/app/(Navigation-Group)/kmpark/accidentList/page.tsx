@@ -115,14 +115,6 @@ export default function Page() {
 
     const popupButtons: ButtonConfig[] = isNew
         ? [
-            /*{
-                label: "저장",
-                onClick: () => handleSave({}),
-                color: "blue",
-                fill: true,
-                width: 100,
-                height: 35,
-            },*/
             {
                 label: "취소",
                 onClick: closePopup,
@@ -170,7 +162,7 @@ export default function Page() {
 
     const onSearchClick = async () => {
         const result = await getClaim(param);
-
+        console.log(data)
         setData(result || []);
         setCurrentPage(0);
     }
@@ -187,11 +179,8 @@ export default function Page() {
             header: '접수번호'
         },
         {
-            key: 'accidentDate',
+            key: 'accidentDateTime',
             header: '사고일',
-            render: (item) => item.accidentDate
-                ? dayjs(item.accidentDate).format('YYYY-MM-DD')
-                : '-'
         },
         {
             key: 'closingAmt',
@@ -201,7 +190,7 @@ export default function Page() {
                 : '-'
         },
         {
-            key: 'pklAddress',
+            key: 'pklName',
             header: '사고장소'
         },
         {
