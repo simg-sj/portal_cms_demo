@@ -1,14 +1,27 @@
 import React, { forwardRef, useImperativeHandle } from 'react';
 import { useForm, UseFormRegister } from "react-hook-form";
-import checkbox from "@/app/components/common/ui/checkbox";
-import Checkbox from "@/app/components/common/ui/checkbox";
 
 interface ParkingFormData {
     pkName: string;
     pkAddress: string;
-    pkCode: string;
-    pkSize: number;
-    pkSize2: number;
+    PJTcode: string;
+    faceCount: number;
+    indoor: {
+        checked: boolean;
+    };
+    outdoor: {
+        checked: boolean;
+    };
+    mechanical: {
+        checked: boolean;
+    };
+    carLift: {
+        checked: boolean;
+    };
+    form: {
+        checked: boolean;
+        value: string;
+    }
 }
 
 export interface AddBusinessRef {
@@ -28,12 +41,22 @@ const AddBusinessKmpark = forwardRef<AddBusinessRef>((props, ref) => {
         defaultValues: {
             pkName: '',
             pkAddress: '',
-            pkCode: '',
-            pkSize: null,
-            pkSize2: null
+            PJTcode: '',
+            faceCount: null,
+            indoor: { checked: false},
+            outdoor: { checked: false},
+            mechanical: { checked: false},
+            carLift: { checked: false},
+            form: { checked: false, value: ''},
         }
     });
 
+
+    const watchIndoor = watch('indoor.checked');
+    const watchOutdoor = watch('outdoor.checked');
+    const watchMechanical = watch('mechanical.checked');
+    const watchCarLift = watch('carLift.checked');
+    const watchForm = watch('form.checked');
 
     const clearForm = () => {
         reset();
@@ -53,6 +76,55 @@ const AddBusinessKmpark = forwardRef<AddBusinessRef>((props, ref) => {
         clearForm,
         validateForm
     }));
+
+
+    // 주차장구분 input 컴포넌트
+    const ParkingTypeField = ({
+                                  label,
+                                  type,
+                                  unit,
+                                  register,
+                                  isChecked,
+                                  errors
+                              }: {
+        label: string;
+        type: 'indoor' | 'outdoor' | 'mechanical' | 'carLift';
+        unit: string;
+        register: UseFormRegister<ParkingFormData>;
+        isChecked: boolean;
+        errors: any;
+    }) => (
+        <label className={'flex items-center my-1'}>
+            <input
+                type="checkbox"
+                {...register(`${type}.checked`)}
+            />
+            <div className={'mx-3 w-[60px]'}>{label}</div>
+            <div className="relative flex-1">
+                <input
+                    type="text"
+                    className={'border rounded px-2 py-1 w-full'}
+                    disabled={!isChecked}
+                    {...register(`${type}.value`, {
+                        validate: (value) => {
+                            if (watch(`${type}.checked`) && (!value || value.trim() === '')) {
+                                return `${label} 값을 입력해주세요`;
+                            }
+                            return true;
+                        },
+                        pattern: {
+                            value: /^[0-9]*$/,
+                            message: "숫자만 입력 가능합니다."
+                        }
+                    })}
+                />
+                {errors[type]?.value && (
+                    <p className={'text-red-500 text-sm absolute'}>{errors[type].value.message}</p>
+                )}
+            </div>
+            <div className={'ml-3'}>{unit}</div>
+        </label>
+    );
 
 
     return (
@@ -108,29 +180,44 @@ const AddBusinessKmpark = forwardRef<AddBusinessRef>((props, ref) => {
                 </div>
             </div>
 
-{/*            <div className={'flex my-3'}>
-                <div className={'w-[110px]'}>주차장구분 <span className={'text-red-500'}>*</span></div>
-                <div className={'flex flex-col w-full space-y-6'}>
-                </div>
-            </div>*/}
-
             <div className={'flex my-3'}>
-                <div className={'w-[110px]'}>평수 <span className={'text-red-500'}>*</span></div>
-                <div className="flex items-center">
-                    <input
-                        type="number"
-                        placeholder={'평수를 입력하세요'}
-                        className={'border rounded px-2 py-1 w-[331px]'}
-                        {...register('pkSize', {
-                            pattern: {
-                                value: /^[0-9]*$/,
-                                message: "숫자만 입력 가능합니다."
-                            }
-                        })}
+                <div className={'w-[150px]'}>주차장구분 <span className={'text-red-500'}>*</span></div>
+                <div className={'flex flex-col w-full space-y-6'}>
+                    <ParkingTypeField
+                        label="옥내"
+                        type="indoor"
+                        unit="㎡"
+                        register={register}
+                        isChecked={watchIndoor}
+                        errors={errors}
                     />
-                    <div className={'ml-3'}>평</div>
+                    <ParkingTypeField
+                        label="옥외"
+                        type="outdoor"
+                        unit="㎡"
+                        register={register}
+                        isChecked={watchOutdoor}
+                        errors={errors}
+                    />
+                    <ParkingTypeField
+                        label="기계식"
+                        type="mechanical"
+                        unit="대"
+                        register={register}
+                        isChecked={watchMechanical}
+                        errors={errors}
+                    />
+                    <ParkingTypeField
+                        label="카리프트"
+                        type="carLift"
+                        unit="대"
+                        register={register}
+                        isChecked={watchCarLift}
+                        errors={errors}
+                    />
                 </div>
             </div>
+
             <div className={'flex my-3'}>
                 <div className={'w-[110px]'}>면적 <span className={'text-red-500'}>*</span></div>
                 <div className="flex items-center">
@@ -138,7 +225,7 @@ const AddBusinessKmpark = forwardRef<AddBusinessRef>((props, ref) => {
                         type="number"
                         placeholder={'면적을 입력하세요'}
                         className={'border rounded px-2 py-1 w-[331px]'}
-                        {...register('pkSize2', {
+                        {...register('pkSize', {
                             pattern: {
                                 value: /^[0-9]*$/,
                                 message: "숫자만 입력 가능합니다."
