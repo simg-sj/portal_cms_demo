@@ -141,7 +141,7 @@ const ParkingList = ({isEditing, isNew = false, rowData, onSave }: HiparkingList
             <div>
                 {isEditing
                     &&
-                    <div className='flex w-full justify-end'>
+                    <div className='absolute top-[32px] right-[272px] z-10'>
                         <Button color={"blue"} fill={true} height={35} width={100} onClick={handleSave}>
                             저장
                         </Button>

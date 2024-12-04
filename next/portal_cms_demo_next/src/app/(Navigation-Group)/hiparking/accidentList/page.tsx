@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 import {getClaim, getImage, updateClaimData} from "@/app/(Navigation-Group)/hiparking/action";
 import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
 import {ButtonConfig, ClaimRowType, UptClaim} from "@/@types/common";
+import Error from "@/assets/images/icon/error-icon.png";
 
 interface ColumnDefinition<T> {
     key: keyof T;
@@ -51,11 +52,11 @@ export default function Page() {
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [param, setParam] = useState<ParamType>({
-        bpk : 2,
+        bpk: 2,
         condition: "wCell",
         endDate: "",
         startDate: "",
-        text : ''
+        text: ''
     });
 
     const getPaginatedData = () => {
@@ -65,7 +66,7 @@ export default function Page() {
     }
 
     useEffect(() => {
-        if(data.length > 0) {
+        if (data.length > 0) {
             setTotalPages(Math.ceil(data.length / itemsPerPage));
         }
     }, [data]);
@@ -81,7 +82,7 @@ export default function Page() {
     };
 
     const handleSave = async (data: UptClaim) => {
-        try{
+        try {
             if (isNew) {
                 window.confirm('등록하시겠습니까?')
                 console.log('신규등록 데이터:', data);
@@ -93,14 +94,14 @@ export default function Page() {
 
                 let result = await updateClaimData(data);
 
-                if(result[0].code === '200'){
+                if (result[0].code === '200') {
 
                     closePopup();
-                }else {
+                } else {
                     alert('서비스 오류')
                 }
             }
-        }catch(e){
+        } catch (e) {
             console.log(e);
         }
     };
@@ -134,14 +135,16 @@ export default function Page() {
         : [
             {
                 label: "편집",
-                onClick: () => {},
+                onClick: () => {
+                },
                 color: "blue",
                 width: 100,
                 height: 35,
             },
             {
                 label: "삭제",
-                onClick: () => {},
+                onClick: () => {
+                },
                 color: "red",
                 width: 100,
                 height: 35,
@@ -219,7 +222,6 @@ export default function Page() {
     ];
 
 
-
     return (
         <>
             <div className={'border border-gray-100 p-6 rounded-lg bg-white flex items-center justify-between'}>
@@ -229,11 +231,12 @@ export default function Page() {
                     <div className={'text-gray-700 font-medium pt-1 ml-2 mr-5'}>검색조건</div>
                     <select
                         className={'w-[200px]'}
-                        onChange={(e : React.ChangeEvent<HTMLSelectElement>) => {
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                             setParam((prev: ParamType) => ({
                                 ...prev,
                                 condition: e.target.value,
-                            }))}
+                            }))
+                        }
                         }
                     >
                         <option value={'wCell'}>피해자 연락처</option>
@@ -244,7 +247,7 @@ export default function Page() {
                         type={'text'}
                         placeholder={'검색조건 설정 후 검색해주세요'}
                         className={'w-[300px] h-[35px] rounded-tr-none rounded-br-none ml-5'}
-                        onChange={(e : React.ChangeEvent<HTMLInputElement>) => {
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                             setParam((prev: ParamType) => ({
                                 ...prev,
                                 text: e.target.value,
@@ -283,7 +286,8 @@ export default function Page() {
                     onClose={closePopup}
                     title={isNew ? "신규 등록" : "상세보기"}
                     rowData={rowData}
-                    Content={(props) => <HiparkingList {...props} isNew={isNew} rowData={rowData || {}} onSave={handleSave}/>}
+                    Content={(props) => <HiparkingList {...props} isNew={isNew} rowData={rowData || {}}
+                                                       onSave={handleSave}/>}
                     buttons={popupButtons}
                 />
                 <div className={'mt-4'}>

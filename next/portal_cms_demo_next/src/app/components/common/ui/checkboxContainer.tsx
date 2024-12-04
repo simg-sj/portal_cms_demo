@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import Checkbox from '@/app/components/common/ui/checkbox';
+import Image from "next/image";
+import Error from "@/assets/images/icon/error-icon.png";
 
 interface ColumnDefinition<T> {
     key: keyof T;
@@ -71,11 +73,6 @@ export function CheckboxContainer<T>({
             return column.defaultValue ?? '-';
         }
 
-        // Handle number formatting
-        if (typeof value === 'number') {
-            return value.toLocaleString();
-        }
-
         // Default to string conversion
         return String(value);
     };
@@ -102,35 +99,46 @@ export function CheckboxContainer<T>({
             </tr>
             </thead>
             <tbody>
-            {items.map((item) => {
-                const id = getItemId(item);
-                const isSelected = selectedRow === id || selectedItems.has(id);
+            {items.length === 0 ? (
+                <tr>
+                    <td colSpan={columns.length}>
+                        <div className={'flex items-centers justify-center my-[150px]'}>
+                            <Image src={Error.src} alt={'에러'} width={30} height={30} className={'mr-5'}/>
+                            <div className={'text-gray-700 text-lg'}>데이터를 불러올 수 없습니다.</div>
+                        </div>
+                    </td>
+                </tr>
+            ) : (
+                items.map((item) => {
+                    const id = getItemId(item);
+                    const isSelected = selectedRow === id || selectedItems.has(id);
 
-                return (
-                    <tr
-                        key={id}
-                        className={`
+                    return (
+                        <tr
+                            key={id}
+                            className={`
                                 ${onRowClick ? 'cursor-pointer' : ''}
                                 ${isSelected ? 'bg-main-lighter' : 'hover:bg-main-lighter'}
                             `}
-                        onClick={() => handleRowClick(item)}
-                    >
-                        {withCheckbox && (
-                            <td onClick={(e) => e.stopPropagation()}>
-                                <Checkbox
-                                    checked={selectedItems.has(id)}
-                                    onChange={() => toggleSelectItem(id)}
-                                />
-                            </td>
-                        )}
-                        {columns.map((column) => (
-                            <td key={String(column.key)}>
-                                {safeRenderValue(column, item)}
-                            </td>
-                        ))}
-                    </tr>
-                );
-            })}
+                            onClick={() => handleRowClick(item)}
+                        >
+                            {withCheckbox && (
+                                <td onClick={(e) => e.stopPropagation()}>
+                                    <Checkbox
+                                        checked={selectedItems.has(id)}
+                                        onChange={() => toggleSelectItem(id)}
+                                    />
+                                </td>
+                            )}
+                            {columns.map((column) => (
+                                <td key={String(column.key)}>
+                                    {safeRenderValue(column, item)}
+                                </td>
+                            ))}
+                        </tr>
+                    );
+                })
+            )}
             </tbody>
         </table>
     );
