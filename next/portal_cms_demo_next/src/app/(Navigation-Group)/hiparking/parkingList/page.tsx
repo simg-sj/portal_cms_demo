@@ -10,9 +10,9 @@ import SlidePopup from "@/app/components/popup/SlidePopup";
 import List from "@/app/components/pageComponents/parking/parkingDetail";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
-import {getClaim} from "@/app/(Navigation-Group)/hiparking/action";
+import {getClaim, getParking} from "@/app/(Navigation-Group)/hiparking/action";
 import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
-import {ButtonConfig, ClaimRowType} from "@/@types/common";
+import {ButtonConfig, ClaimRowType, ParamType, ParkingParamType, ParkingType} from "@/@types/common";
 import CenterPopup from "@/app/components/popup/CenterPopup";
 import AddBusiness, {AddBusinessRef} from "@/app/components/pageComponents/parking/add-business";
 import AddExcelUpload from "@/app/components/pageComponents/parking/add-excel-upload";
@@ -24,13 +24,7 @@ interface ColumnDefinition<T> {
     render?: (item: T) => string | number;
 }
 
-interface ParamType {
-    bpk: number;
-    condition: string;
-    endDate: string;
-    startDate: string;
-    text: string;
-}
+
 
 const itemsPerPage = 15;
 
@@ -40,15 +34,13 @@ export default function Page() {
     const [excelOpen, setExcelOpen] = useState(false);
     const businessRef = useRef<AddBusinessRef>(null);
     const [selectedRow, setSelectedRow] = useState<number | null>(null);
-    const [data, setData] = useState<ClaimRowType[]>([]);
+    const [data, setData] = useState<ParkingType[]>([]);
     const [rowData, setRowData] = useState<ClaimRowType | undefined>();
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
-    const [param, setParam] = useState<ParamType>({
+    const [param, setParam] = useState<ParkingParamType>({
         bpk : 2,
-        condition: "wCell",
-        endDate: "",
-        startDate: "",
+        condition: "pklName",
         text : ''
     });
 
@@ -204,52 +196,46 @@ export default function Page() {
     };
 
     const onSearchClick = async () => {
-        const result = await getClaim(param);
+        console.log(param);
+        const result = await getParking(param);
         console.log(result);
 
-        setData(result || []);
+        setData(result);
         setCurrentPage(0);
     }
 
     // 사고접수 리스트 컬럼
-    const columns: ColumnDefinition<ClaimRowType>[] = [
+    const columns: ColumnDefinition<ParkingType>[] = [
         {
-            key: 'irpk',
+            key: 'pklName',
             header: '사업장명',
-            defaultValue: '-'
-        },
-        {
-            key: 'insuNum',
-            header: '사업장주소'
-        },
-        {
-            key: 'accidentDate',
-            header: '형태',
-            render: (item) => item.accidentDate
-                ? dayjs(item.accidentDate).format('YYYY-MM-DD')
-                : '-'
-        },
-        {
-            key: 'closingAmt',
-            header: '면수',
-            render: (item) => item.closingAmt
-                ? `${item.closingAmt.toLocaleString()}원`
-                : '-'
         },
         {
             key: 'pklAddress',
+            header: '사업장주소'
+        },
+        {
+            key: 'form',
+            header: '형태',
+        },
+        {
+            key: 'faceCount',
+            header: '면수',
+        },
+        {
+            key: 'indoor',
             header: '옥외(㎡)'
         },
         {
-            key: 'wName',
+            key: 'outdoor',
             header: '옥내(㎡)'
         },
         {
-            key: 'wCell',
+            key: 'mechanical',
             header: '기계식(면)'
         },
         {
-            key: 'vCarNum',
+            key: 'carLift',
             header: '카리프트(대)'
         },
     ];
@@ -258,8 +244,6 @@ export default function Page() {
         <>
             <div className={'border border-gray-100 p-6 rounded-lg bg-white flex items-center justify-between'}>
                 <div className={'flex items-center'}>
-                    <div className={'text-gray-700 font-medium pt-1 mr-2'}>기간</div>
-                    <DayTerm setParam={setParam} sDay={new Date()} eDay={new Date()}/>
                     <div className={'text-gray-700 font-medium pt-1 ml-2 mr-5'}>검색조건</div>
                     <select
                         className={'w-[200px]'}
@@ -271,7 +255,7 @@ export default function Page() {
                         }
                     >
                         <option value={'pkName'}>주차장명</option>
-                        <option value={'pkAddress'}>주차장주소</option>
+                        <option value={'pklAddress'}>주차장주소</option>
                     </select>
                     <input
                         type={'text'}

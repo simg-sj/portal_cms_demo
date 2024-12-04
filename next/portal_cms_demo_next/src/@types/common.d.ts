@@ -193,6 +193,12 @@ interface ParamType {
     text : string | null;
 }
 
+interface ParkingParamType{
+    bpk : number;
+    condition : string;
+    text : string;
+}
+
 interface ImageType {
     location : string;
 }
@@ -251,7 +257,28 @@ interface ClaimRowType {
     useYNull?: string | null;           // 사용 여부
     createdYMD?: Date | null;           // 생성일자 (datetime)
 }
-
+interface ParkingType {
+    pklpk: number;                     // 고유 식별자, 주차장 키 (Primary Key)
+    bpk: number;                       // 업체 키 (Business Primary Key)
+    pklName: string;                   // 주차장 이름
+    PJTcode: string;                   // 프로젝트 코드
+    pklAddress: string;                // 주차장 주소
+    region: string;                    // 지역
+    city: string;                      // 도시
+    form: string;                      // 주차장 형태 (예: 지하, 지상 등)
+    faceCount: number;                 // 면수 (주차장 면수)
+    indoor: boolean;                   // 실내 여부
+    outdoor: boolean;                  // 실외 여부
+    mechanical: boolean;               // 기계식 여부
+    carLift: boolean;                  // 차량 리프트 여부
+    detailHistory: string;             // 상세 이력
+    coInsured: boolean;                // 공동 보험 여부
+    town: string;                      // 소속된 마을/구역
+    fileDay: string;                   // 파일 기록 날짜
+    status: string;                    // 상태 (예: 활성, 비활성 등)
+    useYNull: string;                  // 사용 여부
+    createdYMD: Date;                  // 생성일자
+}
 
 interface ButtonConfig {
     label: string;

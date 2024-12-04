@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Dashboard from "@/app/components/pageComponents/parking/dashboard";
-import useFetchDashboard from "@/app/hooks/useFetchDashboard";
+import useFetchDashboard from "@/app/lib/hooks/useFetchDashboard";
 import Loading from "@/app/(Navigation-Group)/loading";
 
 export default function Page() {

@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-11-05 16:27:57
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-12-03 17:51:16
+ * @LastEditTime: 2024-12-04 14:37:52
  * @FilePath: portal_cms_demo_next/src/app/(Navigation-Group)/hiparking/action.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -10,7 +10,15 @@
 
 'use server';
 
-import {ClaimRowType, DashBoardType, ParamDashType2, ParamType, UptClaim} from "@/@types/common";
+import {
+    ClaimRowType,
+    DashBoardType,
+    ParamDashType2,
+    ParamType,
+    ParkingParamType,
+    ParkingType,
+    UptClaim
+} from "@/@types/common";
 import dayjs from "dayjs";
 
 interface ImageType {
@@ -97,6 +105,82 @@ export async function updateClaimData(param: ClaimRowType| UptClaim): Promise<re
     try {
         
         const response = await fetch(`https://center-api.simg.kr/api/portal/updateClaimData`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(param)
+        });
+
+        if (!response.ok) {
+            // 에러 핸들링: 상태 코드와 메시지를 포함한 에러
+            const errorDetails = await response.text();
+            throw new Error(`Error ${response.status}: ${response.statusText} - ${errorDetails}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Failed to fetch dashboard:', error);
+        throw new Error(`Failed to fetch dashboard: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+}
+
+export async function deleteClaimData(param: ClaimRowType): Promise<resultCode> {
+    try {
+        let deleteParam = {
+            bpk : param.bpk,
+            irpk : param.irpk,
+            job : 'DELETE',
+        }
+        const response = await fetch(`https://center-api.simg.kr/api/portal/deleteClaimData`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(deleteParam)
+        });
+
+        if (!response.ok) {
+            // 에러 핸들링: 상태 코드와 메시지를 포함한 에러
+            const errorDetails = await response.text();
+            throw new Error(`Error ${response.status}: ${response.statusText} - ${errorDetails}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Failed to fetch dashboard:', error);
+        throw new Error(`Failed to fetch dashboard: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+}
+
+export async function deleteGroupClaimData(param: ClaimRowType): Promise<resultCode> {
+    try {
+        let deleteParam = {
+            bpk : param.bpk,
+            irpk : param.irpk,
+            job : 'DELETE',
+        }
+        const response = await fetch(`https://center-api.simg.kr/api/portal/deleteClaimData`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(deleteParam)
+        });
+
+        if (!response.ok) {
+            // 에러 핸들링: 상태 코드와 메시지를 포함한 에러
+            const errorDetails = await response.text();
+            throw new Error(`Error ${response.status}: ${response.statusText} - ${errorDetails}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Failed to fetch dashboard:', error);
+        throw new Error(`Failed to fetch dashboard: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+}
+
+export async function getParking(param: ParkingParamType): Promise<ParkingType[]> {
+    try {
+        const response = await fetch(`https://center-api.simg.kr/api/portal/getParkingList`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

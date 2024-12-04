@@ -30,16 +30,15 @@ interface ClaimType {
 interface HiparkingListProps {
     isEditing: boolean;
     isNew?: boolean;
-    rowData : ClaimRowType | {};
+    rowData : ClaimRowType;
     onSave: (data: ClaimRowType) => void;
-
 }
 
 
 
 const ParkingList = ({isEditing, isNew = false, rowData, onSave }: HiparkingListProps) => {
     const [images, setImages] = useState<ImageType[]>([]);
-    const [editData, setEditData] = useState<ClaimRowType | {}>(rowData);
+    const [editData, setEditData] = useState<ClaimRowType>(rowData);
     const fetchImageData = useCallback(async (irpk: number) => {
         try {
             const fetchedImage = await getImage(irpk);
@@ -68,8 +67,9 @@ const ParkingList = ({isEditing, isNew = false, rowData, onSave }: HiparkingList
     };
     const handleSave = (e : React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        onSave(editData);
-
+        if(editData) {
+            onSave(editData);
+        }
     }
     // 입력필드 타입
     const renderField = (key: string, value: any, type: 'text' | 'select' | 'date' | 'dayterm' | 'textarea' = 'text', options?: string[]) => {
