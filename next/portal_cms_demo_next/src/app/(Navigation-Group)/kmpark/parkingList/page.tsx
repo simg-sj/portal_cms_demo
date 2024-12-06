@@ -237,8 +237,6 @@ export default function Page() {
         <>
             <div className={'border border-gray-100 p-6 rounded-lg bg-white flex items-center justify-between'}>
                 <div className={'flex items-center'}>
-                    <div className={'text-gray-700 font-medium pt-1 mr-2'}>기간</div>
-                    <DayTerm setParam={setParam} sDay={new Date()} eDay={new Date()}/>
                     <div className={'text-gray-700 font-medium pt-1 ml-2 mr-5'}>검색조건</div>
                     <select
                         className={'w-[200px]'}
