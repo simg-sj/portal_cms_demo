@@ -116,9 +116,13 @@ export default function Page() {
                     const param = {
                         '주차장명': formData.pkName,
                         '주차장주소:': formData.pkAddress,
-                        '면적(m2)': formData.area,
-                        '세부내역': formData.pkDetail,
-                        '메모': formData.pkMemo
+                        '주차장코드': formData.PJTcode,
+                        '옥내': formData.indoor,
+                        '옥외': formData.outdoor,
+                        '기계식': formData.mechanical,
+                        '카리프트': formData.carLift,
+                        '기타': formData.form,
+                        '면적': formData.faceCount
                     };
                     console.log(param);
                     setAddOpen(false);
