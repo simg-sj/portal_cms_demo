@@ -25,6 +25,7 @@ import {TooltipItem} from "chart.js";
 import {optionBarHorizon, optionDoughnut} from "@/config/data";
 import Error from "@/assets/images/icon/error-icon.png";
 import React from "react";
+import {usePathname} from "next/navigation";
 
 interface DashboardProps {
     chartData: {
@@ -48,9 +49,14 @@ interface DashboardProps {
 
 
 export default function DashboardComponent({
-                                            chartData,
-                                            tableData, setParam,
+                                               chartData,
+                                               tableData,
+                                               setParam,
                                            }: DashboardProps) {
+    //업체별 라우팅 옵션
+    const pathname = usePathname();
+    const isHiparkingRoute = pathname.includes('/hiparking')
+
 
     //table 데이터
     const {handleInputChange} = useInputChange({
@@ -59,9 +65,8 @@ export default function DashboardComponent({
     });
 
 
-
     //양방향막대 옵션
-     const optionTwowayBar = {
+    const optionTwowayBar = {
         responsive: true,
         scales: {
             x: {
@@ -97,7 +102,7 @@ export default function DashboardComponent({
                     label: (context: TooltipItem<'bar'>) => {
                         const dataIndex = context.dataIndex;
                         const datasetIndex = context.datasetIndex;
-                        if(tableData.changeGraphData[dataIndex]){
+                        if (tableData.changeGraphData[dataIndex]) {
                             if (datasetIndex === 0) {
                                 return [
                                     `추가 사업장: ${tableData.changeGraphData[dataIndex].pAdd}`,
@@ -120,7 +125,7 @@ export default function DashboardComponent({
                 },
             },
         },
-     };
+    };
 
 
     const tabs = [
@@ -138,7 +143,7 @@ export default function DashboardComponent({
             content: (
                 <>
                     <div className={'my-5 font-medium text-lg'}>사고발생업소 TOP 5</div>
-                    <BarHorizonChart data={chartData.topBusiness}  options={optionBarHorizon}/>
+                    <BarHorizonChart data={chartData.topBusiness} options={optionBarHorizon}/>
                 </>
             ),
         },
@@ -156,12 +161,15 @@ export default function DashboardComponent({
                             <div
                                 className={'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center'}>
                                 <div className={'text-gray-600 mb-1'}>손해율</div>
-                                <CountUp end={chartData.doughnutValue} duration={5} className={'text-3xl font-semibold'} suffix={'%'}/>
+                                <CountUp end={chartData.doughnutValue} duration={5} className={'text-3xl font-semibold'}
+                                         suffix={'%'}/>
                             </div>
                         </div>
                         <div className={'mt-4 text-right'}>
                             <div className={'text-gray-600'}>지급보험금</div>
-                            <CountUp end={(tableData) && (tableData.counselData[0].closingAmt)  ? FormatNumber(tableData.counselData[0].closingAmt) : 0} duration={2} className={'text-3xl font-semibold'} suffix={'원'}/>
+                            <CountUp
+                                end={(tableData) && (tableData.counselData[0].closingAmt) ? FormatNumber(tableData.counselData[0].closingAmt) : 0}
+                                duration={2} className={'text-3xl font-semibold'} suffix={'원'}/>
                         </div>
                     </div>
                     <div className={'w-full'}>
@@ -182,7 +190,7 @@ export default function DashboardComponent({
                                     <th>증권번호</th>
                                     <th>보험기간</th>
                                     <th>사업장수</th>
-                                   {/* <th>변경보험료</th>*/}
+                                    {/* <th>변경보험료</th>*/}
                                     <th>총보험료</th>
                                     <th>지급보험금</th>
                                     <th>손조비용</th>
@@ -238,7 +246,8 @@ export default function DashboardComponent({
                 <div className={'text-xl font-light mb-6'}>계약변경현황</div>
                 <div className={'flex'}>
                     <div className={'w-[1000px] mr-16'}>
-                        <div className={'mb-5 font-medium text-lg'}>{`최근 ${tableData.changeGraphData.length}개월 계약변경현황`}</div>
+                        <div
+                            className={'mb-5 font-medium text-lg'}>{`최근 ${tableData.changeGraphData.length}개월 계약변경현황`}</div>
                         <BarTwowayChart data={chartData.twowayBar} options={optionTwowayBar}/>
                     </div>
                     <div className={'w-full'}>
@@ -253,8 +262,11 @@ export default function DashboardComponent({
                                     <col style={{width: ""}}/>
                                     <col style={{width: "200px"}}/>
                                     <col style={{width: "200px"}}/>
-                                    <col style={{width: "200px"}}/>
-                                    <col style={{width: "200px"}}/>
+                                    {isHiparkingRoute && (
+                                        <>
+                                            <col style={{width: "200px"}}/>
+                                            <col style={{width: "200px"}}/>
+                                        </>)}
                                 </colgroup>
                                 <thead className={'sticky left-0 top-0'}>
                                 <tr>
@@ -262,13 +274,19 @@ export default function DashboardComponent({
                                     <th rowSpan={2}>변경일</th>
                                     <th rowSpan={2}>증권번호</th>
                                     <th colSpan={2}>사업장수</th>
-                                    <th colSpan={2}>변경보험료</th>
+                                    {isHiparkingRoute && (
+                                        <>
+                                            <th colSpan={2}>변경보험료</th>
+                                        </>)}
                                 </tr>
                                 <tr>
                                     <th>추가</th>
                                     <th>종료</th>
-                                    <th>추가</th>
-                                    <th>종료</th>
+                                    {isHiparkingRoute && (
+                                        <>
+                                            <th>추가</th>
+                                            <th>종료</th>
+                                        </>)}
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -283,12 +301,15 @@ export default function DashboardComponent({
                                         <td>
                                             {changeData.pEnd}
                                         </td>
-                                        <td className={'text-right'}>
-                                             {changeData.AddAmt > 0 ? FormatNumber(changeData.AddAmt) : 0}원
-                                        </td>
-                                        <td className={'text-right'}>
-                                            {changeData.EndAmt > 0 ? FormatNumber(changeData.EndAmt) : 0}원
-                                        </td>
+                                        {isHiparkingRoute && (
+                                            <>
+                                                <td className={'text-right'}>
+                                                    {changeData.AddAmt > 0 ? FormatNumber(changeData.AddAmt) : 0}원
+                                                </td>
+                                                <td className={'text-right'}>
+                                                    {changeData.EndAmt > 0 ? FormatNumber(changeData.EndAmt) : 0}원
+                                                </td>
+                                            </>)}
                                     </tr>
                                 ))}
                                 </tbody>

@@ -21,7 +21,7 @@ interface ParkingFormData {
     form: {
         checked: boolean;
         value: string;
-    }
+    };
 }
 
 export interface AddBusinessRef {
@@ -77,22 +77,22 @@ const AddBusinessKmpark = forwardRef<AddBusinessRef>((props, ref) => {
         validateForm
     }));
 
+    const checkAtLeastOneChecked = () => {
+        return watchIndoor || watchOutdoor || watchMechanical || watchCarLift || watchForm;
+    };
+
 
     // 주차장구분 input 컴포넌트
     const ParkingTypeField = ({
                                   label,
                                   type,
-                                  unit,
                                   register,
-                                  isChecked,
-                                  errors
+                                  isChecked
                               }: {
         label: string;
-        type: 'indoor' | 'outdoor' | 'mechanical' | 'carLift';
-        unit: string;
+        type: 'indoor' | 'outdoor' | 'mechanical' | 'carLift' | 'form';
         register: UseFormRegister<ParkingFormData>;
         isChecked: boolean;
-        errors: any;
     }) => (
         <label className={'flex items-center my-1'}>
             <input
@@ -100,31 +100,21 @@ const AddBusinessKmpark = forwardRef<AddBusinessRef>((props, ref) => {
                 {...register(`${type}.checked`)}
             />
             <div className={'mx-3 w-[60px]'}>{label}</div>
-            <div className="relative flex-1">
-                <input
-                    type="text"
-                    className={'border rounded px-2 py-1 w-full'}
-                    disabled={!isChecked}
-                    {...register(`${type}.value`, {
-                        validate: (value) => {
-                            if (watch(`${type}.checked`) && (!value || value.trim() === '')) {
-                                return `${label} 값을 입력해주세요`;
-                            }
-                            return true;
-                        },
-                        pattern: {
-                            value: /^[0-9]*$/,
-                            message: "숫자만 입력 가능합니다."
-                        }
-                    })}
-                />
-                {errors[type]?.value && (
-                    <p className={'text-red-500 text-sm absolute'}>{errors[type].value.message}</p>
-                )}
-            </div>
-            <div className={'ml-3'}>{unit}</div>
+            {type === 'form' && (
+                <div className="relative flex-1">
+                    <input
+                        type="text"
+                        className={'border rounded px-2 py-1 w-full'}
+                        {...register('form.value')}
+                        disabled={!isChecked}
+                        placeholder={'기타 주차장 구분을 입력하세요'}
+                    />
+                </div>
+            )}
+            {type !== 'form' && <div className={'ml-3'}></div>}
         </label>
     );
+
 
 
     return (
@@ -170,12 +160,12 @@ const AddBusinessKmpark = forwardRef<AddBusinessRef>((props, ref) => {
                         type="text"
                         placeholder={'주차장코드를 입력하세요'}
                         className={'w-full border rounded px-2 py-1'}
-                        {...register('pkCode', {
+                        {...register('PJTcode', {
                             required: "주차장코드를 입력해주세요"
                         })}
                     />
-                    {errors.pkCode && (
-                        <p className={'text-red-500 text-sm mt-1'}>{errors.pkCode.message}</p>
+                    {errors.PJTcode && (
+                        <p className={'text-red-500 text-sm mt-1'}>{errors.PJTcode.message}</p>
                     )}
                 </div>
             </div>
@@ -183,59 +173,63 @@ const AddBusinessKmpark = forwardRef<AddBusinessRef>((props, ref) => {
             <div className={'flex my-3'}>
                 <div className={'w-[150px]'}>주차장구분 <span className={'text-red-500'}>*</span></div>
                 <div className={'flex flex-col w-full space-y-6'}>
+                    <div className={'h-[4px]'}>
+                    {(!watchIndoor && !watchOutdoor && !watchMechanical && !watchCarLift && !watchForm) && (
+                        <p className={'text-gray-600 text-sm'}>* 주차장 구분을 1개 이상 선택해주세요.</p>
+                    )}
+                    </div>
                     <ParkingTypeField
                         label="옥내"
                         type="indoor"
-                        unit="㎡"
                         register={register}
                         isChecked={watchIndoor}
-                        errors={errors}
                     />
                     <ParkingTypeField
                         label="옥외"
                         type="outdoor"
-                        unit="㎡"
                         register={register}
                         isChecked={watchOutdoor}
-                        errors={errors}
                     />
                     <ParkingTypeField
                         label="기계식"
                         type="mechanical"
-                        unit="대"
                         register={register}
                         isChecked={watchMechanical}
-                        errors={errors}
                     />
                     <ParkingTypeField
                         label="카리프트"
                         type="carLift"
-                        unit="대"
                         register={register}
                         isChecked={watchCarLift}
-                        errors={errors}
+                    />
+                    <ParkingTypeField
+                        label="기타"
+                        type="form"
+                        register={register}
+                        isChecked={watchForm}
                     />
                 </div>
             </div>
 
             <div className={'flex my-3'}>
                 <div className={'w-[110px]'}>면적 <span className={'text-red-500'}>*</span></div>
+                <div>
                 <div className="flex items-center">
                     <input
                         type="number"
                         placeholder={'면적을 입력하세요'}
                         className={'border rounded px-2 py-1 w-[331px]'}
-                        {...register('pkSize', {
-                            pattern: {
-                                value: /^[0-9]*$/,
-                                message: "숫자만 입력 가능합니다."
-                            }
+                        {...register('faceCount', {
+                            required: "면적을 입력해주세요",
                         })}
                     />
                     <div className={'ml-3'}>㎡</div>
                 </div>
+                {errors.faceCount && (
+                    <p className={'text-red-500 text-sm mt-1'}>{errors.faceCount.message}</p>
+                )}
+                </div>
             </div>
-
         </form>
     );
 });
