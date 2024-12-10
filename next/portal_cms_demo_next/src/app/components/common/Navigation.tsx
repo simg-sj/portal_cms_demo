@@ -9,6 +9,7 @@ import DashboardIcon from "@/assets/images/icon/dashboard-icon.png";
 import ListIcon from "@/assets/images/icon/list-icon.png";
 import UserIcon from "@/assets/images/icon/user-icon.png";
 import CarIcon from "@/assets/images/icon/parking-icon.png";
+import ScheduleIcon from "@/assets/images/icon/schedule-icon.png";
 import MenuItem from "@/app/components/common/MenuItem";
 import Image from "next/image";
 import {useSession} from "next-auth/react";
@@ -40,10 +41,13 @@ export default function Navigation() {
 
     const getMenuItems = (config: Theme): MenuItemType[] => {
         const baseItems = [
+            // ** 추가하고싶은 메뉴 추가, themeConfig 수정, MenuItems 타입 추가
             { icon: DashboardIcon, label: "대시보드", link: config.menuItems.dashboard || "" },
             { icon: ListIcon, label: "사고리스트", link: config.menuItems.accidentList },
             { icon: CarIcon, label: "사업장관리", link: config.menuItems.parkingList },
+            { icon: ScheduleIcon, label: "보험관리", link: config.menuItems.insuManager || ""},
             { icon: UserIcon, label: `${data?.user?.name}님`, link: config.menuItems.mypage },
+
         ];
         return baseItems.filter(item => item.link !== "");
     };

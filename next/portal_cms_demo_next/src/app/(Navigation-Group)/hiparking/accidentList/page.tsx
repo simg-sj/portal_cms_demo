@@ -283,14 +283,17 @@ export default function Page() {
             </div>
 
             <div className={'border border-gray-100 p-6 rounded-lg bg-white mt-5'}>
-                <div className={'flex justify-end space-x-4'}>
-                    <Button color={"red"} fill={false} height={36} width={120} onClick={handleDeleteGroup}>
-                        삭제
-                    </Button>
-                    <Button color={"main"} fill height={36} width={120} onClick={handleNewEntry}>
-                        <Image src={Plus.src} alt={'추가'} width={16} height={16} className={'mr-1'}/>
-                        신규등록
-                    </Button>
+                <div className={'flex justify-between'}>
+                    <div className={'text-xl font-light mb-6'}>사고리스트</div>
+                    <div className={'flex justify-end space-x-4'}>
+                        <Button color={"red"} fill={false} height={36} width={120} onClick={handleDeleteGroup}>
+                            삭제
+                        </Button>
+                        <Button color={"main"} fill height={36} width={120} onClick={handleNewEntry}>
+                            <Image src={Plus.src} alt={'추가'} width={16} height={16} className={'mr-1'}/>
+                            신규등록
+                        </Button>
+                    </div>
                 </div>
                 <SlidePopup
                     isOpen={isOpen}
@@ -298,7 +301,7 @@ export default function Page() {
                     title={isNew ? "신규 등록" : "상세보기"}
                     rowData={rowData}
                     onDelete={handleDelete}
-                    Content={(props) => <ParkingList {...props} isNew={isNew} rowData={rowData} onSave={handleSave} />}
+                    Content={(props) => <ParkingList {...props} isNew={isNew} rowData={rowData} onSave={handleSave}/>}
                     buttons={popupButtons}
                 />
                 <div className={'mt-4'}>

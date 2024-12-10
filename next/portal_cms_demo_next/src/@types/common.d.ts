@@ -5,6 +5,7 @@ interface MenuItems {
     dashboard?: string;
     accidentList?: string;
     parkingList?: string;
+    insuManager?: string;
     mypage?: string;
 }
 
