@@ -25,7 +25,6 @@ interface ColumnDefinition<T> {
 }
 
 
-
 const itemsPerPage = 15;
 
 export default function Page() {
@@ -39,9 +38,9 @@ export default function Page() {
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [param, setParam] = useState<ParkingParamType>({
-        bpk : 2,
+        bpk: 2,
         condition: "pklName",
-        text : ''
+        text: ''
     });
 
     //페이지
@@ -52,7 +51,7 @@ export default function Page() {
     }
 
     useEffect(() => {
-        if(data.length > 0) {
+        if (data.length > 0) {
             setTotalPages(Math.ceil(data.length / itemsPerPage));
         }
     }, [data]);
@@ -69,23 +68,25 @@ export default function Page() {
     };
 
     const slideSave = (data: any) => {
-            window.confirm('저장하시겠습니까?')
-            console.log('수정된 데이터:', data);
+        window.confirm('저장하시겠습니까?')
+        console.log('수정된 데이터:', data);
         slideClose();
     };
 
     const SlideButtons: ButtonConfig[] =
-            [
+        [
             {
                 label: "편집",
-                onClick: () => {},
+                onClick: () => {
+                },
                 color: "blue",
                 width: 100,
                 height: 35,
             },
             {
                 label: "삭제",
-                onClick: () => {},
+                onClick: () => {
+                },
                 color: "red",
                 width: 100,
                 height: 35,
@@ -247,11 +248,12 @@ export default function Page() {
                     <div className={'text-gray-700 font-medium pt-1 ml-2 mr-5'}>검색조건</div>
                     <select
                         className={'w-[200px]'}
-                        onChange={(e : React.ChangeEvent<HTMLSelectElement>) => {
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                             setParam((prev: ParamType) => ({
                                 ...prev,
                                 condition: e.target.value,
-                            }))}
+                            }))
+                        }
                         }
                     >
                         <option value={'pkName'}>주차장명</option>
@@ -261,7 +263,7 @@ export default function Page() {
                         type={'text'}
                         placeholder={'검색조건 설정 후 검색해주세요'}
                         className={'w-[300px] h-[35px] rounded-tr-none rounded-br-none ml-5'}
-                        onChange={(e : React.ChangeEvent<HTMLInputElement>) => {
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                             setParam((prev: ParamType) => ({
                                 ...prev,
                                 text: e.target.value,
@@ -286,24 +288,28 @@ export default function Page() {
             </div>
 
             <div className={'border border-gray-100 p-6 rounded-lg bg-white mt-5'}>
-                <div className={'flex justify-end space-x-4'}>
-                    <Button color={"red"} fill={false} height={36} width={120} onClick={handleDeleteGroup}>
-                        삭제
-                    </Button>
-                    <Button color={"green"} fill height={36} width={120} onClick={() => setExcelOpen(true)}>
-                        <Image src={ExcelUpload.src} alt={'업로드'} width={15} height={15} className={'mr-2'}/>
-                        엑셀업로드
-                    </Button>
-                    <Button color={"main"} fill height={36} width={120} onClick={() => setAddOpen(true)}>
-                        <Image src={Plus.src} alt={'추가'} width={16} height={16} className={'mr-1'}/>
-                        사업장추가
-                    </Button>
+                <div className={'flex justify-between'}>
+                    <div className={'text-xl font-light mb-6'}>사업장관리</div>
+                    <div className={'flex justify-end space-x-4'}>
+                        <Button color={"red"} fill={false} height={36} width={120} onClick={handleDeleteGroup}>
+                            삭제
+                        </Button>
+                        <Button color={"green"} fill height={36} width={120} onClick={() => setExcelOpen(true)}>
+                            <Image src={ExcelUpload.src} alt={'업로드'} width={15} height={15} className={'mr-2'}/>
+                            엑셀업로드
+                        </Button>
+                        <Button color={"main"} fill height={36} width={120} onClick={() => setAddOpen(true)}>
+                            <Image src={Plus.src} alt={'추가'} width={16} height={16} className={'mr-1'}/>
+                            사업장추가
+                        </Button>
+                    </div>
                 </div>
+
                 <CenterPopup
                     isOpen={addOpen}
                     onClose={addClose}
                     title="사업장 추가"
-                    Content={() => <AddBusiness ref={businessRef} />}
+                    Content={() => <AddBusiness ref={businessRef}/>}
                     buttons={AddButtons}
                 />
                 <CenterPopup
@@ -317,7 +323,7 @@ export default function Page() {
                     isOpen={slideOpen}
                     onClose={slideClose}
                     title={"상세보기"}
-                    Content={(props) => <List {...props} rowData={rowData} onSave={slideSave} />}
+                    Content={(props) => <List {...props} rowData={rowData} onSave={slideSave}/>}
                     buttons={SlideButtons}
                 />
                 <div className={'mt-4'}>

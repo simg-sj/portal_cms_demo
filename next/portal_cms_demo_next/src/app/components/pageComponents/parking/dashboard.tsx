@@ -26,6 +26,8 @@ import {optionBarHorizon, optionDoughnut} from "@/config/data";
 import Error from "@/assets/images/icon/error-icon.png";
 import React from "react";
 import {usePathname} from "next/navigation";
+import CountCard from "@/app/components/common/CountCard";
+import WarningIcon from "@/assets/images/icon/warning-icon.png";
 
 interface DashboardProps {
     chartData: {
@@ -153,7 +155,15 @@ export default function DashboardComponent({
     return (
         <>
             <div className={'px-8 py-6 bg-white rounded-xl'}>
-                <div className={'text-xl font-light mb-6'}>계약현황</div>
+                <div className={'flex justify-between items-start'}>
+                    <div className={'text-xl font-light mb-6'}>계약현황</div>
+                    {/*갱신알림*/}
+                    {/* <div className={'flex items-center text-sm py-2 px-5 bg-gray-100 rounded-lg'}>
+                        <Image src={WarningIcon.src} alt={'경고'} width={18} height={18}
+                               className={'cursor-pointer mr-2'}/>
+                        <div>다가오는 보험 갱신일정이 1건 있습니다. 보험관리메뉴에서 확인해주세요.</div>
+                    </div>*/}
+                </div>
                 <div className={'flex'}>
                     <div className={'w-[200px] mr-16'}>
                         <div className={'relative'}>
@@ -323,40 +333,22 @@ export default function DashboardComponent({
                 <div className={'px-8 py-6 bg-white rounded-xl my-5 w-1/6'}>
                     <div className={'text-xl font-light mb-6'}>월 누적 현황</div>
                     <div>
-                        <div className={'my-10 bg-white shadow-lg px-5 py-5 rounded-xl'}>
-                            <div className={'w-full'}>
-                                <Image src={ChargeIcon} alt={'보험금아이콘'} width={30} height={30} className={'my-4'}/>
-                                <div className={'text-gray-700 mb-2'}>월 누적 지급보험금</div>
-                                <div className={'flex justify-end'}>
-                                    <div
-                                        className={tableData.monthCumulativeData[0].total_percent_change > 0 ? 'text-blue-500 font-medium' : 'text-red-500 font-medium'}
-                                    >{tableData.monthCumulativeData[0].total_percent_change}</div>
-                                </div>
-                                <div className={'flex justify-between items-end'}>
-                                    <CountUp
-                                        end={tableData.monthCumulativeData[0]?.total ? FormatNumber(tableData.monthCumulativeData[0].total) : 0}
-                                        duration={2} className={'text-3xl font-semibold'}/>
-                                    <span className={'text-xl font-semibold ml-5'}> 원</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className={'my-10 bg-white shadow-lg px-5 py-5 rounded-xl'}>
-                            <div className={'w-full'}>
-                                <Image src={CarIcon} alt={'사고아이콘'} width={30} height={30} className={'my-4'}/>
-                                <div className={'text-gray-700 mb-2'}>월 누적 사고접수</div>
-                                <div className={'flex justify-end'}>
-                                    <div
-                                        className={tableData.monthCumulativeData[0].counts_percent_change > 0 ? 'text-blue-500 font-medium' : 'text-red-500 font-medium'}
-                                    >{tableData.monthCumulativeData[0].counts_percent_change}</div>
-                                </div>
-                                <div className={'flex justify-between items-end'}>
-                                    <CountUp
-                                        end={tableData.monthCumulativeData[0]?.counts ? FormatNumber(tableData.monthCumulativeData[0].counts) : 0}
-                                        duration={5} className={'text-3xl font-semibold'}/>
-                                    <span className={'text-xl font-semibold ml-5'}> 건</span>
-                                </div>
-                            </div>
-                        </div>
+                        <CountCard
+                            icon={ChargeIcon}
+                            title={'월 누적 사고접수'}
+                            value={tableData.monthCumulativeData[0]?.total
+                                ? FormatNumber(tableData.monthCumulativeData[0].total)
+                                : 0}
+                            unit={"원"}
+                            percentChange={tableData.monthCumulativeData[0].total_percent_change}
+                        />
+                        <CountCard
+                            icon={CarIcon}
+                            title={'월 누적 사고접수'}
+                            value={tableData.monthCumulativeData[0]?.counts ? FormatNumber(tableData.monthCumulativeData[0].counts) : 0}
+                            unit={"건"}
+                            percentChange={tableData.monthCumulativeData[0].counts_percent_change}
+                        />
                     </div>
                 </div>
 

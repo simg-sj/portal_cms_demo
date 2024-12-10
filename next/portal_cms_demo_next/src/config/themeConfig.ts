@@ -10,6 +10,7 @@ interface Theme {
         dashboard?: string;
         accidentList?: string;
         parkingList?: string;
+        insuManager?: string;
         mypage?: string;
     };
 }
@@ -43,6 +44,7 @@ const themeConfigs: ThemeConfig = {
             accidentList: "/kmpark/accidentList",
             parkingList: "/kmpark/parkingList",
             mypage: "/kmpark/mypage",
+            insuManager: "/kmpark/insuManager"
         },
     },
 };
