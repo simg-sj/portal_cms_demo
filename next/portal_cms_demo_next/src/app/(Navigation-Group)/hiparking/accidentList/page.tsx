@@ -185,7 +185,9 @@ export default function Page() {
         setData(result || []);
         setCurrentPage(0);
     }
-
+    useEffect(() => {
+        onSearchClick();
+    }, []);
     // 사고접수 리스트 컬럼
     const columns: ColumnDefinition<ClaimRowType>[] = [
         {
@@ -229,9 +231,6 @@ export default function Page() {
         },
     ];
 
-    useEffect(() => {
-        console.log('@@@@ relaod',data);
-    }, [data]);
 
     return (
         <>

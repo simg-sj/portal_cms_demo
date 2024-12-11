@@ -1,31 +1,25 @@
 "use client"
 import React, {useState} from "react";
+import {ParkingRowType} from "@/@types/common";
 
-interface ParkingDetailType {
-    pkName: string; //주차장명
-    pkAddress: string; //주차장주소
-    pkType: 'indoor' | 'outdoor' | 'mechanical' | 'carLift'; //주차장구분
-    pkArea: number;//면수
-    pkDetail: string;//세부내역
-    pkMemo: string;//메모 (공동피보험자)
-}
+
 
 interface ListProps {
     isEditing: boolean;
     onSave: (data: any) => void;
-    rowData : ParkingDetailType;
-    setRowData : React.Dispatch<React.SetStateAction<ParkingDetailType>>;
+    rowData : ParkingRowType;
+    setRowData : React.Dispatch<React.SetStateAction<ParkingRowType>>;
 }
 
 const HiparkingList = ({isEditing, rowData, setRowData }: ListProps) => {
     //input 빈값으로 변경
     const [formData, setFormData] = useState({
-        pkName: '', //주차장명
-        pkAddress: '', //주차장주소
-        pkType: '', //주차장구분
-        pkArea: '', //면수
-        pkDetail: '', //세부내역
-        pkMemo: '' //메모 (공동피보험자)
+        pklName: '', //주차장명
+        pklAddress: '', //주차장주소
+        form : '',
+        faceCount: '', //면수
+        detailHistory: '', //세부내역
+        memo: '' //메모 (공동피보험자)
     });
 
     //필드값 변경시 formdata 업데이트
@@ -89,17 +83,17 @@ const HiparkingList = ({isEditing, rowData, setRowData }: ListProps) => {
                     <tbody>
                     <tr>
                         <th>주차장명</th>
-                        <td colSpan={3}>{renderField('pkName', rowData.pkName, 'text')}</td>
+                        <td colSpan={3}>{renderField('pklName', rowData.pklName, 'text')}</td>
                     </tr>
                     <tr>
-                        <th>주차장주소</th>
-                        <td colSpan={3}>{renderField('pkAddress', rowData.pkAddress, 'text')}</td>
+                        <th>소재지</th>
+                        <td colSpan={3}>{renderField('pklAddress', rowData.pklAddress, 'text')}</td>
 
                     </tr>
                     <tr>
-                        <th>주차장구분</th>
+                        <th>형태</th>
                         <td colSpan={3}>
-                            {renderField('pkType', rowData.pkType, 'text')}
+                            {renderField('form', rowData.form, 'text')}
                         </td>
                     </tr>
                     </tbody>
@@ -113,20 +107,39 @@ const HiparkingList = ({isEditing, rowData, setRowData }: ListProps) => {
                         <col style={{width: "200px"}}/>
                         <col style={{width: "250px"}}/>
                         <col style={{width: "200px"}}/>
-                        <col style={{width: "250px"}}/>
+                        <col style={{width: "200px"}}/>
+                        <col style={{width: "200px"}}/>
+                        <col style={{width: "200px"}}/>
+                        <col style={{width: "200px"}}/>
                     </colgroup>
                     <tbody>
                     <tr>
                         <th>면수</th>
-                        <td colSpan={3}>{renderField('pkArea', rowData.pkArea, 'text')}</td>
+                        <td colSpan={3}>{renderField('faceCount', rowData.faceCount ? rowData.faceCount : '-', 'text')}</td>
                     </tr>
                     <tr>
-                        <th>세부내역</th>
-                        <td colSpan={3}>{renderField('pkDetail', rowData.pkDetail, 'text')}</td>
+                        <th>옥외</th>
+                        <td colSpan={3}>{renderField('outdoor', rowData.outdoor ? rowData.outdoor : '-', 'text')}</td>
+                    </tr>
+                    <tr>
+                        <th>옥내</th>
+                        <td colSpan={3}>{renderField('indoor', rowData.indoor ? rowData.indoor : '-', 'text')}</td>
+                    </tr>
+                    <tr>
+                        <th>기계식(면)</th>
+                        <td colSpan={3}>{renderField('mechanical', rowData.mechanical ? rowData.mechanical : '-', 'text')}</td>
+                    </tr>
+                    <tr>
+                        <th>카리프트(대)</th>
+                        <td colSpan={3}>{renderField('carLift', rowData.carLift ? rowData.carLift : '-', 'text')}</td>
+                    </tr>
+                    <tr>
+                        <th>세부 내역</th>
+                        <td colSpan={3}>{renderField('detailHistory', rowData.detailHistory ? rowData.detailHistory : '-', 'text')}</td>
                     </tr>
                     <tr>
                         <th>메모</th>
-                        <td colSpan={3}>{renderField('pkMemo', rowData.pkMemo, 'textarea')}</td>
+                        <td colSpan={3}>{renderField('memo', rowData.memo ? rowData.memo : '-', 'textarea')}</td>
                     </tr>
                     </tbody>
                 </table>

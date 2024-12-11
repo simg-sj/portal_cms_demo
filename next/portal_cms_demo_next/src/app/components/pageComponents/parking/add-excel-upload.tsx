@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Image from "next/image";
 import styled from "styled-components";
 import Button from "@/app/components/common/ui/button";
 import ExcelUpload from "@/assets/images/icon/upload-gray-icon.png";
 import ExcelDown from "@/assets/images/icon/excel-down-icon.png";
+import {useSession} from "next-auth/react";
+import {BSN_CODE} from "@/config/data";
+import {uploadExcel} from "@/app/(Navigation-Group)/hiparking/action";
+import {ParkingType} from "@/@types/common";
+import fileUpload from "@/app/components/common/ui/fileUpload";
 
 const StyledFile = styled.label`
     width: 430px;
@@ -71,10 +76,14 @@ const FileInfoLabel = styled.span`
 const FileInfoValue = styled.span`
     color: #666;
 `;
-
-const AddExcelUpload = () => {
+interface AddProps {
+    setExcelData: React.Dispatch<React.SetStateAction<ParkingType[]>>;
+}
+const AddExcelUpload = ({setExcelData} : AddProps) => {
     const [isActive, setActive] = useState(false);
     const [uploadedFiles, setUploadedFiles] = useState([]);
+    const { data, status } = useSession();
+
 
     const handleDragStart = (e) => {
         e.preventDefault();
@@ -94,25 +103,49 @@ const AddExcelUpload = () => {
         return validTypes.includes(file.type);
     };
 
-    const handleFileUpload = (files) => {
-        const newFiles = Array.from(files).filter(validateExcelFile);
-
-        newFiles.forEach(file => {
-            const fileReader = new FileReader();
-            fileReader.onload = (e) => {
-                const uploadedFile = {
+    const handleFileUpload = async (files) => {
+        try {
+            const formData = new FormData();
+            const uploadedFileDetails = [];
+            Array.from(files).forEach((file, index) => {
+                formData.append("files", file);
+                uploadedFileDetails.push({
+                    id: `${file.name}-${index}`, // 고유 ID 추가
                     name: file.name,
                     size: `${(file.size / 1024).toFixed(2)} KB`,
-                    addedBusinessCount: 0, // Placeholder for future implementation
-                    deletedBusinessCount: 0, // Placeholder for future implementation
-                    errorCount: 0 // Placeholder for future implementation
-                };
+                    addedBusinessCount: 0,
+                    deletedBusinessCount: 0,
+                    errorCount: 0,
+                });
+            });
 
-                setUploadedFiles(prev => [...prev, uploadedFile]);
-            };
-            fileReader.readAsArrayBuffer(file);
-        });
+            formData.append("bpk", BSN_CODE[data.user.bName].bpk);
+            formData.append("type", "up");
+            const res = await uploadExcel(formData);
+            console.log(res)
+            if (res.status === "200") {
+                const countNew = res.data.filter((item) => item.status === "NEW").length;
+                const countDel = res.data.filter((item) => item.status === "EXP").length;
+
+                // 응답 데이터를 기반으로 업데이트
+                if(countNew === 0 && countDel === 0) {
+                    alert("데이터가 없습니다.");
+                }else {
+                    uploadedFileDetails.forEach((file) => {
+                        file.addedBusinessCount = countNew;
+                        file.deletedBusinessCount = countDel;
+                    });
+                    setUploadedFiles((prev) => [...prev, ...uploadedFileDetails]);
+                    setExcelData(res.data);
+                }
+            } else {
+                alert(res.msg);
+            }
+        } catch (e) {
+            console.error("파일 업로드 실패:", e);
+        }
     };
+
 
     const handleDragOver = (e) => {
         e.preventDefault();
@@ -127,6 +160,7 @@ const AddExcelUpload = () => {
     };
 
     const handleFileInputChange = (event) => {
+
         handleFileUpload(event.target.files);
     };
 
@@ -136,10 +170,11 @@ const AddExcelUpload = () => {
         );
     };
 
+
     return (
         <>
             <div className={'flex justify-end space-x-4'}>
-                <Button color={"green"} height={30} width={180} className={'ml-5'}>
+                <Button color={"green"} height={30} width={180} className={'ml-5'} params={{bpk : BSN_CODE[data.user.bName].bpk, type : 'down'}} fileName={BSN_CODE[data.user.bName].fileName} use={'down'}>
                     <Image src={ExcelDown.src} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
                     엑셀 샘플 다운로드
                 </Button>

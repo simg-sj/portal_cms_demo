@@ -109,13 +109,13 @@ export function CheckboxContainer<T>({
                     </td>
                 </tr>
             ) : (
-                items.map((item) => {
+                items.map((item, index) => {
                     const id = getItemId(item);
                     const isSelected = selectedRow === id || selectedItems.has(id);
 
                     return (
                         <tr
-                            key={id}
+                            key={`${id}-${index}`}
                             className={`
                                 ${onRowClick ? 'cursor-pointer' : ''}
                                 ${isSelected ? 'bg-main-lighter' : 'hover:bg-main-lighter'}

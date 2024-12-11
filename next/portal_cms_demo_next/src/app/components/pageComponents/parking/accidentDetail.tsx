@@ -165,9 +165,9 @@ const ParkingList = ({isEditing, isNew = false, rowData, onSave }: HiparkingList
                     </tr>
                     <tr>
                         <th>상태</th>
-                        <td>{renderField('closingCode', ClosingCode[editData.closingCode], 'select', STATE_OPTIONS)}</td>
+                        <td>{renderField('closingStatus', ClosingCode[editData.closingCode], 'select', STATE_OPTIONS)}</td>
                         <th>지급보험금</th>
-                        <td>{editData.total ? renderField('total', editData.total+'원', 'text'): '-'}</td>
+                        <td>{ renderField('total', editData.total? editData.total+'원' : '-', 'text')}</td>
                     </tr>
                     <tr>
                         <th>사고접수일</th>

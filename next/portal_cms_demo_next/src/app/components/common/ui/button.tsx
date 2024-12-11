@@ -10,7 +10,11 @@ interface Button extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     fontWeight?: "font-medium" | "font-bold";
     width?: number;
     height?: number;
+    params ?: Record<string, string>;
+    fileName ?: string;
+    use ?: string;
     style?: React.CSSProperties;
+    onClick ?: () => void;
 }
 
 const bgColor: { [key in colorType]: string } = {
@@ -69,7 +73,12 @@ function Button({
                     width,
                     height,
                     className = "",
-                    style,
+                    style ,
+                    params,
+                    use,
+                    clickEvent,
+                    onClick,
+                    fileName,
                     ...props
                 }: Button) {
     if (!style) style = {};
@@ -84,10 +93,45 @@ function Button({
         style.fontSize = textSize + "px";
     }
 
+    const handleDownload = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        try {
+            e.preventDefault();
+
+            const response = await fetch('https://center-api.simg.kr/api/portal/excelRoute/download', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(params),
+            });
+
+            if (!response.ok) {
+                const errorDetails = await response.text();
+                throw new Error(`Error ${response.status}: ${response.statusText} - ${errorDetails}`);
+            }
+
+            const blob = await response.blob(); // 응답 데이터를 Blob으로 변환
+            const downloadUrl = window.URL.createObjectURL(blob);
+
+            // 가상의 링크 생성 및 클릭 트리거
+            const a = document.createElement("a");
+            a.href = downloadUrl;
+            a.download = fileName; // 다운로드될 파일 이름
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        } catch (error) {
+            console.error("파일 다운로드 실패:", error);
+            alert("파일 다운로드에 실패했습니다. 콘솔 로그를 확인하세요.");
+        }
+    };
+
+
     return (
         <button
             {...props}
             type={type}
+            onClick={use === 'down' ? handleDownload : onClick}
             className={`inline-flex items-center justify-center py-1 px-1 ${combineClass({ color, fill, rounded, fontWeight })}${
                 className ? " " + className : ""
             }`}

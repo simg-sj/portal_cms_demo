@@ -25,10 +25,8 @@ const DayTerm = ({sDay, eDay, type , setParam }: DayTermProps) => {
 
     //타입 월달력, 전체달력 지정 : 월달력 3달단위 전체달력 오늘날짜 기본값
     useEffect(() => {
-        console.log("type is@@@",type)
         // 월달력: 3개월 전부터 현재까지
         if (type === 'month') {
-            console.log('@@@')
             const threeMonthsAgo = new Date(new Date().getFullYear(), new Date().getMonth() - 2, 1);
             setParam((prev: ParamDashType2) => ({
                 ...prev,

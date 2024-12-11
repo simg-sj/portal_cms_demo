@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Button from "@/app/components/common/ui/button";
 import Image from "next/image";
 import Close from "@/assets/images/icon/close-icon.png";
+import {ParkingType} from "@/@types/common";
 
 interface ButtonConfig {
     label: string;
@@ -23,10 +24,12 @@ interface CenterPopupProps {
     buttons: ButtonConfig[];
     onConfirm?: () => void;
     onDelete?: () => void;
+    setExcelData ?: React.Dispatch<React.SetStateAction<ParkingType[]>>;
+    contentProps: T;
 }
 
 
-const CenterPopup = ({isOpen, onClose, title, Content, buttons, onConfirm, onDelete}: CenterPopupProps) => {
+const CenterPopup = ({isOpen, onClose, title, Content, buttons, onConfirm, onDelete, setExcelData, contentProps}: CenterPopupProps) => {
 
     if (!isOpen) return null;
 
@@ -53,23 +56,25 @@ const CenterPopup = ({isOpen, onClose, title, Content, buttons, onConfirm, onDel
                            onClick={onClose}/>
                 </div>
                 <div className="px-8 py-3">
-                    <Content/>
+                    <Content {...contentProps} />
                 </div>
                 <div className="flex justify-center px-8 py-5 space-x-10">
                     {buttons.map((button, index) => (
-                        <Button
-                            key={index}
-                            onClick={() => handleButtonClick(button)}
-                            color={button.color}
-                            fill={button.fill}
-                            rounded={button.rounded}
-                            textSize={button.textSize}
-                            fontWeight={button.fontWeight}
-                            width={button.width}
-                            height={button.height}
-                        >
-                            {button.label}
-                        </Button>
+                        <div key={index}>
+                            <Button
+                                onClick={() => handleButtonClick(button)}
+                                color={button.color}
+                                fill={button.fill}
+                                rounded={button.rounded}
+                                textSize={button.textSize}
+                                fontWeight={button.fontWeight}
+                                width={button.width}
+                                height={button.height}
+                            >
+                                {button.label}
+                            </Button>
+                        </div>
+
                     ))}
                 </div>
             </div>

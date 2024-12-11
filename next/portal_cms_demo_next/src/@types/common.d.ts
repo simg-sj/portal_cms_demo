@@ -284,7 +284,18 @@ interface ParkingType {
     useYNull: string;                  // 사용 여부
     createdYMD: Date;                  // 생성일자
 }
-
+interface ParkingRowType {
+    pklName : string;
+    pklAddress: string;
+    form: string;
+    faceCount : string;
+    detailHistory: string;
+    indoor: boolean;                   // 실내 여부
+    outdoor: boolean;                  // 실외 여부
+    mechanical: boolean;               // 기계식 여부
+    carLift: boolean;                  // 차량 리프트 여부
+    memo : string;
+}
 interface ButtonConfig {
     label: string;
     onClick: () => void;

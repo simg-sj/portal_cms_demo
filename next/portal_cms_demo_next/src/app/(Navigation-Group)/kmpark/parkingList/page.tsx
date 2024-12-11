@@ -10,7 +10,7 @@ import SlidePopup from "@/app/components/popup/SlidePopup";
 import List from "@/app/components/pageComponents/parking/parkingDetail";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
-import {getClaim, getParking} from "@/app/(Navigation-Group)/hiparking/action";
+import {getClaim, getExcelSample, getParking} from "@/app/(Navigation-Group)/hiparking/action";
 import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
 import {ButtonConfig, ClaimRowType, ParkingParamType, ParkingType} from "@/@types/common";
 import CenterPopup from "@/app/components/popup/CenterPopup";
@@ -201,7 +201,10 @@ export default function Page() {
         }
     };
 
+
+
     const onSearchClick = async () => {
+        alert("@@")
         const result = await getParking(param);
 
         setData(result);
@@ -276,7 +279,7 @@ export default function Page() {
                         조회
                     </Button>
                 </div>
-                <Button color={"green"} height={36} width={120} className={'ml-5'}>
+                <Button color={"green"} use={'down'} height={36} width={120} className={'ml-5'} params={{bpk : "01", type : 'down'}} fileName={'Kmpark_sample'}>
                     <Image src={Excel.src} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
                     엑셀다운
                 </Button>

@@ -2,8 +2,8 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-11-26 13:27:27
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-12-04 09:15:23
- * @FilePath: portal_cms_demo_next/src/app/hooks/useFetchDashboard.ts
+ * @LastEditTime: 2024-12-11 15:06:47
+ * @FilePath: portal_cms_demo_next/src/app/lib/hooks/useFetchDashboard.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 
@@ -69,7 +69,6 @@ const useFetchDashboard = (bpk : string) => {
     
 
     useEffect(() => {
-        console.log('param is :::', params)
         fetchData();
     }, [params.job, params.bpk, params.sDay, params.eDay]);
 

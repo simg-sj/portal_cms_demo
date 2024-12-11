@@ -1,6 +1,5 @@
 "use client"
 import React, {useEffect, useRef, useState} from "react";
-import DayTerm from "@/app/components/common/ui/dayTerm";
 import Button from "@/app/components/common/ui/button";
 import Image from "next/image";
 import Excel from "@/assets/images/icon/excel-icon.png";
@@ -9,10 +8,9 @@ import ExcelUpload from "@/assets/images/icon/upload-white-icon.png";
 import SlidePopup from "@/app/components/popup/SlidePopup";
 import List from "@/app/components/pageComponents/parking/parkingDetail";
 import Pagination from "@/app/components/common/ui/pagination";
-import dayjs from "dayjs";
-import {getClaim, getParking} from "@/app/(Navigation-Group)/hiparking/action";
+import {addExcelParking, getParking} from "@/app/(Navigation-Group)/hiparking/action";
 import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
-import {ButtonConfig, ClaimRowType, ParamType, ParkingParamType, ParkingType} from "@/@types/common";
+import {ButtonConfig, ClaimRowType, ParamType, ParkingParamType, ParkingRowType, ParkingType} from "@/@types/common";
 import CenterPopup from "@/app/components/popup/CenterPopup";
 import AddBusiness, {AddBusinessRef} from "@/app/components/pageComponents/parking/add-business-hiparking";
 import AddExcelUpload from "@/app/components/pageComponents/parking/add-excel-upload";
@@ -31,10 +29,11 @@ export default function Page() {
     const [slideOpen, setSlideOpen] = useState(false);
     const [addOpen, setAddOpen] = useState(false);
     const [excelOpen, setExcelOpen] = useState(false);
+    const [excelData, setExcelData] = useState<ParkingType[]>([]);
     const businessRef = useRef<AddBusinessRef>(null);
     const [selectedRow, setSelectedRow] = useState<number | null>(null);
     const [data, setData] = useState<ParkingType[]>([]);
-    const [rowData, setRowData] = useState<ClaimRowType | undefined>();
+    const [rowData, setRowData] = useState<ParkingRowType>();
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [param, setParam] = useState<ParkingParamType>({
@@ -158,10 +157,29 @@ export default function Page() {
         setExcelOpen(false);
     };
 
-    const excelSave = (data: any) => {
-        window.confirm('추가: 몇건 삭제: 몇건 엑셀을 업로드 하시겠습니까?')
-        console.log('업로드 데이터:', data);
-        excelClose();
+    const excelSave = async () => {
+        try{
+            const countNew = excelData.filter((item) => item.status === "NEW").length;
+            const countDel = excelData.filter((item) => item.status === "EXP").length;
+            if (window.confirm(`추가: ${countNew} 삭제: ${countDel} 엑셀을 업로드 하시겠습니까?`)) {
+                // bpk 컬럼 추가
+                const addBpkData = excelData.map((row) => ({
+                    ...row,
+                    bpk: 4, // bpk 컬럼 추가 및 값 설정
+                }));
+                let res = await addExcelParking(addBpkData);
+                if(res.status ==='200'){
+                    alert('저장완료');
+                    excelClose();
+                }else {
+                    alert('서비스 오류입니다.');
+                }
+            } else {
+                return;
+            }
+        }catch (e){
+            console.log(e);
+        }
     };
 
     const ExcelButton: ButtonConfig[] =
@@ -191,16 +209,15 @@ export default function Page() {
             return;
         }
         if (window.confirm(`선택한 ${selectedItems.size}개의 항목을 삭제하시겠습니까?`)) {
+            console.log(selectedItems);
             console.log('삭제할 항목 인덱스:', Array.from(selectedItems));
             return;
         }
     };
 
-    const onSearchClick = async () => {
-        console.log(param);
-        const result = await getParking(param);
-        console.log(result);
 
+    const onSearchClick = async () => {
+        const result = await getParking(param);
         setData(result);
         setCurrentPage(0);
     }
@@ -240,7 +257,9 @@ export default function Page() {
             header: '카리프트(대)'
         },
     ];
-
+    useEffect(() => {
+        onSearchClick();
+    }, []);
     return (
         <>
             <div className={'border border-gray-100 p-6 rounded-lg bg-white flex items-center justify-between'}>
@@ -281,7 +300,7 @@ export default function Page() {
                         조회
                     </Button>
                 </div>
-                <Button color={"green"} height={36} width={120} className={'ml-5'}>
+                <Button color={"green"} height={36} use={'down'} width={120} className={'ml-5'} params={{bpk : "02", type : 'down'}} fileName={'하이파킹_sample'}>
                     <Image src={Excel.src} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
                     엑셀다운
                 </Button>
@@ -316,7 +335,9 @@ export default function Page() {
                     isOpen={excelOpen}
                     onClose={excelClose}
                     title="엑셀업로드"
+                    setExcelData={setExcelData}
                     Content={AddExcelUpload}
+                    contentProps={{ setExcelData }}
                     buttons={ExcelButton}
                 />
                 <SlidePopup
@@ -329,12 +350,13 @@ export default function Page() {
                 <div className={'mt-4'}>
                     <CheckboxContainer
                         items={getPaginatedData()}
-                        getItemId={(item) => item.irpk}
+                        getItemId={(item) => item.pklpk}
                         columns={columns}
                         selectedRow={selectedRow}
                         onSelectionChange={setSelectedItems}
                         onRowClick={(item) => {
-                            setSelectedRow(item.irpk);
+                            console.log(item)
+                            setSelectedRow(item.pklpk);
                             setSlideOpen(true);
                             setRowData(item);
                             document.body.style.overflow = 'hidden';
