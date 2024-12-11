@@ -7,243 +7,129 @@ import AlarmIcon from "@/assets/images/icon/alarm-icon.png";
 import Button from "@/app/components/common/ui/button";
 import Tooltip from "@/app/components/common/ui/tooltip"
 import Plus from "@/assets/images/icon/plus-icon.png";
-import EditIcon from "@/assets/images/icon/edit-icon.png";
-import DeleteIcon from "@/assets/images/icon/delete-icon.png";
-import WarningIcon from "@/assets/images/icon/warning-icon.png";
-import React from "react";
+import React, {useState} from "react";
 import CountCard from "@/app/components/common/CountCard";
+import InsuCard from "@/app/components/common/InsuCard";
 
+const insuranceDataArray = [
+    {
+        insuName: '생명보험',
+        insuNumber: '123-456-789',
+        insuranceCompany: '보험사 A',
+        managementCompany: '관리사 B',
+        startDate: new Date('2023-01-01'),
+        endDate: new Date('2024-01-01'),
+        insuranceCost: 50000,
+    },
+    {
+        insuName: '자동차보험',
+        insuNumber: '987-654-321',
+        insuranceCompany: '보험사 C',
+        managementCompany: '관리사 D',
+        startDate: new Date('2024-05-15'),
+        endDate: new Date('2025-05-15'), // 만료된 보험
+        insuranceCost: 30000,
+    },
+    {
+        insuName: '화재보험',
+        insuNumber: '456-123-789',
+        insuranceCompany: '보험사 E',
+        managementCompany: '관리사 F',
+        startDate: new Date('2023-03-01'),
+        endDate: new Date('2024-03-01'),
+        insuranceCost: 25000,
+    },
+    {
+        insuName: '주차장배상책임보험',
+        insuNumber: '123-456-55',
+        insuranceCompany: '보험사 A',
+        managementCompany: '관리사 B',
+        startDate: new Date('2023-12-13'),
+        endDate: new Date('2024-12-13'),
+        insuranceCost: 7777777,
+    },
+];
 
 export default function Page() {
+
+    const [insuranceData, setInsuranceData] = useState(insuranceDataArray);
+
+    const handleDelete = (insuNumber: string) => {
+        setInsuranceData(prevData => prevData.filter(item => item.insuNumber !== insuNumber));
+    };
+
+    const handleAddInsurance = () => {
+        const newInsuranceData = {
+            insuName: '',
+            insuNumber: '',
+            insuranceCompany: '',
+            managementCompany: '',
+            startDate: new Date(),
+            endDate: new Date(),
+            insuranceCost: 0,
+            isEditing: true,
+        };
+        setInsuranceData(prevData => [newInsuranceData, ...prevData]);
+    };
+
     return (
         <>
             <div className={'p-6 rounded-lg bg-white'}>
-                    <div className={'flex items-center mb-6'}>
-                        <div className={'text-xl font-light'}>보험관리</div>
-                        <Tooltip content={"보험관리 추가 버튼으로 현재 가입되어 있는 보험을 추가하여 해당 페이지에서 모든 보험을 관리할 수 있으며, 갱신 예정인 보험을 1달전에 알림으로 알려드립니다. 갱신 정보는 보험관리추가 버튼을 통해 추가할 수 있습니다."}/>
-                    </div>
+                <div className={'flex items-center mb-6'}>
+                    <div className={'text-xl font-light'}>보험관리</div>
+                    <Tooltip content={"보험관리 추가 버튼으로 현재 가입되어 있는 보험을 추가하여 해당 페이지에서 모든 보험을 관리할 수 있으며, 갱신 예정인 보험을 1달전에 알림으로 알려드립니다. 갱신 정보는 보험관리추가 버튼을 통해 추가할 수 있습니다."}/>
+                </div>
                 <div className={'flex justify-between space-x-10'}>
                     <CountCard
-                        icon={CheckChargeIcon}
+                        icon={CheckChargeIcon.src}
                         title={'가입 보험'}
-                        value={3}
+                        value={insuranceData.length}
                         unit={"건"}
                     />
                     <CountCard
-                        icon={ChargeIcon}
+                        icon={ChargeIcon.src}
                         title={'총 보험료'}
                         value={56328430043}
                         unit={"원"}
                     />
                     <CountCard
-                        icon={CancelChargeIcon}
+                        icon={CancelChargeIcon.src}
                         title={'만료된 보험'}
                         value={1}
                         unit={"건"}
                     />
                     <CountCard
-                        icon={AlarmIcon}
+                        icon={AlarmIcon.src}
                         title={'갱신예정 보험'}
                         value={1}
                         unit={"건"}
                     />
-                    {/*<div className={'w-2 h-2 bg-red-500 rounded-full absolute top-0 left-[90px]'}></div>*/}
                 </div>
             </div>
-            {/*보험리스트*/}
+            {/* 보험리스트 */}
             <div className={'p-6 rounded-lg bg-white my-5'}>
                 <div className={'flex justify-between'}>
-                <div className={'text-xl font-light mb-6'}>보험리스트</div>
-                <Button color={"main"} fill height={36} width={132}>
-                    <Image src={Plus.src} alt={'추가'} width={14} height={14} className={'mr-1'}/>
-                    보험관리추가
-                </Button>
+                    <div className={'text-xl font-light mb-6'}>보험리스트</div>
+                    <Button color={"main"} fill height={36} width={132} onClick={handleAddInsurance}>
+                        <Image src={Plus.src} alt={'추가'} width={14} height={14} className={'mr-1'}/>
+                        보험관리추가
+                    </Button>
                 </div>
                 <div className={'max-h-[calc(100vh-500px)] overflow-y-auto'}>
-                    <div className={'rounded-xl border border-gray-200 my-3'}>
-                        <div className={'flex justify-between items-start px-7 pt-5 mb-5'}>
-                            <div>
-                                <Button color={"blue"} height={26} width={180} rounded={true} textSize={14}>2025.10.01
-                                    갱신예정</Button>
-                                <div className={'font-semibold text-lg my-4 mx-2 relative'}>
-                                    주차장배상책임보험
-                                </div>
-                            </div>
-                            <div className={'flex items-center space-x-4'}>
-                                <div className={'flex items-center text-sm py-2 px-5 bg-gray-100 rounded-lg'}>
-                                    <Image src={WarningIcon.src} alt={'경고'} width={18} height={18}
-                                           className={'cursor-pointer mr-2'}/>
-                                    <div>갱신일정이 13일 남았습니다. 갱신정보를 입력해주세요.</div>
-                                </div>
-                                <Image src={EditIcon.src} alt={'수정'} width={18} height={18}
-                                       className={'cursor-pointer'}/>
-                                <Image src={DeleteIcon.src} alt={'삭제'} width={18} height={18}
-                                       className={'cursor-pointer'}/>
-                            </div>
-                        </div>
-                        <div className={'flex justify-between items-end px-7 mb-5'}>
-                            <div>
-                                <div className={'text-gray-600 mb-2 text-sm'}>증권번호</div>
-                                <div>F-2024-0494293</div>
-                            </div>
-                            <div>
-                                <div className={'text-gray-600 mb-2 text-sm'}>보험사</div>
-                                <div>하나손해보험</div>
-                            </div>
-                            <div>
-                                <div className={'text-gray-600 mb-2 text-sm'}>담당사</div>
-                                <div>SIMG</div>
-                            </div>
-                            <div>
-                                <div className={'text-gray-600 mb-2 text-sm'}>보험기간</div>
-                                <div>2024.10.01 ~ 2025.10.01</div>
-                            </div>
-                            <div>
-                                <div className={'text-gray-600 mb-2 text-sm'}>보험료</div>
-                                <div><span>4,600,000</span> 원</div>
-                            </div>
-                        </div>
-                        <div className={'bg-gray-50 mt-5 py-2'}>
-                            <div className={'flex justify-between py-3 px-7'}>
-                                <div>F-2023-0494293</div>
-                                <div>하나손해보험</div>
-                                <div>SIMG</div>
-                                <div>2023.10.01 ~ 2024.10.01</div>
-                                <div>4.800.000 원</div>
-                            </div>
-                            <div className={'flex justify-between py-3 px-7'}>
-                                <div>F-2022-0494293</div>
-                                <div>하나손해보험</div>
-                                <div>SIMG</div>
-                                <div>2022.10.01 ~ 2023.10.01</div>
-                                <div>4.800.000 원</div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div className={'rounded-xl border border-gray-200 my-3'}>
-                        <div className={'flex justify-between items-start px-7 pt-5 mb-5'}>
-                            <div>
-                                <Button color={"gray"} fill height={26} width={180} rounded={true} textSize={14}>2024.10.23
-                                    만료</Button>
-                                <div className={'font-semibold text-lg my-4 mx-2 relative'}>
-                                    개인정보배상책임보험
-                                </div>
-                            </div>
-                            <div className={'flex items-center space-x-4'}>
-                                <Image src={EditIcon.src} alt={'수정'} width={18} height={18}
-                                       className={'cursor-pointer'}/>
-                                <Image src={DeleteIcon.src} alt={'삭제'} width={18} height={18}
-                                       className={'cursor-pointer'}/>
-                            </div>
-                        </div>
-                        <div className={'flex justify-between items-end px-7 mb-5'}>
-                            <div>
-                                <div className={'text-gray-600 mb-2 text-sm'}>증권번호</div>
-                                <div>F-2024-0494293</div>
-                            </div>
-                            <div>
-                                <div className={'text-gray-600 mb-2 text-sm'}>보험사</div>
-                                <div>하나손해보험</div>
-                            </div>
-                            <div>
-                                <div className={'text-gray-600 mb-2 text-sm'}>담당사</div>
-                                <div>SIMG</div>
-                            </div>
-                            <div>
-                                <div className={'text-gray-600 mb-2 text-sm'}>보험기간</div>
-                                <div>2024.10.01 ~ 2025.10.01</div>
-                            </div>₩
-                            <div>
-                                <div className={'text-gray-600 mb-2 text-sm'}>보험료</div>
-                                <div><span>4,600,000</span> 원</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className={'rounded-xl border border-gray-200 my-3'}>
-                        <div className={'flex justify-between items-start px-7 pt-5 mb-5'}>
-                            <div>
-                                <Button color={"gray"} fill height={26} width={180} rounded={true} textSize={14}>2024.10.23
-                                    만료</Button>
-                                <div className={'font-semibold text-lg my-4 mx-2 relative'}>
-                                    주차장배상책임보험
-                                </div>
-                            </div>
-                            <div className={'flex items-center spa' +
-                                '' +
-                                '' +
-                                '₩ce-x-4'}>
-                                <Image src={EditIcon.src} alt={'수정'} width={18} height={18}
-                                       className={'cursor-pointer'}/>
-                                <Image src={DeleteIcon.src} alt={'삭제'} width={18} height={18}
-                                       className={'cursor-pointer'}/>
-                            </div>
-                        </div>
-                        <div className={'flex justify-between items-end px-7 mb-5'}>
-                            <div>
-                                <div className={'text-gray-600 mb-2 text-sm'}>증권번호</div>
-                                <div>F-2024-0494293</div>
-                            </div>
-                            <div>
-                                <div className={'text-gray-600 mb-2 text-sm'}>보험사</div>
-                                <div>하나손해보험</div>
-                            </div>
-                            <div>
-                                <div className={'text-gray-600 mb-2 text-sm'}>담당사</div>
-                                <div>SIMG</div>
-                            </div>
-                            <div>
-                                <div className={'text-gray-600 mb-2 text-sm'}>보험기간</div>
-                                <div>2024.10.01 ~ 2025.10.01</div>
-                            </div>
-                            <div>
-                                <div className={'text-gray-600 mb-2 text-sm'}>보험료</div>
-                                <div><span>4,600,000</span> 원</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className={'rounded-xl border border-gray-200 my-3'}>
-                        <div className={'flex justify-between items-start px-7 pt-5 mb-5'}>
-                            <div>
-                                <Button color={"gray"} fill height={26} width={180} rounded={true} textSize={14}>2024.10.23
-                                    만료</Button>
-                                <div className={'font-semibold text-lg my-4 mx-2 relative'}>
-                                    주차장배상책임보험
-                                </div>
-                            </div>
-                            <div className={'flex items-center space-x-4'}>
-                                <Image src={EditIcon.src} alt={'수정'} width={18} height={18}
-                                       className={'cursor-pointer'}/>
-                                <Image src={DeleteIcon.src} alt={'삭제'} width={18} height={18}
-                                       className={'cursor-pointer'}/>
-                            </div>
-                        </div>
-                        <div className={'flex justify-between items-end px-7 mb-5'}>
-                            <div>
-                                <div className={'text-gray-600 mb-2 text-sm'}>증권번호</div>
-                                <div>F-2024-0494293</div>
-                            </div>
-                            <div>
-                                <div className={'text-gray-600 mb-2 text-sm'}>보험사</div>
-                                <div>하나손해보험</div>
-                            </div>
-                            <div>
-                                <div className={'text-gray-600 mb-2 text-sm'}>담당사</div>
-                                <div>SIMG</div>
-                            </div>
-                            <div>
-                                <div className={'text-gray-600 mb-2 text-sm'}>보험기간</div>
-                                <div>2024.10.01 ~ 2025.10.01</div>
-                            </div>
-                            <div>
-                                <div className={'text-gray-600 mb-2 text-sm'}>보험료</div>
-                                <div><span>4,600,000</span> 원</div>
-                            </div>
-                        </div>
-                    </div>
+                    {insuranceData.map((insuranceData) => (
+                        <InsuCard
+                            key={insuranceData.insuNumber} // 각 카드에 고유한 키를 부여합니다.
+                            insuName={insuranceData.insuName}
+                            insuNumber={insuranceData.insuNumber}
+                            insuranceCompany={insuranceData.insuranceCompany}
+                            managementCompany={insuranceData.managementCompany}
+                            startDate={insuranceData.startDate}
+                            endDate={insuranceData.endDate}
+                            insuranceCost={insuranceData.insuranceCost}
+                            onDelete={handleDelete}
+                            isEditing={insuranceData.isEditing}
+                        />
+                    ))}
                 </div>
             </div>
         </>
