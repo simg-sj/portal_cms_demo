@@ -51,7 +51,7 @@ export default function Page() {
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [param, setParam] = useState<ParamType>({
-        bpk : 1,
+        bpk : 3,
         condition: "wCell",
         endDate: "",
         startDate: "",
@@ -162,10 +162,13 @@ export default function Page() {
 
     const onSearchClick = async () => {
         const result = await getClaim(param);
-        console.log(data)
         setData(result || []);
         setCurrentPage(0);
     }
+
+    useEffect(()=>{
+        onSearchClick();
+    },[])
 
     // 사고접수 리스트 컬럼
     const columns: ColumnDefinition<ClaimRowType>[] = [

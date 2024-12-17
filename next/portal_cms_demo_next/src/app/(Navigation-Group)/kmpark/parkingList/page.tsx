@@ -204,12 +204,15 @@ export default function Page() {
 
 
     const onSearchClick = async () => {
-        alert("@@")
         const result = await getParking(param);
 
         setData(result);
         setCurrentPage(0);
     }
+
+    useEffect(()=>{
+        onSearchClick();
+    },[])
 
     // 사고접수 리스트 컬럼
     const columns: ColumnDefinition<ParkingType>[] = [
