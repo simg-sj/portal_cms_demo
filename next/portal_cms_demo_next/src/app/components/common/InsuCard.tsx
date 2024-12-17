@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState, useEffect} from 'react';
 import Image from 'next/image';
 import EditIcon from "@/assets/images/icon/edit-icon.png";
 import DeleteIcon from "@/assets/images/icon/delete-icon.png";
@@ -6,6 +6,7 @@ import SaveIcon from "@/assets/images/icon/save-icon.png";
 import WarningIcon from "@/assets/images/icon/warning-icon.png";
 import Button from "@/app/components/common/ui/button";
 import CalenderPicker from "@/app/components/common/ui/calenderPicker";
+import FormatNumber from "@/app/components/common/ui/formatNumber";
 
 interface InsuranceItem {
     insuName: string;
@@ -30,6 +31,7 @@ const InsuCard = ({
                       onDelete,
                       isEditing: initialIsEditing = false
                   }: InsuranceItem) => {
+
     const [isEditing, setIsEditing] = useState(initialIsEditing);
     const [editData, setEditData] = useState({
         insuName,
@@ -41,7 +43,7 @@ const InsuCard = ({
         insuranceCost,
     });
 
-    // 날짜 포맷 맞추기
+    //날짜 포맷 맞추기
     const formatDate = (date: Date) => {
         return new Intl.DateTimeFormat('ko-KR', {
             year: 'numeric',
@@ -57,15 +59,15 @@ const InsuCard = ({
         return dday;
     };
 
-    // 보험 상태 계산
-    const calculateInsuranceStatus = () => {
+    // 보험 상태 계산 (라벨버튼)
+    const calculateInsuranceStatus = (endDate: Date) => {
         const today = new Date();
         const insuranceEndDate = new Date(endDate);
         const oneMonthBefore = new Date(insuranceEndDate);
         oneMonthBefore.setMonth(insuranceEndDate.getMonth() - 1);
 
         const dday = calculateDday(insuranceEndDate);
-
+        //보험만료
         if (today > insuranceEndDate) {
             return {
                 status: 'expired',
@@ -73,7 +75,9 @@ const InsuCard = ({
                 fill: true,
                 label: `${formatDate(insuranceEndDate)} 만료`
             };
-        } else if (dday <= 30 && dday > 0) {
+        }
+        //1개월 전
+        else if (dday <= 30 && dday > 0) {
             return {
                 status: 'renewalSoon',
                 color: 'blue',
@@ -81,7 +85,9 @@ const InsuCard = ({
                 label: `${formatDate(insuranceEndDate)} 갱신예정`,
                 dday: dday
             };
-        } else {
+        }
+        //기본값
+        else {
             return {
                 status: 'active',
                 color: 'blue',
@@ -91,28 +97,46 @@ const InsuCard = ({
         }
     };
 
-    const insuranceStatus = calculateInsuranceStatus();
+    // 상태를 editData.endDate로 계산
+    const [insuranceStatus, setInsuranceStatus] = useState(
+        calculateInsuranceStatus(editData.endDate)
+    );
 
+    // endDate가 변경될 때마다 상태 업데이트
+    useEffect(() => {
+        setInsuranceStatus(calculateInsuranceStatus(editData.endDate));
+    }, [editData.endDate]);
+
+    //편집모드
     const handleEditToggle = () => {
         setIsEditing(!isEditing);
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         setEditData(prev => ({
             ...prev,
             [name]: value,
         }));
     };
 
+    const handleDateChange = (field: 'startDate' | 'endDate', date: Date) => {
+        setEditData(prev => ({
+            ...prev,
+            [field]: date
+        }));
+    };
+
+    //삭제
     const handleDelete = () => {
-        const confirmDelete = window.confirm(`${insuName}을(를) 삭제하시겠습니까?`);
+        const confirmDelete = window.confirm(`정말 ${insuName}을(를) 삭제하시겠습니까?`);
         if (confirmDelete) {
             console.log(`삭제할 데이터 증권번호: ${insuNumber}`);
             onDelete(insuNumber);
         }
     };
 
+    //저장
     const handleSave = () => {
         const confirmSave = window.confirm("저장하시겠습니까?");
         if (confirmSave) {
@@ -120,7 +144,6 @@ const InsuCard = ({
             setIsEditing(false);
         }
     };
-
 
     return (
         <div className={'rounded-xl border border-gray-200 my-3'}>
@@ -151,6 +174,7 @@ const InsuCard = ({
                     </div>
                 </div>
                 <div className={'flex items-center space-x-4'}>
+                    {/* 만료 예정 경고 섹션 */}
                     {insuranceStatus.status === 'renewalSoon' && (
                         <div className={'flex items-center text-sm py-2 px-5 bg-gray-100 rounded-lg'}>
                             <Image
@@ -160,7 +184,7 @@ const InsuCard = ({
                                 height={18}
                                 className={'cursor-pointer mr-2'}
                             />
-                            <div>갱신일정이 {insuranceStatus.dday}일 남았습니다. 보험관리를 추가하여 갱신정보를 입력해주세요.</div>
+                            <div>갱신일정이 {insuranceStatus.dday}일 남았습니다. 갱신정보를 입력해주세요.</div>
                         </div>
                     )}
                     {isEditing ? (
@@ -237,12 +261,12 @@ const InsuCard = ({
                         <div className={'flex items-center'}>
                             <CalenderPicker
                                 selected={editData.startDate}
-                                onChange={(date) => setEditData(prev => ({...prev, startDate: date}))}
+                                onChange={(date) => handleDateChange('startDate', date)}
                             />
                             <div className={'mx-1'}>~</div>
                             <CalenderPicker
                                 selected={editData.endDate}
-                                onChange={(date) => setEditData(prev => ({...prev, endDate: date}))}
+                                onChange={(date) => handleDateChange('endDate', date)}
                             />
                         </div>
                     ) : (
@@ -263,7 +287,7 @@ const InsuCard = ({
                             <span> 원</span>
                         </div>
                     ) : (
-                        <div><span>{editData.insuranceCost}</span> 원</div>
+                        <div><span>{FormatNumber(editData.insuranceCost)}</span> 원</div>
                     )}
                 </div>
             </div>

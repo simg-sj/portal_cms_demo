@@ -4,6 +4,7 @@ import { useForm, UseFormRegister } from "react-hook-form";
 interface ParkingFormData {
     pkName: string;
     pkAddress: string;
+    form: string;
     indoor: {
         checked: boolean;
         value: string;
@@ -42,6 +43,7 @@ const AddBusinessHiparking = forwardRef<AddBusinessRef>((props, ref) => {
         defaultValues: {
             pkName: '',
             pkAddress: '',
+            form: '',
             indoor: { checked: false, value: '' },
             outdoor: { checked: false, value: '' },
             mechanical: { checked: false, value: '' },
@@ -127,16 +129,16 @@ const AddBusinessHiparking = forwardRef<AddBusinessRef>((props, ref) => {
     );
 
     return (
-            <form className="space-y-4">
-                <div className={'flex my-3'}>
-                    <div className={'w-[110px]'}>주차장명 <span className={'text-red-500'}>*</span></div>
-                    <div className="flex-1">
-                        <input
-                            type="text"
-                            placeholder={'주차장명을 입력하세요'}
-                            className={'w-full border rounded px-2 py-1'}
-                            {...register('pkName', {
-                                required: "주차장명을 입력해주세요"
+        <form className="space-y-4">
+            <div className={'flex my-3'}>
+                <div className={'w-[110px]'}>주차장명 <span className={'text-red-500'}>*</span></div>
+                <div className="flex-1">
+                    <input
+                        type="text"
+                        placeholder={'주차장명을 입력하세요'}
+                        className={'w-full border rounded px-2 py-1'}
+                        {...register('pkName', {
+                            required: "주차장명을 입력해주세요"
                         })}
                     />
                     {errors.pkName && (
@@ -154,6 +156,23 @@ const AddBusinessHiparking = forwardRef<AddBusinessRef>((props, ref) => {
                         className={'w-full border rounded px-2 py-1'}
                         {...register('pkAddress', {
                             required: "주차장주소를 입력해주세요"
+                        })}
+                    />
+                    {errors.pkAddress && (
+                        <p className={'text-red-500 text-sm mt-1'}>{errors.pkAddress.message}</p>
+                    )}
+                </div>
+            </div>
+
+            <div className={'flex my-3'}>
+                <div className={'w-[110px]'}>형태 <span className={'text-red-500'}>*</span></div>
+                <div className="flex-1">
+                    <input
+                        type="text"
+                        placeholder={'형태를 입력하세요'}
+                        className={'w-full border rounded px-2 py-1'}
+                        {...register('form', {
+                            required: "형태를 입력해주세요"
                         })}
                     />
                     {errors.pkAddress && (
@@ -228,11 +247,11 @@ const AddBusinessHiparking = forwardRef<AddBusinessRef>((props, ref) => {
                 </div>
             </div>
             <div className={'flex my-3'}>
-                <div className={'w-[110px]'}>메모</div>
+                <div className={'w-[110px]'}>공동피보험자</div>
                 <div className="flex-1">
                     <input
                         type="text"
-                        placeholder={'ex) 공동피보험자 : 000-00-0000 에스아이엠지'}
+                        placeholder={'공동피보험자를 입력해주세요'}
                         className={'w-full border rounded px-2 py-1'}
                     />
                 </div>
