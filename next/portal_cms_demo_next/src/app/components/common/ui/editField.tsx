@@ -59,7 +59,13 @@ const EditableField = ({ type, value, onChange, className = '' }: EditableFieldP
                     <span>{value}</span>
             }
             <button onClick={() => setEditMode(true)} className="ml-2">
-                <Image src={EditIcon} alt={'수정'} width={18} height={18}/>
+                <Image
+                    src={EditIcon.src}
+                    alt={'수정'}
+                    width={60}
+                    height={60}
+                    className={'cursor-pointer object-cover object-[0px] h-[20px] w-[20px] hover:object-[-31px]'}
+                />
             </button>
         </div>
     );

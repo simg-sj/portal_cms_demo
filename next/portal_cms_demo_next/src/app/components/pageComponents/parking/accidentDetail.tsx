@@ -14,6 +14,7 @@ import {
 import {getImage} from "@/app/(Navigation-Group)/hiparking/action";
 import {ClaimRowType, ImageType} from "@/@types/common";
 import Button from "@/app/components/common/ui/button";
+import FormatNumber from "@/app/components/common/ui/formatNumber";
 
 interface ClaimType {
     irpk: number;
@@ -27,7 +28,7 @@ interface ClaimType {
     vCarNum: string;
 }
 
-interface HiparkingListProps {
+interface ListProps {
     isEditing: boolean;
     isNew?: boolean;
     rowData : ClaimRowType;
@@ -36,7 +37,7 @@ interface HiparkingListProps {
 
 
 
-const ParkingList = ({isEditing, isNew = false, rowData, onSave }: HiparkingListProps) => {
+const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListProps) => {
     const [images, setImages] = useState<ImageType[]>([]);
     const [editData, setEditData] = useState<ClaimRowType | ''>(rowData || '');
     const fetchImageData = useCallback(async (irpk: number) => {
@@ -167,7 +168,7 @@ const ParkingList = ({isEditing, isNew = false, rowData, onSave }: HiparkingList
                         <th>상태</th>
                         <td>{renderField('closingStatus', ClosingCode[editData.closingCode], 'select', STATE_OPTIONS)}</td>
                         <th>지급보험금</th>
-                        <td>{ renderField('total', editData.total? editData.total+'원' : '-', 'text')}</td>
+                        <td>{ renderField('total', FormatNumber(editData.total)? FormatNumber(editData.total)+'원' : '-', 'text')}</td>
                     </tr>
                     <tr>
                         <th>사고접수일</th>
@@ -320,4 +321,4 @@ const ParkingList = ({isEditing, isNew = false, rowData, onSave }: HiparkingList
         ;
 };
 
-export default ParkingList;
+export default AccidentDetailList;

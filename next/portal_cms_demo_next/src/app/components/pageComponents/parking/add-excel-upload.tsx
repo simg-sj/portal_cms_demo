@@ -9,6 +9,7 @@ import {BSN_CODE} from "@/config/data";
 import {uploadExcel} from "@/app/(Navigation-Group)/hiparking/action";
 import {ParkingType} from "@/@types/common";
 import fileUpload from "@/app/components/common/ui/fileUpload";
+import Tooltip from "@/app/components/common/ui/tooltip";
 
 const StyledFile = styled.label`
     width: 430px;
@@ -51,13 +52,6 @@ const FileInfoSection = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
-    
-    div {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 5px;
-    }
 `;
 
 const FileInfo = styled.div`
@@ -66,8 +60,8 @@ const FileInfo = styled.div`
     margin-bottom: 5px;
 `;
 const FileName = styled.span`
-    width: 200px;
     font-weight: 600;
+    margin-bottom: 5px;
 `;
 const FileInfoLabel = styled.span`
     width: 150px;
@@ -79,10 +73,58 @@ const FileInfoValue = styled.span`
 interface AddProps {
     setExcelData: React.Dispatch<React.SetStateAction<ParkingType[]>>;
 }
-const AddExcelUpload = ({setExcelData} : AddProps) => {
+
+const ExcelGuide = () => {
+    return(
+        <>
+            <div className={'font-bold mb-3'}>엑셀업로드 가이드</div>
+            <div className={'text-sm font-semibold my-3 text-gray-800'}>1 ) 엑셀샘플을 다운로드 합니다.</div>
+            <div className={'text-sm font-semibold my-3 text-gray-800'}>2 ) 다운로드한 파일에 하단 예시를 참고하여 작성합니다.</div>
+            <table className="colTable text-[14px]">
+                <tbody>
+                <tr className={'!h-[30px]'}>
+                    <th className={'!py-2 !bg-gray-100'}>No</th>
+                    <td className={'!py-2'}>상단부터 1,2,3 순서로 작성</td>
+                </tr>
+                <tr className={'!h-[30px]'}>
+                    <th className={'!py-2 !bg-gray-100'}>구분</th>
+                    <td className={'!py-2'}>추가일 경우 'NEW' 삭제일 경우 'EXP' 작성</td>
+                </tr>
+                <tr className={'!h-[30px]'}>
+                    <th className={'!py-2 !bg-gray-100'}>물건명</th>
+                    <td className={'!py-2'}>사업장명 작성</td>
+                </tr>
+                <tr className={'!h-[30px]'}>
+                    <th className={'!py-2 !bg-gray-100'}>소재지</th>
+                    <td className={'!py-2'}>사업장주소 작성</td>
+                </tr>
+                <tr className={'!h-[30px]'}>
+                    <th className={'!py-2 !bg-gray-100'}>형태</th>
+                    <td className={'!py-2'}>옥내,옥외 등 건물형태 작성</td>
+                </tr>
+                <tr className={'!h-[30px]'}>
+                    <th className={'!py-2 !bg-gray-100'}>면수/옥외/옥내/기계식/카리프트</th>
+                    <td className={'!py-2'}>숫자 입력</td>
+                </tr>
+                <tr className={'!h-[30px]'}>
+                    <th className={'!py-2 !bg-gray-100'}>세부내역</th>
+                    <td className={'!py-2'}>건물에 대한 기타 세부내역 작성</td>
+                </tr>
+                <tr className={'!h-[30px]'}>
+                    <th className={'!py-2 !bg-gray-100'}>공동피보험자</th>
+                    <td className={'!py-2'}>공동피보험자 사업장, 사업자번호 작성</td>
+                </tr>
+                </tbody>
+            </table>
+            <div className={'text-sm font-semibold my-3 text-gray-800'}>3 ) 엑셀파일을 업로드한 후 확인을 눌러 업로드합니다.</div>
+        </>
+    )
+}
+
+const AddExcelUpload = ({setExcelData}: AddProps) => {
     const [isActive, setActive] = useState(false);
     const [uploadedFiles, setUploadedFiles] = useState([]);
-    const { data, status } = useSession();
+    const {data, status} = useSession();
 
 
     const handleDragStart = (e) => {
@@ -173,8 +215,14 @@ const AddExcelUpload = ({setExcelData} : AddProps) => {
 
     return (
         <>
-            <div className={'flex justify-end space-x-4'}>
-                <Button color={"green"} height={30} width={180} className={'ml-5'} params={{bpk : BSN_CODE[data.user.bName].bpk, type : 'down'}} fileName={BSN_CODE[data.user.bName].fileName} use={'down'}>
+            <div className={'flex justify-between space-x-4'}>
+                <div className={'flex items-center'}>
+                    간편 엑셀업로드
+                    <Tooltip content={<ExcelGuide/>} width={600}/>
+                </div>
+                <Button color={"green"} height={30} width={180} className={'ml-5'}
+                        params={{bpk: BSN_CODE[data.user.bName].bpk, type: 'down'}}
+                        fileName={BSN_CODE[data.user.bName].fileName} use={'down'}>
                     <Image src={ExcelDown.src} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
                     엑셀 샘플 다운로드
                 </Button>
@@ -198,31 +246,28 @@ const AddExcelUpload = ({setExcelData} : AddProps) => {
                 <p className="mt-3 text-gray-800">클릭 혹은 엑셀파일을 이곳에 드롭하세요.</p>
             </StyledFile>
             <div className={'max-h-[500px] overflow-y-auto'}>
-            {uploadedFiles.map((file, index) => (
-                <FileListContainer key={index}>
-                    <FileInfoSection>
-                        <div>
+                {uploadedFiles.map((file, index) => (
+                    <FileListContainer key={index}>
+                        <FileInfoSection>
                             <FileName>{file.name}</FileName>
-                            <FileInfoValue>{file.size}</FileInfoValue>
-                            <Button color={"red"} height={26} width={100} className={'ml-5'} onClick={() => handleRemoveFile(file)}>
-                                파일삭제
-                            </Button>
-                        </div>
-                        <FileInfo>
-                            <FileInfoLabel>추가 사업장</FileInfoLabel>
-                            <FileInfoValue>{file.addedBusinessCount}<span> 건</span></FileInfoValue>
-                        </FileInfo>
-                        <FileInfo>
-                            <FileInfoLabel>삭제 사업장</FileInfoLabel>
-                            <FileInfoValue>{file.deletedBusinessCount}<span> 건</span></FileInfoValue>
-                        </FileInfo>
-                        <FileInfo>
-                            <FileInfoLabel>에러 건수</FileInfoLabel>
-                            <FileInfoValue>{file.errorCount}<span> 건</span></FileInfoValue>
-                        </FileInfo>
-                    </FileInfoSection>
-                </FileListContainer>
-            ))}
+                            <div className={'flex items-center justify-end mb-3'}>
+                                <FileInfoValue>{file.size}</FileInfoValue>
+                                <Button color={"red"} height={26} width={100} className={'ml-5'}
+                                        onClick={() => handleRemoveFile(file)}>
+                                    파일삭제
+                                </Button>
+                            </div>
+                            <FileInfo>
+                                <FileInfoLabel>추가 사업장</FileInfoLabel>
+                                <FileInfoValue>{file.addedBusinessCount}<span> 건</span></FileInfoValue>
+                            </FileInfo>
+                            <FileInfo>
+                                <FileInfoLabel>삭제 사업장</FileInfoLabel>
+                                <FileInfoValue>{file.deletedBusinessCount}<span> 건</span></FileInfoValue>
+                            </FileInfo>
+                        </FileInfoSection>
+                    </FileListContainer>
+                ))}
             </div>
         </>
     );
