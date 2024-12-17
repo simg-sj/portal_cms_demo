@@ -80,7 +80,7 @@ const ImageUploader = ({ initialImages, isEditing, onChange }: ImageUploaderProp
                     {isEditing && (
                         <button
                             onClick={() => handleDelete(index)}
-                            className="absolute top-2 right-2 bg-white text-red-500 border-2 border-red-500 rounded-full w-6 text-sm hover:bg-red-500 hover:text-white"
+                            className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 text-sm hover:bg-red-500 hover:bg-red-100 hover:text-red-600"
                         >
                             X
                         </button>

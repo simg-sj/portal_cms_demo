@@ -3,38 +3,22 @@ import React, {useState} from "react";
 import {ParkingRowType} from "@/@types/common";
 import Button from "@/app/components/common/ui/button";
 
-
-
 interface ListProps {
     isEditing: boolean;
-    onSave: (data: any) => void;
     rowData : ParkingRowType;
-    setRowData : React.Dispatch<React.SetStateAction<ParkingRowType>>;
+    onSave: (data: ParkingRowType) => void;
 }
 
-const HiparkingList = ({isEditing, rowData, setRowData, onSave }: ListProps) => {
+const ParkingDetailList = ({isEditing, rowData, onSave }: ListProps) => {
+    const [editData, setEditData] = useState<ParkingRowType | ''>(rowData || '');
 
-
-    //input 빈값으로 변경
-    const [formData, setFormData] = useState({
-        pklName: '', //주차장명
-        pklAddress: '', //주차장주소
-        form : '', //형태
-        faceCount: '', //면수
-        detailHistory: '', //세부내역
-        memo: '' //메모 (공동피보험자)
-    });
-
-    //필드값 변경시 formdata 업데이트
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setEditData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
     const handleSave = (e : React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        if(formData) {
-            onSave(formData);
-        }
+        onSave(editData);
     }
 
     //입력필드 타입
@@ -47,7 +31,7 @@ const HiparkingList = ({isEditing, rowData, setRowData, onSave }: ListProps) => 
                 return (
                     <select
                         name={key}
-                        defaultValue={value}
+                        value={editData[key] || ''}
                         onChange={handleChange}
                         className="w-full p-1 border rounded"
                     >
@@ -61,7 +45,7 @@ const HiparkingList = ({isEditing, rowData, setRowData, onSave }: ListProps) => 
                 return (
                     <textarea
                         name={key}
-                        defaultValue={value}
+                        value={editData[key] || ''}
                         onChange={handleChange}
                         className={"w-full p-1 border rounded h-[100px]"}
                     />
@@ -71,7 +55,7 @@ const HiparkingList = ({isEditing, rowData, setRowData, onSave }: ListProps) => 
                     <input
                         type="text"
                         name={key}
-                        defaultValue={value}
+                        value={editData[key] || ''}
                         onChange={handleChange}
                         className="w-full p-1 border rounded"
                     />
@@ -104,17 +88,17 @@ const HiparkingList = ({isEditing, rowData, setRowData, onSave }: ListProps) => 
                     <tbody>
                     <tr>
                         <th>주차장명</th>
-                        <td colSpan={3}>{renderField('pklName', rowData.pklName, 'text')}</td>
+                        <td colSpan={3}>{renderField('pklName', editData.pklName, 'text')}</td>
                     </tr>
                     <tr>
                         <th>소재지</th>
-                        <td colSpan={3}>{renderField('pklAddress', rowData.pklAddress, 'text')}</td>
+                        <td colSpan={3}>{renderField('pklAddress', editData.pklAddress, 'text')}</td>
 
                     </tr>
                     <tr>
                         <th>형태</th>
                         <td colSpan={3}>
-                            {renderField('form', rowData.form, 'text')}
+                            {renderField('form', editData.form, 'text')}
                         </td>
                     </tr>
                     </tbody>
@@ -136,31 +120,31 @@ const HiparkingList = ({isEditing, rowData, setRowData, onSave }: ListProps) => 
                     <tbody>
                     <tr>
                         <th>면수</th>
-                        <td colSpan={3}>{renderField('faceCount', rowData.faceCount ? rowData.faceCount : '-', 'text')}</td>
+                        <td colSpan={3}>{renderField('faceCount', editData.faceCount, 'text')}</td>
                     </tr>
                     <tr>
-                        <th>옥외 (㎡)</th>
-                        <td colSpan={3}>{renderField('outdoor', rowData.outdoor ? rowData.outdoor : '-', 'text')}</td>
+                        <th>옥외</th>
+                        <td colSpan={3}>{renderField('outdoor', editData.outdoor, 'text')}</td>
                     </tr>
                     <tr>
-                        <th>옥내 (㎡)</th>
-                        <td colSpan={3}>{renderField('indoor', rowData.indoor ? rowData.indoor : '-', 'text')}</td>
+                        <th>옥내</th>
+                        <td colSpan={3}>{renderField('indoor', editData.indoor, 'text')}</td>
                     </tr>
                     <tr>
-                        <th>기계식 (면)</th>
-                        <td colSpan={3}>{renderField('mechanical', rowData.mechanical ? rowData.mechanical : '-', 'text')}</td>
+                        <th>기계식(면)</th>
+                        <td colSpan={3}>{renderField('mechanical', editData.mechanical, 'text')}</td>
                     </tr>
                     <tr>
-                        <th>카리프트 (대)</th>
-                        <td colSpan={3}>{renderField('carLift', rowData.carLift ? rowData.carLift : '-', 'text')}</td>
+                        <th>카리프트(대)</th>
+                        <td colSpan={3}>{renderField('carLift', editData.carLift, 'text')}</td>
                     </tr>
                     <tr>
                         <th>세부 내역</th>
-                        <td colSpan={3}>{renderField('detailHistory', rowData.detailHistory ? rowData.detailHistory : '-', 'text')}</td>
+                        <td colSpan={3}>{renderField('detailHistory', editData.detailHistory, 'text')}</td>
                     </tr>
                     <tr>
                         <th>공동피보험자</th>
-                        <td colSpan={3}>{renderField('memo', rowData.memo ? rowData.memo : '-', 'textarea')}</td>
+                        <td colSpan={3}>{renderField('memo', editData.memo, 'textarea')}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -168,6 +152,6 @@ const HiparkingList = ({isEditing, rowData, setRowData, onSave }: ListProps) => 
         </>
     )
         ;
-};
+}
 
-export default HiparkingList;
+export default ParkingDetailList

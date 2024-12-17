@@ -6,11 +6,11 @@ import Excel from "@/assets/images/icon/excel-icon.png";
 import Plus from "@/assets/images/icon/plus-icon.png";
 import ExcelUpload from "@/assets/images/icon/upload-white-icon.png";
 import SlidePopup from "@/app/components/popup/SlidePopup";
-import List from "@/app/components/pageComponents/parking/parkingDetail";
+import ParkingDetailList from "@/app/components/pageComponents/parking/parkingDetail";
 import Pagination from "@/app/components/common/ui/pagination";
-import {addExcelParking, getParking} from "@/app/(Navigation-Group)/hiparking/action";
+import {addExcelParking, deleteClaimData, getClaim, getParking} from "@/app/(Navigation-Group)/hiparking/action";
 import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
-import {ButtonConfig, ClaimRowType, ParamType, ParkingParamType, ParkingRowType, ParkingType} from "@/@types/common";
+import {ButtonConfig, ParamType, ParkingParamType, ParkingRowType, ParkingType} from "@/@types/common";
 import CenterPopup from "@/app/components/popup/CenterPopup";
 import AddBusiness, {AddBusinessRef} from "@/app/components/pageComponents/parking/add-business-hiparking";
 import AddExcelUpload from "@/app/components/pageComponents/parking/add-excel-upload";
@@ -66,10 +66,16 @@ export default function Page() {
         document.body.style.removeProperty('overflow');
     };
 
-    const slideSave = (data: any) => {
-        window.confirm('저장하시겠습니까?')
-        console.log('수정된 데이터:', data);
-        slideClose();
+    const slideSave = (data: ParkingRowType) => {
+        if(window.confirm('저장하시겠습니까?')){
+            console.log('수정된 데이터:', data);
+            slideClose();
+        }
+    };
+
+    const slideDelete = (data: ParkingRowType) => {
+            console.log('삭제 데이터:', data);
+            slideClose();
     };
 
     const SlideButtons: ButtonConfig[] =
@@ -344,7 +350,9 @@ export default function Page() {
                     isOpen={slideOpen}
                     onClose={slideClose}
                     title={"상세보기"}
-                    Content={(props) => <List {...props} rowData={rowData} onSave={slideSave}/>}
+                    rowData={rowData}
+                    onDelete={slideDelete}
+                    Content={(props) => <ParkingDetailList {...props} rowData={rowData} onSave={slideSave}/>}
                     buttons={SlideButtons}
                 />
                 <div className={'mt-4'}>

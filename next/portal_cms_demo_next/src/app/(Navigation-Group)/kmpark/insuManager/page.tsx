@@ -45,7 +45,7 @@ const insuranceDataArray = [
         insuranceCompany: '보험사 A',
         managementCompany: '관리사 B',
         startDate: new Date('2023-12-13'),
-        endDate: new Date('2024-12-13'),
+        endDate: new Date('2024-12-28'),
         insuranceCost: 7777777,
     },
 ];
@@ -65,12 +65,27 @@ export default function Page() {
             insuranceCompany: '',
             managementCompany: '',
             startDate: new Date(),
-            endDate: new Date(),
+            endDate: new Date(2050,12,31),
             insuranceCost: 0,
             isEditing: true,
         };
         setInsuranceData(prevData => [newInsuranceData, ...prevData]);
     };
+
+    // 총 보험료 계산
+    const totalInsuranceCost = insuranceData.reduce((total, item) => total + item.insuranceCost, 0);
+
+    // 만료된 보험 수 계산
+    const expiredInsuranceCount = insuranceData.filter(item => new Date() > item.endDate).length;
+
+    // 갱신 예정 보험 수 계산
+    const renewalSoonCount = insuranceData.filter(item => {
+        const dday = Math.ceil((item.endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+        return dday <= 30 && dday > 0;
+    }).length;
+
+    //만료일 기준 보험리스트 정렬
+    const listArray = [...insuranceData].sort((a, b) => b.endDate.getTime() - a.endDate.getTime());
 
     return (
         <>
@@ -89,19 +104,19 @@ export default function Page() {
                     <CountCard
                         icon={ChargeIcon.src}
                         title={'총 보험료'}
-                        value={56328430043}
+                        value={totalInsuranceCost}
                         unit={"원"}
                     />
                     <CountCard
                         icon={CancelChargeIcon.src}
                         title={'만료된 보험'}
-                        value={1}
+                        value={expiredInsuranceCount}
                         unit={"건"}
                     />
                     <CountCard
                         icon={AlarmIcon.src}
                         title={'갱신예정 보험'}
-                        value={1}
+                        value={renewalSoonCount}
                         unit={"건"}
                     />
                 </div>
@@ -116,9 +131,9 @@ export default function Page() {
                     </Button>
                 </div>
                 <div className={'max-h-[calc(100vh-500px)] overflow-y-auto'}>
-                    {insuranceData.map((insuranceData) => (
+                    {listArray.map((insuranceData) => (
                         <InsuCard
-                            key={insuranceData.insuNumber} // 각 카드에 고유한 키를 부여합니다.
+                            key={insuranceData.insuNumber} // 각 카드에 고유한 키 부여
                             insuName={insuranceData.insuName}
                             insuNumber={insuranceData.insuNumber}
                             insuranceCompany={insuranceData.insuranceCompany}

@@ -6,29 +6,19 @@ import Image from "next/image";
 import Excel from "@/assets/images/icon/excel-icon.png";
 import Plus from "@/assets/images/icon/plus-icon.png";
 import SlidePopup from "@/app/components/popup/SlidePopup";
-import HiparkingList from "@/app/components/pageComponents/parking/accidentDetail";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
 import {deleteClaimData, getClaim, getImage, updateClaimData} from "@/app/(Navigation-Group)/hiparking/action";
 import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
-import {ButtonConfig, ClaimRowType, UptClaim} from "@/@types/common";
+import {ButtonConfig, ClaimRowType, UptClaim, ParamType} from "@/@types/common";
 import Error from "@/assets/images/icon/error-icon.png";
-import ParkingList from "@/app/components/pageComponents/parking/accidentDetail";
+import AccidentDetailList from "@/app/components/pageComponents/parking/accidentDetail";
 
 interface ColumnDefinition<T> {
     key: keyof T;
     header: string;
     defaultValue?: string;
     render?: (item: T) => string | number;
-}
-
-
-interface ParamType {
-    bpk: number;
-    condition: string;
-    endDate: string;
-    startDate: string;
-    text: string;
 }
 
 const itemsPerPage = 15;
@@ -300,7 +290,7 @@ export default function Page() {
                     title={isNew ? "신규 등록" : "상세보기"}
                     rowData={rowData}
                     onDelete={handleDelete}
-                    Content={(props) => <ParkingList {...props} isNew={isNew} rowData={rowData} onSave={handleSave}/>}
+                    Content={(props) => <AccidentDetailList {...props} isNew={isNew} rowData={rowData} onSave={handleSave}/>}
                     buttons={popupButtons}
                 />
                 <div className={'mt-4'}>

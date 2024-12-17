@@ -106,7 +106,7 @@ const PickerWrapper = styled.div`
 `;
 
 const CalenderPicker = ({ maxDate, minDate, selected, onChange }: CalenderPickerProps) => {
-    const years = Range(2000, getYear(new Date()) + 1, 1);
+    const years = Range(2000, getYear(new Date()) + 20, 1);
     const months = [
         "1월",
         "2월",

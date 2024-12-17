@@ -6,7 +6,7 @@ import Image from "next/image";
 import Excel from "@/assets/images/icon/excel-icon.png";
 import Plus from "@/assets/images/icon/plus-icon.png";
 import SlidePopup from "@/app/components/popup/SlidePopup";
-import ParkingList from "@/app/components/pageComponents/parking/accidentDetail";
+import AccidentDetailList from "@/app/components/pageComponents/parking/accidentDetail";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
 import {getClaim, updateClaimData} from "@/app/(Navigation-Group)/hiparking/action";
@@ -271,7 +271,7 @@ export default function Page() {
                     isOpen={isOpen}
                     onClose={closePopup}
                     title={isNew ? "신규 등록" : "상세보기"}
-                    Content={(props) => <ParkingList {...props} isNew={isNew} rowData={rowData || {}} onSave={handleSave}/>}
+                    Content={(props) => <AccidentDetailList {...props} isNew={isNew} rowData={rowData || {}} onSave={handleSave}/>}
                     buttons={popupButtons}
                 />
                 <div className={'mt-4'}>
