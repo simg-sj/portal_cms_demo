@@ -96,6 +96,12 @@ export default function Page() {
                 </div>
                 <div className={'flex justify-between space-x-10'}>
                     <CountCard
+                        icon={AlarmIcon.src}
+                        title={'갱신예정 보험'}
+                        value={renewalSoonCount}
+                        unit={"건"}
+                    />
+                    <CountCard
                         icon={CheckChargeIcon.src}
                         title={'가입 보험'}
                         value={insuranceData.length}
@@ -106,18 +112,6 @@ export default function Page() {
                         title={'총 보험료'}
                         value={totalInsuranceCost}
                         unit={"원"}
-                    />
-                    <CountCard
-                        icon={CancelChargeIcon.src}
-                        title={'만료된 보험'}
-                        value={expiredInsuranceCount}
-                        unit={"건"}
-                    />
-                    <CountCard
-                        icon={AlarmIcon.src}
-                        title={'갱신예정 보험'}
-                        value={renewalSoonCount}
-                        unit={"건"}
                     />
                 </div>
             </div>

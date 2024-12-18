@@ -6,7 +6,7 @@ interface Button extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     rounded?: boolean;
     textSize?: number;
     fill?: boolean;
-    color: colorType;
+    color: colorType | string;
     fontWeight?: "font-medium" | "font-bold";
     width?: number;
     height?: number;
@@ -73,7 +73,7 @@ function Button({
                     width,
                     height,
                     className = "",
-                    style ,
+                    style = {} ,
                     params,
                     use,
                     clickEvent,
@@ -92,6 +92,8 @@ function Button({
     if (textSize) {
         style.fontSize = textSize + "px";
     }
+
+    const cursorStyle = style.cursor || 'pointer';
 
     const handleDownload = async (e: React.MouseEvent<HTMLButtonElement>) => {
         try {
@@ -135,7 +137,7 @@ function Button({
             className={`inline-flex items-center justify-center py-1 px-1 ${combineClass({ color, fill, rounded, fontWeight })}${
                 className ? " " + className : ""
             }`}
-            style={style}
+            style={{ ...style, cursor: cursorStyle}}
         >
             {children}
         </button>

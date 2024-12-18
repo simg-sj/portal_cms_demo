@@ -7,6 +7,7 @@ import WarningIcon from "@/assets/images/icon/warning-icon.png";
 import Button from "@/app/components/common/ui/button";
 import CalenderPicker from "@/app/components/common/ui/calenderPicker";
 import FormatNumber from "@/app/components/common/ui/formatNumber";
+import Plus from "@/assets/images/icon/plus-icon.png";
 
 interface InsuranceItem {
     insuName: string;
@@ -156,6 +157,7 @@ const InsuCard = ({
                         width={180}
                         rounded={true}
                         textSize={14}
+                        style={{ cursor: 'default' }}
                     >
                         {insuranceStatus.label}
                     </Button>
@@ -167,6 +169,7 @@ const InsuCard = ({
                                 value={editData.insuName}
                                 onChange={handleInputChange}
                                 className={'h-7 rounded'}
+                                placeholder={'보험명을 입력해주세요'}
                             />
                         ) : (
                             <div>{editData.insuName}</div>
@@ -176,6 +179,7 @@ const InsuCard = ({
                 <div className={'flex items-center space-x-4'}>
                     {/* 만료 예정 경고 섹션 */}
                     {insuranceStatus.status === 'renewalSoon' && (
+                        <>
                         <div className={'flex items-center text-sm py-2 px-5 bg-gray-100 rounded-lg'}>
                             <Image
                                 src={WarningIcon.src}
@@ -184,8 +188,12 @@ const InsuCard = ({
                                 height={18}
                                 className={'cursor-pointer mr-2'}
                             />
-                            <div>갱신일정이 {insuranceStatus.dday}일 남았습니다. 갱신정보를 입력해주세요.</div>
+                            <div>갱신일정이 {insuranceStatus.dday}일 남았습니다. 갱신정보를 추가해주세요.</div>
+                            <Button color={"blue"} height={26} width={120} textSize={14} className={'ml-3'}>
+                                갱신정보추가하기
+                            </Button>
                         </div>
+                        </>
                     )}
                     {isEditing ? (
                         <Image src={SaveIcon.src} alt={'저장'} width={120} height={120}
@@ -222,6 +230,7 @@ const InsuCard = ({
                             value={editData.insuNumber}
                             onChange={handleInputChange}
                             className={'h-7 rounded'}
+                            placeholder={'증권번호를 입력해주세요'}
                         />
                     ) : (
                         <div>{editData.insuNumber}</div>
@@ -236,6 +245,7 @@ const InsuCard = ({
                             value={editData.insuranceCompany}
                             onChange={handleInputChange}
                             className={'h-7 rounded'}
+                            placeholder={'보험사를 입력해주세요'}
                         />
                     ) : (
                         <div>{editData.insuranceCompany}</div>
@@ -250,6 +260,7 @@ const InsuCard = ({
                             value={editData.managementCompany}
                             onChange={handleInputChange}
                             className={'h-7 rounded'}
+                            placeholder={'담당사를 입력해주세요'}
                         />
                     ) : (
                         <div>{editData.managementCompany}</div>
@@ -283,6 +294,7 @@ const InsuCard = ({
                                 value={editData.insuranceCost}
                                 onChange={handleInputChange}
                                 className={'h-7 rounded'}
+                                placeholder={'보험료를 입력해주세요'}
                             />
                             <span> 원</span>
                         </div>
