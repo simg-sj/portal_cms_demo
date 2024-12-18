@@ -51,7 +51,7 @@ export default function Navigation() {
             { icon: UserIcon, label: `${data?.user?.name}님`, link: config.menuItems.mypage },
 
         ];
-        return baseItems.filter(item => item.link !== "");
+        return baseItems.filter(item => item.link !== "" && item.link !== undefined);
     };
 
     const menuItems = themeConfig ? getMenuItems(themeConfig) : [];
