@@ -37,6 +37,12 @@ const themeConfigs: ThemeConfig = {
             mypage: "/simg/mypage",
         },
     },
+    turu: {
+        logoSrc: SimgLogo,
+        menuItems: {
+            mypage: "/simg/mypage",
+        },
+    },
     kmpark: {
         logoSrc: KmparkLogo,
         menuItems: {

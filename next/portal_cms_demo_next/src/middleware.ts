@@ -24,6 +24,10 @@ const platformUrls = {
     'kmpark' : [
         '/kmpark',
         '/kmpark/*'
+    ],
+    'turu' : [
+        '/turu',
+        '/turu/*'
     ]
 }
 

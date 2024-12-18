@@ -140,8 +140,9 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
     return(
         <>
             <div>
-                {isEditing
-                    &&
+                {
+                    isEditing
+                        &&
                     <div className='absolute top-[32px] right-[272px] z-10'>
                         <Button color={"blue"} fill={true} height={35} width={100} onClick={handleSave}>
                             저장
