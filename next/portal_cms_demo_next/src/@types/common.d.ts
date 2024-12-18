@@ -1,8 +1,10 @@
 import {StaticImageData} from "next/image";
 import React from "react";
 
+//메뉴추가시 타입추가
 interface MenuItems {
     dashboard?: string;
+    accidentAccept?: string;
     accidentList?: string;
     parkingList?: string;
     insuManager?: string;

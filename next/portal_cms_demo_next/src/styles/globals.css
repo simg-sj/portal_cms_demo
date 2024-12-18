@@ -103,7 +103,8 @@ input[type=file]::file-selector-button {
         --color-sub-light: #a2daca;
         --color-sub-lighter: #e5fff6;
     }
-    html[data-theme='hiparking'] {
+    html[data-theme='hiparking'],
+    html[data-theme='turu']{
         --color-main: #f1923e;
         --color-main-light: #fdae68;
         --color-main-lighter: #fff3e7;
