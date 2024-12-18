@@ -9,6 +9,12 @@
 
 export default function Page() {
     return(
-        <div>simg</div>
+        <>
+            <div className={'px-8 py-6 bg-white rounded-xl'}>
+                <div className={'flex justify-between items-start'}>
+                    <div className={'text-xl font-light mb-6'}>ㅇ</div>
+                </div>
+            </div>
+        </>
     )
 }

@@ -7,7 +7,9 @@ import {StaticImageData} from "next/image";
 interface Theme {
     logoSrc: StaticImageData;
     menuItems: {
+        //메뉴 추가시 해당 타입 추가
         dashboard?: string;
+        accidentAccept?: string;
         accidentList?: string;
         parkingList?: string;
         insuManager?: string;
@@ -19,6 +21,7 @@ interface ThemeConfig {
     [key: string]: Theme;
 }
 
+//메뉴추가시 업체명, 링크 추가
 const themeConfigs: ThemeConfig = {
     hiparking: {
         logoSrc: HiparkingLogo,
@@ -38,9 +41,11 @@ const themeConfigs: ThemeConfig = {
         },
     },
     turu: {
-        logoSrc: SimgLogo,
+        logoSrc: HiparkingLogo,
         menuItems: {
-            mypage: "/simg/mypage",
+            accidentAccept: "/turu",
+            accidentList: "/turu/accidentList",
+            mypage: "/turu/mypage",
         },
     },
     kmpark: {

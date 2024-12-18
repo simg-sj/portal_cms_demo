@@ -6,6 +6,7 @@ import SimgLogo from "@/assets/images/logo/simg-white-logo.png";
 import { useEffect, useState } from "react";
 import { getThemeConfig } from "@/config/themeConfig";
 import DashboardIcon from "@/assets/images/icon/dashboard-icon.png";
+import AccidentIcon from "@/assets/images/icon/accident-icon.png";
 import ListIcon from "@/assets/images/icon/list-icon.png";
 import UserIcon from "@/assets/images/icon/user-icon.png";
 import CarIcon from "@/assets/images/icon/parking-icon.png";
@@ -43,6 +44,7 @@ export default function Navigation() {
         const baseItems = [
             // ** 추가하고싶은 메뉴 추가, themeConfig 수정, MenuItems 타입 추가
             { icon: DashboardIcon, label: "대시보드", link: config.menuItems.dashboard || "" },
+            { icon: AccidentIcon, label: "사고접수", link: config.menuItems.accidentAccept || "" },
             { icon: ListIcon, label: "사고리스트", link: config.menuItems.accidentList },
             { icon: CarIcon, label: "사업장관리", link: config.menuItems.parkingList },
             { icon: ScheduleIcon, label: "보험관리", link: config.menuItems.insuManager || ""},
@@ -67,7 +69,7 @@ export default function Navigation() {
     return (
         <div className="bg-main h-screen fixed w-[100px] p-3 flex flex-col justify-between z-50">
             <div>
-                <Image src={themeConfig.logoSrc} alt="업체로고" height={50} className="mt-5 mb-14" priority={true} />
+                <Image src={themeConfig.logoSrc} alt="업체로고" height={50} className="mt-5 mb-14 ml-1" priority={true} />
                 {menuItems.slice(0, -1).map((item, index) => (
                     <div key={index}>
                         <MenuItem
@@ -96,7 +98,7 @@ export default function Navigation() {
                         <div className="text-white text-sm mt-2">로그아웃</div>
                     </button>
                 </form>
-                <Image src={SimgLogo} alt="SIMG로고" height={70} className="mb-5 mt-14" priority={true}/>
+                <Image src={SimgLogo} alt="SIMG로고" height={70} className="mb-5 mt-14 ml-1" priority={true}/>
             </div>
         </div>
     );
