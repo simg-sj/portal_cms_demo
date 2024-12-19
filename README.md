@@ -1,46 +1,36 @@
-# SIMG 업체용 CMS
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-###  File Structure
+## Getting Started
 
-📁public
+First, run the development server:
 
-└──favicon.ico  //파비콘 아이콘
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-📁src
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-├── 📁@types
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-    └── common.d.ts //타입스크립트 타입정의
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-├── 📁assets
+## Learn More
 
-    ├── 📁fonts                         //폰트파일
-    └── 📁images                        //이미지파일
-        ├── 📁icon
-        └── 📁logo
+To learn more about Next.js, take a look at the following resources:
 
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-├── 📁components
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-    ├── 📁common                        //공통컴포넌트
-    ├── 📁layout                        //화면 레이아웃
-    └── 📁popup                         //팝업
+## Deploy on Vercel
 
-    ├── 📁pages                               //페이지
-        ├── App.tsx                         //메인페이지
-        └── login.tsx                       //로그인페이지
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-    ├── 📁styles                              //css 스타일
-        ├── common.css                      //전체 css 불러오기
-        ├── globals.css                     //공통 css
-        └── index.css                       //반응형, 컴포넌트스타일
-
-    └── main.tsx                              //페이지링크설정
-
-└── 📁config
-
-    └── themeConfig                         //테마변경설정
-
-index.html                                //페이지명, 기본페이지 설정
-
-tailwind.config.js                        //프로젝트색상정의
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
