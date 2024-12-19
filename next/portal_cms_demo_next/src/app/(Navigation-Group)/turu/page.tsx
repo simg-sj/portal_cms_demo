@@ -20,6 +20,8 @@ export default function Page() {
         persInjury: '',
         etc: '',
         accidentDetail: '',
+        confirmation: '',
+        manager: '',
     });
 
     const handleNext = () => {
@@ -42,6 +44,8 @@ export default function Page() {
             persInjury: '',
             etc: '',
             accidentDetail: '',
+            confirmation: '',
+            manager: '',
         });
     };
 
@@ -60,8 +64,8 @@ export default function Page() {
 
     return (
         <div className={'flex justify-center'}>
-            <div className={'px-8 py-6 bg-white rounded-xl w-[1200px]'}>
-                <div>
+            <div className={'px-8 py-6 bg-white rounded-xl w-full'}>
+                <div className={''}>
                     <div className="flex mx-[100px] mb-[50px] text-main-light font-bold text-2xl step mt-5">
                         <div
                             className={`border-main-light border-2 rounded-full px-[25px] py-[15px] ${currentStep === 1 ? 'bg-main-light text-white' : ''}`}
