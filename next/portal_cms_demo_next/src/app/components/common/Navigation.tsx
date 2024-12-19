@@ -4,31 +4,39 @@ import {usePathname} from 'next/navigation';
 import LogoutIcon from "@/assets/images/icon/logout-icon.png";
 import SimgLogo from "@/assets/images/logo/simg-white-logo.png";
 import { useEffect, useState } from "react";
-import { getThemeConfig } from "@/config/themeConfig";
-import DashboardIcon from "@/assets/images/icon/dashboard-icon.png";
-import AccidentIcon from "@/assets/images/icon/accident-icon.png";
-import ListIcon from "@/assets/images/icon/list-icon.png";
-import UserIcon from "@/assets/images/icon/user-icon.png";
-import CarIcon from "@/assets/images/icon/parking-icon.png";
-import ScheduleIcon from "@/assets/images/icon/schedule-icon.png";
+import {getMenuItems, getThemeConfig} from "@/config/themeConfig";
 import MenuItem from "@/app/components/common/MenuItem";
 import Image from "next/image";
 import {useSession} from "next-auth/react";
 import {signOutWithForm} from "@/app/lib/action/auth";
 import Loading from "@/app/(Navigation-Group)/loading";
-import {MenuItemType, Theme} from "@/@types/common";
+import {Theme} from "@/@types/common";
 
 
 export default function Navigation() {
     const pathname = usePathname();
     const {data } = useSession();
-    const [themeConfig, setThemeConfig] = useState<Theme | null>(null);
+    const [themeConfig, setThemeConfig] = useState<Theme | undefined>( undefined);
     const [activeLink, setActiveLink] = useState<string | null>(null);
     useEffect(() => {
         if (data && data.user) {
-            const { platform } = data.user; // data.user가 존재하는지 확인
+            const { platform, authLevel } = data.user; // data.user가 존재하는지 확인
             const config = getThemeConfig(platform);
-            setThemeConfig(config);
+            let authPage = [];
+
+            // 마이페이지 이름 추가, 권한 별 보이기
+            if(Array.isArray(config.menuItems)){
+                authPage = config.menuItems.map((item) =>
+                    item.title === "mypage"
+                        ? { ...item, label: `${data.user.name}님` }
+                        : item);
+            }
+            authPage = authPage.filter((item) => item.authLevel <= authLevel);
+
+            setThemeConfig({
+                ...config,
+                menuItems: authPage,
+            });
             document.documentElement.setAttribute('data-theme', platform);
         }
     }, [data]);
@@ -40,21 +48,6 @@ export default function Navigation() {
         }
     }, [pathname]);
 
-    const getMenuItems = (config: Theme): MenuItemType[] => {
-        const baseItems = [
-            // ** 추가하고싶은 메뉴 추가, themeConfig 수정, MenuItems 타입 추가
-            { icon: DashboardIcon, label: "대시보드", link: config.menuItems.dashboard || "" },
-            { icon: AccidentIcon, label: "사고접수", link: config.menuItems.accidentAccept || "" },
-            { icon: ListIcon, label: "사고리스트", link: config.menuItems.accidentList },
-            { icon: CarIcon, label: "사업장관리", link: config.menuItems.parkingList },
-            { icon: ScheduleIcon, label: "보험관리", link: config.menuItems.insuManager || ""},
-            { icon: UserIcon, label: `${data?.user?.name}님`, link: config.menuItems.mypage },
-
-        ];
-        return baseItems.filter(item => item.link !== "" && item.link !== undefined);
-    };
-
-    const menuItems = themeConfig ? getMenuItems(themeConfig) : [];
 
     if (!themeConfig) {
         return <Loading/>;
@@ -70,7 +63,7 @@ export default function Navigation() {
         <div className="bg-main h-screen fixed w-[100px] p-3 flex flex-col justify-between z-50">
             <div>
                 <Image src={themeConfig.logoSrc} alt="업체로고" height={50} className="mt-5 mb-14 ml-1" priority={true} />
-                {menuItems.slice(0, -1).map((item, index) => (
+                {themeConfig.menuItems.slice(0, -1).map((item, index) => (
                     <div key={index}>
                         <MenuItem
                             {...item}
@@ -81,7 +74,7 @@ export default function Navigation() {
                 ))}
             </div>
             <div>
-                {menuItems.slice(-1).map((item, index) => (
+                {themeConfig.menuItems.slice(-1).map((item, index) => (
                     <div key={index}>
                         <MenuItem
                             {...item}

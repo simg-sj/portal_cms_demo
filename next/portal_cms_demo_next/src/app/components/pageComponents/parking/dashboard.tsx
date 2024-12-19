@@ -6,7 +6,6 @@ import DoughnutChart from "@/app/components/chart/DoughnutChart";
 import BarTwowayChart from "@/app/components/chart/BarTwowayChart";
 import FormatNumber from "@/app/components/common/ui/formatNumber";
 import EditableField from "@/app/components/common/ui/editField";
-import useInputChange from "@/app/lib/customHook/inputChange";
 import Tab from "@/app/components/common/ui/tab";
 import Image from "next/image";
 import CarIcon from '@/assets/images/icon/car-icon.png'
@@ -27,7 +26,6 @@ import Error from "@/assets/images/icon/error-icon.png";
 import React from "react";
 import {usePathname} from "next/navigation";
 import CountCard from "@/app/components/common/CountCard";
-import WarningIcon from "@/assets/images/icon/warning-icon.png";
 
 interface DashboardProps {
     chartData: {
@@ -59,12 +57,6 @@ export default function DashboardComponent({
     const pathname = usePathname();
     const isHiparkingRoute = pathname.includes('/hiparking')
 
-
-    //table 데이터
-    const {handleInputChange} = useInputChange({
-        counselData: [{name: '', age: ''}],
-        changeData: [{status: ''}]
-    });
 
 
     //양방향막대 옵션

@@ -2,13 +2,14 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-10-02 14:13:08
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-10-15 14:53:40
+ * @LastEditTime: 2024-12-19 13:59:50
  * @FilePath: portal_cms_demo_next/src/auth.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials';
+import {UserConfig, UserType} from "@/@types/common";
 
 export const {
     handlers,
@@ -39,6 +40,7 @@ export const {
                     email: data.mail,
                     phone : data.phone,
                     auth : data.auth,
+                    authLevel : data.authLevel,
                 };
 
                 if (user) {
@@ -58,9 +60,8 @@ export const {
         signIn: '/login', // Default: '/auth/signin'
     },
     callbacks: {
-        jwt: async ({ token, user }) => {
+        jwt: async ({ token, user  }) => {
             if(user){
-                console.log(user);
                 return {
                     ...token,
                     id: user.id,
@@ -69,6 +70,7 @@ export const {
                     work : user.work,
                     name: user.name,
                     auth : user.auth,
+                    authLevel : user.authLevel,
                     phone : user.phone,
                     email : user.email
                 }
@@ -84,6 +86,7 @@ export const {
                 session.user.phone = token.phone;
                 session.user.id = token.id;
                 session.user.auth = token.auth;
+                session.user.authLevel = token.authLevel;
             }
             return session
         },

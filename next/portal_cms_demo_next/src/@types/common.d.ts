@@ -1,21 +1,15 @@
 import {StaticImageData} from "next/image";
 import React from "react";
+import {User} from "next-auth";
 
-//메뉴추가시 타입추가
-interface MenuItems {
-    dashboard?: string;
-    accidentAccept?: string;
-    accidentList?: string;
-    parkingList?: string;
-    insuManager?: string;
-    mypage?: string;
-}
 
 
 interface MenuItemType {
-    icon: StaticImageData;
+    icon : StaticImageData | {};
+    title : string;
     label: string;
     link: string;
+    authLevel : number;
 }
 
 interface MenuItemProps extends MenuItemType {
@@ -23,10 +17,6 @@ interface MenuItemProps extends MenuItemType {
     onClick: () => void;
 }
 
-interface UserInfo {
-    userId: string;
-    password: string;
-}
 
 interface CounselData{
     pNo: string;
@@ -52,11 +42,7 @@ interface ChangeCounselData{
     EndAmt: number;
 }
 
-interface ChangeCounselGraphType{
-    label: string;
-    data: number[];
-    backgroundColor: string;
-}
+
 interface ChangeGraph{
     cNo: number;
     cDay: string;
@@ -82,17 +68,6 @@ interface TopBusinessData {
     pklName : string;
     count : number;
 }
-type TableType = {
-    monthAccidentData: MonthAccidentData[];
-    counselData: CounselData[]; // 배열로 정의
-    changeData: ChangeCounselData[];
-    changeGraphData : ChangeGraph[];
-};
-
-interface DataTwowayBarType {
-    labels: string[];
-    datasets: ChangeCounselGraphType[];
-}
 
 interface MonthAccidentData{
     changeDay: string;
@@ -103,81 +78,17 @@ interface MonthAccidentData{
     suspense: number;
 }
 
-interface EditableFieldProps {
-    value: string | number;
-    onChange: (value: string) => void;
-    className?: string;
+
+interface Theme {
+    logoSrc: StaticImageData | {};
+    menuItems: MenuItemType[];
 }
-
-interface DataState {
-    counselData: CounselData[];
-    changeData: ChangeCounselData[];
-};
-
-interface YearMonthPickerProps {
-    maxDate?: Date;
-    minDate?: Date;
-    selected: Date | null;
-    onChange: (date: Date | null) => void;
-}
-interface DatePickerProps {
-    maxDate?: Date;
-    minDate?: Date;
-}
-
-interface DataState {
-    counselData: CounselData[];
-    changeData: ChangeCounselData[];
-};
-
-interface ListData {
-    ppk: number;
-    irpk: number;
-    createdYMD: string;
-    accidentDate: string;
-    closingAmt: number;
-    accidentLocation: string;
-    wName: string;
-    wCell: string;
-    vCarNum: string;
-}
-
-interface UserInfo {
-    userId: string;
-    password: string;
-}
-
-interface UserData {
-    userId: string;
-    password: string;
-    affiliation: string;
-}
-
-interface MenuItemType {
-    icon: string,
-    label: string,
-    link: string,
-}
-
-interface MenuItemProps extends MenuItemType {
-    isActive: boolean;
-}
-
-interface ThemeConfigs {
-    [key: string]: ThemeConfig;
-}
-
 
 interface ThemeConfig {
-    logoSrc: string;
-    menuItems: {
-        dashboard?: string;
-        list?: string;
-        mypage: string;
-    };
+    [key: string]: Theme;
 }
 
-interface UserType {
+interface UserType extends User{
     index?: number;
     auth: string | null;
     name: string | null;
@@ -187,6 +98,7 @@ interface UserType {
     email: string | null;
     phone: string | null;
     work?: string | null;
+    authLevel : number;
 }
 
 interface ParamType {
@@ -208,10 +120,7 @@ interface ImageType {
 }
 
 
-interface Theme {
-    logoSrc: StaticImageData;
-    menuItems: MenuItems;
-}
+
 
 interface ClaimRowType {
     irpk: number;                       // Primary key, auto-increment
@@ -316,12 +225,6 @@ interface DashBoardType {
     counselData: CounselData[];
     changeCounselData: ChangeCounselData[];
 
-}
-interface ParamDashType {
-    job ?: string;
-    bpk ?: string;
-    startDate : string;
-    endDate : string;
 }
 
 interface ParamDashType2 {
