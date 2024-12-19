@@ -1,14 +1,12 @@
-import {useState} from "react";
+import React, {useState} from "react";
 // import {api1001} from "../api/commonAPi.ts";
 import Button from "@/app/components/common/ui/button";
+import type {FormData, Step2Props} from "@/@types/common";
 
-interface Step2Props {
-    onNext: () => void;
-    onPrev: () => void;
-    param: FormData;
-}
 
-export default function Step2({onNext, onPrev, param} : Step2Props)  {
+
+
+const Step2= ({onNext, onPrev, param} : Step2Props) =>  {
     //체크박스 유효성검사
     const [agreements, setAgreements] = useState({
         privacy: false,
@@ -24,27 +22,17 @@ export default function Step2({onNext, onPrev, param} : Step2Props)  {
 
     const handleSubmit = async () => {
         try {
-            let formData = new FormData();
+            const formData = new FormData();
             if (isAllChecked) {
-                formData.append('name', param.name);
-                formData.append('car', param.car);
+                formData.append('partnerName', param.partnerName);
                 formData.append('carNum', param.carNum);
-                formData.append('color', param.color);
-                formData.append('contents', param.contents);
-                formData.append('date', param.date);
-                formData.append('datetime', param.date + ' ' + param.time);
+                formData.append('carType', param.carType);
+                formData.append('accidentDate', param.accidentDate);
+                formData.append('arrivalETA', param.arrivalETA);
+                formData.append('propDamage', param.propDamage);
+                formData.append('persInjury', param.persInjury);
                 formData.append('etc', param.etc);
-                formData.append('email', param.email +'@'+param.email2);
-                formData.append('parking', param.parking);
-                formData.append('phone', param.phone);
-                formData.append('privacy', agreements.privacy ? 'Y' : 'N');
-                formData.append('thirdParty', agreements.thirdParty ? 'Y' : 'N');
-
-                if(param.image){
-                    for(const file of param.image){
-                        formData.append('photos', file);
-                    }
-                }
+                formData.append('accidentDetail', param.accidentDetail);
 
                 /*for(let i of formData){
                     console.log(i);
@@ -70,6 +58,8 @@ export default function Step2({onNext, onPrev, param} : Step2Props)  {
     };
     return (
         <div className={'text-xl my-[70px] mx-[100px] stepTwo'}>
+            <div className={'text-lg font-light my-6 px-[100px] text-gray-700'}>개인정보 수집 및 이용에 동의하시고 사고접수를 완료해주세요.
+            </div>
             <div className={'mb-10 text-2xl font-bold'}>개인정보 수집 및 이용동의</div>
             <div className={'font-medium my-3'}>1. 개인정보의 수집 및 이용목적</div>
             <div className={'text-gray-800 mb-5'}>보험금지급·심사 및 보험사고 조사(보험사기 조사 포함), 보험금지급관련 민원처리 및 분쟁대응</div>
@@ -99,8 +89,11 @@ export default function Step2({onNext, onPrev, param} : Step2Props)  {
             </label>
             <div className={'flex justify-center my-10'}>
                 <Button color={"gray"} onClick={onPrev} className={'mr-10 w-3/5 h-[60px] button'}>취소</Button>
-                <Button color={"green"} fill={true} onClick={handleSubmit} className={'w-3/5 h-[60px] button'}>접수하기</Button>
+                <Button color={"main"} fill={true} onClick={handleSubmit}
+                        className={'w-3/5 h-[60px] button'}>접수하기</Button>
             </div>
         </div>
     );
 };
+
+export default Step2;
