@@ -10,7 +10,7 @@ import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
 import {deleteClaimData, getClaim, getImage, updateClaimData} from "@/app/(Navigation-Group)/hiparking/action";
 import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
-import {ButtonConfig, ClaimRowType, UptClaim, ParamType} from "@/@types/common";
+import {ButtonConfig, ClaimRowType, UptClaim, ParamType, FormData} from "@/@types/common";
 import Error from "@/assets/images/icon/error-icon.png";
 import AccidentDetailList from "@/app/components/pageComponents/parking/accidentDetail";
 
@@ -178,46 +178,27 @@ export default function Page() {
     useEffect(() => {
         onSearchClick();
     }, []);
+
     // 사고접수 리스트 컬럼
-    const columns: ColumnDefinition<ClaimRowType>[] = [
+    const columns: ColumnDefinition<FormData>[] = [
         {
-            key: 'irpk',
-            header: '고유번호',
-            defaultValue: '-'
+            key: 'partnerName',
+            header: '제휴사명',
         },
         {
-            key: 'insuNum',
-            header: '접수번호'
+            key: 'carNum',
+            header: '차량번호'
+        },
+        {
+            key: 'carType',
+            header: '차종',
         },
         {
             key: 'accidentDate',
-            header: '사고일',
+            header: '사고일시',
             render: (item) => item.accidentDate
                 ? dayjs(item.accidentDate).format('YYYY-MM-DD')
                 : '-'
-        },
-        {
-            key: 'closingAmt',
-            header: '지급보험금',
-            render: (item) => item.closingAmt
-                ? `${item.closingAmt.toLocaleString()}원`
-                : '-'
-        },
-        {
-            key: 'pklAddress',
-            header: '사고장소'
-        },
-        {
-            key: 'wName',
-            header: '피해자'
-        },
-        {
-            key: 'wCell',
-            header: '피해자연락처'
-        },
-        {
-            key: 'vCarNum',
-            header: '차량번호'
         },
     ];
 
@@ -239,9 +220,8 @@ export default function Page() {
                         }
                         }
                     >
-                        <option value={'wCell'}>피해자 연락처</option>
-                        <option value={'vCarNum'}>피해 차량번호</option>
-                        <option value={'pklName'}>주차장명</option>
+                        <option value={'wCell'}>제휴사명</option>
+                        <option value={'vCarNum'}>차량번호</option>
                     </select>
                     <input
                         type={'text'}
