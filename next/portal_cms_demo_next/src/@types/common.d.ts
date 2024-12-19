@@ -334,3 +334,34 @@ interface ParamDashType2 {
 interface UptClaim extends ClaimRowType {
     job : string;
 }
+
+interface FormData {
+    partnerName: string; //제휴사명
+    carNum: string; //차량번호
+    carType: string; //차종
+    accidentDate: string; //사고일시
+    arrivalETA: string; //예상입고일정
+    //피해규모
+    propDamage: string; //대물
+    persInjury: string; //대인
+    etc: string; //기타
+    accidentDetail: string; //사고내용
+    confirmation?: string; //컴펌여부
+    manager? : string; //컴펌담당자
+}
+
+interface Step1Props {
+    onNext: () => void;
+    formData: FormData;
+    setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+}
+
+interface Step2Props {
+    onNext: () => void;
+    onPrev: () => void;
+    param: FormData;
+}
+
+interface Step3Props {
+    onReset: () => void;
+}
