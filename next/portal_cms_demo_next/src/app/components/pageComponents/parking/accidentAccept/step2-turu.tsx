@@ -33,16 +33,15 @@ const Step2= ({onNext, onPrev, param} : Step2Props) =>  {
                 formData.append('persInjury', param.persInjury);
                 formData.append('etc', param.etc);
                 formData.append('accidentDetail', param.accidentDetail);
-
+                formData.append('confirmation', param.confirmation);
+                formData.append('manager', param.manager);
                 /*for(let i of formData){
                     console.log(i);
                     onNext();
-
                 }*/
-
+                onNext();
                 let {statusCode} = await api1001(formData);
                 if(statusCode === '200'){
-                    onNext();
                 }
             } else {
                 alert("모든 약관에 동의해주세요.");
@@ -58,7 +57,7 @@ const Step2= ({onNext, onPrev, param} : Step2Props) =>  {
     };
     return (
         <div className={'text-xl my-[70px] mx-[100px] stepTwo'}>
-            <div className={'text-lg font-light my-6 px-[100px] text-gray-700'}>개인정보 수집 및 이용에 동의하시고 사고접수를 완료해주세요.
+            <div className={'text-lg font-light my-6 text-gray-700'}>개인정보 수집 및 이용에 동의하시고 사고접수를 완료해주세요.
             </div>
             <div className={'mb-10 text-2xl font-bold'}>개인정보 수집 및 이용동의</div>
             <div className={'font-medium my-3'}>1. 개인정보의 수집 및 이용목적</div>
