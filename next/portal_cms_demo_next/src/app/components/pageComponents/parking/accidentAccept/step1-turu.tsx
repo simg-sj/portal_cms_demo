@@ -26,9 +26,15 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
         const newErrors: { [key: string]: string } = {};
 
         if (!formData.partnerName) newErrors.partnerName = "제휴사명을 선택해주세요.";
-        if (!formData.carNum) newErrors.carNum = "차량번호를 입력해주세요. 차량번호입력시 차종이 자동입력됩니다.";
+        const carNumRegex = /^\d{2,3}[가-힣]\d{4}$/;
+        if (!formData.carNum) {
+            newErrors.carNum = "차량번호를 입력해주세요. 차량번호입력시 차종이 자동입력됩니다.";
+        } else if (!carNumRegex.test(formData.carNum)) {
+            newErrors.carNum = "차량번호 형식이 올바르지 않습니다. 형식: 12가3456 또는 123가4567 으로 입력해주세요.";
+        }
         if (!formData.carType) newErrors.carType = "차종을 입력해주세요.";
         if (!formData.accidentDate) newErrors.accidentDate = "사고일시를 선택해주세요.";
+        if (!formData.accidentTime) newErrors.accidentTime = "사고시간을 선택해주세요.";
         if (!formData.arrivalETA) newErrors.arrivalETA = "예상입고일정을 선택해주세요.";
         if (!formData.propDamage && !formData.persInjury && !formData.etc) newErrors.damage = "피해규모를 입력해주세요"
         if (!formData.accidentDetail) newErrors.accidentDetail = "사고내용을 입력해주세요";
@@ -69,7 +75,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                         value={formData.partnerName || ''}
                         onChange={handleInputChange}
                     >
-                        <option value="" disabled hidden selected>제휴사를 선택하세요</option>
+                        <option value="" disabled>제휴사를 선택하세요</option>
                         <option value="partnerNameA">제휴사A</option>
                         <option value="partnerNameB">제휴사B</option>
                     </select>
@@ -113,6 +119,19 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                 </div>
                 {errors.accidentDate &&
                     <div className="text-red-500 pl-[100px] text-base error">{errors.accidentDate}</div>}
+                <div className={'flex px-[100px] py-5 items-center'}>
+                    <div className={'font-medium w-[300px] mr-1'}>사고시간 <span className={'text-red-500'}>*</span>
+                    </div>
+                    <input
+                        type={'time'}
+                        name="accidentTime"
+                        value={formData.accidentTime || ''}
+                        onChange={handleInputChange}
+                        className={'w-[800px]'}
+                    />
+                </div>
+                {errors.accidentTime &&
+                    <div className="text-red-500 pl-[100px] text-base error">{errors.accidentTime}</div>}
                 <div className={'flex px-[100px] py-5 items-center'}>
                     <div className={'font-medium w-[300px] mr-1'}>예상입고일정 <span className={'text-red-500'}>*</span>
                     </div>
@@ -186,7 +205,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                         <div className={'flex px-[100px] py-5 items-center'}>
                             <div className={'font-medium w-[300px] mr-1'}>컨펌여부 <span className={'text-red-500'}>*</span>
                             </div>
-                            <div className={'w-full flex items-center'}>
+                            <div className={'flex items-center'}>
                                 <label className={'flex items-center mr-10'}>
                                     <input
                                         type="radio"
@@ -209,12 +228,12 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                                 </label>
                                 {confirmation === 'yes' && (
                                     <select
-                                        className={'ml-20 w-[465px]'}
+                                        className={'ml-20 w-[560px]'}
                                         value={formData.manager || ''}
                                         name="manager"
                                         onChange={handleInputChange}
                                     >
-                                        <option value="" disabled hidden selected>담당자를 선택하세요</option>
+                                        <option value="" disabled>담당자를 선택하세요</option>
                                         <option value="A">담당자A</option>
                                         <option value="B">담당자B</option>
                                     </select>

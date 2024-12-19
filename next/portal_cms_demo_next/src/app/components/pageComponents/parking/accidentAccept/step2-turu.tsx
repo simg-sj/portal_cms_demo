@@ -28,6 +28,7 @@ const Step2= ({onNext, onPrev, param} : Step2Props) =>  {
                 formData.append('carNum', param.carNum);
                 formData.append('carType', param.carType);
                 formData.append('accidentDate', param.accidentDate);
+                formData.append('accidentTime', param.accidentTime);
                 formData.append('arrivalETA', param.arrivalETA);
                 formData.append('propDamage', param.propDamage);
                 formData.append('persInjury', param.persInjury);

@@ -243,6 +243,7 @@ interface FormData {
     carNum: string; //차량번호
     carType: string; //차종
     accidentDate: string; //사고일시
+    accidentTime: string; //사고시간
     arrivalETA: string; //예상입고일정
     //피해규모
     propDamage: string; //대물
