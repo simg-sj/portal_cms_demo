@@ -8,7 +8,7 @@ import {getMenuItems, getThemeConfig} from "@/config/themeConfig";
 import MenuItem from "@/app/components/common/MenuItem";
 import Image from "next/image";
 import {useSession} from "next-auth/react";
-import {signOutWithForm} from "@/app/lib/action/auth";
+import {signOutWithForm} from "@/middleware";
 import Loading from "@/app/(Navigation-Group)/loading";
 import {Theme} from "@/@types/common";
 

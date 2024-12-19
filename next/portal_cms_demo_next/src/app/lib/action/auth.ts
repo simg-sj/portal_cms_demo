@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-10-02 14:43:44
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-12-19 15:46:06
+ * @LastEditTime: 2024-12-19 16:23:57
  * @FilePath: portal_cms_demo_next/src/app/lib/action/auth.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -53,12 +53,3 @@ export const signInWithCredentials = async (formData) => {
 };
 
 
-export const signOutWithForm = async () => {
-    try {
-        await signOut({
-            callbackUrl: '/login', // 로그아웃 후 '/login'으로 리다이렉트
-        });
-    } catch (error) {
-        console.error('로그아웃 중 에러 발생:', error);
-    }
-};
