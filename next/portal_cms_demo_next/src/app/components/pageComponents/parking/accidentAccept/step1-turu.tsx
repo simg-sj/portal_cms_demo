@@ -65,9 +65,9 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                     <div className={'font-medium w-[300px] mr-1'}>제휴사명 <span className={'text-red-500'}>*</span></div>
                     <select
                         className={'w-[800px]'}
-                        value={formData.partnerName || ''}
+                        defaultValue={''}
                     >
-                        <option value="" disabled hidden selected>제휴사를 선택하세요</option>
+                        <option value="" disabled hidden>제휴사를 선택하세요</option>
                         <option value="A">제휴사A</option>
                         <option value="B">제휴사B</option>
                     </select>
@@ -80,7 +80,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                     <input
                         type={'text'}
                         name="carNum"
-                        value={formData.carNum || ''}
+                        defaultValue={formData.carNum || ''}
                         onChange={handleInputChange}
                         className={'w-[800px]'}
                     />
@@ -92,7 +92,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                     <input
                         type={'text'}
                         name="carType"
-                        value={formData.carType || ''}
+                        defaultValue={formData.carType || ''}
                         onChange={handleInputChange}
                         className={'w-[800px]'}
                     />
@@ -104,7 +104,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                     <input
                         type={'date'}
                         name="accidentDate"
-                        value={formData.accidentDate || ''}
+                        defaultValue={formData.accidentDate || ''}
                         onChange={handleInputChange}
                         className={'w-[800px]'}
                     />
@@ -117,7 +117,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                     <input
                         type={'date'}
                         name="arrivalETA"
-                        value={formData.arrivalETA || ''}
+                        defaultValue={formData.arrivalETA || ''}
                         onChange={handleInputChange}
                         className={'w-[800px]'}
                     />
@@ -132,7 +132,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                             <input
                                 type={'text'}
                                 name="propDamage"
-                                value={formData.propDamage || ''}
+                                defaultValue={formData.propDamage || ''}
                                 onChange={handleInputChange}
                                 className={'mx-3 w-[140px]'}
                             />
@@ -143,7 +143,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                             <input
                                 type={'text'}
                                 name="persInjury"
-                                value={formData.persInjury || ''}
+                                defaultValue={formData.persInjury || ''}
                                 onChange={handleInputChange}
                                 className={'mx-3 w-[140px]'}
                             />
@@ -154,7 +154,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                             <input
                                 type={'text'}
                                 name="etc"
-                                value={formData.etc || ''}
+                                defaultValue={formData.etc || ''}
                                 onChange={handleInputChange}
                                 className={'mx-3 w-[140px]'}
                             />
@@ -171,7 +171,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                     <textarea rows={3}
                               className={'h-20 resize-none w-[800px]'}
                               name="accidentDetail"
-                              value={formData.accidentDetail || ''}
+                              defaultValue={formData.accidentDetail || ''}
                               onChange={handleInputChange}>
                     </textarea>
                 </div>
@@ -206,10 +206,10 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                         {confirmation === 'yes' && (
                             <select
                                 className={'ml-20 w-[465px]'}
-                                value={formData.manager || ''}
                                 onChange={handleManagerChange}
+                                defaultValue={""}
                             >
-                                <option value="" disabled hidden selected>담당자를 선택하세요</option>
+                                <option value="" disabled >담당자를 선택하세요</option>
                                 <option value="A">담당자A</option>
                                 <option value="B">담당자B</option>
                             </select>
