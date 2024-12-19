@@ -31,6 +31,10 @@ const matchersForSignIn = ['/login', '/login/*'];
 // 경로 매칭 함수
 function isPathMatch(pathname: string, paths: string[]) {
     return paths.some((path) => {
+        if (typeof path !== 'string') {
+            console.error('Invalid path:', path); // 디버깅용 로그
+            return false;
+        }
         const regex = new RegExp('^' + path.replace('*', '.*') + '$');
         return regex.test(pathname);
     });
@@ -39,6 +43,10 @@ function isPathMatch(pathname: string, paths: string[]) {
 // 권한 검사 함수
 function isAuthorized(pathname: string, urls: { path: string; minAuthLevel: number }[], authLevel: number) {
     return urls.some(({ path, minAuthLevel }) => {
+        if (typeof path !== 'string') {
+            console.error('Invalid URL path:', path); // 디버깅용 로그
+            return false;
+        }
         const regex = new RegExp('^' + path.replace('*', '.*') + '$');
         return regex.test(pathname) && authLevel >= minAuthLevel;
     });
@@ -54,6 +62,8 @@ export async function middleware(request: NextRequest) {
             : [];
     const paths = userAccessUrls.map((url) => url.path).filter((path): path is string => typeof path === 'string');
     const { pathname } = request.nextUrl;
+
+    console.log('Paths for user:', paths);
 
     // 1. 예외 경로 처리
     if (isPathMatch(pathname, excludeMatchers)) {
