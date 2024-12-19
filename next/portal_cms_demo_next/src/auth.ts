@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-10-02 14:13:08
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-12-19 13:59:50
+ * @LastEditTime: 2024-12-19 15:47:27
  * @FilePath: portal_cms_demo_next/src/auth.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -57,7 +57,9 @@ export const {
         maxAge: 60 * 60 // 세션 만료 시간(sec)
     },
     pages: {
-        signIn: '/login', // Default: '/auth/signin'
+        signIn: '/login',
+        signOut: '/login',
+        error: '/login',
     },
     callbacks: {
         jwt: async ({ token, user  }) => {
@@ -90,19 +92,10 @@ export const {
             }
             return session
         },
-        redirect: async ({ url, baseUrl }) => {
+        async redirect({ url, baseUrl }) {
+            console.log(url);
             if (url.startsWith('/')) return `${baseUrl}${url}`;
-            if (url) {
-                const { search, origin } = new URL(url);
-                const callbackUrl = new URLSearchParams(search).get('callbackUrl');
-                if (callbackUrl) {
-                    return callbackUrl.startsWith('/')
-                        ? `${baseUrl}${callbackUrl}`
-                        : callbackUrl;
-                }
-                if (origin === baseUrl) return url;
-            }
             return baseUrl;
-        }
+        },
     }
 })

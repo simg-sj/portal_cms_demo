@@ -72,15 +72,15 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                     <select
                         name="partnerName"
                         className={'w-[800px]'}
-                        value={formData.partnerName || ''}
                         onChange={handleInputChange}
+                        defaultValue={''}
                     >
                         <option value="" disabled>제휴사를 선택하세요</option>
                         <option value="partnerNameA">제휴사A</option>
                         <option value="partnerNameB">제휴사B</option>
                     </select>
                 </div>
-                {errors.partnerName &&
+            {errors.partnerName &&
                     <div className="text-red-500 pl-[100px] text-base error">{errors.partnerName}</div>}
                 <div className={'flex px-[100px] py-5 items-center'}>
                     <div className={'font-medium w-[300px] mr-1'}>차량번호 <span className={'text-red-500'}>*</span>
@@ -88,7 +88,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                     <input
                         type={'text'}
                         name="carNum"
-                        value={formData.carNum || ''}
+                        defaultValue={formData.carNum || ''}
                         onChange={handleInputChange}
                         className={'w-[800px]'}
                     />
@@ -100,7 +100,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                     <input
                         type={'text'}
                         name="carType"
-                        value={formData.carType || ''}
+                        defaultValue={formData.carType || ''}
                         onChange={handleInputChange}
                         className={'w-[800px]'}
                     />
@@ -112,7 +112,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                     <input
                         type={'date'}
                         name="accidentDate"
-                        value={formData.accidentDate || ''}
+                        defaultValue={formData.accidentDate || ''}
                         onChange={handleInputChange}
                         className={'w-[800px]'}
                     />
@@ -138,13 +138,15 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                     <input
                         type={'date'}
                         name="arrivalETA"
-                        value={formData.arrivalETA || ''}
+                        defaultValue={formData.arrivalETA || ''}
                         onChange={handleInputChange}
                         className={'w-[800px]'}
                     />
                 </div>
-                {errors.arrivalETA &&
-                    <div className="text-red-500 pl-[100px] text-base error">{errors.arrivalETA}</div>}
+                {
+                    errors.arrivalETA &&
+                    <div className="text-red-500 pl-[100px] text-base error">{errors.arrivalETA}</div>
+                }
                 <div className={'flex px-[100px] py-5 items-center'}>
                     <div className={'font-medium w-[300px] mr-1'}>피해규모 <span className={'text-red-500'}>*</span></div>
                     <div className={'flex justify-between w-[800px]'}>
@@ -153,7 +155,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                             <input
                                 type={'text'}
                                 name="propDamage"
-                                value={formData.propDamage || ''}
+                                defaultValue={formData.propDamage}
                                 onChange={handleInputChange}
                                 className={'mx-3 w-[140px]'}
                             />
@@ -164,7 +166,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                             <input
                                 type={'text'}
                                 name="persInjury"
-                                value={formData.persInjury || ''}
+                                defaultValue={formData.persInjury}
                                 onChange={handleInputChange}
                                 className={'mx-3 w-[140px]'}
                             />
@@ -175,7 +177,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                             <input
                                 type={'text'}
                                 name="etc"
-                                value={formData.etc || ''}
+                                defaultValue={formData.etc}
                                 onChange={handleInputChange}
                                 className={'mx-3 w-[140px]'}
                             />
@@ -192,7 +194,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                     <textarea rows={3}
                               className={'h-20 resize-none w-[800px]'}
                               name="accidentDetail"
-                              value={formData.accidentDetail || ''}
+                              defaultValue={formData.accidentDetail}
                               onChange={handleInputChange}>
                     </textarea>
                 </div>
