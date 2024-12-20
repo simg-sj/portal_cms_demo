@@ -4,21 +4,20 @@ import type {FormData, Step1Props} from "@/@types/common";
 import {useSession} from "next-auth/react";
 
 const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
-    const {data: session} = useSession();
+    const {data} = useSession();
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [isFormValid, setIsFormValid] = useState(false);
-    const [confirmation, setConfirmation] = useState<'yes' | 'no' | null>(null);
-    const isAdmin = session?.user?.auth === 'admin';
-
+    const [confirmation, setConfirmation] = useState<'Y' | 'N' | null>(null);
+    const isAdmin = data?.user?.auth === 'admin';
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const {name, value} = e.target;
         setFormData((prev: FormData) => ({...prev, [name]: value}));
     };
 
-    const handleConfirmationChange = (value: 'yes' | 'no') => {
+    const handleConfirmationChange = (value: 'Y' | 'N') => {
         setConfirmation(value);
-        if (value === 'no') {
-            setFormData((prev: FormData) => ({...prev, manager: ''}));
+        if (value === 'N') {
+            setFormData((prev: FormData) => ({...prev, confirmedBy: ''}));
         }
     };
 
@@ -42,7 +41,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
             if (confirmation === null) {
                 newErrors.confirmation = "컨펌여부를 선택해주세요";
             }
-            if (confirmation === 'yes' && !formData.manager) {
+            if (confirmation === 'yes' && !formData.confirmedBy) {
                 newErrors.manager = "담당자를 선택해주세요";
             }
         }
@@ -51,6 +50,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
     };
 
     useEffect(() => {
+        console.log(formData)
         setIsFormValid(validateForm());
     }, [formData]);
 
@@ -61,6 +61,14 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
             alert("모든 필수 항목을 입력해주세요.");
         }
     };
+
+    useEffect(() => {
+        if(data && data.user){
+            if(!isAdmin){
+                setFormData((prev: FormData) => ({...prev, partnerName: data.user.bName}));
+            }
+        }
+    }, [data]);
     return (
         <>
             <div className={'text-lg font-light my-6 px-[100px] text-gray-700'}>트루카 사고접수 페이지입니다. 사고접수 내용을 입력하여
@@ -69,18 +77,37 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
             <div className={'text-xl my-[50px] stepOne'}>
                 <div className={'flex px-[100px] py-5 items-center'}>
                     <div className={'font-medium w-[300px] mr-1'}>제휴사명 <span className={'text-red-500'}>*</span></div>
-                    <select
-                        name="partnerName"
-                        className={'w-[800px]'}
-                        onChange={handleInputChange}
-                        defaultValue={''}
-                    >
-                        <option value="" disabled>제휴사를 선택하세요</option>
-                        <option value="partnerNameA">제휴사A</option>
-                        <option value="partnerNameB">제휴사B</option>
-                    </select>
+                    {
+                        isAdmin ?
+                            <select
+                                name="partnerName"
+                                className={'w-[800px]'}
+                                onChange={handleInputChange}
+                                defaultValue={''}
+                            >
+                                <option value="" disabled>
+                                    제휴사를 선택하세요
+                                </option>
+                                <option value="partnerNameA">
+                                    제휴사A
+                                </option>
+                                <option value="partnerNameB">
+                                    제휴사B
+                                </option>
+                            </select>
+                            :
+                            <input
+                                type={'text'}
+                                name="partnerName"
+                                defaultValue={formData.partnerName || ''}
+                                onChange={handleInputChange}
+                                className={'w-[800px]'}
+                            />
+
+                    }
+
                 </div>
-            {errors.partnerName &&
+                {errors.partnerName &&
                     <div className="text-red-500 pl-[100px] text-base error">{errors.partnerName}</div>}
                 <div className={'flex px-[100px] py-5 items-center'}>
                     <div className={'font-medium w-[300px] mr-1'}>차량번호 <span className={'text-red-500'}>*</span>

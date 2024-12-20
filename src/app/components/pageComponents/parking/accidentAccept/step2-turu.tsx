@@ -2,6 +2,7 @@ import React, {useState} from "react";
 // import {api1001} from "../api/commonAPi.ts";
 import Button from "@/app/components/common/ui/button";
 import type {FormData, Step2Props} from "@/@types/common";
+import {insertRcAccident} from "@/app/(Navigation-Group)/action";
 
 
 
@@ -22,27 +23,11 @@ const Step2= ({onNext, onPrev, param} : Step2Props) =>  {
 
     const handleSubmit = async () => {
         try {
-            const formData = new FormData();
             if (isAllChecked) {
-                formData.append('partnerName', param.partnerName);
-                formData.append('carNum', param.carNum);
-                formData.append('carType', param.carType);
-                formData.append('accidentDate', param.accidentDate);
-                formData.append('accidentTime', param.accidentTime);
-                formData.append('arrivalETA', param.arrivalETA);
-                formData.append('propDamage', param.propDamage);
-                formData.append('persInjury', param.persInjury);
-                formData.append('etc', param.etc);
-                formData.append('accidentDetail', param.accidentDetail);
-                formData.append('confirmation', param.confirmation);
-                formData.append('manager', param.manager);
-                /*for(let i of formData){
-                    console.log(i);
-                    onNext();
-                }*/
-                onNext();
-                let {statusCode} = await api1001(formData);
+                let {statusCode} = await insertRcAccident(param);
+                console.log(statusCode);
                 if(statusCode === '200'){
+                    onNext();
                 }
             } else {
                 alert("모든 약관에 동의해주세요.");

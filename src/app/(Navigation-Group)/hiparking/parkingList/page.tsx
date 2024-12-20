@@ -8,7 +8,7 @@ import ExcelUpload from "@/assets/images/icon/upload-white-icon.png";
 import SlidePopup from "@/app/components/popup/SlidePopup";
 import ParkingDetailList from "@/app/components/pageComponents/parking/parkingDetail";
 import Pagination from "@/app/components/common/ui/pagination";
-import {addExcelParking, deleteClaimData, getClaim, getParking} from "@/app/(Navigation-Group)/hiparking/action";
+import {addExcelParking, deleteClaimData, getClaim, getParking} from "@/app/(Navigation-Group)/action";
 import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
 import {ButtonConfig, ParamType, ParkingParamType, ParkingRowType, ParkingType} from "@/@types/common";
 import CenterPopup from "@/app/components/popup/CenterPopup";

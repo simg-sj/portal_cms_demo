@@ -9,7 +9,7 @@ import SlidePopup from "@/app/components/popup/SlidePopup";
 import AccidentDetailList from "@/app/components/pageComponents/parking/accidentDetail";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
-import {getClaim, updateClaimData} from "@/app/(Navigation-Group)/hiparking/action";
+import {getClaim, updateClaimData} from "@/app/(Navigation-Group)/action";
 import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
 import {ButtonConfig, ClaimRowType, UptClaim} from "@/@types/common";
 

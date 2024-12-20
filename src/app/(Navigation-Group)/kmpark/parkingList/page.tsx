@@ -10,7 +10,7 @@ import SlidePopup from "@/app/components/popup/SlidePopup";
 import List from "@/app/components/pageComponents/parking/parkingDetail";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
-import {getClaim, getExcelSample, getParking} from "@/app/(Navigation-Group)/hiparking/action";
+import {getClaim, getExcelSample, getParking} from "@/app/(Navigation-Group)/action";
 import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
 import {ButtonConfig, ClaimRowType, ParkingParamType, ParkingType} from "@/@types/common";
 import CenterPopup from "@/app/components/popup/CenterPopup";

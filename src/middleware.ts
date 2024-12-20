@@ -6,7 +6,7 @@ import { signOut } from 'next-auth/react';
 // 플랫폼별 경로 및 최소 권한 레벨 정의
 const platformUrls = {
     hiparking: [
-        { path: '/hiparking/*', minAuthLevel: 2 },
+        { path: '/hiparking/*', minAuthLevel: 1 },
         { path: '/hiparking', minAuthLevel: 1 },
     ],
     simg: [
@@ -14,8 +14,8 @@ const platformUrls = {
         { path: '/simg/*', minAuthLevel: 1 },
     ],
     kmpark: [
-        { path: '/kmpark', minAuthLevel: 3 },
-        { path: '/kmpark/*', minAuthLevel: 3 },
+        { path: '/kmpark', minAuthLevel: 1 },
+        { path: '/kmpark/*', minAuthLevel: 1 },
     ],
     turu: [
         { path: '/turu', minAuthLevel: 1 },
@@ -55,7 +55,7 @@ export const signOutWithForm = async () => {
             redirect: true,      // 자동 리다이렉트 활성화
         });
     } catch (error) {
-        console.error('로그아웃 중 에러 발생:', error);
+        console. error('로그아웃 중 에러 발생:', error);
     }
 };
 

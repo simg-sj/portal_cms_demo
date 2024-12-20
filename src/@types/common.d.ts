@@ -207,6 +207,28 @@ interface ParkingRowType {
     carLift: boolean;                  // 차량 리프트 여부
     memo : string;
 }
+
+interface rcAccidentType {
+    rcPk : number;
+    bpk: number; // 업체키
+    insuNum ?: number;
+    partnerName: string; // 제휴사명
+    carNum: string; // 차량번호
+    carType: string; // 차종
+    accidentDate: Date; // 사고 일시
+    arrivalETA: Date; // 예상 입고 일정 (nullable)
+    propDamage: string | null; // 대물 (nullable)
+    persInjury : string | null; // 대인 (nullable)
+    etc : string | null; // 기타 (nullable)
+    accidentDetail : string; // 사고내용 (nullable)
+    isConfirmed : string; // 컨펌 여부 (nullable)
+    confirmedBy : string | null; // 컨펌 담당자 (nullable)
+    statusCode ?: string;
+    memo ?: string;
+    createdYMD: Date; // 생성일
+}
+
+
 interface ButtonConfig {
     label: string;
     onClick: () => void;
@@ -239,6 +261,8 @@ interface UptClaim extends ClaimRowType {
 }
 
 interface FormData {
+    rcPk : number;
+    bpk : number;
     partnerName: string; //제휴사명
     carNum: string; //차량번호
     carType: string; //차종
@@ -250,8 +274,8 @@ interface FormData {
     persInjury: string; //대인
     etc: string; //기타
     accidentDetail: string; //사고내용
-    confirmation?: string; //컴펌여부
-    manager? : string; //컴펌담당자
+    isConfirmed?: string; //컴펌여부
+    confirmedBy? : string; //컴펌담당자
 }
 
 interface Step1Props {

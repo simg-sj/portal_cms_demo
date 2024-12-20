@@ -8,7 +8,7 @@ import Plus from "@/assets/images/icon/plus-icon.png";
 import SlidePopup from "@/app/components/popup/SlidePopup";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
-import {deleteClaimData, getClaim, getImage, updateClaimData} from "@/app/(Navigation-Group)/hiparking/action";
+import {deleteClaimData, getClaim, getImage, updateClaimData} from "@/app/(Navigation-Group)/action";
 import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
 import {ButtonConfig, ClaimRowType, UptClaim, ParamType} from "@/@types/common";
 import Error from "@/assets/images/icon/error-icon.png";
@@ -34,8 +34,8 @@ export default function Page() {
     const [param, setParam] = useState<ParamType>({
         bpk: 2,
         condition: "wCell",
-        endDate: "",
-        startDate: "",
+        endDate: dayjs().format('YYYY-MM-DD'),
+        startDate: dayjs().format('YYYY-MM-DD'),
         text: ''
     });
 
@@ -227,7 +227,7 @@ export default function Page() {
             <div className={'border border-gray-100 p-6 rounded-lg bg-white flex items-center justify-between'}>
                 <div className={'flex items-center'}>
                     <div className={'text-gray-700 font-medium pt-1 mr-2'}>기간</div>
-                    <DayTerm type={'day'} setParam={setParam} sDay={new Date()} eDay={new Date()}/>
+                    <DayTerm type={'day'} setParam={setParam} sDay={new Date(param.startDate)} eDay={new Date(param.endDate)}/>
                     <div className={'text-gray-700 font-medium pt-1 ml-2 mr-5'}>검색조건</div>
                     <select
                         className={'w-[200px]'}

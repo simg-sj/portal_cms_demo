@@ -2,14 +2,13 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-10-02 14:13:08
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-12-19 15:47:27
- * @FilePath: portal_cms_demo_next/src/auth.ts
+ * @LastEditTime: 2024-12-20 09:11:23
+ * @FilePath: src/auth.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials';
-import {UserConfig, UserType} from "@/@types/common";
 
 export const {
     handlers,
@@ -26,7 +25,6 @@ export const {
             async authorize(credentials) {
                     const res = await fetch('https://center-api.simg.kr/api/portal/auth', {method : 'POST', headers : {"Content-Type": "application/json"}, body : JSON.stringify(credentials)});
                     const data = await res.json();
-                    console.log('data is :::',data);
 
                     if (!res.ok) {
                         throw new Error(data.message || "로그인에 실패했습니다.");
@@ -93,7 +91,6 @@ export const {
             return session
         },
         async redirect({ url, baseUrl }) {
-            console.log(url);
             if (url.startsWith('/')) return `${baseUrl}${url}`;
             return baseUrl;
         },

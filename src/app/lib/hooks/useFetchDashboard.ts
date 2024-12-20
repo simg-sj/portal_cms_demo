@@ -2,8 +2,8 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-11-26 13:27:27
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-12-11 15:06:47
- * @FilePath: portal_cms_demo_next/src/app/lib/hooks/useFetchDashboard.ts
+ * @LastEditTime: 2024-12-20 09:53:27
+ * @FilePath: src/app/lib/hooks/useFetchDashboard.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 
@@ -17,7 +17,7 @@ import {
     TopBusinessData,
     TopCounselData
 } from "@/@types/common";
-import {getDashBoard} from "@/app/(Navigation-Group)/hiparking/action";
+import {getDashBoard} from "@/app/(Navigation-Group)/action";
 
 type DashboardData = {
     counselData: CounselData[];

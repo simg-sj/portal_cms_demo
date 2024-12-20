@@ -4,13 +4,16 @@ import Step1 from "@/app/components/pageComponents/parking/accidentAccept/step1-
 import Step2 from "@/app/components/pageComponents/parking/accidentAccept/step2-turu";
 import Step3 from "@/app/components/pageComponents/parking/accidentAccept/step3";
 import {FormData} from "@/@types/common";
+import {useSession} from "next-auth/react";
 
 
 export default function Page() {
 
     //스탭
     const [currentStep, setCurrentStep] = useState(1);
+    const {data} = useSession();
     const [formData, setFormData] = useState<FormData>({
+        bpk : 4,
         partnerName: '',
         carNum: '',
         carType: '',
@@ -21,8 +24,8 @@ export default function Page() {
         persInjury: '',
         etc: '',
         accidentDetail: '',
-        confirmation: '',
-        manager: '',
+        isConfirmed: '',
+        confirmedBy: ''
     });
 
     const handleNext = () => {
@@ -36,6 +39,7 @@ export default function Page() {
     const handleReset = () => {
         setCurrentStep(1);
         setFormData({
+            bpk : 4,
             partnerName: '',
             carNum: '',
             carType: '',
@@ -46,8 +50,8 @@ export default function Page() {
             persInjury: '',
             etc: '',
             accidentDetail: '',
-            confirmation: '',
-            manager: '',
+            isConfirmed: '',
+            confirmedBy: ''
         });
     };
 

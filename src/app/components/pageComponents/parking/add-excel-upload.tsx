@@ -6,7 +6,7 @@ import ExcelUpload from "@/assets/images/icon/upload-gray-icon.png";
 import ExcelDown from "@/assets/images/icon/excel-down-icon.png";
 import {useSession} from "next-auth/react";
 import {BSN_CODE} from "@/config/data";
-import {uploadExcel} from "@/app/(Navigation-Group)/hiparking/action";
+import {uploadExcel} from "@/app/(Navigation-Group)/action";
 import {ParkingType} from "@/@types/common";
 import fileUpload from "@/app/components/common/ui/fileUpload";
 import Tooltip from "@/app/components/common/ui/tooltip";

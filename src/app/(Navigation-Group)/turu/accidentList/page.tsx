@@ -8,9 +8,16 @@ import Plus from "@/assets/images/icon/plus-icon.png";
 import SlidePopup from "@/app/components/popup/SlidePopup";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
-import {deleteClaimData, getClaim, getImage, updateClaimData} from "@/app/(Navigation-Group)/hiparking/action";
+import {deleteClaimData, getClaim, getImage, getRcAccidentList, updateClaimData} from "@/app/(Navigation-Group)/action";
 import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
-import {ButtonConfig, ClaimRowType, UptClaim, ParamType, FormData} from "@/@types/common";
+import {
+    ButtonConfig,
+    ClaimRowType,
+    UptClaim,
+    ParamType,
+    FormData,
+    rcAccidentType,
+} from "@/@types/common";
 import Error from "@/assets/images/icon/error-icon.png";
 import AccidentDetailList from "@/app/components/pageComponents/parking/accidentDetail";
 
@@ -27,15 +34,15 @@ export default function Page() {
     const [isOpen, setIsOpen] = useState(false);
     const [isNew, setIsNew] = useState(false);
     const [selectedRow, setSelectedRow] = useState<number | null>(null);
-    const [data, setData] = useState<ClaimRowType[]>([]);
-    const [rowData, setRowData] = useState<ClaimRowType | null>();
+    const [data, setData] = useState<rcAccidentType[]>([]);
+    const [rowData, setRowData] = useState<rcAccidentType | null>();
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [param, setParam] = useState<ParamType>({
-        bpk: 2,
-        condition: "wCell",
-        endDate: "",
-        startDate: "",
+        bpk: 4,
+        condition: "partnerName",
+        endDate: dayjs().format('YYYY-MM-DD'),
+        startDate: dayjs().format('YYYY-MM-DD'),
         text: ''
     });
 
@@ -61,8 +68,8 @@ export default function Page() {
         document.body.style.removeProperty('overflow');
     };
 
-    const handleSave = async (data: UptClaim) => {
-        try {
+    const handleSave = async (data: rcAccidentType) => {
+       /* try {
             if (isNew) {
                 window.confirm('등록하시겠습니까?')
                 console.log('신규등록 데이터:', data);
@@ -75,7 +82,7 @@ export default function Page() {
                     let result = await updateClaimData(data);
 
                     if (result[0].code === '200') {
-                        let reload = await getClaim(param);
+                        let reload = await getRcAccidentList(param);
                         setData(reload || []);
                         closePopup();
                     } else {
@@ -87,7 +94,7 @@ export default function Page() {
             }
         } catch (e) {
             console.log(e);
-        }
+        }*/
     };
 
     const handleNewEntry = () => {
@@ -145,7 +152,7 @@ export default function Page() {
             console.log('삭제할 항목 인덱스:', Array.from(selectedItems));
             let result = await deleteClaimData(rowData);
             if(result.code === '200') {
-                let reload = await getClaim(param);
+                let reload = await getRcAccidentList(param);
                 setData(reload);
                 closePopup();
             }else {
@@ -159,7 +166,7 @@ export default function Page() {
         try{
             let result = await deleteClaimData(rowData);
             if(result.code === '200'){
-                let reload = await getClaim(param);
+                let reload = await getRcAccidentList(param);
                 setData(reload);
                 closePopup();
             }else {
@@ -171,7 +178,7 @@ export default function Page() {
     };
 
     const onSearchClick = async () => {
-        const result = await getClaim(param);
+        const result = await getRcAccidentList(param);
         setData(result || []);
         setCurrentPage(0);
     }
@@ -181,6 +188,10 @@ export default function Page() {
 
     // 사고접수 리스트 컬럼
     const columns: ColumnDefinition<FormData>[] = [
+        {
+            key: 'rcPk',
+            header: '고유키',
+        },
         {
             key: 'partnerName',
             header: '제휴사명',
@@ -197,7 +208,7 @@ export default function Page() {
             key: 'accidentDate',
             header: '사고일시',
             render: (item) => item.accidentDate
-                ? dayjs(item.accidentDate).format('YYYY-MM-DD')
+                ? dayjs(item.accidentDate).format('YYYY-MM-DD HH:mm')
                 : '-'
         },
     ];
@@ -208,7 +219,7 @@ export default function Page() {
             <div className={'border border-gray-100 p-6 rounded-lg bg-white flex items-center justify-between'}>
                 <div className={'flex items-center'}>
                     <div className={'text-gray-700 font-medium pt-1 mr-2'}>기간</div>
-                    <DayTerm type={'day'} setParam={setParam} sDay={new Date()} eDay={new Date()}/>
+                    <DayTerm type={'day'} setParam={setParam} sDay={new Date(param.startDate)} eDay={new Date(param.endDate)}/>
                     <div className={'text-gray-700 font-medium pt-1 ml-2 mr-5'}>검색조건</div>
                     <select
                         className={'w-[200px]'}
@@ -220,8 +231,8 @@ export default function Page() {
                         }
                         }
                     >
-                        <option value={'wCell'}>제휴사명</option>
-                        <option value={'vCarNum'}>차량번호</option>
+                        <option value={'partherName'}>제휴사명</option>
+                        <option value={'carNum'}>차량번호</option>
                     </select>
                     <input
                         type={'text'}
@@ -276,13 +287,13 @@ export default function Page() {
                 <div className={'mt-4'}>
                     <CheckboxContainer
                         items={getPaginatedData()}
-                        getItemId={(item) => item.irpk}
+                        getItemId={(item) => item.rcPk}
                         columns={columns}
                         selectedRow={selectedRow}
                         onSelectionChange={setSelectedItems}
                         onRowClick={(item) => {
                             setIsNew(false);
-                            setSelectedRow(item.irpk);
+                            setSelectedRow(item.rcPk);
                             setIsOpen(true);
                             setRowData(item);
                             document.body.style.overflow = 'hidden';

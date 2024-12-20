@@ -14,6 +14,11 @@ export const ClosingCode= {
     '07' : '합의'
 }
 
+export const ConfirmCode= {
+    'Y' : '승인',
+    'N' : '미승인'
+}
+
 
 export const UserSet: UserType[] = [
     {
