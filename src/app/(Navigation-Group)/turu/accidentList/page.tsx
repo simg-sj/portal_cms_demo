@@ -8,17 +8,19 @@ import Plus from "@/assets/images/icon/plus-icon.png";
 import SlidePopup from "@/app/components/popup/SlidePopup";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
-import {deleteClaimData, getClaim, getImage, getRcAccidentList, updateClaimData} from "@/app/(Navigation-Group)/action";
+import {
+    deleteClaimData,
+    getClaim,
+    getImage,
+    getRcAccidentList,
+    rcPortalRoute,
+} from "@/app/(Navigation-Group)/action";
 import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
 import {
     ButtonConfig,
-    ClaimRowType,
-    UptClaim,
     ParamType,
-    FormData,
-    rcAccidentType,
+    rcAccidentType, rcAccidentRowType,
 } from "@/@types/common";
-import Error from "@/assets/images/icon/error-icon.png";
 import AccidentDetailList from "@/app/components/pageComponents/parking/accidentDetail";
 
 interface ColumnDefinition<T> {
@@ -35,7 +37,7 @@ export default function Page() {
     const [isNew, setIsNew] = useState(false);
     const [selectedRow, setSelectedRow] = useState<number | null>(null);
     const [data, setData] = useState<rcAccidentType[]>([]);
-    const [rowData, setRowData] = useState<rcAccidentType | null>();
+    const [rowData, setRowData] = useState<rcAccidentRowType | null>();
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [param, setParam] = useState<ParamType>({
@@ -68,20 +70,16 @@ export default function Page() {
         document.body.style.removeProperty('overflow');
     };
 
-    const handleSave = async (data: rcAccidentType) => {
-       /* try {
-            if (isNew) {
-                window.confirm('등록하시겠습니까?')
-                console.log('신규등록 데이터:', data);
-            } else {
+    const handleSave = async (data: rcAccidentRowType) => {
+       try {
                 if(window.confirm('저장하시겠습니까?')){
                     data.job = 'UPT';
-                    data.requestDate = dayjs(data.requestDate).format('YYYY-MM-DD HH:mm:ss');
-                    data.accidentDateTime = dayjs(data.accidentDateTime).format('YYYY-MM-DD HH:mm:ss');
-
-                    let result = await updateClaimData(data);
-
-                    if (result[0].code === '200') {
+                    data.accidentDate = dayjs(data.accidentDate).format('YYYY-MM-DD HH:mm:ss');
+                    data.arrivalETA = dayjs(data.arrivalETA).format('YYYY-MM-DD');
+                    console.log(data);
+                    let result = await rcPortalRoute(data);
+                    console.log(result)
+                    if (result.code === '200') {
                         let reload = await getRcAccidentList(param);
                         setData(reload || []);
                         closePopup();
@@ -91,19 +89,12 @@ export default function Page() {
                 }else {
                     return;
                 }
-            }
+
         } catch (e) {
             console.log(e);
-        }*/
+        }
     };
 
-    const handleNewEntry = () => {
-        setIsNew(true);
-        setSelectedRow(null);
-        setRowData()
-        setIsOpen(true);
-        document.body.style.overflow = 'hidden';
-    };
 
     const popupButtons: ButtonConfig[] = isNew
         ? [
@@ -150,7 +141,7 @@ export default function Page() {
         }
         if (window.confirm(`선택한 ${selectedItems.size}개의 항목을 삭제하시겠습니까?`)) {
             console.log('삭제할 항목 인덱스:', Array.from(selectedItems));
-            let result = await deleteClaimData(rowData);
+            let result = await rcPortalRoute(rowData);
             if(result.code === '200') {
                 let reload = await getRcAccidentList(param);
                 setData(reload);
@@ -162,9 +153,12 @@ export default function Page() {
     };
 
     //삭제버튼 클릭
-    const handleDelete = async (rowData : ClaimRowType) => {
+    const handleDelete = async (rowData : rcAccidentRowType) => {
         try{
-            let result = await deleteClaimData(rowData);
+            rowData.accidentDate = dayjs(rowData.accidentDate).format('YYYY-MM-DD HH:mm:ss');
+            rowData.arrivalETA = dayjs(rowData.arrivalETA).format('YYYY-MM-DD');
+            rowData.job = 'DELETE';
+            let result = await rcPortalRoute(rowData);
             if(result.code === '200'){
                 let reload = await getRcAccidentList(param);
                 setData(reload);
@@ -187,7 +181,7 @@ export default function Page() {
     }, []);
 
     // 사고접수 리스트 컬럼
-    const columns: ColumnDefinition<FormData>[] = [
+    const columns: ColumnDefinition<rcAccidentType>[] = [
         {
             key: 'rcPk',
             header: '고유키',
@@ -268,10 +262,6 @@ export default function Page() {
                     <div className={'flex justify-end space-x-4'}>
                         <Button color={"red"} fill={false} height={36} width={120} onClick={handleDeleteGroup}>
                             삭제
-                        </Button>
-                        <Button color={"main"} fill height={36} width={120} onClick={handleNewEntry}>
-                            <Image src={Plus.src} alt={'추가'} width={16} height={16} className={'mr-1'}/>
-                            신규등록
                         </Button>
                     </div>
                 </div>

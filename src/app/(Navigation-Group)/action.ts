@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-11-05 16:27:57
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-12-20 13:17:46
+ * @LastEditTime: 2024-12-20 15:30:48
  * @FilePath: src/app/(Navigation-Group)/action.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -12,11 +12,11 @@
 
 import {
     ClaimRowType,
-    DashBoardType, FormData,
+    DashBoardType,
     ParamDashType2,
     ParamType,
     ParkingParamType,
-    ParkingType, rcAccidentType,
+    ParkingType, rcAccidentRowType, rcAccidentType, RcFormData,
     UptClaim
 } from "@/@types/common";
 import dayjs from "dayjs";
@@ -281,9 +281,9 @@ export async function getRcAccidentList(param: ParamType) : Promise<rcAccidentTy
     }
 }
 
-export async function insertRcAccident(param: FormData) : Promise<resultCode> {
+export async function rcPortalRoute(param: rcAccidentRowType) : Promise<resultCode> {
     try {
-        const response = await fetch(`https://center-api.simg.kr/api/portal/insertRcAccident`, {
+        const response = await fetch(`https://center-api.simg.kr/api/portal/rcPortalRoute`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

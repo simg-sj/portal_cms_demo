@@ -211,12 +211,12 @@ interface ParkingRowType {
 interface rcAccidentType {
     rcPk : number;
     bpk: number; // 업체키
-    insuNum ?: number;
+    insuNum ?: string;
     partnerName: string; // 제휴사명
     carNum: string; // 차량번호
     carType: string; // 차종
-    accidentDate: Date; // 사고 일시
-    arrivalETA: Date; // 예상 입고 일정 (nullable)
+    accidentDate: string; // 사고 일시
+    arrivalETA: string; // 예상 입고 일정 (nullable)
     propDamage: string | null; // 대물 (nullable)
     persInjury : string | null; // 대인 (nullable)
     etc : string | null; // 기타 (nullable)
@@ -225,7 +225,7 @@ interface rcAccidentType {
     confirmedBy : string | null; // 컨펌 담당자 (nullable)
     statusCode ?: string;
     memo ?: string;
-    createdYMD: Date; // 생성일
+    createdYMD: string; // 생성일
 }
 
 
@@ -260,22 +260,9 @@ interface UptClaim extends ClaimRowType {
     job : string;
 }
 
-interface FormData {
-    rcPk : number;
-    bpk : number;
-    partnerName: string; //제휴사명
-    carNum: string; //차량번호
-    carType: string; //차종
-    accidentDate: string; //사고일시
-    accidentTime: string; //사고시간
-    arrivalETA: string; //예상입고일정
-    //피해규모
-    propDamage: string; //대물
-    persInjury: string; //대인
-    etc: string; //기타
-    accidentDetail: string; //사고내용
-    isConfirmed?: string; //컴펌여부
-    confirmedBy? : string; //컴펌담당자
+interface rcAccidentRowType extends rcAccidentType{
+    gbn ?: string;
+    job ?: string;
 }
 
 interface Step1Props {

@@ -1,17 +1,14 @@
 "use client"
-import React, {useState, useEffect, useCallback} from "react";
-import ImageUploader from "@/app/components/common/ui/fileUpload";
+import React, {useState} from "react";
 import DayTerm from "@/app/components/common/ui/dayTerm";
 import CalenderPicker from "@/app/components/common/ui/calenderPicker";
 import dayjs from "dayjs";
 import {
-    ACCIDENT_DETAIL_TYPE_OPTIONS,
-    ACCIDENT_TYPE_OPTIONS,
     APPROVAL_OPTIONS,
     ClosingCode, ConfirmCode,
     STATE_OPTIONS
 } from "@/config/data";
-import {ImageType, rcAccidentType} from "@/@types/common";
+import { rcAccidentRowType} from "@/@types/common";
 import Button from "@/app/components/common/ui/button";
 import FormatNumber from "@/app/components/common/ui/formatNumber";
 
@@ -19,18 +16,16 @@ import FormatNumber from "@/app/components/common/ui/formatNumber";
 interface ListProps {
     isEditing: boolean;
     isNew?: boolean;
-    rowData : rcAccidentType;
-    onSave: (data: rcAccidentType) => void;
+    rowData : rcAccidentRowType;
+    onSave: (data: rcAccidentRowType) => void;
 }
 
 
 
 const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListProps) => {
-    const [images, setImages] = useState<ImageType[]>([]);
-    const [editData, setEditData] = useState<rcAccidentType>(rowData);
+    const [editData, setEditData] = useState<rcAccidentRowType>(rowData);
 
-    // 필드값 변경시 formdata 업데이트
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         setEditData((prev) => {
             const updatedValue = { ...prev, [e.target.name]: e.target.value };
             return updatedValue;
@@ -42,7 +37,7 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
         }
     }
     // 입력필드 타입
-    const renderField = (key: string, value: any, type: 'text' | 'select' | 'date' | 'dayterm' | 'textarea' = 'text', options?: string[]) => {
+    const renderField = (key: string, value: any, type: 'text' | 'select' | 'date' |  'textarea' = 'text', options?: string[]) => {
         if (!isEditing && !isNew) {
             if (type === 'date') {
                 return value ? value.toLocaleDateString() : '';
@@ -75,14 +70,6 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                             [key]: dayjs(date).format('YYYY-MM-DD')
                         }))
                     }/>
-                );
-            case 'dayterm':
-                return (
-                    <DayTerm
-                        sDay={dayjs(editData.sDay).toDate()}
-                        eDay={dayjs(editData.eDay).toDate()}
-                        setParam={setEditData}
-                    />
                 );
             case 'textarea':
                 return (
