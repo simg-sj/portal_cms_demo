@@ -140,15 +140,17 @@ export default function Page() {
             return;
         }
         if (window.confirm(`선택한 ${selectedItems.size}개의 항목을 삭제하시겠습니까?`)) {
-            console.log('삭제할 항목 인덱스:', Array.from(selectedItems));
-            let result = await deleteGroup(selectedItems);
+            let result = await deleteGroup(Array.from(selectedItems));
             if(result.code === '200') {
                 let reload = await getRcAccidentList(param);
+                setSelectedItems( new Set());
                 setData(reload);
                 closePopup();
             }else {
                 alert("서비스 오류입니다.");
             }
+        }else{
+            return;
         }
     };
 

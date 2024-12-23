@@ -14,7 +14,7 @@ export const ClosingCode= {
     '07' : '합의'
 }
 
-export const ConfirmCode= {
+export const r= {
     'Y' : '승인',
     'N' : '미승인'
 }
