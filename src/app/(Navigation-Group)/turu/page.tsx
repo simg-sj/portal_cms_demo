@@ -71,8 +71,8 @@ export default function Page() {
 
     return (
         <div className={'flex justify-center'}>
-            <div className={'px-8 py-6 bg-white rounded-xl w-full'}>
-                <div className={''}>
+            <div className={'px-8 py-6 bg-white rounded-xl w-full flex justify-center'}>
+                <div>
                     <div className="flex mx-[100px] mb-[50px] text-main-light font-bold text-2xl step mt-5">
                         <div
                             className={`border-main-light border-2 rounded-full px-[25px] py-[15px] ${currentStep === 1 ? 'bg-main-light text-white' : ''}`}

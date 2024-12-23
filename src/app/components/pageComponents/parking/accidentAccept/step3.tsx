@@ -9,8 +9,7 @@ const Step3 = ({onReset}: Step3Props) => {
             <div>사고접수가 완료되었습니다</div>
             <div className={'mt-5 mb-[200px]'}>감사합니다</div>
             <div className={'mt-10'}>
-                <Button color={"main"} fill={true} onClick={onReset}
-                        className={'text-xl font-medium w-4/5 h-[60px] button'}>확인</Button>
+                <Button color={"main"} fill={true} onClick={onReset} textSize={18} width={1100} height={60} >확인</Button>
             </div>
         </div>
     );

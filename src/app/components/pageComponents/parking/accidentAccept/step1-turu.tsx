@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import Button from "@/app/components/common/ui/button";
 import type {rcAccidentRowType, Step1Props} from "@/@types/common";
 import {useSession} from "next-auth/react";
+import TimePicker from "@/app/components/common/ui/timePicker";
 
 const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
     const {data} = useSession();
@@ -9,9 +10,14 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
     const [isFormValid, setIsFormValid] = useState(false);
     const [confirmation, setConfirmation] = useState<'Y' | 'N' | null>(null);
     const isAdmin = data?.user?.auth === 'admin';
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const {name, value} = e.target;
         setFormData((prev: rcAccidentRowType) => ({...prev, [name]: value}));
+    };
+
+    const handleTimeChange = (timeString: string) => {
+        setFormData(prev => ({...prev, accidentTime: timeString}));
     };
 
     const handleConfirmationChange = (value: 'Y' | 'N') => {
@@ -41,8 +47,8 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
             if (confirmation === null) {
                 newErrors.confirmation = "컨펌여부를 선택해주세요";
             }
-            if (confirmation === 'yes' && !formData.confirmedBy) {
-                newErrors.manager = "담당자를 선택해주세요";
+            if (confirmation === 'Y' && !formData.confirmedBy) {
+                newErrors.confirmedBy = "담당자를 선택해주세요";
             }
         }
         setErrors(newErrors);
@@ -134,7 +140,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                 </div>
                 {errors.carType && <div className="text-red-500 pl-[100px] text-base error">{errors.carType}</div>}
                 <div className={'flex px-[100px] py-5 items-center'}>
-                    <div className={'font-medium w-[300px] mr-1'}>사고일시 <span className={'text-red-500'}>*</span>
+                    <div className={'font-medium w-[300px] mr-1'}>사고일자 <span className={'text-red-500'}>*</span>
                     </div>
                     <input
                         type={'date'}
@@ -149,13 +155,17 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                 <div className={'flex px-[100px] py-5 items-center'}>
                     <div className={'font-medium w-[300px] mr-1'}>사고시간 <span className={'text-red-500'}>*</span>
                     </div>
-                    <input
+                    <TimePicker
+                        initialTime={formData.accidentTime}
+                        onChange={handleTimeChange}
+                    />
+                    {/*<input
                         type={'time'}
                         name="accidentTime"
                         value={formData.accidentTime || ''}
                         onChange={handleInputChange}
                         className={'w-[800px]'}
-                    />
+                    />*/}
                 </div>
                 {errors.accidentTime &&
                     <div className="text-red-500 pl-[100px] text-base error">{errors.accidentTime}</div>}
@@ -240,8 +250,8 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                                         type="radio"
                                         name="confirmation"
                                         className={'mr-3'}
-                                        checked={confirmation === 'yes'}
-                                        onChange={() => handleConfirmationChange('yes')}
+                                        checked={confirmation === 'Y'}
+                                        onChange={() => handleConfirmationChange('Y')}
                                     />
                                     <span>예</span>
                                 </label>
@@ -250,16 +260,16 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                                         type="radio"
                                         name="confirmation"
                                         className={'mr-3'}
-                                        checked={confirmation === 'no'}
-                                        onChange={() => handleConfirmationChange('no')}
+                                        checked={confirmation === 'N'}
+                                        onChange={() => handleConfirmationChange('N')}
                                     />
                                     <span>아니오</span>
                                 </label>
-                                {confirmation === 'yes' && (
+                                {confirmation === 'Y' && (
                                     <select
                                         className={'ml-20 w-[560px]'}
-                                        value={formData.manager || ''}
-                                        name="manager"
+                                        value={formData.confirmedBy || ''}
+                                        name="confirmedBy"
                                         onChange={handleInputChange}
                                     >
                                         <option value="" disabled>담당자를 선택하세요</option>
@@ -271,14 +281,13 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                         </div>
                         {errors.confirmation &&
                             <div className="text-red-500 pl-[100px] text-base error">{errors.confirmation}</div>}
-                        {errors.manager &&
-                            <div className="text-red-500 pl-[100px] text-base error">{errors.manager}</div>}
+                        {errors.confirmedBy &&
+                            <div className="text-red-500 pl-[100px] text-base error">{errors.confirmedBy}</div>}
                     </>
                 )}
             </div>
             <div className={'flex my-10 mx-[100px]'}>
-                <Button color={"main"} fill={true} onClick={handleNext} textSize={18} width={1100}
-                        height={60}>확인</Button>
+                <Button color={"main"} fill={true} onClick={handleNext} textSize={18} width={1100} height={60}>확인</Button>
             </div>
         </>
     );
