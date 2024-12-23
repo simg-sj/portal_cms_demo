@@ -123,7 +123,7 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                     </tr>
                     <tr>
                         <th>상태</th>
-                        <td>{renderField('statusCode', ClosingCode[editData.statusCode], 'select', STATE_OPTIONS)}</td>
+                        <td>{renderField('statusCode', editData.statusCode?ClosingCode[editData.statusCode] : '-', 'select', STATE_OPTIONS)}</td>
                         <th>지급보험금</th>
                         {/*<td>{ renderField('total', FormatNumber(editData.total)? FormatNumber(editData.total)+'원' : '-', 'text')}</td>*/}
                     </tr>
@@ -131,7 +131,7 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                         <th>사고접수일</th>
                         <td>{renderField('createdYMD', dayjs(editData.createdYMD).toDate(), 'date')}</td>
                         <th>컨펌 여부</th>
-                        <td>{renderField('isConfirmed', ConfirmCode[editData.isConfirmed], 'select', APPROVAL_OPTIONS)}</td>
+                        <td>{renderField('isConfirmed',editData.isConfirmed ? ConfirmCode[editData.isConfirmed] : '-', 'select', APPROVAL_OPTIONS)}</td>
                     </tr>
                     </tbody>
                 </table>
