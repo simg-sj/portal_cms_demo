@@ -36,11 +36,6 @@ const Step2= ({onNext, onPrev, param} : Step2Props) =>  {
         }catch(error){
             console.error(error);
         }
-
-
-
-
-
     };
     return (
         <div className={'text-xl my-[70px] mx-[100px] stepTwo'}>
@@ -74,9 +69,8 @@ const Step2= ({onNext, onPrev, param} : Step2Props) =>  {
                 <div className={'text-lg text-gray-700'}> 위와 같이 개인정보 제3자 제공에 동의합니다.</div>
             </label>
             <div className={'flex justify-center my-10'}>
-                <Button color={"gray"} onClick={onPrev} className={'mr-10 w-3/5 h-[60px] button'}>취소</Button>
-                <Button color={"main"} fill={true} onClick={handleSubmit}
-                        className={'w-3/5 h-[60px] button'}>접수하기</Button>
+                <Button color={"gray"} onClick={onPrev} textSize={18} width={540} height={60} className={'mr-[20px]'}>취소</Button>
+                <Button color={"main"} fill={true} onClick={handleSubmit} textSize={18} width={540} height={60} >접수하기</Button>
             </div>
         </div>
     );
