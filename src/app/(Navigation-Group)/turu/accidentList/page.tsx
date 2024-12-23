@@ -9,7 +9,7 @@ import SlidePopup from "@/app/components/popup/SlidePopup";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
 import {
-    deleteClaimData,
+    deleteClaimData, deleteGroup,
     getClaim,
     getImage,
     getRcAccidentList,
@@ -141,7 +141,7 @@ export default function Page() {
         }
         if (window.confirm(`선택한 ${selectedItems.size}개의 항목을 삭제하시겠습니까?`)) {
             console.log('삭제할 항목 인덱스:', Array.from(selectedItems));
-            let result = await rcPortalRoute(rowData);
+            let result = await deleteGroup(selectedItems);
             if(result.code === '200') {
                 let reload = await getRcAccidentList(param);
                 setData(reload);

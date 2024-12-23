@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-11-05 16:27:57
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-12-20 15:30:48
+ * @LastEditTime: 2024-12-23 09:49:37
  * @FilePath: src/app/(Navigation-Group)/action.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -152,19 +152,16 @@ export async function deleteClaimData(param: ClaimRowType): Promise<resultCode> 
     }
 }
 
-export async function deleteGroupClaimData(param: ClaimRowType): Promise<resultCode> {
+
+export async function deleteGroup(param: Set<number>): Promise<resultCode> {
     try {
-        let deleteParam = {
-            bpk : param.bpk,
-            irpk : param.irpk,
-            job : 'DELETE',
-        }
-        const response = await fetch(`https://center-api.simg.kr/api/portal/deleteClaimData`, {
+        console.log("@@@@@",param);
+        const response = await fetch(`https://center-api.simg.kr/api/portal/deleteGroup`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(deleteParam)
+            body: JSON.stringify(Array.from(param))
         });
 
         if (!response.ok) {
@@ -296,7 +293,7 @@ export async function rcPortalRoute(param: rcAccidentRowType) : Promise<resultCo
             const errorDetails = await response.text();
             throw new Error(`Error ${response.status}: ${response.statusText} - ${errorDetails}`);
         }
-
+        
         return await response.json();
 
 

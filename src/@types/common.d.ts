@@ -207,7 +207,23 @@ interface ParkingRowType {
     carLift: boolean;                  // 차량 리프트 여부
     memo : string;
 }
-
+interface FormData {
+    rcPk: number;
+    bpk: number;
+    partnerName: string; //제휴사명
+    carNum: string; //차량번호
+    carType: string; //차종
+    accidentDate: string; //사고일시
+    accidentTime: string; //사고시간
+    arrivalETA: string; //예상입고일정
+    //피해규모
+    propDamage: string; //대물
+    persInjury: string; //대인
+    etc: string; //기타
+    accidentDetail: string; //사고내용
+    isConfirmed?: string; //컴펌여부
+    confirmedBy?: string; //컴펌담당자
+}
 interface rcAccidentType {
     rcPk : number;
     bpk: number; // 업체키
@@ -225,7 +241,7 @@ interface rcAccidentType {
     confirmedBy : string | null; // 컨펌 담당자 (nullable)
     statusCode ?: string;
     memo ?: string;
-    createdYMD: string; // 생성일
+    createdYMD?: string; // 생성일
 }
 
 
@@ -260,21 +276,24 @@ interface UptClaim extends ClaimRowType {
     job : string;
 }
 
+type PkType = [number]
+
 interface rcAccidentRowType extends rcAccidentType{
     gbn ?: string;
     job ?: string;
+    accidentTime : string;
 }
 
 interface Step1Props {
     onNext: () => void;
-    formData: FormData;
-    setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+    formData: rcAccidentRowType;
+    setFormData: React.Dispatch<React.SetStateAction<rcAccidentRowType>>;
 }
 
 interface Step2Props {
     onNext: () => void;
     onPrev: () => void;
-    param: FormData;
+    param: rcAccidentRowType;
 }
 
 interface Step3Props {

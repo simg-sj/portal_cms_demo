@@ -1,8 +1,7 @@
 import React, {useState} from "react";
-// import {api1001} from "../api/commonAPi.ts";
 import Button from "@/app/components/common/ui/button";
-import type {FormData, Step2Props} from "@/@types/common";
-import {insertRcAccident} from "@/app/(Navigation-Group)/action";
+import type {Step2Props} from "@/@types/common";
+import {rcPortalRoute} from "@/app/(Navigation-Group)/action";
 
 
 
@@ -24,9 +23,11 @@ const Step2= ({onNext, onPrev, param} : Step2Props) =>  {
     const handleSubmit = async () => {
         try {
             if (isAllChecked) {
-                let {statusCode} = await insertRcAccident(param);
-                console.log(statusCode);
-                if(statusCode === '200'){
+                param.job = 'INS';
+                param.gbn = '';
+                let {code} = await rcPortalRoute(param);
+
+                if(code === '200'){
                     onNext();
                 }
             } else {

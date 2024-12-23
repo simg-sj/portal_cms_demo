@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import Button from "@/app/components/common/ui/button";
-import type {FormData, Step1Props} from "@/@types/common";
+import type {rcAccidentRowType, Step1Props} from "@/@types/common";
 import {useSession} from "next-auth/react";
 
 const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
@@ -11,13 +11,13 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
     const isAdmin = data?.user?.auth === 'admin';
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const {name, value} = e.target;
-        setFormData((prev: FormData) => ({...prev, [name]: value}));
+        setFormData((prev: rcAccidentRowType) => ({...prev, [name]: value}));
     };
 
     const handleConfirmationChange = (value: 'Y' | 'N') => {
         setConfirmation(value);
         if (value === 'N') {
-            setFormData((prev: FormData) => ({...prev, confirmedBy: ''}));
+            setFormData((prev: rcAccidentRowType) => ({...prev, confirmedBy: ''}));
         }
     };
 
