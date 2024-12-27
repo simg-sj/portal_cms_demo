@@ -10,7 +10,7 @@ import {
 } from "@/config/data";
 import { rcAccidentRowType} from "@/@types/common";
 import Button from "@/app/components/common/ui/button";
-import FormatNumber from "@/app/components/common/ui/formatNumber";
+import TimePicker from "@/app/components/common/ui/timePicker";
 
 
 interface ListProps {
@@ -37,13 +37,13 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
         }
     }
     // 입력필드 타입
-    const renderField = (key: string, value: any, type: 'text' | 'select' | 'date' |  'textarea' = 'text', options?: string[]) => {
+    const renderField = (key: string, value: any, type: 'text' | 'select' | 'date' | 'time' |  'textarea' = 'text', options?: string[]) => {
         if (!isEditing && !isNew) {
             if (type === 'date') {
-                return value ? value.toLocaleDateString() : '';
+                return value ? dayjs(value).format('YYYY-MM-DD') : '';
             }
-            if (type === 'dayterm') {
-                return `${value.startDate?.toLocaleDateString()} ~ ${value.endDate?.toLocaleDateString()}`;
+            if (type === 'time') {
+                return value ? dayjs(value).format('HH:mm') : '';
             }
             return value;
         }
@@ -64,12 +64,15 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                 );
             case 'date':
                 return (
-                    <CalenderPicker selected={dayjs(editData[key]).toDate()} onChange={(date: Date | null) =>
-                        setEditData((prevState) => ({
-                            ...prevState,
-                            [key]: dayjs(date).format('YYYY-MM-DD')
-                        }))
-                    }/>
+                    <CalenderPicker
+                        selected={dayjs(value).toDate()}
+                        onChange={(date: Date | null) =>
+                            setEditData((prevState) => ({
+                                ...prevState,
+                                [key]: dayjs(date).format('YYYY-MM-DD')
+                            }))
+                        }
+                    />
                 );
             case 'textarea':
                 return (
@@ -78,6 +81,19 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                         defaultValue={value}
                         onChange={handleChange}
                         className={"w-full p-1 border rounded h-[100px]"}
+                    />
+                );
+            case 'time':
+                return (
+                    <TimePicker
+                        initialTime={dayjs(value).format('HH:mm')}
+                        onChange={(timeString) => {
+                            const currentDate = dayjs(editData[key]).format('YYYY-MM-DD');
+                            setEditData((prevState) => ({
+                                ...prevState,
+                                [key]: `${currentDate} ${timeString}:00`
+                            }));
+                        }}
                     />
                 );
             default:
@@ -112,9 +128,9 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                 <table className={'colTable text-[15px]'}>
                     <colgroup>
                         <col style={{width: "200px"}}/>
-                        <col style={{width: "250px"}}/>
+                        <col style={{width: ""}}/>
                         <col style={{width: "200px"}}/>
-                        <col style={{width: "250px"}}/>
+                        <col style={{width: ""}}/>
                     </colgroup>
                     <tbody>
                     <tr>
@@ -142,11 +158,7 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                 <table className={'colTable text-[15px]'}>
                     <colgroup>
                         <col style={{width: "200px"}}/>
-                        <col style={{width: "200px"}}/>
-                        <col style={{width: "200px"}}/>
-                        <col style={{width: "200px"}}/>
-                        <col style={{width: "250px"}}/>
-                        <col style={{width: "250px"}}/>
+                        <col style={{width: ""}}/>
                     </colgroup>
                     <tbody>
                     <tr>
@@ -159,7 +171,17 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                     </tr>
                     <tr>
                         <th>사고일시</th>
-                        <td>{renderField('accidentDate', dayjs(editData.accidentDate).toDate(), 'date')}</td>
+                        {/*<td>{renderField('accidentDate', dayjs(editData.accidentDate).toDate(), 'date')}</td>*/}
+                        <td>
+                            {!isEditing && !isNew ? (
+                                dayjs(editData.accidentDate).format('YYYY-MM-DD HH:mm')
+                            ) : (
+                                <div className="flex gap-4 w-[685px]">
+                                    {renderField('accidentDate', editData.accidentDate, 'date')}
+                                    {renderField('accidentDate', editData.accidentDate, 'time')}
+                                </div>
+                            )}
+                        </td>
                     </tr>
                     <tr>
                         <th>예상입고일정</th>
@@ -182,15 +204,14 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                     피해규모
                 </div>
                 <table className={'colTable text-[15px]'}>
-                <colgroup>
+                    <colgroup>
                         <col style={{width: "200px"}}/>
-                        <col style={{width: "250px"}}/>
-                        <col style={{width: "200px"}}/>
+                        <col style={{width: ""}}/>
                     </colgroup>
                     <tbody>
-                        <tr>
-                            <th>대물</th>
-                            <td colSpan={3}>{renderField('propDamage', editData.propDamage ? editData.propDamage : '-')}</td>
+                    <tr>
+                        <th>대물</th>
+                        <td colSpan={3}>{renderField('propDamage', editData.propDamage ? editData.propDamage : '-')}</td>
                         </tr>
                         <tr>
                             <th>대인</th>
@@ -209,9 +230,7 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                 <table className={'colTable text-[15px]'}>
                     <colgroup>
                         <col style={{width: "200px"}}/>
-                        <col style={{width: "250px"}}/>
-                        <col style={{width: "200px"}}/>
-                        <col style={{width: "250px"}}/>
+                        <col style={{width: ""}}/>
                     </colgroup>
                     <tbody>
                     <tr>
@@ -227,9 +246,7 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                 <table className={'colTable text-[15px]'}>
                     <colgroup>
                         <col style={{width: "200px"}}/>
-                        <col style={{width: "250px"}}/>
-                        <col style={{width: "200px"}}/>
-                        <col style={{width: "250px"}}/>
+                        <col style={{width: ""}}/>
                     </colgroup>
                     <tbody>
                     <tr>
