@@ -3,13 +3,12 @@ import React from "react";
 import {User} from "next-auth";
 
 
-
 interface MenuItemType {
-    icon : StaticImageData | {};
-    title : string;
+    icon: StaticImageData | {};
+    title: string;
     label: string;
     link: string;
-    authLevel : number;
+    authLevel: number;
 }
 
 interface MenuItemProps extends MenuItemType {
@@ -18,7 +17,7 @@ interface MenuItemProps extends MenuItemType {
 }
 
 
-interface CounselData{
+interface CounselData {
     pNo: string;
     sDay: string;
     eDay: string;
@@ -29,10 +28,10 @@ interface CounselData{
     closingAmt: number;
     repairCost: number;
     lossRatio: number;
-    dPremiums ?: number;
+    dPremiums?: number;
 }
 
-interface ChangeCounselData{
+interface ChangeCounselData {
     cNo: number;
     cDay: string;
     pNo: string;
@@ -43,7 +42,7 @@ interface ChangeCounselData{
 }
 
 
-interface ChangeGraph{
+interface ChangeGraph {
     cNo: number;
     cDay: string;
     pNo: string;
@@ -52,24 +51,27 @@ interface ChangeGraph{
     AddAmt: number;
     EndAmt: number;
 }
+
 interface MonthCumulativeData {
-    bpk : number
-    changeDay : string
-    counts : number
-    total : number
-    counts_percent_change : number
-    total_percent_change : number
-}
-interface TopCounselData {
-    pklName : string;
-    total_sum : string;
-}
-interface TopBusinessData {
-    pklName : string;
-    count : number;
+    bpk: number
+    changeDay: string
+    counts: number
+    total: number
+    counts_percent_change: number
+    total_percent_change: number
 }
 
-interface MonthAccidentData{
+interface TopCounselData {
+    pklName: string;
+    total_sum: string;
+}
+
+interface TopBusinessData {
+    pklName: string;
+    count: number;
+}
+
+interface MonthAccidentData {
     changeDay: string;
     acceptNum: number;
     endNum: number;
@@ -88,48 +90,47 @@ interface ThemeConfig {
     [key: string]: Theme;
 }
 
-interface UserType extends User{
-    index?: number;
-    auth: string | null;
-    name: string | null;
-    platform: string | null;
-    password?: string;
-    userId: string;
-    email: string | null;
-    phone: string | null;
-    work?: string | null;
-    authLevel : number;
+interface UserType {
+    index?: number,
+    auth: string ,
+    name: string ,
+    platform: string,
+    password?: string,
+    userId: string,
+    email?: string,
+    phone?: string,
+    work?: string,
+    authLevel: number,
+    userInfo?: UserType
 }
 
 interface ParamType {
-    bpk : number
-    startDate : string;
-    endDate : string;
-    condition : string;
-    text : string | null;
+    bpk: number
+    startDate: string;
+    endDate: string;
+    condition: string;
+    text: string | null;
 }
 
-interface ParkingParamType{
-    bpk : number;
-    condition : string;
-    text : string;
+interface ParkingParamType {
+    bpk: number;
+    condition: string;
+    text: string;
 }
 
 interface ImageType {
-    location : string;
+    location: string;
 }
-
-
 
 
 interface ClaimRowType {
     irpk: number;                       // Primary key, auto-increment
     bpk?: number | null;                // 업체키
-    pNo : string;
-    bNumber : string;
-    platform : string;
-    sDay : string;
-    eDay : string;
+    pNo: string;
+    bNumber: string;
+    platform: string;
+    sDay: string;
+    eDay: string;
     cpk?: number | null;                // simg 통합 CMS에서의 업체키 세팅값
     insuNum?: string | null;            // 사고 접수 번호
     pklName?: string | null;            // 주차장명
@@ -160,9 +161,9 @@ interface ClaimRowType {
     rentPay?: string | null;            // 렌트비
     selfPay?: string | null;            // 자기부담금
     vat?: string | null;                // 부가세
-    bCargeName ?: string
-    bCell ?: string
-    bMail ?: string
+    bCargeName?: string
+    bCell?: string
+    bMail?: string
     selfTotal?: string | null;          // 합계(자기부담금)
     selfYN?: string | null;             // 정산여부(자기부담금)
     depositYN?: string | null;          // 입금 여부
@@ -173,6 +174,7 @@ interface ClaimRowType {
     useYNull?: string | null;           // 사용 여부
     createdYMD?: Date | null;           // 생성일자 (datetime)
 }
+
 interface ParkingType {
     pklpk: number;                     // 고유 식별자, 주차장 키 (Primary Key)
     bpk: number;                       // 업체 키 (Business Primary Key)
@@ -195,18 +197,20 @@ interface ParkingType {
     useYNull: string;                  // 사용 여부
     createdYMD: Date;                  // 생성일자
 }
+
 interface ParkingRowType {
-    pklName : string;
+    pklName: string;
     pklAddress: string;
     form: string;
-    faceCount : string;
+    faceCount: string;
     detailHistory: string;
     indoor: boolean;                   // 실내 여부
     outdoor: boolean;                  // 실외 여부
     mechanical: boolean;               // 기계식 여부
     carLift: boolean;                  // 차량 리프트 여부
-    memo : string;
+    memo: string;
 }
+
 interface FormData {
     rcPk: number;
     bpk: number;
@@ -224,23 +228,23 @@ interface FormData {
     isConfirmed?: string; //컴펌여부
     confirmedBy?: string; //컴펌담당자
 }
+
 interface rcAccidentType {
-    rcPk : number;
+    rcPk: number;
     bpk: number; // 업체키
-    insuNum ?: string;
+    insuNum?: string;
     partnerName: string; // 제휴사명
     carNum: string; // 차량번호
-    carType: string; // 차종
     accidentDate: string; // 사고 일시
     arrivalETA: string; // 예상 입고 일정 (nullable)
     propDamage: string | null; // 대물 (nullable)
-    persInjury : string | null; // 대인 (nullable)
-    etc : string | null; // 기타 (nullable)
-    accidentDetail : string; // 사고내용 (nullable)
-    isConfirmed : string; // 컨펌 여부 (nullable)
-    confirmedBy : string | null; // 컨펌 담당자 (nullable)
-    statusCode ?: string;
-    memo ?: string;
+    persInjury: string | null; // 대인 (nullable)
+    etc: string | null; // 기타 (nullable)
+    accidentDetail: string; // 사고내용 (nullable)
+    isConfirmed: string; // 컨펌 여부 (nullable)
+    confirmedBy: string | null; // 컨펌 담당자 (nullable)
+    statusCode?: string;
+    memo?: string;
     createdYMD?: string; // 생성일
 }
 
@@ -266,22 +270,23 @@ interface DashBoardType {
 }
 
 interface ParamDashType2 {
-    job : string;
-    bpk : string;
-    sDay : string;
-    eDay : string;
+    job: string;
+    bpk: string;
+    sDay: string;
+    eDay: string;
 }
 
 interface UptClaim extends ClaimRowType {
-    job : string;
+    job: string;
 }
 
 type PkType = [number]
 
-interface rcAccidentRowType extends rcAccidentType{
-    gbn ?: string;
-    job ?: string;
-    accidentTime : string;
+interface rcAccidentRowType extends rcAccidentType {
+    gbn?: string;
+    job?: string;
+    accidentTime: string;
+    accidentDateTime: string;
 }
 
 interface Step1Props {

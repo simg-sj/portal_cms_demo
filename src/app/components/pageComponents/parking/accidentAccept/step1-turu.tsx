@@ -37,7 +37,6 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
         } else if (!carNumRegex.test(formData.carNum)) {
             newErrors.carNum = "차량번호 형식이 올바르지 않습니다. 형식: 12가3456 또는 123가4567 으로 입력해주세요.";
         }
-        if (!formData.carType) newErrors.carType = "차종을 입력해주세요.";
         if (!formData.accidentDate) newErrors.accidentDate = "사고일시를 선택해주세요.";
         if (!formData.accidentTime) newErrors.accidentTime = "사고시간을 선택해주세요.";
         if (!formData.arrivalETA) newErrors.arrivalETA = "예상입고일정을 선택해주세요.";
@@ -56,7 +55,6 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
     };
 
     useEffect(() => {
-        console.log(formData)
         setIsFormValid(validateForm());
     }, [formData]);
 
@@ -71,7 +69,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
     useEffect(() => {
         if(data && data.user){
             if(!isAdmin){
-                setFormData((prev: FormData) => ({...prev, partnerName: data.user.bName}));
+                setFormData((prev: rcAccidentRowType) => ({...prev, partnerName : data.user.bName}));
             }
         }
     }, [data]);
@@ -128,18 +126,6 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                 </div>
                 {errors.carNum && <div className="text-red-500 pl-[100px] text-base error">{errors.carNum}</div>}
                 <div className={'flex px-[100px] py-5 items-center'}>
-                    <div className={'font-medium w-[300px] mr-1'}>차종 <span className={'text-red-500'}>*</span>
-                    </div>
-                    <input
-                        type={'text'}
-                        name="carType"
-                        defaultValue={formData.carType || ''}
-                        onChange={handleInputChange}
-                        className={'w-[800px]'}
-                    />
-                </div>
-                {errors.carType && <div className="text-red-500 pl-[100px] text-base error">{errors.carType}</div>}
-                <div className={'flex px-[100px] py-5 items-center'}>
                     <div className={'font-medium w-[300px] mr-1'}>사고일자 <span className={'text-red-500'}>*</span>
                     </div>
                     <input
@@ -177,6 +163,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                         name="arrivalETA"
                         defaultValue={formData.arrivalETA || ''}
                         onChange={handleInputChange}
+                        min={formData.accidentDate}
                         className={'w-[800px]'}
                     />
                 </div>

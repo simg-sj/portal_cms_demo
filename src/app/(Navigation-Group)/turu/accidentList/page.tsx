@@ -9,9 +9,7 @@ import SlidePopup from "@/app/components/popup/SlidePopup";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
 import {
-    deleteClaimData, deleteGroup,
-    getClaim,
-    getImage,
+    deleteGroup,
     getRcAccidentList,
     rcPortalRoute,
 } from "@/app/(Navigation-Group)/action";
@@ -21,7 +19,7 @@ import {
     ParamType,
     rcAccidentType, rcAccidentRowType,
 } from "@/@types/common";
-import AccidentDetailList from "@/app/components/pageComponents/parking/accidentDetail";
+import RcAccidentDetailList from "@/app/components/pageComponents/rentCar/rcAccidentDetail";
 
 interface ColumnDefinition<T> {
     key: keyof T;
@@ -273,7 +271,7 @@ export default function Page() {
                     title={isNew ? "신규 등록" : "상세보기"}
                     rowData={rowData}
                     onDelete={handleDelete}
-                    Content={(props) => <AccidentDetailList {...props} isNew={isNew} rowData={rowData} onSave={handleSave}/>}
+                    Content={(props) => <RcAccidentDetailList {...props} isNew={isNew} rowData={rowData} onSave={handleSave}/>}
                     buttons={popupButtons}
                 />
                 <div className={'mt-4'}>

@@ -3,22 +3,20 @@ import React, {useState} from 'react';
 import Step1 from "@/app/components/pageComponents/parking/accidentAccept/step1-turu";
 import Step2 from "@/app/components/pageComponents/parking/accidentAccept/step2-turu";
 import Step3 from "@/app/components/pageComponents/parking/accidentAccept/step3";
-import {FormData, rcAccidentRowType} from "@/@types/common";
-import {useSession} from "next-auth/react";
+import { rcAccidentRowType} from "@/@types/common";
 
 
 export default function Page() {
     //스탭
     const [currentStep, setCurrentStep] = useState(1);
-    const {data} = useSession();
     const [formData, setFormData] = useState<rcAccidentRowType>({
         rcPk: 0,
         bpk : 4,
         partnerName: '',
         carNum: '',
-        carType: '',
         accidentDate: '',
-        accidentTime: '',
+        accidentTime: '12:00',
+        accidentDateTime : '',
         arrivalETA: '' ,
         propDamage: '',
         persInjury: '',
@@ -43,9 +41,9 @@ export default function Page() {
             bpk : 4,
             partnerName: '',
             carNum: '',
-            carType: '',
             accidentDate: '',
             accidentTime: '',
+            accidentDateTime : '',
             arrivalETA: '',
             propDamage: '',
             persInjury: '',

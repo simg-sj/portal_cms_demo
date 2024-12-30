@@ -25,8 +25,9 @@ const Step2= ({onNext, onPrev, param} : Step2Props) =>  {
             if (isAllChecked) {
                 param.job = 'INS';
                 param.gbn = '';
-                let {code} = await rcPortalRoute(param);
 
+                param.accidentDateTime = param.accidentDate +' '+ param.accidentTime;
+                let {code} = await rcPortalRoute(param);
                 if(code === '200'){
                     onNext();
                 }

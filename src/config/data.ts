@@ -1,7 +1,3 @@
-import {UserType} from "@/@types/common";
-
-
-
 
 export const ClosingCode= {
     '00' : '확인중',
@@ -14,124 +10,19 @@ export const ClosingCode= {
     '07' : '합의'
 }
 
+
+export const ConfirmCode= {
+    'Y' : '승인',
+    'N' : '미승인',
+    null : '-'
+}
+
 export const r= {
     'Y' : '승인',
     'N' : '미승인'
 }
 
 
-export const UserSet: UserType[] = [
-    {
-        index: 1,
-        auth: '관리자',
-        name: '홍홍홍',
-        platform: '케이엠파크',
-        password: '1234',
-        userId: 'hongildong',
-        email: 'hong@hiparking.com',
-        phone: '010-0000-0000',
-        work: '팀장'
-    },
-    {
-        index: 2,
-        auth: '사용자',
-        name: '어쩌구',
-        platform: '하이파킹',
-        password: '1234',
-        userId: 'hongildong',
-        email: 'hong@hiparking.com',
-        phone: '010-0000-0000',
-        work: '팀장'
-    },
-    {
-        index: 3,
-        auth: '사용자',
-        name: '저쩌구',
-        platform: '하이파킹',
-        password: '1234',
-        userId: 'hongildong',
-        email: 'hong@hiparking.com',
-        phone: '010-0000-0000',
-        work: '팀장'
-    },
-    {
-        index: 4,
-        auth: '관리자',
-        name: '샤샤샥',
-        platform: '하이파킹',
-        password: '1234',
-        userId: 'hongildong',
-        email: 'hong@hiparking.com',
-        phone: '010-0000-0000',
-        work: '팀장'
-    },
-    {
-        index: 5,
-        auth: '관리자',
-        name: '샤샤샥',
-        platform: '하이파킹',
-        password: '1234',
-        userId: 'hongildong',
-        email: 'hong@hiparking.com',
-        phone: '010-0000-0000',
-        work: '팀장'
-    },
-    {
-        index: 6,
-        auth: '관리자',
-        name: '샤샤샥',
-        platform: '하이파킹',
-        password: '1234',
-        userId: 'hongildong',
-        email: 'hong@hiparking.com',
-        phone: '010-0000-0000',
-        work: '팀장'
-    },
-    {
-        index: 7,
-        auth: '관리자',
-        name: '샤샤샥',
-        platform: '하이파킹',
-        password: '1234',
-        userId: 'hongildong',
-        email: 'hong@hiparking.com',
-        phone: '010-0000-0000',
-        work: '팀장'
-    },
-    {
-        index: 8,
-        auth: '관리자',
-        name: '샤샤샥',
-        platform: '하이파킹',
-        password: '1234',
-        userId: 'hongildong',
-        email: 'hong@hiparking.com',
-        phone: '010-0000-0000',
-        work: '팀장'
-    },
-    {
-        index: 5,
-        auth: '관리자',
-        name: '샤샤샥',
-        platform: '하이파킹',
-        password: '1234',
-        userId: 'hongildong',
-        email: 'hong@hiparking.com',
-        phone: '010-0000-0000',
-        work: '팀장'
-    },
-    {
-        index: 9,
-        auth: '관리자',
-        name: '샤샤샥',
-        platform: '하이파킹',
-        password: '1234',
-        userId: 'hongildong',
-        email: 'hong@hiparking.com',
-        phone: '010-0000-0000',
-        work: '팀장'
-    },
-]
 
 export const STATE_OPTIONS = ['확인중', '접수', '접수 취소', '보류', '면책', '종결', '추산', '합의', '부재'];
 export const APPROVAL_OPTIONS = ['승인', '미승인'];
