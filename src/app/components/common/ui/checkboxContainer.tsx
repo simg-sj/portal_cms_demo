@@ -15,7 +15,7 @@ interface CheckboxContainerProps<T> {
     columns: ColumnDefinition<T>[];
     getItemId: (item: T) => number;
     withCheckbox?: boolean;
-    onSelectionChange?: (selectedIds: Set<number>) => void;
+    onSelectionChange?: (selectedIds: number[]) => void;
     onRowClick?: (item: T) => void;
     selectedRow?: number | null;
 }
@@ -27,33 +27,35 @@ export function CheckboxContainer<T>({
                                          withCheckbox = true,
                                          onSelectionChange,
                                          onRowClick,
-                                         selectedRow
-                                     }: CheckboxContainerProps<T>) {
-    const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
-
+                                         selectedRow,
+                                         selectedItems
+                                     }: CheckboxContainerProps<T> & {selectedItems : number []}) {
     const toggleSelectAll = (checked: boolean) => {
         if (!withCheckbox) return;
 
-        const allIds = new Set(items.map(item => getItemId(item)));
-        const newSelectedItems = checked ? allIds : new Set<number>();
+        const allIds = items.map(item => getItemId(item));
+        const newSelectedItems = checked ? allIds : [];
 
-        setSelectedItems(newSelectedItems);
-        onSelectionChange?.(newSelectedItems);
+        onSelectionChange?.(newSelectedItems); // 부모 상태를 업데이트
     };
 
     const toggleSelectItem = (id: number) => {
         if (!withCheckbox) return;
 
-        const newSelectedItems = new Set(selectedItems);
-        if (newSelectedItems.has(id)) {
-            newSelectedItems.delete(id);
+        const newSelectedItems = [...selectedItems];
+
+        if (newSelectedItems.includes(id)) {
+            // id가 이미 선택된 경우 삭제
+            const index = newSelectedItems.indexOf(id);
+            if (index > -1) newSelectedItems.splice(index, 1);
         } else {
-            newSelectedItems.add(id);
+            // id가 선택되지 않은 경우 추가
+            newSelectedItems.push(id);
         }
 
-        setSelectedItems(newSelectedItems);
-        onSelectionChange?.(newSelectedItems);
+        onSelectionChange?.(newSelectedItems); // 부모 상태를 업데이트
     };
+
 
     const handleRowClick = (item: T) => {
         onRowClick?.(item);
@@ -77,8 +79,8 @@ export function CheckboxContainer<T>({
         return String(value);
     };
 
-    const isAllSelected = selectedItems.size === items.length;
-    const isSomeSelected = selectedItems.size > 0 && selectedItems.size < items.length;
+    const isAllSelected = selectedItems.length === items.length;
+    const isSomeSelected = selectedItems.length > 0 && selectedItems.length < items.length;
 
     return (
         <table className="w-full">
@@ -111,7 +113,7 @@ export function CheckboxContainer<T>({
             ) : (
                 items.map((item, index) => {
                     const id = getItemId(item);
-                    const isSelected = selectedRow === id || selectedItems.has(id);
+                    const isSelected = selectedRow === id || selectedItems.includes(id);
 
                     return (
                         <tr
@@ -125,7 +127,7 @@ export function CheckboxContainer<T>({
                             {withCheckbox && (
                                 <td onClick={(e) => e.stopPropagation()}>
                                     <Checkbox
-                                        checked={selectedItems.has(id)}
+                                        checked={selectedItems.includes(id)}
                                         onChange={() => toggleSelectItem(id)}
                                     />
                                 </td>

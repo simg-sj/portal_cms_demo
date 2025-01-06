@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-11-26 13:27:27
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-12-20 09:53:27
+ * @LastEditTime: 2025-01-02 09:39:31
  * @FilePath: src/app/lib/hooks/useFetchDashboard.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -29,7 +29,7 @@ type DashboardData = {
     monthCumulativeData: MonthCumulativeData[];
 };
 
-const useFetchDashboard = (bpk : string) => {
+const useFetchDashboard = (bpk : number) => {
     const [tableData, setTableData] = useState<DashboardData | null>(null);
     const [doughnutValue, setDoughnutValue] = useState<number | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
@@ -45,7 +45,20 @@ const useFetchDashboard = (bpk : string) => {
         try {
             setLoading(true);
             const result = await getDashBoard(params);
-
+            let emptyMonth :MonthCumulativeData[] = []; 
+            
+            if(result[6].length === 0){
+                emptyMonth = [{
+                    bpk: bpk,
+                    changeDay: "",
+                    counts: 0,
+                    total: 0,
+                    counts_percent_change: 0,
+                    total_percent_change: 0
+                }]
+                console.log(true);
+            }
+            
             setTableData({
                 counselData: result[0],
                 changeData: result[1],
@@ -53,7 +66,7 @@ const useFetchDashboard = (bpk : string) => {
                 topCounselData: result[3],
                 monthAccidentData: result[4],
                 changeGraphData: result[5],
-                monthCumulativeData: result[6],
+                monthCumulativeData: result[6].length === 0 ? emptyMonth : result[6],
             });
 
             if (result[0] && result[0].length > 0) {

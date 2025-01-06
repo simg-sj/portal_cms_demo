@@ -18,7 +18,7 @@ interface SearchParams {
 }
 
 export default function UserList() {
-    const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
+    const [selectedItems, setSelectedItems] = useState<number[]>([]);
     const columns = ["이름", "연락처", "이메일", "아이디", "권한"];
     const addUserRef = useRef<AddUserRef>(null);
     const [isOpen, setIsOpen] = useState(false);
@@ -254,6 +254,7 @@ export default function UserList() {
                     items={displayedUsers}
                     getItemId={(item) => item.index}
                     columns={columns}
+                    selectedItems={selectedItems}
                     renderItem={(item, isSelected, onToggle) => (
                         <tr className={'cursor-pointer hover:bg-main-lighter'}
                             onClick={() => handleRowClick(item)}>

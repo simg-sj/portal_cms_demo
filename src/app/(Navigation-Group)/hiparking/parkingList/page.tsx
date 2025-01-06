@@ -207,14 +207,14 @@ export default function Page() {
             }
         ];
 
-    const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
+    const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
     const handleDeleteGroup = () => {
-        if (selectedItems.size === 0) {
+        if (selectedItems.length === 0) {
             alert('삭제할 항목을 선택해주세요.');
             return;
         }
-        if (window.confirm(`선택한 ${selectedItems.size}개의 항목을 삭제하시겠습니까?`)) {
+        if (window.confirm(`선택한 ${selectedItems.length}개의 항목을 삭제하시겠습니까?`)) {
             console.log(selectedItems);
             console.log('삭제할 항목 인덱스:', Array.from(selectedItems));
             return;
@@ -274,7 +274,7 @@ export default function Page() {
                     <select
                         className={'w-[200px]'}
                         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                            setParam((prev: ParamType) => ({
+                            setParam((prev: ParkingParamType) => ({
                                 ...prev,
                                 condition: e.target.value,
                             }))
@@ -289,7 +289,7 @@ export default function Page() {
                         placeholder={'검색조건 설정 후 검색해주세요'}
                         className={'w-[300px] h-[35px] rounded-tr-none rounded-br-none ml-5'}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                            setParam((prev: ParamType) => ({
+                            setParam((prev: ParkingParamType) => ({
                                 ...prev,
                                 text: e.target.value,
                             }))
@@ -360,6 +360,7 @@ export default function Page() {
                         items={getPaginatedData()}
                         getItemId={(item) => item.pklpk}
                         columns={columns}
+                        selectedItems={selectedItems}
                         selectedRow={selectedRow}
                         onSelectionChange={setSelectedItems}
                         onRowClick={(item) => {
@@ -374,7 +375,6 @@ export default function Page() {
                         <Pagination
                             maxNumber={totalPages}
                             onChange={handlePageChange}
-                            initialPage={currentPage}
                         />
                     )}
                 </div>

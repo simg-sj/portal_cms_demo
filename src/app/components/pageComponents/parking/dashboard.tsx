@@ -23,7 +23,7 @@ import CountUp from "@/app/components/common/ui/countUp";
 import {TooltipItem} from "chart.js";
 import {optionBarHorizon, optionDoughnut} from "@/config/data";
 import Error from "@/assets/images/icon/error-icon.png";
-import React from "react";
+import React, {useEffect} from "react";
 import {usePathname} from "next/navigation";
 import CountCard from "@/app/components/common/CountCard";
 
@@ -56,7 +56,7 @@ export default function DashboardComponent({
     //업체별 라우팅 옵션
     const pathname = usePathname();
     const isHiparkingRoute = pathname.includes('/hiparking')
-
+    console.log(tableData);
 
 
     //양방향막대 옵션
@@ -142,7 +142,6 @@ export default function DashboardComponent({
             ),
         },
     ]
-
 
     return (
         <>

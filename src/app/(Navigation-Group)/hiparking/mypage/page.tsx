@@ -27,11 +27,6 @@ export default function Page() {
             });
         }
     }, [data]);
-
-    if (status === "loading" || !userInfo) {
-        return <Loading />;
-    }
-
     return (
         <>
             {

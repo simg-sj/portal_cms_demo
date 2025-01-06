@@ -7,7 +7,7 @@ import {deleteClaimData, getClaim} from "@/app/(Navigation-Group)/action";
 
 interface SlidePopupProps {
     isOpen: boolean;
-    onClose: (data?: ClaimRowType) => void;
+    onClose: (data?: ClaimRowType | ParkingRowType) => void;
     title: string;
     Content: React.ComponentType<{ isEditing: boolean, onSave: (data: any) => void }>;
     buttons: ButtonConfig[];
@@ -18,7 +18,7 @@ interface SlidePopupProps {
 interface ButtonConfig {
     label: string;
     onClick: (() => void) ;
-    onDelete : ((data: ClaimRowType) => void);
+    onDelete : ((data: ClaimRowType | ParkingRowType) => void);
     color: "main" | "sub" | "blue" | "green" | "red" | "gray" | "dark-gray";
     fill?: boolean;
     rounded?: boolean;

@@ -1,8 +1,8 @@
 'use client'
 import React, {useState} from 'react';
-import Step1 from "@/app/components/pageComponents/parking/accidentAccept/step1-turu";
-import Step2 from "@/app/components/pageComponents/parking/accidentAccept/step2-turu";
-import Step3 from "@/app/components/pageComponents/parking/accidentAccept/step3";
+import Step1 from "@/app/components/pageComponents/rentCar/accidentAccept/step1-turu";
+import Step2 from "@/app/components/pageComponents/rentCar/accidentAccept/step2-turu";
+import Step3 from "@/app/components/pageComponents/rentCar/accidentAccept/step3";
 import { rcAccidentRowType} from "@/@types/common";
 
 

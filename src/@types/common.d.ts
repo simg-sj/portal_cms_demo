@@ -271,7 +271,7 @@ interface DashBoardType {
 
 interface ParamDashType2 {
     job: string;
-    bpk: string;
+    bpk: number;
     sDay: string;
     eDay: string;
 }

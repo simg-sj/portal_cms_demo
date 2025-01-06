@@ -8,7 +8,7 @@ import Plus from "@/assets/images/icon/plus-icon.png";
 import SlidePopup from "@/app/components/popup/SlidePopup";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
-import {deleteClaimData, getClaim, getImage, updateClaimData} from "@/app/(Navigation-Group)/action";
+import {deleteClaimData, deleteGroup, getClaim, getImage, updateClaimData} from "@/app/(Navigation-Group)/action";
 import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
 import {ButtonConfig, ClaimRowType, UptClaim, ParamType} from "@/@types/common";
 import Error from "@/assets/images/icon/error-icon.png";
@@ -134,17 +134,18 @@ export default function Page() {
             },
         ];
 
-    const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
+    const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
     const handleDeleteGroup = async () => {
-        if (selectedItems.size === 0) {
+        if (selectedItems.length === 0) {
             alert('삭제할 항목을 선택해주세요.');
             return;
         }
-        if (window.confirm(`선택한 ${selectedItems.size}개의 항목을 삭제하시겠습니까?`)) {
-            console.log('삭제할 항목 인덱스:', Array.from(selectedItems));
-            let result = await deleteClaimData(rowData);
+        console.log(selectedItems);
+        if (window.confirm(`선택한 ${selectedItems.length}개의 항목을 삭제하시겠습니까?`)) {
+            let result = await deleteGroup(Array.from(selectedItems));
             if(result.code === '200') {
+                setSelectedItems([]);
                 let reload = await getClaim(param);
                 setData(reload);
                 closePopup();
@@ -299,6 +300,7 @@ export default function Page() {
                         getItemId={(item) => item.irpk}
                         columns={columns}
                         selectedRow={selectedRow}
+                        selectedItems={selectedItems}
                         onSelectionChange={setSelectedItems}
                         onRowClick={(item) => {
                             setIsNew(false);

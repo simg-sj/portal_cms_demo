@@ -3,6 +3,7 @@ import React, {useState, useEffect} from "react";
 import EditUser from "@/app/components/pageComponents/mypqge/editUser";
 import Loading from "@/app/(Navigation-Group)/loading";
 import UserList from "@/app/components/pageComponents/mypqge/userList";
+import {UserType} from "@/@types/common";
 
 
 interface UserParam {

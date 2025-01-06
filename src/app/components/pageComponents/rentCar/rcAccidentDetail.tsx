@@ -1,14 +1,9 @@
 "use client"
 import React, {useState} from "react";
-import DayTerm from "@/app/components/common/ui/dayTerm";
 import CalenderPicker from "@/app/components/common/ui/calenderPicker";
 import dayjs from "dayjs";
-import {
-    APPROVAL_OPTIONS,
-    ClosingCode, ConfirmCode,
-    STATE_OPTIONS
-} from "@/config/data";
-import { rcAccidentRowType} from "@/@types/common";
+import {APPROVAL_OPTIONS, ClosingCode, ConfirmCode, STATE_OPTIONS} from "@/config/data";
+import {rcAccidentRowType} from "@/@types/common";
 import Button from "@/app/components/common/ui/button";
 
 
@@ -26,8 +21,7 @@ export default function RcAccidentDetailList ({isEditing, isNew = false, rowData
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         setEditData((prev) => {
-            const updatedValue = { ...prev, [e.target.name]: e.target.value };
-            return updatedValue;
+            return {...prev, [e.target.name]: e.target.value};
         });
     };
     const handleSave = () => {

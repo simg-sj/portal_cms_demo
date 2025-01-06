@@ -1,10 +1,9 @@
 "use client"
-import React, {useCallback, useEffect, useState} from "react";
+import React, { useEffect, useState} from "react";
 import DayTerm from "@/app/components/common/ui/dayTerm";
 import Button from "@/app/components/common/ui/button";
 import Image from "next/image";
 import Excel from "@/assets/images/icon/excel-icon.png";
-import Plus from "@/assets/images/icon/plus-icon.png";
 import SlidePopup from "@/app/components/popup/SlidePopup";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
@@ -74,9 +73,7 @@ export default function Page() {
                     data.job = 'UPT';
                     data.accidentDate = dayjs(data.accidentDate).format('YYYY-MM-DD HH:mm:ss');
                     data.arrivalETA = dayjs(data.arrivalETA).format('YYYY-MM-DD');
-                    console.log(data);
                     let result = await rcPortalRoute(data);
-                    console.log(result)
                     if (result.code === '200') {
                         let reload = await getRcAccidentList(param);
                         setData(reload || []);
@@ -130,25 +127,28 @@ export default function Page() {
             },
         ];
 
-    const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
+    const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
     const handleDeleteGroup = async () => {
-        if (selectedItems.size === 0) {
+        if (selectedItems.length === 0) {
             alert('삭제할 항목을 선택해주세요.');
             return;
         }
-        if (window.confirm(`선택한 ${selectedItems.size}개의 항목을 삭제하시겠습니까?`)) {
-            let result = await deleteGroup(Array.from(selectedItems));
-            if(result.code === '200') {
-                let reload = await getRcAccidentList(param);
-                setSelectedItems( new Set());
-                setData(reload);
-                closePopup();
-            }else {
-                alert("서비스 오류입니다.");
+        if (window.confirm(`선택한 ${selectedItems.length}개의 항목을 삭제하시겠습니까?`)) {
+            try {
+                let result = await deleteGroup(Array.from(selectedItems));
+                if (result?.code === '200') {
+                    setSelectedItems([]); // 초기화
+                    let reload = await getRcAccidentList(param);
+                    setData(reload); // 데이터 업데이트
+                    closePopup();
+                } else {
+                    alert("서비스 오류입니다.");
+                }
+            } catch (error) {
+                console.error("Error during deleteGroup:", error);
+                alert("서비스 처리 중 오류가 발생했습니다.");
             }
-        }else{
-            return;
         }
     };
 
@@ -179,6 +179,8 @@ export default function Page() {
     useEffect(() => {
         onSearchClick();
     }, []);
+
+
 
     // 사고접수 리스트 컬럼
     const columns: ColumnDefinition<rcAccidentType>[] = [
@@ -280,6 +282,7 @@ export default function Page() {
                         getItemId={(item) => item.rcPk}
                         columns={columns}
                         selectedRow={selectedRow}
+                        selectedItems={selectedItems}
                         onSelectionChange={setSelectedItems}
                         onRowClick={(item) => {
                             setIsNew(false);
