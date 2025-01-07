@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import Image from "next/image";
 import styled from "styled-components";
-import Button from "@/app/components/common/ui/button";
+import Button from "@/app/components/common/ui/button/button";
 import ExcelUpload from "@/assets/images/icon/upload-gray-icon.png";
 import ExcelDown from "@/assets/images/icon/excel-down-icon.png";
 import {useSession} from "next-auth/react";
 import {BSN_CODE} from "@/config/data";
 import {uploadExcel} from "@/app/(Navigation-Group)/action";
 import {ParkingType} from "@/@types/common";
-import fileUpload from "@/app/components/common/ui/fileUpload";
+import fileUpload from "@/app/components/common/ui/input/fileUpload";
 import Tooltip from "@/app/components/common/ui/tooltip";
 
 const StyledFile = styled.label`

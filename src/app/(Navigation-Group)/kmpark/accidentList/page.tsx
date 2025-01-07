@@ -1,7 +1,7 @@
 "use client"
 import React, {useEffect, useState} from "react";
-import DayTerm from "@/app/components/common/ui/dayTerm";
-import Button from "@/app/components/common/ui/button";
+import DayTerm from "@/app/components/common/ui/calender/dayTerm";
+import Button from "@/app/components/common/ui/button/button";
 import Image from "next/image";
 import Excel from "@/assets/images/icon/excel-icon.png";
 import Plus from "@/assets/images/icon/plus-icon.png";
@@ -10,7 +10,7 @@ import AccidentDetailList from "@/app/components/pageComponents/parking/accident
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
 import {getClaim, updateClaimData} from "@/app/(Navigation-Group)/action";
-import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
+import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContainer";
 import {ButtonConfig, ClaimRowType, UptClaim} from "@/@types/common";
 
 interface ColumnDefinition<T> {
@@ -254,7 +254,7 @@ export default function Page() {
                         조회
                     </Button>
                 </div>
-                <Button color={"green"} height={36} width={120} className={'ml-5'}>
+                <Button color={"green"} height={32} width={120} className={'ml-5'}>
                     <Image src={Excel.src} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
                     엑셀다운
                 </Button>
@@ -262,10 +262,10 @@ export default function Page() {
 
             <div className={'border border-gray-100 p-6 rounded-lg bg-white mt-5'}>
                 <div className={'flex justify-end space-x-4'}>
-                    <Button color={"red"} fill={false} height={36} width={120} onClick={handleDeleteGroup}>
+                    <Button color={"red"} fill={false} height={32} width={120} onClick={handleDeleteGroup}>
                         삭제
                     </Button>
-                    <Button color={"main"} fill height={36} width={120} onClick={handleNewEntry}>
+                    <Button color={"main"} fill height={32} width={120} onClick={handleNewEntry}>
                         <Image src={Plus.src} alt={'추가'} width={16} height={16} className={'mr-1'}/>
                         신규등록
                     </Button>

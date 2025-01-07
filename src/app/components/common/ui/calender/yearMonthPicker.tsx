@@ -8,7 +8,7 @@ import SelectIcon from '@/assets/images/icon/select-icon.png';
 const CustomPicker = styled.div`
     .react-datepicker__input-container > input {
         border: 0;
-        font-size: large;
+        font-size: medium;
         font-weight: 500;
         width: 160px;
         cursor: pointer;

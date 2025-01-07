@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "@/app/components/common/ui/button";
+import Button from "@/app/components/common/ui/button/button";
 import type {Step3Props} from "@/@types/common";
 
 

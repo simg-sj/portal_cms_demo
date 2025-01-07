@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import UserIcon from '@/assets/images/icon/user-icon.png';
 import React, { useEffect, useState } from "react";
-import MyPageTabs from "@/app/components/common/myPageTabs";
+import MyPageTabs from "@/app/components/common/MyPageTabs";
 import Loading from "@/app/(Navigation-Group)/loading";
 import {UserType} from "@/@types/common";
 
@@ -46,19 +46,19 @@ export default function Page() {
                         <h2 className='leading-[40px] text-gray-500 text-lg border-b mb-2'>
                             업체명
                         </h2>
-                        <h2 className={'text-2xl'}>
+                        <h2 className={'text-xl'}>
                             {userInfo.platform}
                         </h2>
                         <h2 className='leading-[40px] text-gray-500 text-lg border-b mb-2 mt-14'>
                             권한
                         </h2>
-                        <h2 className={'text-2xl'}>
+                        <h2 className={'text-xl'}>
                             {userInfo.auth}
                         </h2>
                         <h2 className='leading-[40px] text-gray-500 text-lg border-b mb-2 mt-14'>
                             성함
                         </h2>
-                        <h2 className={'text-2xl'}>
+                        <h2 className={'text-xl'}>
                             {userInfo.name}
                         </h2>
                     </div>

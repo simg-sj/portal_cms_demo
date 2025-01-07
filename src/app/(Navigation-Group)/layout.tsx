@@ -7,15 +7,15 @@
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 import React, {ReactNode} from "react";
-import Navigation from "@/app/components/common/Navigation";
+import Navigation from "@/app/components/common/nav/Navigation";
     
 export default function Layout({children}: {children: ReactNode}) {
     return (
-        <div className="flex h-full min-h-screen min-w-[2200px]">
+        <div className="flex h-full min-h-screen min-w-[1500px]">
             <div className="flex-none">
                 <Navigation/>
             </div>
-                <div className="flex-grow p-5 bg-gray-50 ml-[100px]">{children}</div>
+                <div className="flex-grow p-5 bg-gray-50 ml-[90px]">{children}</div>
         </div>
     );
 }

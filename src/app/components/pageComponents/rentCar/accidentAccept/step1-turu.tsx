@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
-import Button from "@/app/components/common/ui/button";
+import Button from "@/app/components/common/ui/button/button";
 import type {rcAccidentRowType, Step1Props} from "@/@types/common";
 import {useSession} from "next-auth/react";
-import TimePicker from "@/app/components/common/ui/timePicker";
+import TimePicker from "@/app/components/common/ui/input/timePicker";
 
 const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
     const {data} = useSession();

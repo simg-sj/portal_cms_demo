@@ -1,14 +1,14 @@
 'use client'
 import React, {useEffect, useRef, useState} from "react";
-import Button from "@/app/components/common/ui/button";
+import Button from "@/app/components/common/ui/button/button";
 import Image from "next/image";
 import Plus from "@/assets/images/icon/plus-icon.png";
-import Checkbox from "@/app/components/common/ui/checkbox";
+import Checkbox from "@/app/components/common/ui/input/checkbox";
 import {UserSet} from "@/config/data";
 import Pagination from "@/app/components/common/ui/pagination";
 import CenterPopup from "@/app/components/popup/CenterPopup";
-import AddUser, {AddUserRef} from "@/app/components/pageComponents/parking/add-user";
-import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
+import AddUser, {AddUserRef} from "@/app/components/pageComponents/parking/addUser";
+import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContainer";
 import {UserType} from "@/@types/common";
 
 interface SearchParams {
@@ -234,10 +234,10 @@ export default function UserList() {
                 </div>
             </div>
             <div className={'flex justify-end space-x-4 mt-4'}>
-                <Button color={"red"} fill={false} height={36} width={120} onClick={handleDeleteGroup}>
+                <Button color={"red"} fill={false} height={32} width={120} onClick={handleDeleteGroup}>
                     삭제
                 </Button>
-                <Button color={"main"} fill height={36} width={120} onClick={handleAddClick}>
+                <Button color={"main"} fill height={32} width={120} onClick={handleAddClick}>
                     <Image src={Plus.src} alt={'추가'} width={16} height={16} className={'mr-1'}/>
                     사용자추가
                 </Button>

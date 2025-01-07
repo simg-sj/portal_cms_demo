@@ -1,6 +1,6 @@
 import React, {SetStateAction, useEffect, useState} from "react";
-import YearMonthPicker from "@/app/components/common/ui/yearMonthPicker";
-import CalenderPicker from "@/app/components/common/ui/calenderPicker";
+import YearMonthPicker from "@/app/components/common/ui/calender/yearMonthPicker";
+import CalenderPicker from "@/app/components/common/ui/calender/calenderPicker";
 import dayjs from "dayjs";
 import {ParamDashType2} from "@/@types/common";
 

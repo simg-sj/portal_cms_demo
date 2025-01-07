@@ -4,7 +4,7 @@ import ChargeIcon from "@/assets/images/icon/charge-icon.png";
 import CheckChargeIcon from "@/assets/images/icon/checckCharge-icon.png";
 import CancelChargeIcon from "@/assets/images/icon/cancelCharge-icon.png";
 import AlarmIcon from "@/assets/images/icon/alarm-icon.png";
-import Button from "@/app/components/common/ui/button";
+import Button from "@/app/components/common/ui/button/button";
 import Tooltip from "@/app/components/common/ui/tooltip"
 import Plus from "@/assets/images/icon/plus-icon.png";
 import React, {useState} from "react";
@@ -91,7 +91,7 @@ export default function Page() {
         <>
             <div className={'p-6 rounded-lg bg-white'}>
                 <div className={'flex items-center mb-6'}>
-                    <div className={'text-xl font-light'}>보험관리</div>
+                    <div className={'text-lg font-light'}>보험관리</div>
                     <Tooltip content={"보험관리 추가 버튼으로 현재 가입되어 있는 보험을 추가하여 해당 페이지에서 모든 보험을 관리할 수 있으며, 갱신 예정인 보험을 1달전에 알림으로 알려드립니다. 갱신 정보는 보험관리추가 버튼을 통해 추가할 수 있습니다."}/>
                 </div>
                 <div className={'flex justify-between space-x-10'}>
@@ -118,8 +118,8 @@ export default function Page() {
             {/* 보험리스트 */}
             <div className={'p-6 rounded-lg bg-white my-5'}>
                 <div className={'flex justify-between'}>
-                    <div className={'text-xl font-light mb-6'}>보험리스트</div>
-                    <Button color={"main"} fill height={36} width={132} onClick={handleAddInsurance}>
+                    <div className={'text-lg font-light mb-6'}>보험리스트</div>
+                    <Button color={"main"} fill height={32} width={132} onClick={handleAddInsurance}>
                         <Image src={Plus.src} alt={'추가'} width={14} height={14} className={'mr-1'}/>
                         보험관리추가
                     </Button>

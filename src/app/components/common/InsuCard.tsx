@@ -4,8 +4,8 @@ import EditIcon from "@/assets/images/icon/edit-icon.png";
 import DeleteIcon from "@/assets/images/icon/delete-icon.png";
 import SaveIcon from "@/assets/images/icon/save-icon.png";
 import WarningIcon from "@/assets/images/icon/warning-icon.png";
-import Button from "@/app/components/common/ui/button";
-import CalenderPicker from "@/app/components/common/ui/calenderPicker";
+import Button from "@/app/components/common/ui/button/button";
+import CalenderPicker from "@/app/components/common/ui/calender/calenderPicker";
 import FormatNumber from "@/app/components/common/ui/formatNumber";
 import Plus from "@/assets/images/icon/plus-icon.png";
 

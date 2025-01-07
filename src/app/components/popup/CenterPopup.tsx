@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from "@/app/components/common/ui/button";
+import Button from "@/app/components/common/ui/button/button";
 import Image from "next/image";
 import Close from "@/assets/images/icon/close-icon.png";
 import {ParkingType} from "@/@types/common";

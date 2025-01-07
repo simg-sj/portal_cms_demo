@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Checkbox from '@/app/components/common/ui/checkbox';
+import Checkbox from '@/app/components/common/ui/input/checkbox';
 import Image from "next/image";
 import Error from "@/assets/images/icon/error-icon.png";
 

@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState} from "react";
-import DayTerm from "@/app/components/common/ui/dayTerm";
-import Button from "@/app/components/common/ui/button";
+import DayTerm from "@/app/components/common/ui/calender/dayTerm";
+import Button from "@/app/components/common/ui/button/button";
 import Image from "next/image";
 import Excel from "@/assets/images/icon/excel-icon.png";
 import SlidePopup from "@/app/components/popup/SlidePopup";
@@ -12,7 +12,7 @@ import {
     getRcAccidentList,
     rcPortalRoute,
 } from "@/app/(Navigation-Group)/action";
-import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
+import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContainer";
 import {
     ButtonConfig,
     ParamType,
@@ -252,7 +252,7 @@ export default function Page() {
                         조회
                     </Button>
                 </div>
-                <Button color={"green"} height={36} width={120} className={'ml-5'}>
+                <Button color={"green"} height={32} width={120} className={'ml-5'}>
                     <Image src={Excel.src} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
                     엑셀다운
                 </Button>
@@ -260,9 +260,9 @@ export default function Page() {
 
             <div className={'border border-gray-100 p-6 rounded-lg bg-white mt-5'}>
                 <div className={'flex justify-between'}>
-                    <div className={'text-xl font-light mb-6'}>사고리스트</div>
+                    <div className={'text-lg font-light mb-6'}>사고리스트</div>
                     <div className={'flex justify-end space-x-4'}>
-                        <Button color={"red"} fill={false} height={36} width={120} onClick={handleDeleteGroup}>
+                        <Button color={"red"} fill={false} height={32} width={120} onClick={handleDeleteGroup}>
                             삭제
                         </Button>
                     </div>
