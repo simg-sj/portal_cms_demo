@@ -7,8 +7,11 @@
     테이블 table
    ---------------------------------------
 */
+table {
+    font-size: 15px;
+}
 thead th, thead td{
-    padding: 16px 20px;
+    padding: 14px 18px;
     background: #fafafa;
 }
 thead tr{
@@ -16,12 +19,12 @@ thead tr{
 }
 
 tbody th, tbody td {
-    padding: 8px 20px;
+    padding: 6px 18px;
     text-align: center;
 }
 tr {
     border-bottom: 1px solid #e1e1e1;
-    height: 48px;
+    height: 46px;
 }
 tbody tr:last-child {
     border: 0;

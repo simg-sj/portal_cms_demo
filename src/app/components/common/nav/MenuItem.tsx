@@ -19,8 +19,8 @@ export default function MenuItem({icon, label, link, isActive, onClick}: MenuIte
             ${isActive ? 'bg-white bg-opacity-30' : 'hover:bg-white hover:bg-opacity-30'}`}
             onClick={onClick}
         >
-            <Image src={icon} alt={label} width={35} />
-            <div className="text-white text-sm mt-2">{label}</div>
+            <Image src={icon} alt={label} width={28} />
+            <div className="text-white text-[12px] mt-2">{label}</div>
         </Link>
     )
 }

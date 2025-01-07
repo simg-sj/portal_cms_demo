@@ -1,7 +1,7 @@
 "use client"
 import React, {useEffect, useRef, useState} from "react";
-import DayTerm from "@/app/components/common/ui/dayTerm";
-import Button from "@/app/components/common/ui/button";
+import DayTerm from "@/app/components/common/ui/calender/dayTerm";
+import Button from "@/app/components/common/ui/button/button";
 import Image from "next/image";
 import Excel from "@/assets/images/icon/excel-icon.png";
 import Plus from "@/assets/images/icon/plus-icon.png";
@@ -11,11 +11,11 @@ import List from "@/app/components/pageComponents/parking/parkingDetail";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
 import {getClaim, getExcelSample, getParking} from "@/app/(Navigation-Group)/action";
-import {CheckboxContainer} from "@/app/components/common/ui/checkboxContainer";
+import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContainer";
 import {ButtonConfig, ClaimRowType, ParkingParamType, ParkingType} from "@/@types/common";
 import CenterPopup from "@/app/components/popup/CenterPopup";
-import AddBusiness, {AddBusinessRef} from "@/app/components/pageComponents/parking/add-business-kmpark";
-import AddExcelUpload from "@/app/components/pageComponents/parking/add-excel-upload";
+import AddBusiness, {AddBusinessRef} from "@/app/components/pageComponents/parking/addBusiness-kmpark";
+import AddExcelUpload from "@/app/components/pageComponents/parking/addExcelUpload";
 
 interface ColumnDefinition<T> {
     key: keyof T;
@@ -282,7 +282,7 @@ export default function Page() {
                         조회
                     </Button>
                 </div>
-                <Button color={"green"} use={'down'} height={36} width={120} className={'ml-5'} params={{bpk : "01", type : 'down'}} fileName={'Kmpark_sample'}>
+                <Button color={"green"} use={'down'} height={32} width={120} className={'ml-5'} params={{bpk : "01", type : 'down'}} fileName={'Kmpark_sample'}>
                     <Image src={Excel.src} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
                     엑셀다운
                 </Button>
@@ -290,14 +290,14 @@ export default function Page() {
 
             <div className={'border border-gray-100 p-6 rounded-lg bg-white mt-5'}>
                 <div className={'flex justify-end space-x-4'}>
-                    <Button color={"red"} fill={false} height={36} width={120} onClick={handleDeleteGroup}>
+                    <Button color={"red"} fill={false} height={32} width={120} onClick={handleDeleteGroup}>
                         삭제
                     </Button>
-                    <Button color={"green"} fill height={36} width={120} onClick={() => setExcelOpen(true)}>
+                    <Button color={"green"} fill height={32} width={120} onClick={() => setExcelOpen(true)}>
                         <Image src={ExcelUpload.src} alt={'업로드'} width={15} height={15} className={'mr-2'}/>
                         엑셀업로드
                     </Button>
-                    <Button color={"main"} fill height={36} width={120} onClick={() => setAddOpen(true)}>
+                    <Button color={"main"} fill height={32} width={120} onClick={() => setAddOpen(true)}>
                         <Image src={Plus.src} alt={'추가'} width={16} height={16} className={'mr-1'}/>
                         사업장추가
                     </Button>

@@ -1,7 +1,7 @@
 "use client"
 import React, {useState} from "react";
 import {ParkingRowType} from "@/@types/common";
-import Button from "@/app/components/common/ui/button";
+import Button from "@/app/components/common/ui/button/button";
 
 
 

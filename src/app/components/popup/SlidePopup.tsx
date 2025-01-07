@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Button from "@/app/components/common/ui/button";
+import Button from "@/app/components/common/ui/button/button";
 import {ClaimRowType, ParkingRowType, rcAccidentType, RcFormData} from "@/@types/common";
 import {deleteClaimData, getClaim} from "@/app/(Navigation-Group)/action";
 

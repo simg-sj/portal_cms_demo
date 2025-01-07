@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import Button from "@/app/components/common/ui/button";
+import Button from "@/app/components/common/ui/button/button";
 import type {Step2Props} from "@/@types/common";
 import {rcPortalRoute} from "@/app/(Navigation-Group)/action";
 

@@ -1,8 +1,8 @@
 "use client"
 import React, {useCallback, useEffect, useState} from "react";
-import ImageUploader from "@/app/components/common/ui/fileUpload";
-import DayTerm from "@/app/components/common/ui/dayTerm";
-import CalenderPicker from "@/app/components/common/ui/calenderPicker";
+import ImageUploader from "@/app/components/common/ui/input/fileUpload";
+import DayTerm from "@/app/components/common/ui/calender/dayTerm";
+import CalenderPicker from "@/app/components/common/ui/calender/calenderPicker";
 import dayjs from "dayjs";
 import {
     ACCIDENT_DETAIL_TYPE_OPTIONS,
@@ -13,7 +13,7 @@ import {
 } from "@/config/data";
 
 import {ClaimRowType, ImageType} from "@/@types/common";
-import Button from "@/app/components/common/ui/button";
+import Button from "@/app/components/common/ui/button/button";
 import FormatNumber from "@/app/components/common/ui/formatNumber";
 import {getImage} from "@/app/(Navigation-Group)/action";
 

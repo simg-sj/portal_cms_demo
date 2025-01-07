@@ -1,17 +1,17 @@
 'use client'
-import Button from "@/app/components/common/ui/button";
+import Button from "@/app/components/common/ui/button/button";
 import Excel from "@/assets/images/icon/excel-icon.png";
 import "react-datepicker/dist/react-datepicker.css";
 import DoughnutChart from "@/app/components/chart/DoughnutChart";
 import BarTwowayChart from "@/app/components/chart/BarTwowayChart";
 import FormatNumber from "@/app/components/common/ui/formatNumber";
-import EditableField from "@/app/components/common/ui/editField";
+import EditableField from "@/app/components/common/ui/input/editField";
 import Tab from "@/app/components/common/ui/tab";
 import Image from "next/image";
 import CarIcon from '@/assets/images/icon/car-icon.png'
 import ChargeIcon from '@/assets/images/icon/charge-icon.png'
 import BarHorizonChart from "@/app/components/chart/BarHorizonChart";
-import DayTerm from "@/app/components/common/ui/dayTerm";
+import DayTerm from "@/app/components/common/ui/calender/dayTerm";
 import {
     ChangeCounselData,
     ChangeGraph,
@@ -147,7 +147,7 @@ export default function DashboardComponent({
         <>
             <div className={'px-8 py-6 bg-white rounded-xl'}>
                 <div className={'flex justify-between items-start'}>
-                    <div className={'text-xl font-light mb-6'}>계약현황</div>
+                    <div className={'text-lg font-light mb-6'}>계약현황</div>
                     {/*갱신알림*/}
                     {/* <div className={'flex items-center text-sm py-2 px-5 bg-gray-100 rounded-lg'}>
                         <Image src={WarningIcon.src} alt={'경고'} width={18} height={18}
@@ -162,7 +162,7 @@ export default function DashboardComponent({
                             <div
                                 className={'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center'}>
                                 <div className={'text-gray-600 mb-1'}>손해율</div>
-                                <CountUp end={chartData.doughnutValue} duration={5} className={'text-3xl font-semibold'}
+                                <CountUp end={chartData.doughnutValue} duration={5} className={'text-2xl font-semibold'}
                                          suffix={'%'}/>
                             </div>
                         </div>
@@ -170,7 +170,7 @@ export default function DashboardComponent({
                             <div className={'text-gray-600'}>지급보험금</div>
                             <CountUp
                                 end={(tableData) && (tableData.counselData[0].closingAmt) ? FormatNumber(tableData.counselData[0].closingAmt) : 0}
-                                duration={2} className={'text-3xl font-semibold'} suffix={'원'}/>
+                                duration={2} className={'text-2xl font-semibold'} suffix={'원'}/>
                         </div>
                     </div>
                     <div className={'w-full'}>
@@ -244,15 +244,15 @@ export default function DashboardComponent({
 
 
             <div className={'px-8 py-6 bg-white rounded-xl my-5'}>
-                <div className={'text-xl font-light mb-6'}>계약변경현황</div>
+                <div className={'text-lg font-light mb-6'}>계약변경현황</div>
                 <div className={'flex'}>
                     <div className={'w-[1000px] mr-16'}>
                         <div
-                            className={'mb-5 font-medium text-lg'}>{`최근 ${tableData.changeGraphData.length}개월 계약변경현황`}</div>
+                            className={'mb-5 font-medium text-[16px]'}>{`최근 ${tableData.changeGraphData.length}개월 계약변경현황`}</div>
                         <BarTwowayChart data={chartData.twowayBar} options={optionTwowayBar}/>
                     </div>
                     <div className={'w-full'}>
-                        <div className={"flex justify-end mb-4 text-xl"}>
+                        <div className={"flex justify-end mb-4 text-lg"}>
                             <DayTerm type="month" setParam={setParam}></DayTerm>
                         </div>
                         <div className={'max-h-[260px] overflow-y-auto'}>
@@ -261,8 +261,8 @@ export default function DashboardComponent({
                                     <col style={{width: ""}}/>
                                     <col style={{width: ""}}/>
                                     <col style={{width: ""}}/>
-                                    <col style={{width: "200px"}}/>
-                                    <col style={{width: "200px"}}/>
+                                    <col style={{width: "80px"}}/>
+                                    <col style={{width: "80px"}}/>
                                     {isHiparkingRoute && (
                                         <>
                                             <col style={{width: "200px"}}/>
@@ -322,7 +322,7 @@ export default function DashboardComponent({
 
             <div className={'flex'}>
                 <div className={'px-8 py-6 bg-white rounded-xl my-5 w-1/6'}>
-                    <div className={'text-xl font-light mb-6'}>월 누적 현황</div>
+                    <div className={'text-lg font-light mb-6'}>월 누적 현황</div>
                     <div>
                         <CountCard
                             icon={ChargeIcon}
@@ -345,8 +345,8 @@ export default function DashboardComponent({
 
                 <div className={'px-8 py-6 bg-white rounded-xl my-5 w-2/6 mx-8'}>
                     <div className={'flex justify-between'}>
-                        <div className={'text-xl font-light mb-6'}>Top 5</div>
-                        <div className={"flex justify-end mb-4 text-xl"}>
+                        <div className={'text-lg font-light mb-6'}>Top 5</div>
+                        <div className={"flex justify-end mb-4 text-lg"}>
                             <DayTerm type="month" setParam={setParam}></DayTerm>
                         </div>
                     </div>
@@ -356,14 +356,14 @@ export default function DashboardComponent({
                 <div className={'px-8 py-6 bg-white rounded-xl my-5 w-1/2'}>
                     <div>
                         <div className={'flex justify-between'}>
-                            <div className={'text-xl font-light mb-6'}>월별 사고접수현황</div>
-                            <div className={"flex justify-end mb-4 text-xl"}>
+                            <div className={'text-lg font-light mb-6'}>월별 사고접수현황</div>
+                            <div className={"flex justify-end mb-4 text-lg"}>
                                 <DayTerm type="month" setParam={setParam}></DayTerm>
                             </div>
                         </div>
                         <div className={'w-full'}>
                             <div className={"flex justify-end mb-4"}>
-                                <Button color={"green"} height={36} width={120}>
+                                <Button color={"green"} height={32} width={120}>
                                     <Image src={Excel.src} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
                                     엑셀다운
                                 </Button>

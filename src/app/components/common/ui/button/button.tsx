@@ -145,3 +145,6 @@ function Button({
 }
 
 export default Button;
+
+// ** 필요한 컬러 추가해서 사용, color/fill/width/height/rounded/textSize 등 지정하여 사용
+// **
