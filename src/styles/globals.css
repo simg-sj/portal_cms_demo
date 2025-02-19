@@ -120,6 +120,14 @@ input[type=file]::file-selector-button {
         --color-sub-light: #c0c0c0;
         --color-sub-lighter: #dcdcdc;
     }
+    html[data-theme='starpickers'] {
+        --color-main: #009968;
+        --color-main-light: #00b37a;
+        --color-main-lighter: #e2f6ef;
+        --color-sub: #ffcb11;
+        --color-sub-light: #c0c0c0;
+        --color-sub-lighter: #ffe898;
+    }
 }
 
 

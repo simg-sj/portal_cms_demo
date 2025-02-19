@@ -21,6 +21,10 @@ const platformUrls = {
         { path: '/turu', minAuthLevel: 1 },
         { path: '/turu/*', minAuthLevel: 1 },
     ],
+    starpickers: [
+        { path: '/starpickers', minAuthLevel: 1 },
+        { path: '/starpickers/*', minAuthLevel: 1 },
+    ],
 };
 
 // 예외 경로 정의

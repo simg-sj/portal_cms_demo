@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-11-26 13:27:27
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2025-01-02 09:39:31
+ * @LastEditTime: 2025-01-16 15:35:50
  * @FilePath: src/app/lib/hooks/useFetchDashboard.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -37,6 +37,7 @@ const useFetchDashboard = (bpk : number) => {
     const [params, setParams] = useState<ParamDashType2>({
         job: 'dash',
         bpk: bpk,
+        gbn : '',
         sDay: '2024-09',
         eDay: '2025-09',
     });

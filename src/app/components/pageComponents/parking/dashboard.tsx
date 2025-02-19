@@ -56,7 +56,6 @@ export default function DashboardComponent({
     //업체별 라우팅 옵션
     const pathname = usePathname();
     const isHiparkingRoute = pathname.includes('/hiparking')
-    console.log(tableData);
 
 
     //양방향막대 옵션

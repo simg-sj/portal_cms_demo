@@ -248,6 +248,27 @@ interface rcAccidentType {
     createdYMD?: string; // 생성일
 }
 
+interface dutyType {
+    rcPk: number;
+    bpk: number; // 업체키
+    insuNum?: string;
+    partnerName: string; // 제휴사명
+    carNum: string; // 차량번호
+    accidentDate: string; // 사고 일시
+    arrivalETA: string; // 예상 입고 일정 (nullable)
+    propDamage: string | null; // 대물 (nullable)
+    persInjury: string | null; // 대인 (nullable)
+    startDate: string;
+    endDate: string;
+    etc: string | null; // 기타 (nullable)
+    accidentDetail: string; // 사고내용 (nullable)
+    isConfirmed: string; // 컨펌 여부 (nullable)
+    confirmedBy: string | null; // 컨펌 담당자 (nullable)
+    statusCode?: string;
+    memo?: string;
+    createdYMD?: string; // 생성일
+}
+
 
 interface ButtonConfig {
     label: string;
@@ -272,6 +293,7 @@ interface DashBoardType {
 interface ParamDashType2 {
     job: string;
     bpk: number;
+    gbn : string;
     sDay: string;
     eDay: string;
 }
@@ -289,9 +311,16 @@ interface rcAccidentRowType extends rcAccidentType {
     accidentDateTime: string;
 }
 
+interface dutyRowType extends dutyType {
+    gbn?: string;
+    job?: string;
+    accidentTime: string;
+    accidentDateTime: string;
+}
+
 interface Step1Props {
     onNext: () => void;
-    formData: rcAccidentRowType;
+    formData: rcAccidentRowType | dutyRowType;
     setFormData: React.Dispatch<React.SetStateAction<rcAccidentRowType>>;
 }
 

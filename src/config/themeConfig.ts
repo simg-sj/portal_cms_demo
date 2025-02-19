@@ -1,8 +1,10 @@
 import HiparkingLogo from '@/assets/images/logo/hiparking-logo.png'
 import SimgLogo from '@/assets/images/logo/simg-round-logo.png'
 import KmparkLogo from '@/assets/images/logo/kmpark-logo.png'
+import StarPickerLogo from '@/assets/images/logo/별따러가자-logo-white.png';
 import DashboardIcon from "@/assets/images/icon/dashboard-icon.png";
 import AccidentIcon from "@/assets/images/icon/accident-icon.png";
+import MotocycleIcon from "@/assets/images/icon/motocycle.png";
 import ListIcon from "@/assets/images/icon/list-icon.png";
 import UserIcon from "@/assets/images/icon/user-icon.png";
 import CarIcon from "@/assets/images/icon/parking-icon.png";
@@ -45,6 +47,14 @@ const themeConfigs: ThemeConfig = {
             {title: "parkingList", icon: CarIcon, label: "사업장관리", link: "/kmpark/parkingList" , authLevel : 1},
             {title: "insuManager", icon: ScheduleIcon, label: "보험관리", link: "/kmpark/insuManager" , authLevel : 1},
             {title: "mypage", icon: UserIcon, label: `님`, link: "/kmpark/mypage", authLevel : 1}
+        ]
+    },
+    starpickers: {
+        logoSrc: StarPickerLogo,
+        menuItems: [
+            {title: "main", icon: MotocycleIcon, label: "보험접수", link: "/starpickers", authLevel : 1},
+            {title: "underwriteList", icon: ListIcon, label: "접수현황", link: "/starpickers/underwriteList", authLevel : 4},
+            {title: "mypage", icon: UserIcon, label: `님`, link: "/starpickers/mypage", authLevel : 1}
         ]
     },
 };

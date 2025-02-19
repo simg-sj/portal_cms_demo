@@ -1,14 +1,11 @@
 'use client';
-
 import React from 'react';
 import Dashboard from "@/app/components/pageComponents/parking/dashboard";
 import useFetchDashboard from "@/app/lib/hooks/useFetchDashboard";
 import Loading from "@/app/(Navigation-Group)/loading";
-import Image from "next/image";
-import Error from "@/assets/images/icon/error-icon.png";
 
 export default function Page() {
-    const { tableData, doughnutValue, loading, error, updateParams } = useFetchDashboard('2');
+    const { tableData, doughnutValue, loading, error, updateParams } = useFetchDashboard(2);
 
     if (error) {
         return <div>Error: {error.message}</div>;
