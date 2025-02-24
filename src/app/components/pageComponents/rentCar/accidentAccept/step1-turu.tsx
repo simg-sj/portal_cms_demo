@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from "react";
 import Button from "@/app/components/common/ui/button/button";
-import type {dutyRowType, Step1Props} from "@/@types/common";
+import type {rcAccidentRowType, Step1Props} from "@/@types/common";
 import {useSession} from "next-auth/react";
 import TimePicker from "@/app/components/common/ui/input/timePicker";
-import DayTerm from "@/app/components/common/ui/calender/dayTerm";
 
 const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
     const {data} = useSession();
@@ -14,9 +13,19 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const {name, value} = e.target;
-        setFormData((prev: dutyRowType) => ({...prev, [name]: value}));
+        setFormData((prev: rcAccidentRowType) => ({...prev, [name]: value}));
     };
 
+    const handleTimeChange = (timeString: string) => {
+        setFormData(prev => ({...prev, accidentTime: timeString}));
+    };
+
+    const handleConfirmationChange = (value: 'Y' | 'N') => {
+        setConfirmation(value);
+        if (value === 'N') {
+            setFormData((prev: rcAccidentRowType) => ({...prev, confirmedBy: ''}));
+        }
+    };
 
     const validateForm = () => {
         const newErrors: { [key: string]: string } = {};
@@ -60,18 +69,37 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
     useEffect(() => {
         if(data && data.user){
             if(!isAdmin){
-                setFormData((prev: dutyRowType) => ({...prev, partnerName : data.user.bName}));
+                setFormData((prev: rcAccidentRowType) => ({...prev, partnerName : data.user.bName}));
             }
         }
     }, [data]);
     return (
         <>
-            <div className={'text-lg font-light my-6 px-[100px] text-gray-700'}>별따러가자 책임 보험접수 페이지입니다. 보험접수 내용을 입력하여
+            <div className={'text-lg font-light my-6 px-[100px] text-gray-700'}>트루카 사고접수 페이지입니다. 사고접수 내용을 입력하여
                 접수해주세요.
             </div>
             <div className={'text-xl my-[50px] stepOne'}>
                 <div className={'flex px-[100px] py-5 items-center'}>
-                    <div className={'font-medium w-[300px] mr-1'}>사업자번호 <span className={'text-red-500'}>*</span></div>
+                    <div className={'font-medium w-[300px] mr-1'}>제휴사명 <span className={'text-red-500'}>*</span></div>
+                    {
+                        isAdmin ?
+                            <select
+                                name="partnerName"
+                                className={'w-[800px]'}
+                                onChange={handleInputChange}
+                                defaultValue={''}
+                            >
+                                <option value="" disabled>
+                                    제휴사를 선택하세요
+                                </option>
+                                <option value="partnerNameA">
+                                    제휴사A
+                                </option>
+                                <option value="partnerNameB">
+                                    제휴사B
+                                </option>
+                            </select>
+                            :
                             <input
                                 type={'text'}
                                 name="partnerName"
@@ -79,11 +107,14 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                                 onChange={handleInputChange}
                                 className={'w-[800px]'}
                             />
+
+                    }
+
                 </div>
                 {errors.partnerName &&
                     <div className="text-red-500 pl-[100px] text-base error">{errors.partnerName}</div>}
                 <div className={'flex px-[100px] py-5 items-center'}>
-                    <div className={'font-medium w-[300px] mr-1'}>차대번호 <span className={'text-red-500'}>*</span>
+                    <div className={'font-medium w-[300px] mr-1'}>차량번호 <span className={'text-red-500'}>*</span>
                     </div>
                     <input
                         type={'text'}
@@ -95,145 +126,51 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                 </div>
                 {errors.carNum && <div className="text-red-500 pl-[100px] text-base error">{errors.carNum}</div>}
                 <div className={'flex px-[100px] py-5 items-center'}>
-                    <div className={'font-medium w-[300px] mr-1'}>보험기간 <span className={'text-red-500'}>*</span>
+                    <div className={'font-medium w-[300px] mr-1'}>사고일자 <span className={'text-red-500'}>*</span>
                     </div>
-                        <DayTerm  type={'day'} setParam={setFormData} sDay={new Date(formData.startDate)} eDay={new Date(formData.endDate)}/>
+                    <input
+                        type={'date'}
+                        name="accidentDate"
+                        defaultValue={formData.accidentDate || ''}
+                        onChange={handleInputChange}
+                        className={'w-[800px]'}
+                    />
                 </div>
                 {errors.accidentDate &&
-                    <div className="text-red-500 pl-[100px] text-base error">{errors.accidentDate}</div>
+                    <div className="text-red-500 pl-[100px] text-base error">{errors.accidentDate}</div>}
+                <div className={'flex px-[100px] py-5 items-center'}>
+                    <div className={'font-medium w-[300px] mr-1'}>사고시간 <span className={'text-red-500'}>*</span>
+                    </div>
+                    <TimePicker
+                        initialTime={formData.accidentTime}
+                        onChange={handleTimeChange}
+                    />
+                    {/*<input
+                        type={'time'}
+                        name="accidentTime"
+                        value={formData.accidentTime || ''}
+                        onChange={handleInputChange}
+                        className={'w-[800px]'}
+                    />*/}
+                </div>
+                {errors.accidentTime &&
+                    <div className="text-red-500 pl-[100px] text-base error">{errors.accidentTime}</div>}
+                <div className={'flex px-[100px] py-5 items-center'}>
+                    <div className={'font-medium w-[300px] mr-1'}>예상입고일정 <span className={'text-red-500'}>*</span>
+                    </div>
+                    <input
+                        type={'date'}
+                        name="arrivalETA"
+                        defaultValue={formData.arrivalETA || ''}
+                        onChange={handleInputChange}
+                        min={formData.accidentDate}
+                        className={'w-[800px]'}
+                    />
+                </div>
+                {
+                    errors.arrivalETA &&
+                    <div className="text-red-500 pl-[100px] text-base error">{errors.arrivalETA}</div>
                 }
-                <div className={'flex px-[100px] py-5 items-center'}>
-                    <div className={'font-medium w-[300px] mr-1'}>차대번호 <span className={'text-red-500'}>*</span>
-                    </div>
-                    <input
-                        type={'text'}
-                        name="carNum"
-                        defaultValue={formData.carNum || ''}
-                        onChange={handleInputChange}
-                        className={'w-[800px]'}
-                    />
-                </div>
-                {errors.carNum && <div className="text-red-500 pl-[100px] text-base error">{errors.carNum}</div>}
-                <div className={'flex px-[100px] py-5 items-center'}>
-                    <div className={'font-medium w-[300px] mr-1'}>차대번호 <span className={'text-red-500'}>*</span>
-                    </div>
-                    <input
-                        type={'text'}
-                        name="carNum"
-                        defaultValue={formData.carNum || ''}
-                        onChange={handleInputChange}
-                        className={'w-[800px]'}
-                    />
-                </div>
-                {errors.carNum && <div className="text-red-500 pl-[100px] text-base error">{errors.carNum}</div>}
-                <div className={'flex px-[100px] py-5 items-center'}>
-                    <div className={'font-medium w-[300px] mr-1'}>차대번호 <span className={'text-red-500'}>*</span>
-                    </div>
-                    <input
-                        type={'text'}
-                        name="carNum"
-                        defaultValue={formData.carNum || ''}
-                        onChange={handleInputChange}
-                        className={'w-[800px]'}
-                    />
-                </div>
-                {errors.carNum && <div className="text-red-500 pl-[100px] text-base error">{errors.carNum}</div>}
-                <div className={'flex px-[100px] py-5 items-center'}>
-                    <div className={'font-medium w-[300px] mr-1'}>차대번호 <span className={'text-red-500'}>*</span>
-                    </div>
-                    <input
-                        type={'text'}
-                        name="carNum"
-                        defaultValue={formData.carNum || ''}
-                        onChange={handleInputChange}
-                        className={'w-[800px]'}
-                    />
-                </div>
-                {errors.carNum && <div className="text-red-500 pl-[100px] text-base error">{errors.carNum}</div>}
-                <div className={'flex px-[100px] py-5 items-center'}>
-                    <div className={'font-medium w-[300px] mr-1'}>차대번호 <span className={'text-red-500'}>*</span>
-                    </div>
-                    <input
-                        type={'text'}
-                        name="carNum"
-                        defaultValue={formData.carNum || ''}
-                        onChange={handleInputChange}
-                        className={'w-[800px]'}
-                    />
-                </div>
-                {errors.carNum && <div className="text-red-500 pl-[100px] text-base error">{errors.carNum}</div>}
-                <div className={'flex px-[100px] py-5 items-center'}>
-                    <div className={'font-medium w-[300px] mr-1'}>차대번호 <span className={'text-red-500'}>*</span>
-                    </div>
-                    <input
-                        type={'text'}
-                        name="carNum"
-                        defaultValue={formData.carNum || ''}
-                        onChange={handleInputChange}
-                        className={'w-[800px]'}
-                    />
-                </div>
-                {errors.carNum && <div className="text-red-500 pl-[100px] text-base error">{errors.carNum}</div>}
-                <div className={'flex px-[100px] py-5 items-center'}>
-                    <div className={'font-medium w-[300px] mr-1'}>차대번호 <span className={'text-red-500'}>*</span>
-                    </div>
-                    <input
-                        type={'text'}
-                        name="carNum"
-                        defaultValue={formData.carNum || ''}
-                        onChange={handleInputChange}
-                        className={'w-[800px]'}
-                    />
-                </div>
-                {errors.carNum && <div className="text-red-500 pl-[100px] text-base error">{errors.carNum}</div>}
-                <div className={'flex px-[100px] py-5 items-center'}>
-                    <div className={'font-medium w-[300px] mr-1'}>차대번호 <span className={'text-red-500'}>*</span>
-                    </div>
-                    <input
-                        type={'text'}
-                        name="carNum"
-                        defaultValue={formData.carNum || ''}
-                        onChange={handleInputChange}
-                        className={'w-[800px]'}
-                    />
-                </div>
-                {errors.carNum && <div className="text-red-500 pl-[100px] text-base error">{errors.carNum}</div>}
-                <div className={'flex px-[100px] py-5 items-center'}>
-                    <div className={'font-medium w-[300px] mr-1'}>차대번호 <span className={'text-red-500'}>*</span>
-                    </div>
-                    <input
-                        type={'text'}
-                        name="carNum"
-                        defaultValue={formData.carNum || ''}
-                        onChange={handleInputChange}
-                        className={'w-[800px]'}
-                    />
-                </div>
-                {errors.carNum && <div className="text-red-500 pl-[100px] text-base error">{errors.carNum}</div>}
-                <div className={'flex px-[100px] py-5 items-center'}>
-                    <div className={'font-medium w-[300px] mr-1'}>차대번호 <span className={'text-red-500'}>*</span>
-                    </div>
-                    <input
-                        type={'text'}
-                        name="carNum"
-                        defaultValue={formData.carNum || ''}
-                        onChange={handleInputChange}
-                        className={'w-[800px]'}
-                    />
-                </div>
-                {errors.carNum && <div className="text-red-500 pl-[100px] text-base error">{errors.carNum}</div>}
-                <div className={'flex px-[100px] py-5 items-center'}>
-                    <div className={'font-medium w-[300px] mr-1'}>차대번호 <span className={'text-red-500'}>*</span>
-                    </div>
-                    <input
-                        type={'text'}
-                        name="carNum"
-                        defaultValue={formData.carNum || ''}
-                        onChange={handleInputChange}
-                        className={'w-[800px]'}
-                    />
-                </div>
-                {errors.carNum && <div className="text-red-500 pl-[100px] text-base error">{errors.carNum}</div>}
                 <div className={'flex px-[100px] py-5 items-center'}>
                     <div className={'font-medium w-[300px] mr-1'}>피해규모 <span className={'text-red-500'}>*</span></div>
                     <div className={'flex justify-between w-[800px]'}>

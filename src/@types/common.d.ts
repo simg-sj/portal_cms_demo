@@ -249,23 +249,27 @@ interface rcAccidentType {
 }
 
 interface dutyType {
-    rcPk: number;
     bpk: number; // 업체키
-    insuNum?: string;
+    bNo: string; // 렌탈사 보유코드 / 사업자번호
+    bName : string;
     partnerName: string; // 제휴사명
-    carNum: string; // 차량번호
-    accidentDate: string; // 사고 일시
-    arrivalETA: string; // 예상 입고 일정 (nullable)
-    propDamage: string | null; // 대물 (nullable)
-    persInjury: string | null; // 대인 (nullable)
+    carNum ?: string; // 차량번호
+    carType: string; // 차종
+    displacement: string; // 배기량
+    modelYear: string // 연식
+    driverScope: string ; // 운전자 범위
+    ageRange: string; // 연령범위
     startDate: string;
     endDate: string;
-    etc: string | null; // 기타 (nullable)
-    accidentDetail: string; // 사고내용 (nullable)
-    isConfirmed: string; // 컨펌 여부 (nullable)
-    confirmedBy: string | null; // 컨펌 담당자 (nullable)
+    pawn: string; // 담보
+    etcPawn ?: string; // 기타 담보 조정 사항
+    pNo: string; // 컨펌 여부 (nullable)
+    premium: string; // 컨펌 담당자 (nullable)
     statusCode?: string;
-    memo?: string;
+    payType: string;
+    cardNum ?: string;
+    bank ?: string;
+    account ?: string;
     createdYMD?: string; // 생성일
 }
 
@@ -314,8 +318,6 @@ interface rcAccidentRowType extends rcAccidentType {
 interface dutyRowType extends dutyType {
     gbn?: string;
     job?: string;
-    accidentTime: string;
-    accidentDateTime: string;
 }
 
 interface Step1Props {

@@ -1,6 +1,6 @@
 'use client'
 import React, {useState} from 'react';
-import Step1 from "@/app/components/pageComponents/rentCar/accidentAccept/step1-turu";
+import Step1 from "@/app/components/pageComponents/liabilityIns/step1-star";
 import Step2 from "@/app/components/pageComponents/rentCar/accidentAccept/step2-turu";
 import Step3 from "@/app/components/pageComponents/rentCar/accidentAccept/step3";
 import {dutyRowType, dutyType, rcAccidentRowType} from "@/@types/common";
