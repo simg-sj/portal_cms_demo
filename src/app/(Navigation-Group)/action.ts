@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-11-05 16:27:57
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-12-23 11:12:50
+ * @LastEditTime: 2025-02-27 15:27:02
  * @FilePath: src/app/(Navigation-Group)/action.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -17,9 +17,10 @@ import {
     ParamType,
     ParkingParamType,
     ParkingType, rcAccidentRowType, rcAccidentType, RcFormData,
-    UptClaim
+    UptClaim, UserType
 } from "@/@types/common";
 import dayjs from "dayjs";
+import {list} from "postcss";
 
 // 주차장 업체용
 interface ImageType {
@@ -298,6 +299,32 @@ export async function rcPortalRoute(param: rcAccidentRowType) : Promise<resultCo
 
     } catch (error) {
         console.error('Failed to rcAccident:', error);
+        throw new Error(`Failed to rcAccident: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+}
+
+export async function getUserData(platform : string, listType : string) : Promise<UserType[] | null> {
+    try {
+        console.log(listType);
+        const response = await fetch(`https://center-api.simg.kr/api/portal/getUser`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({platform, listType})
+        });
+
+        if (!response.ok) {
+            // 에러 핸들링: 상태 코드와 메시지를 포함한 에러
+            const errorDetails = await response.text();
+            throw new Error(`Error ${response.status}: ${response.statusText} - ${errorDetails}`);
+        }
+
+        return await response.json();
+
+
+    } catch (error) {
+        console.error('Failed to getUserList:', error);
         throw new Error(`Failed to rcAccident: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
 }

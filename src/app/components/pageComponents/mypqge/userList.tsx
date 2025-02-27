@@ -9,7 +9,7 @@ import Pagination from "@/app/components/common/ui/pagination";
 import CenterPopup from "@/app/components/popup/CenterPopup";
 import AddUser, {AddUserRef} from "@/app/components/pageComponents/parking/addUser";
 import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContainer";
-import {UserType} from "@/@types/common";
+import {UserListType, UserType} from "@/@types/common";
 
 interface SearchParams {
     authority: string;
@@ -17,26 +17,24 @@ interface SearchParams {
     searchKeyword: string;
 }
 
-export default function UserList() {
+export default function UserList({ userList }: { userList: UserListType[] }) {
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
-    const columns = ["이름", "연락처", "이메일", "아이디", "권한"];
+    const columns = [{header : '이름',key:"uName"}, {header : '연락처',key:"uCell"}, {header : '이메일',key:"uEmail"}, {header : '아이디',key:"userId"}, {header : '권한',key:"auth"}];
     const addUserRef = useRef<AddUserRef>(null);
     const [isOpen, setIsOpen] = useState(false);
     const [mode, setMode] = useState<'add' | 'edit'>('add');
     const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
-
     const itemsPerPage = 10; //페이지당 항목수
     const totalItems = UserSet.length;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
     // pagination 페이지
     const startIndex = (currentPage - 1) * itemsPerPage;
-    const displayedUsers = UserSet.slice(startIndex, startIndex + itemsPerPage);
-
+    const [displayedUsers, setDisplayUsers] = useState(userList.slice(startIndex, startIndex + itemsPerPage));
     const handlePageChange = (page: number) => {
         setCurrentPage(page + 1);
-        setSelectedItems(new Set()); // 페이지 변경 시 선택된 항목 초기화
+        setSelectedItems([]); // 페이지 변경 시 선택된 항목 초기화
     };
 
     useEffect(() => {
@@ -47,13 +45,13 @@ export default function UserList() {
 
     //사용자 선택 삭제
     const handleDeleteGroup = () => {
-        if (selectedItems.size === 0) {
+        if (selectedItems.length === 0) {
             alert('삭제할 항목을 선택해주세요.');
             return;
         }
-        const selectedUsers = UserSet.filter((user, index) => selectedItems.has(index));
-        if (window.confirm(`선택한 ${selectedItems.size}개의 항목을 삭제하시겠습니까?`)) {
-            console.log('삭제할 항목:', selectedUsers.map(user => ({ id: user.userId, name: user.name , index: user.index })));
+        const selectedUsers = userList.filter(item => selectedItems.includes(item.upk));
+        if (window.confirm(`선택한 ${selectedItems.length}개의 항목을 삭제하시겠습니까?`)) {
+            console.log('삭제할 항목:', selectedUsers.map(user => ({ id: user.userId, name: user.uName  })));
             return;
         }
     };
@@ -127,8 +125,8 @@ export default function UserList() {
 
     //조회
     const [searchParams, setSearchParams] = useState<SearchParams>({
-        authority: '전체',
-        searchCondition: '아이디',
+        authority: 'all',
+        searchCondition: 'userId',
         searchKeyword: ''
     });
 
@@ -141,8 +139,31 @@ export default function UserList() {
 
     const onSearchClick = () => {
         console.log("검색 데이터:", searchParams);
+        console.log("검색 데이터:", searchParams.searchKeyword);
+        console.log("userList 데이터:", userList);
+
+        if (!searchParams.searchKeyword || !searchParams.searchCondition) {
+            console.warn("검색 키워드 또는 검색 조건이 비어 있습니다.");
+            return;
+        }
+
+        const keyword = searchParams.searchKeyword.toLowerCase(); // 소문자로 변환
+        const condition = searchParams.searchCondition;
+
+        let filteredUsers = userList.filter(item =>
+            item[condition]?.toLowerCase().includes(keyword) // 대소문자 구분 없이 검색
+        );
+
+        if (searchParams.authority !== 'all') {
+            filteredUsers = filteredUsers.filter(item =>
+                searchParams.authority.includes(item.auth)
+            );
+        }
+
+        console.log("필터링된 사용자 목록:", filteredUsers);
+        setDisplayUsers(filteredUsers);
         setCurrentPage(1); // 검색 시 첫 페이지로 이동
-    }
+    };
 
     const getPopupButtons = () => {
         if (mode === 'add') {
@@ -200,9 +221,9 @@ export default function UserList() {
                         value={searchParams.authority}
                         onChange={(e) => handleParamChange('authority', e.target.value)}
                     >
-                        <option value={'전체'}>전체</option>
-                        <option value={'관리자'}>관리자</option>
-                        <option value={'사용자'}>사용자</option>
+                        <option value={'all'}>전체</option>
+                        <option value={'admin'}>관리자</option>
+                        <option value={'user'}>사용자</option>
                     </select>
                     <div className={'text-gray-700 font-medium pt-1 ml-7 mr-5'}>검색조건</div>
                     <select
@@ -210,9 +231,9 @@ export default function UserList() {
                         value={searchParams.searchCondition}
                         onChange={(e) => handleParamChange('searchCondition', e.target.value)}
                     >
-                        <option value={'아이디'}>아이디</option>
-                        <option value={'이름'}>이름</option>
-                        <option value={'연락처'}>연락처</option>
+                        <option value={'userId'}>아이디</option>
+                        <option value={'uName'}>이름</option>
+                        <option value={'uCell'}>연락처</option>
                     </select>
                     <input
                         type={'text'}
@@ -250,27 +271,12 @@ export default function UserList() {
                 buttons={getPopupButtons()}
             />
             <div className={'mt-4'}>
-                <CheckboxContainer<UserType>
+                <CheckboxContainer<UserListType[]>
                     items={displayedUsers}
-                    getItemId={(item) => item.index}
+                    getItemId={({upk}) => upk}
                     columns={columns}
                     selectedItems={selectedItems}
-                    renderItem={(item, isSelected, onToggle) => (
-                        <tr className={'cursor-pointer hover:bg-main-lighter'}
-                            onClick={() => handleRowClick(item)}>
-                            <td onClick={event => event.stopPropagation()}>
-                                <Checkbox
-                                    checked={isSelected}
-                                    onChange={() => onToggle(item.index)}
-                                />
-                            </td>
-                            <td>{item.name}</td>
-                            <td>{item.phone}</td>
-                            <td>{item.email}</td>
-                            <td>{item.userId}</td>
-                            <td>{item.auth}</td>
-                        </tr>
-                    )}
+
                     onSelectionChange={setSelectedItems}
                 />
                 <Pagination

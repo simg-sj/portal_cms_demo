@@ -29,6 +29,10 @@ export const APPROVAL_OPTIONS = ['승인', '미승인'];
 export const ACCIDENT_TYPE_OPTIONS = ['주차장배상', '재물배상', '치료비'];
 export const ACCIDENT_DETAIL_TYPE_OPTIONS = ['차대차', '시설물사고','배상책임', '발렛사고','재물배상', '건물자체사고', '치료비', '기타'];
 export const BSN_CODE = {'케이엠파크' : {bpk :'01', fileName :'케이엠파크_sample'} ,'하이파킹' : {bpk :'02', fileName :'하이파킹_sample'}};
+export const tabs = {
+    'user': [{'label': '마이페이지' , 'Yn' : 'Y'}, {'label': '관리자 정보', 'Yn' : 'Y'}, {'listType' : 'adminList' , 'Yn' : 'N'}],
+    'admin': [{'label': '마이페이지' , 'Yn' : 'Y'}, {'label': '사용자 목록' , 'Yn' : 'Y'}, {'listType' : 'userList' , 'Yn' : 'N'}]
+}
 //가로막대 옵션
 export const optionBarHorizon = {
     indexAxis: 'y' as const,

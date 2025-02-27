@@ -18,7 +18,8 @@ export default function Page() {
                 name: data.user.name ,
                 email: data.user.email,
                 auth: data.user.auth ,
-                platform: data.user.platform ,
+                bName: data.user.bName,
+                platform : data.user.platform,
                 userId: data.user.id ,
                 password: data.user.password,
                 phone: data.user.phone,
@@ -26,7 +27,7 @@ export default function Page() {
                 work: data.user.work
             });
         }
-    }, [data]);
+    }, [status]);
 
     return (
         <>

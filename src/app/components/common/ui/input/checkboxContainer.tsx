@@ -2,37 +2,36 @@ import React, { useState } from 'react';
 import Checkbox from '@/app/components/common/ui/input/checkbox';
 import Image from "next/image";
 import Error from "@/assets/images/icon/error-icon.png";
-
-interface ColumnDefinition<T> {
-    key: keyof T;
-    header: string;
-    render?: (item: T) => React.ReactNode;
-    defaultValue?: string | number;
+import { UserListType } from "@/@types/common";
+interface ColumType {
+    key : string;
+    header : string;
 }
-
-interface CheckboxContainerProps<T> {
-    items: T[];
-    columns: ColumnDefinition<T>[];
-    getItemId: (item: T) => number;
+interface CheckboxContainerProps {
+    items: UserListType[];
+    columns: ColumType[];
+    getItemId: (item: UserListType) => number;
     withCheckbox?: boolean;
     onSelectionChange?: (selectedIds: number[]) => void;
-    onRowClick?: (item: T) => void;
+    onRowClick?: (item: UserListType) => void;
     selectedRow?: number | null;
+    selectedItems: number[];
 }
 
-export function CheckboxContainer<T>({
-                                         items,
-                                         columns,
-                                         getItemId,
-                                         withCheckbox = true,
-                                         onSelectionChange,
-                                         onRowClick,
-                                         selectedRow,
-                                         selectedItems
-                                     }: CheckboxContainerProps<T> & {selectedItems : number []}) {
-    const toggleSelectAll = (checked: boolean) => {
+export function CheckboxContainer({
+                                      items,
+                                      columns,
+                                      getItemId,
+                                      withCheckbox = true,
+                                      onSelectionChange,
+                                      onRowClick,
+                                      selectedRow,
+                                      selectedItems
+                                  }: CheckboxContainerProps) {
+    const toggleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (!withCheckbox) return;
 
+        const checked = event.target.checked;
         const allIds = items.map(item => getItemId(item));
         const newSelectedItems = checked ? allIds : [];
 
@@ -41,41 +40,24 @@ export function CheckboxContainer<T>({
 
     const toggleSelectItem = (id: number) => {
         if (!withCheckbox) return;
-
-        const newSelectedItems = [...selectedItems];
-
-        if (newSelectedItems.includes(id)) {
-            // id가 이미 선택된 경우 삭제
-            const index = newSelectedItems.indexOf(id);
-            if (index > -1) newSelectedItems.splice(index, 1);
-        } else {
-            // id가 선택되지 않은 경우 추가
-            newSelectedItems.push(id);
-        }
+        const newSelectedItems = selectedItems.includes(id)
+            ? selectedItems.filter(item => item !== id) // 제거
+            : [...selectedItems, id]; // 추가
 
         onSelectionChange?.(newSelectedItems); // 부모 상태를 업데이트
     };
 
-
-    const handleRowClick = (item: T) => {
+    const handleRowClick = (item: UserListType) => {
         onRowClick?.(item);
     };
 
-    const safeRenderValue = (column: ColumnDefinition<T>, item: T) => {
-        // If render function exists, use it
-        if (column.render) {
-            return column.render(item);
-        }
+    const safeRenderValue = (column: string, item: UserListType) => {
+        const value = item[column];
 
-        // Get the value from the item
-        const value = item[column.key];
-
-        // Handle null/undefined cases
         if (value === null || value === undefined) {
-            return column.defaultValue ?? '-';
+            return "-";
         }
 
-        // Default to string conversion
         return String(value);
     };
 
@@ -95,17 +77,17 @@ export function CheckboxContainer<T>({
                         />
                     </th>
                 )}
-                {columns.map((column) => (
-                    <th key={String(column.key)}>{column.header}</th>
+                {columns.map((column, index) => (
+                    <th key={index}>{column.header}</th>
                 ))}
             </tr>
             </thead>
             <tbody>
             {items.length === 0 ? (
                 <tr>
-                    <td colSpan={columns.length}>
-                        <div className={'flex items-centers justify-center my-[150px]'}>
-                            <Image src={Error.src} alt={'에러'} width={30} height={30} className={'mr-5'}/>
+                    <td colSpan={columns.length + (withCheckbox ? 1 : 0)}>
+                        <div className={'flex items-center justify-center my-[150px]'}>
+                            <Image src={Error.src} alt={'에러'} width={30} height={30} className={'mr-5'} />
                             <div className={'text-gray-700 text-lg'}>데이터가 없습니다.</div>
                         </div>
                     </td>
@@ -119,9 +101,9 @@ export function CheckboxContainer<T>({
                         <tr
                             key={`${id}-${index}`}
                             className={`
-                                ${onRowClick ? 'cursor-pointer' : ''}
-                                ${isSelected ? 'bg-main-lighter' : 'hover:bg-main-lighter'}
-                            `}
+                                    ${onRowClick ? 'cursor-pointer' : ''}
+                                    ${isSelected ? 'bg-main-lighter' : 'hover:bg-main-lighter'}
+                                `}
                             onClick={() => handleRowClick(item)}
                         >
                             {withCheckbox && (
@@ -132,10 +114,8 @@ export function CheckboxContainer<T>({
                                     />
                                 </td>
                             )}
-                            {columns.map((column) => (
-                                <td key={String(column.key)}>
-                                    {safeRenderValue(column, item)}
-                                </td>
+                            {columns.map((column, colIndex) => (
+                                <td key={colIndex}>{safeRenderValue(column.key, item)}</td>
                             ))}
                         </tr>
                     );

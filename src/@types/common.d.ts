@@ -91,10 +91,10 @@ interface ThemeConfig {
 }
 
 interface UserType {
-    index?: number,
+    upk?: number,
     auth: string ,
     name: string ,
-    platform: string,
+    bName : string,
     password?: string,
     userId: string,
     email?: string,
@@ -102,6 +102,15 @@ interface UserType {
     work?: string,
     authLevel: number,
     userInfo?: UserType
+}
+
+interface UserListType {
+    userId: string;
+    uName: string;
+    upk : number;
+    uEmail: string;
+    uCell: string;
+    auth : string;
 }
 
 interface ParamType {
@@ -272,6 +281,7 @@ interface dutyType {
     account ?: string;
     createdYMD?: string; // 생성일
 }
+
 
 
 interface ButtonConfig {

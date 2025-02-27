@@ -38,7 +38,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                     />
                 </div>
                 <div className={'flex px-[100px] py-5 items-center'}>
-                    <div className={'font-medium w-[300px] mr-1'}>렌탈사 보유자코드 / 사업자번호 <span
+                    <div className={'font-medium w-[300px] mr-1'}>사업자번호 <span
                         className={'text-red-500'}>*</span></div>
                     <input
                         type={'text'}
@@ -138,13 +138,28 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                 </div>
                 {errors.carNum && <div className="text-red-500 pl-[100px] text-base error">{errors.carNum}</div>}
                 <div className={'flex px-[100px] py-5 items-center'}>
-                    <div className={'font-medium w-[300px] mr-1'}>등록일 / 년식 <span className={'text-red-500'}>*</span>
+                    <div className={'font-medium w-[300px] mr-1'}>등록일 <span className={'text-red-500'}>*</span>
                     </div>
                     <input
                         type={'text'}
                         name="modelYear"
                         {...register("modelYear", {
-                                required: "등록일/년식을 입력해주세요."
+                                required: "등록일을 입력해주세요."
+
+                            }
+                        )}
+                        className={'w-[800px]'}
+                    />
+                </div>
+                {errors.carNum && <div className="text-red-500 pl-[100px] text-base error">{errors.carNum}</div>}
+                <div className={'flex px-[100px] py-5 items-center'}>
+                    <div className={'font-medium w-[300px] mr-1'}>년식<span className={'text-red-500'}>*</span>
+                    </div>
+                    <input
+                        type={'text'}
+                        name="modelYear"fjhj
+                        {...register("modelYear", {
+                                required: "년식을 입력해주세요."
 
                             }
                         )}
