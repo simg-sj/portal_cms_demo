@@ -21,42 +21,49 @@ const Range = (start: number, end: number, step: number): number[] => {
 
 const CustomPicker = styled.div`
     position: relative;
-    .calender-icon{
+
+    .calender-icon {
         position: absolute;
         bottom: 10px;
         left: 10px;
     }
-    .react-datepicker-popper .react-datepicker{
+
+    .react-datepicker__input-container,
+    .react-datepicker-wrapper {
+        width: 100%;
+    }
+
+    .react-datepicker-popper .react-datepicker {
         font-family: Pretendard;
         border: 0;
         box-shadow: 0 3px 7px 1px rgb(0 0 0 / 0.1);
-        border-radius: 12px;
         width: 255px;
-        
-        .react-datepicker__header{
+
+        .react-datepicker__header {
             border: 0;
             padding: 14px;
             font-size: medium;
         }
     }
+
+    border-radius: 12px;
     
+
     .react-datepicker__input-container > input {
         border: 0;
         font-size: 16px;
         font-weight: 500;
-        width: 160px;
+        width: 100%;
         cursor: pointer;
         background: none;
         text-align: center;
-        padding: 0 0px 0 25px
+        padding: 0 0px 0 25px;
+        outline: 1px solid #d0d0d0;
+        border-radius: 8px;
     }
 
     .react-datepicker__input-container > input[readonly] {
         pointer-events: visible;
-    }
-
-    .react-datepicker__input-container > input:focus {
-        outline: 1px solid #eeeeee;
     }
 
     .react-datepicker__day-names {
@@ -76,7 +83,7 @@ const CustomPicker = styled.div`
         color: black;
     }
 
-    .react-datepicker__day--selected{
+    .react-datepicker__day--selected {
         color: white;
         background-color: var(--color-main);
         border-radius: 100px;
@@ -88,10 +95,12 @@ const CustomPicker = styled.div`
         color: black;
         border-radius: 100px;
     }
-    .react-datepicker__header select{
+
+    .react-datepicker__header select {
         border: 0;
         padding: 0 6px;
     }
+
     .react-datepicker__header select:focus {
         border: 0;
     }

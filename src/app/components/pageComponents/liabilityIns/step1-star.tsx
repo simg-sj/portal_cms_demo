@@ -72,8 +72,8 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                     {/*<DayTerm  type={'day'} setParam={setFormData} sDay={new Date(formData.startDate)} eDay={new Date(formData.endDate)}/>*/}
                     <div className={'flex items-center w-[800px]'}>
                         <div className={'mr-3 w-full'}>
-                            <div className={'w-1/2 mr-3 text-[18px] text-gray-700'}>시작일</div>
-                            <div className='border rounded-lg'>
+                            <div className={'w-1/2 mr-3 text-[16px] text-gray-700'}>시작일</div>
+                            <div className={'w-[400px]'}>
                                 <CalenderPicker
                                     maxDate={fromDay || new Date()}
                                     minDate={new Date()}
@@ -82,13 +82,11 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                             </div>
                         </div>
                         <div className={'w-full'}>
-                            <div className={'w-1/2 text-[18px] text-gray-700'}>종료일</div>
+                            <div className={'w-1/2 text-[16px] text-gray-700'}>종료일</div>
                             <div className={'mr-3 w-full'}>
-                                <div className='border rounded-lg'>
                                     <CalenderPicker
                                         minDate={new Date(fromDay)}
                                     />
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -157,7 +155,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                     </div>
                     <input
                         type={'text'}
-                        name="modelYear"fjhj
+                        name="modelYear"
                         {...register("modelYear", {
                                 required: "년식을 입력해주세요."
 
