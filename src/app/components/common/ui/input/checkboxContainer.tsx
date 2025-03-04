@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import Checkbox from '@/app/components/common/ui/input/checkbox';
 import Image from "next/image";
 import Error from "@/assets/images/icon/error-icon.png";
-import { UserListType } from "@/@types/common";
+import {UserListType, UserType} from "@/@types/common";
+import {authText} from "@/config/data";
 interface ColumType {
     key : string;
     header : string;
@@ -13,7 +14,7 @@ interface CheckboxContainerProps {
     getItemId: (item: UserListType) => number;
     withCheckbox?: boolean;
     onSelectionChange?: (selectedIds: number[]) => void;
-    onRowClick?: (item: UserListType) => void;
+    onRowClick?: (item: UserType) => void;
     selectedRow?: number | null;
     selectedItems: number[];
 }
@@ -48,14 +49,20 @@ export function CheckboxContainer({
     };
 
     const handleRowClick = (item: UserListType) => {
+        console.log(item)
+        console.log(selectedItems)
         onRowClick?.(item);
     };
 
     const safeRenderValue = (column: string, item: UserListType) => {
-        const value = item[column];
+        let value = item[column];
 
         if (value === null || value === undefined) {
             return "-";
+        }
+
+        if(column === 'uAuth') {
+            value = authText[item[column]];
         }
 
         return String(value);
@@ -87,7 +94,7 @@ export function CheckboxContainer({
                 <tr>
                     <td colSpan={columns.length + (withCheckbox ? 1 : 0)}>
                         <div className={'flex items-center justify-center my-[150px]'}>
-                            <Image src={Error.src} alt={'에러'} width={30} height={30} className={'mr-5'} />
+                            <Image src={Error} alt={'에러'} width={30} height={30} className={'mr-5'} />
                             <div className={'text-gray-700 text-lg'}>데이터가 없습니다.</div>
                         </div>
                     </td>

@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import MyPageTabs from "@/app/components/common/MyPageTabs";
 import Loading from "@/app/(Navigation-Group)/loading";
 import {UserType} from "@/@types/common";
+import {authText} from "@/config/data";
 
 
 export default function Page() {
@@ -16,13 +17,17 @@ export default function Page() {
     useEffect(() => {
         if (data && data.user) {
             setUserInfo({
-                name: data.user.name || null,
-                email: data.user.email || null,
-                auth: data.user.auth || null,
-                platform: data.user.platform || null,
-                userId: data.user.id || '',
-                phone: data.user.phone || null,
-                work: data.user.work || null
+                index: 0,
+                name: data.user.name ,
+                email: data.user.email,
+                auth: data.user.auth ,
+                bName: data.user.bName,
+                platform : data.user.platform,
+                userId: data.user.id ,
+                password: data.user.password,
+                phone: data.user.phone,
+                authLevel: data.user.authLevel,
+                work: data.user.work
             });
         }
     }, [data]);
@@ -53,7 +58,7 @@ export default function Page() {
                             권한
                         </h2>
                         <h2 className={'text-xl'}>
-                            {userInfo.auth}
+                            {authText[userInfo.auth]}
                         </h2>
                         <h2 className='leading-[40px] text-gray-500 text-lg border-b mb-2 mt-14'>
                             성함

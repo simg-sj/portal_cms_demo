@@ -99,6 +99,7 @@ interface UserType {
     userId: string,
     email?: string,
     phone?: string,
+    platform?: string,
     work?: string,
     authLevel: number,
     userInfo?: UserType
@@ -110,7 +111,7 @@ interface UserListType {
     upk : number;
     uEmail: string;
     uCell: string;
-    auth : string;
+    uAuth : string;
 }
 
 interface ParamType {

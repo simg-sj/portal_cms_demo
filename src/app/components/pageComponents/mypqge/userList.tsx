@@ -3,8 +3,6 @@ import React, {useEffect, useRef, useState} from "react";
 import Button from "@/app/components/common/ui/button/button";
 import Image from "next/image";
 import Plus from "@/assets/images/icon/plus-icon.png";
-import Checkbox from "@/app/components/common/ui/input/checkbox";
-import {UserSet} from "@/config/data";
 import Pagination from "@/app/components/common/ui/pagination";
 import CenterPopup from "@/app/components/popup/CenterPopup";
 import AddUser, {AddUserRef} from "@/app/components/pageComponents/parking/addUser";
@@ -19,16 +17,15 @@ interface SearchParams {
 
 export default function UserList({ userList }: { userList: UserListType[] }) {
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
-    const columns = [{header : '이름',key:"uName"}, {header : '연락처',key:"uCell"}, {header : '이메일',key:"uEmail"}, {header : '아이디',key:"userId"}, {header : '권한',key:"auth"}];
+    const columns = [{header : '이름',key:"uName"}, {header : '연락처',key:"uCell"}, {header : '이메일',key:"uEmail"}, {header : '아이디',key:"userId"}, {header : '권한',key:"uAuth"}];
     const addUserRef = useRef<AddUserRef>(null);
     const [isOpen, setIsOpen] = useState(false);
     const [mode, setMode] = useState<'add' | 'edit'>('add');
     const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10; //페이지당 항목수
-    const totalItems = UserSet.length;
+    const totalItems = userList.length;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
-
     // pagination 페이지
     const startIndex = (currentPage - 1) * itemsPerPage;
     const [displayedUsers, setDisplayUsers] = useState(userList.slice(startIndex, startIndex + itemsPerPage));
@@ -108,7 +105,6 @@ export default function UserList({ userList }: { userList: UserListType[] }) {
     };
 
     const handleRowClick = (user: UserType) => {
-        console.log("선택한 사용자 데이터:", user);
         setSelectedUser(user);
         setMode('edit');
         setIsOpen(true);
@@ -138,12 +134,8 @@ export default function UserList({ userList }: { userList: UserListType[] }) {
     };
 
     const onSearchClick = () => {
-        console.log("검색 데이터:", searchParams);
-        console.log("검색 데이터:", searchParams.searchKeyword);
-        console.log("userList 데이터:", userList);
-
         if (!searchParams.searchKeyword || !searchParams.searchCondition) {
-            console.warn("검색 키워드 또는 검색 조건이 비어 있습니다.");
+            alert("검색 키워드 또는 검색 조건이 비어 있습니다.");
             return;
         }
 
@@ -155,12 +147,11 @@ export default function UserList({ userList }: { userList: UserListType[] }) {
         );
 
         if (searchParams.authority !== 'all') {
+            console.log(filteredUsers);
             filteredUsers = filteredUsers.filter(item =>
-                searchParams.authority.includes(item.auth)
+                searchParams.authority.includes(item.uAuth)
             );
         }
-
-        console.log("필터링된 사용자 목록:", filteredUsers);
         setDisplayUsers(filteredUsers);
         setCurrentPage(1); // 검색 시 첫 페이지로 이동
     };
@@ -259,7 +250,7 @@ export default function UserList({ userList }: { userList: UserListType[] }) {
                     삭제
                 </Button>
                 <Button color={"main"} fill height={32} width={120} onClick={handleAddClick}>
-                    <Image src={Plus.src} alt={'추가'} width={16} height={16} className={'mr-1'}/>
+                    <Image src={Plus} alt={'추가'} width={16} height={16} className={'mr-1'}/>
                     사용자추가
                 </Button>
             </div>
@@ -276,7 +267,7 @@ export default function UserList({ userList }: { userList: UserListType[] }) {
                     getItemId={({upk}) => upk}
                     columns={columns}
                     selectedItems={selectedItems}
-
+                    onRowClick={handleRowClick}
                     onSelectionChange={setSelectedItems}
                 />
                 <Pagination

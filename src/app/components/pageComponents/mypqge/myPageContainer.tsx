@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-12-30 14:25:26
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2025-02-27 16:42:20
+ * @LastEditTime: 2025-03-04 10:54:11
  * @FilePath: src/app/components/pageComponents/mypqge/myPageContainer.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -12,13 +12,13 @@ import MyPageTabs from "@/app/components/common/MyPageTabs";
 import React, { useState} from "react";
 import {UserType} from "@/@types/common";
 import useUserList from "@/app/lib/hooks/useUserList";
+import {authText} from "@/config/data";
 
 
 
 export default function MyPageContainer({userInfo} : UserType) {
     const [userData, setUserData] = useState<UserType>(userInfo);
     const userList = useUserList(userData);
-    
     return (
         <div className="flex justify-between w-full h-full">
             <div className='basis-1/3 flex flex-col items-center bg-white p-16 mr-10 shadow-sm rounded-lg'>
@@ -41,7 +41,7 @@ export default function MyPageContainer({userInfo} : UserType) {
                             권한
                         </h2>
                         <h2 className={'text-xl'}>
-                            {userData.auth}
+                            {authText[userInfo.auth]}
                         </h2>
                         <h2 className='leading-[40px] text-gray-500 text-lg border-b mb-2 mt-14'>
                             성함
