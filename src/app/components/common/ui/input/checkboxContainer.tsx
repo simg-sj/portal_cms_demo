@@ -14,8 +14,8 @@ interface CheckboxContainerProps {
     getItemId: (item: UserListType) => number;
     withCheckbox?: boolean;
     onSelectionChange?: (selectedIds: number[]) => void;
-    onRowClick?: (item: UserType) => void;
-    selectedRow?: number | null;
+    onRowClick?: (item: UserListType) => void;
+    selectedRow: number | null;
     selectedItems: number[];
 }
 
@@ -44,13 +44,10 @@ export function CheckboxContainer({
         const newSelectedItems = selectedItems.includes(id)
             ? selectedItems.filter(item => item !== id) // 제거
             : [...selectedItems, id]; // 추가
-
         onSelectionChange?.(newSelectedItems); // 부모 상태를 업데이트
     };
 
     const handleRowClick = (item: UserListType) => {
-        console.log(item)
-        console.log(selectedItems)
         onRowClick?.(item);
     };
 

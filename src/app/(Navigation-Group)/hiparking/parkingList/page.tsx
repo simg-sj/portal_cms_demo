@@ -320,11 +320,11 @@ export default function Page() {
                             삭제
                         </Button>
                         <Button color={"green"} fill height={32} width={120} onClick={() => setExcelOpen(true)}>
-                            <Image src={ExcelUpload.src} alt={'업로드'} width={15} height={15} className={'mr-2'}/>
+                            <Image src={ExcelUpload} alt={'업로드'} width={15} height={15} className={'mr-2'}/>
                             엑셀업로드
                         </Button>
                         <Button color={"main"} fill height={32} width={120} onClick={() => setAddOpen(true)}>
-                            <Image src={Plus.src} alt={'추가'} width={16} height={16} className={'mr-1'}/>
+                            <Image src={Plus} alt={'추가'} width={16} height={16} className={'mr-1'}/>
                             사업장추가
                         </Button>
                     </div>

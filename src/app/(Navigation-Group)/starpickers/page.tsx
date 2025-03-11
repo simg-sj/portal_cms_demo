@@ -1,33 +1,39 @@
 'use client'
 import React, {useState} from 'react';
 import Step1 from "@/app/components/pageComponents/liabilityIns/step1-star";
-import Step2 from "@/app/components/pageComponents/rentCar/accidentAccept/step2-turu";
+import Step2 from "@/app/components/pageComponents/liabilityIns/step2-star";
 import Step3 from "@/app/components/pageComponents/rentCar/accidentAccept/step3";
-import {dutyRowType, dutyType, rcAccidentRowType} from "@/@types/common";
-import dayjs from "dayjs";
+import {dutyType} from "@/@types/common";
 
 
 export default function Page() {
     //스탭
     const [currentStep, setCurrentStep] = useState(1);
-    const [formData, setFormData] = useState<dutyRowType>({
-        rcPk: 0,
-        bpk : 4,
-        partnerName: '',
-        carNum: '',
-        accidentDate: '',
-        endDate: dayjs().format('YYYY-MM-DD'),
-        startDate: dayjs().format('YYYY-MM-DD'),
-        accidentTime: '12:00',
-        accidentDateTime : '',
-        arrivalETA: '' ,
-        propDamage: '',
-        persInjury: '',
-        etc: '',
-        accidentDetail: '',
-        isConfirmed: '',
-        confirmedBy: ''
-    });
+    const [formData, setFormData] = useState<dutyType>(
+        {
+            ageRange: "",
+            bName: "",
+            bankName: "",
+            bankNum: "",
+            bikeCC: "",
+            bikeName: "",
+            bikeNum: "",
+            bizId: "",
+            bpk: 5,
+            creaditNum: "",
+            dambo: "",
+            driverRange: "누구나운전",
+            fuelType: "",
+            gbn: "",
+            gitaDambo: "선택안함",
+            handlerName: "",
+            handlerPhone: "",
+            job: "",
+            payMethod: "",
+            registYMD: "",
+            viNum: ""
+        }
+    );
 
     const handleNext = () => {
         setCurrentStep(prev => Math.min(prev + 1, 3));
@@ -40,22 +46,27 @@ export default function Page() {
     const handleReset = () => {
         setCurrentStep(1);
         setFormData({
-            rcPk : 0,
-            bpk : 5,
-            partnerName: '',
-            carNum: '',
-            accidentDate: '',
-            accidentTime: '',
-            accidentDateTime : '',
-            endDate: dayjs().format('YYYY-MM-DD'),
-            startDate: dayjs().format('YYYY-MM-DD'),
-            arrivalETA: '',
-            propDamage: '',
-            persInjury: '',
-            etc: '',
-            accidentDetail: '',
-            isConfirmed: '',
-            confirmedBy: ''
+            ageRange: "",
+            bName: "",
+            bankName: "",
+            bankNum: "",
+            bikeCC: "",
+            bikeName: "",
+            bikeNum: "",
+            bizId: "",
+            bpk: 5,
+            creaditNum: "",
+            dambo: "",
+            driverRange: "누구나운전",
+            fuelType: "",
+            gbn: "",
+            gitaDambo: "선택안함",
+            handlerName: "",
+            handlerPhone: "",
+            job: "",
+            payMethod: "",
+            registYMD: "",
+            viNum: ""
         });
     };
 

@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-10-02 14:13:08
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-12-20 09:11:23
+ * @LastEditTime: 2025-03-10 13:38:23
  * @FilePath: src/auth.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -36,9 +36,13 @@ export const {
                     bName : data.bName,
                     name: data.name,
                     email: data.mail,
+                    bNo : data.bNo,
                     phone : data.phone,
                     auth : data.auth,
+                    bpk : data.bpk,
                     authLevel : data.authLevel,
+                    service : data.service,
+                    subYn : data.subYn
                 };
 
                 if (user) {
@@ -70,9 +74,13 @@ export const {
                     work : user.work,
                     name: user.name,
                     auth : user.auth,
+                    bpk : user.bpk,
+                    bNo : user.bNo,
                     authLevel : user.authLevel,
                     phone : user.phone,
-                    email : user.email
+                    email : user.email,
+                    subYn : user.subYn,
+                    service : user.service
                 }
             }
             return token
@@ -85,8 +93,12 @@ export const {
                 session.user.email = token.email;
                 session.user.phone = token.phone;
                 session.user.id = token.id;
+                session.user.bpk = token.bpk;
                 session.user.auth = token.auth;
                 session.user.authLevel = token.authLevel;
+                session.user.service = token.service;
+                session.user.subYn = token.subYn;
+                session.user.bNo = token.bNo;
             }
             return session
         },

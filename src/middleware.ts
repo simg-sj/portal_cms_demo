@@ -69,7 +69,7 @@ export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // 사용자 플랫폼 및 허용 경로
-    const userPlatform = userInfo?.user?.platform || '';
+    const userPlatform = userInfo?.user?.service || '';
     const userAccessUrls = platformUrls[userPlatform] || [];
     const allowedPaths = userAccessUrls.map((url) => url.path).filter((path): path is string => typeof path === 'string');
     const userHomeUrl = `/${userPlatform}`; // 사용자 플랫폼 루트 경로

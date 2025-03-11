@@ -10,12 +10,13 @@ import MyPageContainer from "@/app/components/pageComponents/mypqge/myPageContai
 export default function Page() {
     const { data, status } = useSession();
     const [userInfo, setUserInfo] = useState<UserType>();  // 초기값을 null로 설정
-
+    console.log(data);
     useEffect(() => {
         if (data && data.user) {
             setUserInfo({
                 index: 0,
                 name: data.user.name ,
+                bpk : data.user.bpk,
                 email: data.user.email,
                 auth: data.user.auth ,
                 bName: data.user.bName,

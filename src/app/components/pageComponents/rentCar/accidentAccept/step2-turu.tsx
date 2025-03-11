@@ -1,12 +1,12 @@
 import React, {useState} from "react";
 import Button from "@/app/components/common/ui/button/button";
-import type {Step2Props} from "@/@types/common";
 import {rcPortalRoute} from "@/app/(Navigation-Group)/action";
+import {Step2PropsLC} from "@/@types/common";
 
 
 
 
-const Step2= ({onNext, onPrev, param} : Step2Props) =>  {
+const Step2= ({onNext, onPrev, param} : Step2PropsLC) =>  {
     //체크박스 유효성검사
     const [agreements, setAgreements] = useState({
         privacy: false,

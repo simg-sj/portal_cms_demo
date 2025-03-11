@@ -1,6 +1,5 @@
 import {StaticImageData} from "next/image";
 import React from "react";
-import {User} from "next-auth";
 
 
 interface MenuItemType {
@@ -92,6 +91,7 @@ interface ThemeConfig {
 
 interface UserType {
     upk?: number,
+    bpk : number,
     auth: string ,
     name: string ,
     bName : string,
@@ -105,15 +105,39 @@ interface UserType {
     userInfo?: UserType
 }
 
+interface UserUpk {
+    upks : string;
+    gbn : string;
+    job : string;
+}
+
+interface SearchParams {
+    uAuth: string;
+    searchCondition: string;
+    searchKeyword: string;
+    gbn : string;
+    job : string;
+}
+
 interface UserListType {
     userId: string;
     uName: string;
-    upk : number;
-    uEmail: string;
+    upk : string;
+    bpk : string;
+    uMail: string;
     uCell: string;
     uAuth : string;
+    userPwd : string;
+    platform : string;
+    gbn?: string;
+
 }
 
+interface UserCudType extends UserListType{
+   job : string;
+}
+
+// 주차장 사고접수 타입
 interface ParamType {
     bpk: number
     startDate: string;
@@ -122,17 +146,20 @@ interface ParamType {
     text: string | null;
 }
 
+// 주차장 검색 조건 타입
 interface ParkingParamType {
     bpk: number;
     condition: string;
     text: string;
 }
 
+// 이미지 타입
 interface ImageType {
     location: string;
 }
 
 
+// 주차장 사고 접수 타입
 interface ClaimRowType {
     irpk: number;                       // Primary key, auto-increment
     bpk?: number | null;                // 업체키
@@ -185,6 +212,7 @@ interface ClaimRowType {
     createdYMD?: Date | null;           // 생성일자 (datetime)
 }
 
+// 주차장 타입
 interface ParkingType {
     pklpk: number;                     // 고유 식별자, 주차장 키 (Primary Key)
     bpk: number;                       // 업체 키 (Business Primary Key)
@@ -208,6 +236,7 @@ interface ParkingType {
     createdYMD: Date;                  // 생성일자
 }
 
+// 주차장 타입
 interface ParkingRowType {
     pklName: string;
     pklAddress: string;
@@ -221,24 +250,7 @@ interface ParkingRowType {
     memo: string;
 }
 
-interface FormData {
-    rcPk: number;
-    bpk: number;
-    partnerName: string; //제휴사명
-    carNum: string; //차량번호
-    carType: string; //차종
-    accidentDate: string; //사고일시
-    accidentTime: string; //사고시간
-    arrivalETA: string; //예상입고일정
-    //피해규모
-    propDamage: string; //대물
-    persInjury: string; //대인
-    etc: string; //기타
-    accidentDetail: string; //사고내용
-    isConfirmed?: string; //컴펌여부
-    confirmedBy?: string; //컴펌담당자
-}
-
+// 트루카 책임보험 사고 타입 정의
 interface rcAccidentType {
     rcPk: number;
     bpk: number; // 업체키
@@ -257,32 +269,6 @@ interface rcAccidentType {
     memo?: string;
     createdYMD?: string; // 생성일
 }
-
-interface dutyType {
-    bpk: number; // 업체키
-    bNo: string; // 렌탈사 보유코드 / 사업자번호
-    bName : string;
-    partnerName: string; // 제휴사명
-    carNum ?: string; // 차량번호
-    carType: string; // 차종
-    displacement: string; // 배기량
-    modelYear: string // 연식
-    driverScope: string ; // 운전자 범위
-    ageRange: string; // 연령범위
-    startDate: string;
-    endDate: string;
-    pawn: string; // 담보
-    etcPawn ?: string; // 기타 담보 조정 사항
-    pNo: string; // 컨펌 여부 (nullable)
-    premium: string; // 컨펌 담당자 (nullable)
-    statusCode?: string;
-    payType: string;
-    cardNum ?: string;
-    bank ?: string;
-    account ?: string;
-    createdYMD?: string; // 생성일
-}
-
 
 
 interface ButtonConfig {
@@ -317,8 +303,7 @@ interface UptClaim extends ClaimRowType {
     job: string;
 }
 
-type PkType = [number]
-
+// 트루카
 interface rcAccidentRowType extends rcAccidentType {
     gbn?: string;
     job?: string;
@@ -326,23 +311,58 @@ interface rcAccidentRowType extends rcAccidentType {
     accidentDateTime: string;
 }
 
+
+// 책임보험 타입 정의
+interface dutyType {
+    bpk: number; // 업체키
+    handlerName: string; // 담당자 이름
+    handlerPhone: string; // 담당자 전화번호
+    bizId: string; // 렌탈사 보유코드 / 사업자번호
+    bName : string;
+    bikeNum ?: string; // 차량번호
+    viNum: string; // 차대번호
+    bikeName: string; // 차량이름
+    bikeCC: string; // 배기량
+    fuelType : string;
+    registYMD: string // 연식
+    driverRange: string ; // 운전자 범위
+    ageRange: string; // 연령범위
+    dambo: string; // 담보
+    gitaDambo ?: string; // 기타 담보 조정 사항
+    payMethod : string;
+    creaditNum : string;
+    bankName : string;
+    bankNum : string;
+}
+
+
+// 책임보험 타입 확장
 interface dutyRowType extends dutyType {
     gbn?: string;
     job?: string;
 }
 
+
+
 interface Step1Props {
     onNext: () => void;
-    formData: rcAccidentRowType | dutyRowType;
-    setFormData: React.Dispatch<React.SetStateAction<rcAccidentRowType>>;
+    formData: rcAccidentRowType | dutyType;
+    setFormData: React.Dispatch<React.SetStateAction<rcAccidentRowType | dutyType>>;
 }
 
-interface Step2Props {
+interface Step2PropsDT {
     onNext: () => void;
     onPrev: () => void;
-    param: rcAccidentRowType;
+    param: dutyType;
+}
+
+interface Step2PropsLC {
+    onNext: () => void;
+    onPrev: () => void;
+    param: dutyType;
 }
 
 interface Step3Props {
     onReset: () => void;
 }
+

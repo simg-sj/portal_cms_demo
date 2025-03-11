@@ -20,8 +20,8 @@ export default function Navigation() {
     const [activeLink, setActiveLink] = useState<string | null>(null);
     useEffect(() => {
         if (data && data.user) {
-            const { platform, authLevel } = data.user; // data.user가 존재하는지 확인
-            const config = getThemeConfig(platform);
+            const { service, authLevel } = data.user; // data.user가 존재하는지 확인
+            const config = getThemeConfig(service);
             let authPage = [];
 
             // 마이페이지 이름 추가, 권한 별 보이기
@@ -37,7 +37,7 @@ export default function Navigation() {
                 ...config,
                 menuItems: authPage,
             });
-            document.documentElement.setAttribute('data-theme', platform);
+            document.documentElement.setAttribute('data-theme', service);
         }
     }, [data]);
 

@@ -1,5 +1,5 @@
 'use client'
-import React, {useEffect, useRef, useState} from "react";
+import React, {SetStateAction, useEffect, useRef, useState} from "react";
 import Button from "@/app/components/common/ui/button/button";
 import Image from "next/image";
 import Plus from "@/assets/images/icon/plus-icon.png";
@@ -7,28 +7,31 @@ import Pagination from "@/app/components/common/ui/pagination";
 import CenterPopup from "@/app/components/popup/CenterPopup";
 import AddUser, {AddUserRef} from "@/app/components/pageComponents/parking/addUser";
 import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContainer";
-import {UserListType, UserType} from "@/@types/common";
+import {SearchParams, UserCudType, UserListType, UserUpk} from "@/@types/common";
+import {authText} from "@/config/data";
+import {userService} from "@/app/(Navigation-Group)/action";
 
-interface SearchParams {
-    authority: string;
-    searchCondition: string;
-    searchKeyword: string;
-}
 
-export default function UserList({ userList }: { userList: UserListType[] }) {
+export default function UserList({ userList, reloadUserList, onSearch }: { userList: UserListType[], reloadUserList : () => void, onSearch : (param : SearchParams) => void}) {
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
-    const columns = [{header : '이름',key:"uName"}, {header : '연락처',key:"uCell"}, {header : '이메일',key:"uEmail"}, {header : '아이디',key:"userId"}, {header : '권한',key:"uAuth"}];
+    const columns = [{header : '이름',key:"uName"}, {header : '연락처',key:"uCell"}, {header : '이메일',key:"uMail"}, {header : '아이디',key:"userId"}, {header : '권한',key:"uAuth"}];
     const addUserRef = useRef<AddUserRef>(null);
     const [isOpen, setIsOpen] = useState(false);
     const [mode, setMode] = useState<'add' | 'edit'>('add');
-    const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
+    const [selectedUser, setSelectedUser] = useState<UserListType | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10; //페이지당 항목수
-    const totalItems = userList.length;
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const totalPages = Math.ceil(userList.length / itemsPerPage);
+
     // pagination 페이지
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const [displayedUsers, setDisplayUsers] = useState(userList.slice(startIndex, startIndex + itemsPerPage));
+    const [displayedUsers, setDisplayUsers] = useState<UserListType[]>(userList.slice(0, itemsPerPage));
+
+    // `userList`가 변경될 때 `displayedUsers`도 갱신되도록 설정
+    useEffect(() => {
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        setDisplayUsers(userList.slice(startIndex, startIndex + itemsPerPage));
+    }, [userList, currentPage]);
+
     const handlePageChange = (page: number) => {
         setCurrentPage(page + 1);
         setSelectedItems([]); // 페이지 변경 시 선택된 항목 초기화
@@ -40,43 +43,57 @@ export default function UserList({ userList }: { userList: UserListType[] }) {
         }
     }, [isOpen, mode, selectedUser]);
 
-    //사용자 선택 삭제
-    const handleDeleteGroup = () => {
-        if (selectedItems.length === 0) {
-            alert('삭제할 항목을 선택해주세요.');
-            return;
-        }
-        const selectedUsers = userList.filter(item => selectedItems.includes(item.upk));
-        if (window.confirm(`선택한 ${selectedItems.length}개의 항목을 삭제하시겠습니까?`)) {
-            console.log('삭제할 항목:', selectedUsers.map(user => ({ id: user.userId, name: user.uName  })));
-            return;
-        }
-    };
-
+    // 사용자 생성
     const handleAdd = async () => {
-        if (addUserRef.current) {
-            const isValid = await addUserRef.current.validateForm();
+        if (!addUserRef.current) return;
 
-            if (isValid) {
-                const formData = addUserRef.current.getFormData();
-                if (window.confirm(`${formData.name} ${formData.auth} 를 추가하시겠습니까?`)) {
-                    console.log('추가된 데이터:', formData);
-                    setIsOpen(false);
-                } else {
-                    setIsOpen(true);
-                    console.log('저장취소');
-                }
+        try {
+            const isValid = await addUserRef.current.validateForm();
+            if (!isValid) return;
+
+            const formData = addUserRef.current.getFormData();
+            const confirmMessage = `${formData.uName} ${authText[formData.uAuth]} 를 추가하시겠습니까?`;
+
+            if (!window.confirm(confirmMessage)) {
+                return;
             }
+
+            console.log("추가된 데이터:", formData);
+            formData.gbn = "editUser";
+
+            const { code } = await userService(formData);
+
+            if (code === "200") {
+                alert("수정되었습니다.");
+                setIsOpen(false);
+            } else {
+                alert("서비스 오류입니다.");
+            }
+        } catch (error) {
+            console.error("사용자 추가 중 오류 발생:", error);
+            alert("예기치 않은 오류가 발생했습니다.");
         }
     };
 
+    // 사용자 수정
     const handleSave = async () => {
         if (addUserRef.current) {
             const isValid = await addUserRef.current.validateForm();
             if (isValid) {
-                const formData = addUserRef.current.getFormData();
-                if (window.confirm(`${formData.name} ${formData.auth} 를 수정하시겠습니까?`)) {
+                const formData : UserCudType = addUserRef.current.getFormData();
+                console.log(formData);
+
+                if (window.confirm(`${formData.uName} ${authText[formData.uAuth]} 를 수정하시겠습니까?`)) {
                     console.log('수정된 데이터:', formData);
+                    formData.gbn = 'UPD'
+                    formData.job = 'CUD';
+                    let {code} = await userService(formData);
+                    if (code === "200") {
+                        alert('수정되었습니다.');
+                        reloadUserList();
+                    }else {
+                        alert('서비스 오류입니다.');
+                    }
                     setIsOpen(false);
                 } else {
                     setIsOpen(true);
@@ -86,11 +103,45 @@ export default function UserList({ userList }: { userList: UserListType[] }) {
         }
     };
 
-    const handleDeleteSingle = () => {
+
+    //사용자 선택 삭제
+    const handleDeleteGroup = async () => {
+        if (selectedItems.length === 0) {
+            alert('삭제할 항목을 선택해주세요.');
+            return;
+        }
+        if (window.confirm(`선택한 ${selectedItems.length}개의 항목을 삭제하시겠습니까?`)) {
+            let param : UserUpk = {
+                upks : selectedItems.join(','),
+                job : 'CUD',
+                gbn : 'MDEL'
+            };
+            let {code, msg} = await userService(param);
+            if (code === "200") {
+                alert(msg);
+                reloadUserList();
+            }else {
+                alert('서비스 오류입니다.');
+            }
+
+            return;
+        }
+    };
+
+
+    const handleDeleteSingle = async () => {
         if (addUserRef.current) {
             const formData = addUserRef.current.getFormData();
-            if (window.confirm(`${formData.name} ${formData.auth} 를 삭제하시겠습니까?`)) {
-                alert('삭제하였습니다');
+            if (window.confirm(`${formData.uName} ${authText[formData.uAuth]} 를 삭제하시겠습니까?`)) {
+                formData.gbn = 'UPD'
+                formData.job = 'CUD';
+                let {code} = await userService(formData);
+                if (code === "200") {
+                    alert('삭제하였습니다');
+                    reloadUserList();
+                }else {
+                    alert('서비스 오류입니다.');
+                }
                 setIsOpen(false);
             }
         }
@@ -104,7 +155,7 @@ export default function UserList({ userList }: { userList: UserListType[] }) {
         setIsOpen(false);
     };
 
-    const handleRowClick = (user: UserType) => {
+    const handleRowClick = (user: UserListType) => {
         setSelectedUser(user);
         setMode('edit');
         setIsOpen(true);
@@ -121,7 +172,9 @@ export default function UserList({ userList }: { userList: UserListType[] }) {
 
     //조회
     const [searchParams, setSearchParams] = useState<SearchParams>({
-        authority: 'all',
+        job : 'LIST',
+        gbn : 'SEARCH',
+        uAuth: 'all',
         searchCondition: 'userId',
         searchKeyword: ''
     });
@@ -138,21 +191,21 @@ export default function UserList({ userList }: { userList: UserListType[] }) {
             alert("검색 키워드 또는 검색 조건이 비어 있습니다.");
             return;
         }
-
-        const keyword = searchParams.searchKeyword.toLowerCase(); // 소문자로 변환
+        onSearch(searchParams);
+        /*const keyword = searchParams.searchKeyword.toLowerCase(); // 소문자로 변환
         const condition = searchParams.searchCondition;
 
         let filteredUsers = userList.filter(item =>
             item[condition]?.toLowerCase().includes(keyword) // 대소문자 구분 없이 검색
         );
-
+        console.log(filteredUsers);
         if (searchParams.authority !== 'all') {
             console.log(filteredUsers);
             filteredUsers = filteredUsers.filter(item =>
                 searchParams.authority.includes(item.uAuth)
             );
         }
-        setDisplayUsers(filteredUsers);
+        setDisplayUsers(filteredUsers);*/
         setCurrentPage(1); // 검색 시 첫 페이지로 이동
     };
 
@@ -209,8 +262,8 @@ export default function UserList({ userList }: { userList: UserListType[] }) {
                     <div className={'text-gray-700 font-medium pt-1 mr-5'}>권한</div>
                     <select
                         className={'w-[200px]'}
-                        value={searchParams.authority}
-                        onChange={(e) => handleParamChange('authority', e.target.value)}
+                        value={searchParams.uAuth}
+                        onChange={(e) => handleParamChange('uAuth', e.target.value)}
                     >
                         <option value={'all'}>전체</option>
                         <option value={'admin'}>관리자</option>
@@ -259,8 +312,7 @@ export default function UserList({ userList }: { userList: UserListType[] }) {
                 onClose={handleClose}
                 title={mode === 'add' ? "사용자 추가" : "사용자 수정"}
                 Content={() => <AddUser ref={addUserRef}/>}
-                buttons={getPopupButtons()}
-            />
+                buttons={getPopupButtons()}/>
             <div className={'mt-4'}>
                 <CheckboxContainer<UserListType[]>
                     items={displayedUsers}

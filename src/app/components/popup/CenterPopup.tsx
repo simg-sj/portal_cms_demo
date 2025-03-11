@@ -25,7 +25,7 @@ interface CenterPopupProps {
     onConfirm?: () => void;
     onDelete?: () => void;
     setExcelData ?: React.Dispatch<React.SetStateAction<ParkingType[]>>;
-    contentProps: T;
+    contentProps?: T;
 }
 
 
