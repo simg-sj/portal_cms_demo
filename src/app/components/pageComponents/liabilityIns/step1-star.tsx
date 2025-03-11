@@ -3,10 +3,10 @@ import React, {useEffect} from "react";
 import type {dutyRowType, Step1Props} from "@/@types/common";
 import {useSession} from "next-auth/react";
 import {useForm, Controller} from "react-hook-form";
-import button from "@/app/components/common/ui/button/button";
 import CalenderPicker from "@/app/components/common/ui/calender/calenderPicker";
 import dayjs from "dayjs";
 import {bankList} from "@/config/data";
+import AddExcelUploadReceipt from "@/app/components/pageComponents/parking/addExcelUploadReceipt";
 
 
 const ErrorMessage = ({ message }: { message?: string }) => {
@@ -18,6 +18,8 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
     const { register, handleSubmit, formState: { errors }, reset, control, watch } = useForm<dutyRowType>({
         defaultValues: formData
     });
+
+    const Ncase = watch('Ncase');
 
     const payType = watch('payMethod');
 
@@ -41,6 +43,29 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
             </div>
             <form className={'text-xl my-[50px] stepOne'} onSubmit={handleSubmit(onSubmit)}>
                 <div className={'flex px-[100px] py-5 items-center'}>
+                    <div className={'font-medium w-[300px] mr-1'}>접수 건수 <span
+                        className={'text-red-500'}>*</span></div>
+                    <div className={'flex w-[800px]'}>
+                        <label className={'flex items-center w-1/2 text-xl'}>
+                            <input
+                                type={'radio'}
+                                value="single"
+                                {...register("Ncase", {required: "접수건수는 필수값입니다."})}
+                            />
+                            <div className={'ml-3'}>단일</div>
+                        </label>
+                        <label className={'flex items-center w-1/2 text-xl'}>
+                            <input
+                                type={'radio'}
+                                value="multiple"
+                                {...register("Ncase", {required: "접수건수는 필수값입니다."})}
+                            />
+                            <div className={'ml-3'}>다중</div>
+                        </label>
+                    </div>
+                </div>
+                <ErrorMessage message={errors.Ncase?.message}/>
+                <div className={'flex px-[100px] py-5 items-center'}>
                     <div className={'font-medium w-[300px] mr-1'}>플랫폼 <span
                         className={'text-red-500'}>*</span></div>
                     <input
@@ -60,6 +85,8 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                         className={'w-[800px]'}
                     />
                 </div>
+                {Ncase === 'single' &&
+                    <>
                 <div className={'flex px-[100px] py-5 items-center'}>
                     <div className={'font-medium w-[300px] mr-1'}>담당자 이름 <span className={'text-red-500'}>*</span>
                     </div>
@@ -194,7 +221,6 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                     </div>
                     <div className={'flex items-center w-[800px]'}>
                         <div className={'mr-3 w-full'}>
-                            <div className={'w-1/2 mr-3 text-[16px] text-gray-700'}>등록일</div>
                             <div className={'w-[800px]'}>
                                 <Controller
                                     control={control}
@@ -343,84 +369,91 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                 {
                     payType === '신용카드' &&
                     <>
-                    <div className={'flex px-[100px] py-5 items-center'}>
-                        <div className={'font-medium w-[300px] mr-1'}>카드번호 <span
-                            className={'text-red-500'}>*</span>
-                        </div>
-                        <input
-                            type={'text'}
-                            placeholder={'-없이 입력해 주세요.'}
-                            {...register("creaditNum", {
-                                required: "카드번호를 입력해주세요."
+                        <div className={'flex px-[100px] py-5 items-center'}>
+                            <div className={'font-medium w-[300px] mr-1'}>카드번호 <span
+                                className={'text-red-500'}>*</span>
+                            </div>
+                            <input
+                                type={'text'}
+                                placeholder={'-없이 입력해 주세요.'}
+                                {...register("creaditNum", {
+                                    required: "카드번호를 입력해주세요."
 
-                            })}
-                            onChange={(e) => {
-                                e.target.value = e.target.value.replace(/[^0-9]/g, "");
-                            }}
-                            className={'w-[800px]'}
-                        />
-                    </div>
-                    <ErrorMessage message={errors.creaditNum?.message}/>
+                                })}
+                                onChange={(e) => {
+                                    e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                                }}
+                                className={'w-[800px]'}
+                            />
+                        </div>
+                        <ErrorMessage message={errors.creaditNum?.message}/>
                     </>
 
-                    }
+                }
 
-                    {
-                        payType === '자동이체' &&
-                        <>
-                            <div className={'flex px-[100px] py-5 items-center'}>
-                                <div className={'font-medium w-[300px] mr-1'}>은행명 <span
-                                    className={'text-red-500'}>*</span>
-                                </div>
-                                <select
-                                    {...register("bankName", {
-                                            required: "은행명을 선택해주세요."
-
-                                        }
-                                    )}
-                                    className={'w-[800px]'}
-                                >
-                                    {
-                                        bankList.map((bank, index) =>
-                                            <option key={index} value={bank.value}>{bank.label}</option>
-                                        )
-                                    }
-                                </select>
+                {
+                    payType === '자동이체' &&
+                    <>
+                        <div className={'flex px-[100px] py-5 items-center'}>
+                            <div className={'font-medium w-[300px] mr-1'}>은행명 <span
+                                className={'text-red-500'}>*</span>
                             </div>
-                            <ErrorMessage message={errors.bankName?.message}/>
+                            <select
+                                {...register("bankName", {
+                                        required: "은행명을 선택해주세요."
+
+                                    }
+                                )}
+                                className={'w-[800px]'}
+                            >
+                                {
+                                    bankList.map((bank, index) =>
+                                        <option key={index} value={bank.value}>{bank.label}</option>
+                                    )
+                                }
+                            </select>
+                        </div>
+                        <ErrorMessage message={errors.bankName?.message}/>
 
                         <div className={'flex px-[100px] py-5 items-center'}>
-                    <div className={'font-medium w-[300px] mr-1'}>계좌번호 <span
-                        className={'text-red-500'}>*</span>
-                    </div>
-                    <input
-                        type={'text'}
-                        placeholder={'-없이 입력해 주세요.'}
-                        {...register("bankNum", {
-                            required: "계좌번호를 입력해주세요."
+                            <div className={'font-medium w-[300px] mr-1'}>계좌번호 <span
+                                className={'text-red-500'}>*</span>
+                            </div>
+                            <input
+                                type={'text'}
+                                placeholder={'-없이 입력해 주세요.'}
+                                {...register("bankNum", {
+                                    required: "계좌번호를 입력해주세요."
 
-                        })}
-                        onChange={(e) => {
-                            e.target.value = e.target.value.replace(/[^0-9]/g, "");
-                        }}
-                        className={'w-[800px]'}
-                    />
-                    </div>
-                    <ErrorMessage message={errors.bankNum?.message}/>
+                                })}
+                                onChange={(e) => {
+                                    e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                                }}
+                                className={'w-[800px]'}
+                            />
+                        </div>
+                        <ErrorMessage message={errors.bankNum?.message}/>
 
+                    </>
+                }
+                    </>
+                    }
+                {Ncase === 'multiple' &&
+                <>
+                    <AddExcelUploadReceipt ></AddExcelUploadReceipt>
+                </>
+                }
+
+
+                <div className={'flex my-10 mx-[100px]'}>
+                    <button type={'submit'} className={'w-[1100px] text-[18px] h-[60px] bg-main rounded-lg text-white'}>
+                        확인
+                    </button>
+                </div>
+            </form>
         </>
-}
-
-
-    <div className={'flex my-10 mx-[100px]'}>
-        <button type={'submit'} className={'w-[1100px] text-[18px] h-[60px] bg-main rounded-lg text-white'}>
-            확인
-        </button>
-    </div>
-</form>
-</>
-)
-    ;
+    )
+        ;
 };
 
 export default Step1;
