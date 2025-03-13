@@ -13,6 +13,7 @@ export default function Page() {
         {
             ageRange: "",
             bName: "",
+            ncase : "",
             bankName: "",
             bankNum: "",
             bikeCC: "",
@@ -50,6 +51,7 @@ export default function Page() {
             bName: "",
             bankName: "",
             bankNum: "",
+            ncase : "",
             bikeCC: "",
             bikeName: "",
             bikeNum: "",

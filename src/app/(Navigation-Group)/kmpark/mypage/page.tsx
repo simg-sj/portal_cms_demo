@@ -19,6 +19,7 @@ export default function Page() {
             setUserInfo({
                 index: 0,
                 name: data.user.name ,
+                bpk : data.user.bpk,
                 email: data.user.email,
                 auth: data.user.auth ,
                 bName: data.user.bName,

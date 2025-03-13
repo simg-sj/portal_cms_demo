@@ -16,9 +16,11 @@ export default function Page() {
             setUserInfo({
                 index: 0,
                 name: data.user.name ,
+                bpk : data.user.bpk,
                 email: data.user.email,
                 auth: data.user.auth ,
-                platform: data.user.platform ,
+                bName: data.user.bName,
+                platform : data.user.platform,
                 userId: data.user.id ,
                 password: data.user.password,
                 phone: data.user.phone,

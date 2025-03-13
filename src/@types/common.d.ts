@@ -314,7 +314,7 @@ interface rcAccidentRowType extends rcAccidentType {
 
 // 책임보험 타입 정의
 interface dutyType {
-    Ncase: 'single' | 'multiple';
+    ncase: 'single' | 'multiple' | '';
     bpk: number; // 업체키
     handlerName: string; // 담당자 이름
     handlerPhone: string; // 담당자 전화번호

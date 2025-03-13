@@ -25,6 +25,10 @@ const platformUrls = {
         { path: '/starpickers', minAuthLevel: 1 },
         { path: '/starpickers/*', minAuthLevel: 1 },
     ],
+    kakao: [
+        { path: '/kakao', minAuthLevel: 1 },
+        { path: '/kakao/*', minAuthLevel: 1 },
+    ],
 };
 
 // 예외 경로 정의
