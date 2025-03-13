@@ -32,7 +32,7 @@ export default function Page() {
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [param, setParam] = useState<ParamType>({
-        bpk: 2,
+        bpk: 6,
         condition: "wCell",
         endDate: dayjs().format('YYYY-MM-DD'),
         startDate: dayjs().format('YYYY-MM-DD'),

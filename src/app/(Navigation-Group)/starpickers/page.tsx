@@ -66,7 +66,7 @@ export default function Page() {
             handlerName: "",
             handlerPhone: "",
             job: "",
-            payMethod: "",
+            payMethod: "-",
             registYMD: "",
             viNum: ""
         });

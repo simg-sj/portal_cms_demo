@@ -16,7 +16,7 @@ import {ClaimRowType, ImageType} from "@/@types/common";
 import Button from "@/app/components/common/ui/button/button";
 import FormatNumber from "@/app/components/common/ui/formatNumber";
 import {getImage} from "@/app/(Navigation-Group)/action";
-
+import cn from 'classnames';
 
 interface ListProps {
     isEditing: boolean;
@@ -29,7 +29,7 @@ interface ListProps {
 
 const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListProps) => {
     const [images, setImages] = useState<ImageType[]>([]);
-    const [editData, setEditData] = useState<ClaimRowType>(rowData);
+    const [editData, setEditData] = useState<ClaimRowType>();
     const fetchImageData = useCallback(async (irpk: number) => {
         try {
             const fetchedImage = await getImage(irpk);
@@ -39,10 +39,13 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
         }
     }, []);
 
+    useEffect(() => {
 
+    }, [isNew]);
     useEffect(() => {
         // 이미지 데이터를 처음 로드하거나 irpk가 변경될 때만 호출
         if (!isNew && rowData.irpk) {
+
             fetchImageData(rowData.irpk);
         }
 
@@ -50,17 +53,37 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
 
 
     // 필드값 변경시 formdata 업데이트
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         setEditData((prev) => {
             return {...prev, [e.target.name]: e.target.value};
         });
     };
     const handleSave = (e : React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        if(editData) {
-            onSave(editData);
+        if(isEditing){
+            if(editData) {
+                onSave(editData);
+            }else {
+                alert('변경된 정보가 없습니다.');
+                return;
+            }
         }
+
+        if(isNew){
+            if(editData) {
+                onSave(editData);
+            }else {
+                alert('변경된 정보가 없습니다.');
+                return;
+            }
+        }
+
     }
+    useEffect(() => {
+        console.log('edit' , isEditing);
+        console.log('new' , isNew);
+
+    }, [isNew, isEditing]);
     // 입력필드 타입
     const renderField = (key: string, value: any, type: 'text' | 'select' | 'date' | 'dayterm' | 'textarea' = 'text', options?: string[]) => {
         if (!isEditing && !isNew) {
@@ -89,7 +112,7 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                 );
             case 'date':
                 return (
-                    <CalenderPicker selected={dayjs(editData[key]).toDate()} onChange={(date: Date | null) =>
+                    <CalenderPicker selected={dayjs(rowData[key]).toDate()} onChange={(date: Date | null) =>
                         setEditData((prevState) => ({
                             ...prevState,
                             [key]: dayjs(date).format('YYYY-MM-DD')
@@ -130,9 +153,8 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
         <>
             <div>
                 {
-                    isEditing
-                    &&
-                    <div className='absolute top-[32px] right-[272px] z-10'>
+                    (isEditing || isNew)  &&
+                    <div className={cn("z-10", isEditing ? "absolute top-[32px] right-[272px]" : "absolute top-[32px] right-[160px]")}>
                         <Button color={"blue"} fill={true} height={35} width={100} onClick={handleSave}>
                             저장
                         </Button>
@@ -152,19 +174,19 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                     <tbody>
                     <tr>
                         <th>접수번호</th>
-                        <td colSpan={3}>{renderField('insuNum', editData.insuNum, 'text')}</td>
+                        <td colSpan={3}>{renderField('insuNum', rowData.insuNum, 'text')}</td>
                     </tr>
                     <tr>
                         <th>상태</th>
-                        <td>{renderField('closingStatus', ClosingCode[editData.closingCode], 'select', STATE_OPTIONS)}</td>
+                        <td>{renderField('closingStatus', ClosingCode[rowData.closingCode], 'select', STATE_OPTIONS)}</td>
                         <th>지급보험금</th>
-                        <td>{ renderField('total', editData.total ? FormatNumber(editData.total)+'원' : '-', 'text')}</td>
+                        <td>{ renderField('total', rowData.total ? FormatNumber(Number(rowData.total))+'원' : '-', 'text')}</td>
                     </tr>
                     <tr>
                         <th>사고접수일</th>
-                        <td>{renderField('requestDate', dayjs(editData.requestDate).toDate(), 'date')}</td>
+                        <td>{renderField('requestDate', dayjs(rowData.requestDate).toDate(), 'date')}</td>
                         <th>내부결재 여부</th>
-                        <td>{renderField('approvalYN', editData.approvalYN, 'select', APPROVAL_OPTIONS)}</td>
+                        <td>{renderField('approvalYN', rowData.approvalYN, 'select', APPROVAL_OPTIONS)}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -182,34 +204,34 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                     <tbody>
                     <tr>
                         <th>사고일시</th>
-                        <td>{renderField('accidentDate',dayjs(editData.accidentDate).toDate(), 'date')}</td>
+                        <td>{renderField('accidentDate',dayjs(rowData.accidentDate).toDate(), 'date')}</td>
                         <th>사고유형</th>
-                        <td>{renderField('accidentType', editData.accidentType, 'select', ACCIDENT_TYPE_OPTIONS)}</td>
+                        <td>{renderField('accidentType', rowData.accidentType, 'select', ACCIDENT_TYPE_OPTIONS)}</td>
                     </tr>
                     <tr>
                         <th>사고세부유형</th>
-                        <td>{renderField('accidentDetailType', editData.accidentDetailType, 'select', ACCIDENT_DETAIL_TYPE_OPTIONS)}</td>
+                        <td>{renderField('accidentDetailType', rowData.accidentDetailType, 'select', ACCIDENT_DETAIL_TYPE_OPTIONS)}</td>
                         <th>접수자 성함</th>
-                        <td>{renderField('wName', editData.wName)}</td>
+                        <td>{renderField('wName', rowData.wName)}</td>
                     </tr>
                     <tr>
                         <th>현장담당자</th>
-                        <td>{renderField('inCargeName', editData.inCargeName)}</td>
+                        <td>{renderField('inCargeName', rowData.inCargeName)}</td>
                         <th>현장담당자 연락처</th>
-                        <td>{renderField('inCargePhone', editData.inCargePhone)}</td>
+                        <td>{renderField('inCargePhone', rowData.inCargePhone)}</td>
                     </tr>
                     <tr>
                         <th>사업소명(주차장명)</th>
-                        <td>{renderField('pklName', editData.pklName)}</td>
+                        <td>{renderField('pklName', rowData.pklName)}</td>
                     </tr>
                     <tr>
                         <th>사고내용</th>
-                        <td colSpan={3}>{renderField('accidentDetail', editData.accidentDetail, 'textarea')}</td>
+                        <td colSpan={3}>{renderField('accidentDetail', rowData.accidentDetail, 'textarea')}</td>
                     </tr>
                     <tr>
                         <th>비고</th>
                         <td colSpan={3}>
-                            {renderField('wOpinion', editData.wOpinion, 'textarea')}
+                            {renderField('wOpinion', rowData.wOpinion, 'textarea')}
                         </td>
                     </tr>
                     <tr>
@@ -239,19 +261,19 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                     <tbody>
                     <tr>
                         <th>피해자 이름</th>
-                        <td>{renderField('wName', editData.wName)}</td>
+                        <td>{renderField('wName', rowData.wName)}</td>
                         <th>피해자 연락처</th>
-                        <td>{renderField('wCell', editData.wCell)}</td>
+                        <td>{renderField('wCell', rowData.wCell)}</td>
                     </tr>
                     <tr>
                         <th>피해자 차량번호</th>
-                        <td colSpan={3}>{renderField('vCarNum', editData.vCarNum)}</td>
+                        <td colSpan={3}>{renderField('vCarNum', rowData.vCarNum)}</td>
                     </tr>
                     <tr>
                         <th>차종</th>
-                        <td>{renderField('vCarType', editData.vCarType)}</td>
+                        <td>{renderField('vCarType', rowData.vCarType)}</td>
                         <th>차랑색상</th>
-                        <td>{renderField('vCarColor', editData.vCarColor)}</td>
+                        <td>{renderField('vCarColor', rowData.vCarColor)}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -269,15 +291,15 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                     <tbody>
                     <tr>
                         <th>증권번호</th>
-                        <td>{editData.pNo}</td>
+                        <td>{rowData.pNo}</td>
                         <th>보험기간</th>
-                        <td>{editData.sDay} ~ {editData.eDay}</td>
+                        <td>{rowData.sDay} ~ {rowData.eDay}</td>
                     </tr>
                     <tr>
                         <th>피보험자 상호</th>
-                        <td>{editData.platform}</td>
+                        <td>{rowData.platform}</td>
                         <th>피보험자 사업자등록번호</th>
-                        <td>{editData.bNumber}</td>
+                        <td>{rowData.bNumber}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -295,13 +317,13 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                     <tbody>
                     <tr>
                         <th>업무 담당자 성함</th>
-                        <td colSpan={3}>{renderField('bCargeName', editData.bCargeName)}</td>
+                        <td colSpan={3}>{renderField('bCargeName', rowData.bCargeName)}</td>
                     </tr>
                     <tr>
                         <th>업무 담당자 연락처</th>
-                        <td>{renderField('bCell', editData.bCell)}</td>
+                        <td>{renderField('bCell', rowData.bCell)}</td>
                         <th>업무 담당자 메일</th>
-                        <td>{renderField('bMail', editData.bMail)}</td>
+                        <td>{renderField('bMail', rowData.bMail)}</td>
                     </tr>
                     </tbody>
                 </table>

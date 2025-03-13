@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-11-26 13:27:27
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2025-01-16 15:35:50
+ * @LastEditTime: 2025-03-13 15:57:22
  * @FilePath: src/app/lib/hooks/useFetchDashboard.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -47,7 +47,7 @@ const useFetchDashboard = (bpk : number) => {
             setLoading(true);
             const result = await getDashBoard(params);
             let emptyMonth :MonthCumulativeData[] = []; 
-            
+            console.log(result);
             if(result[6].length === 0){
                 emptyMonth = [{
                     bpk: bpk,

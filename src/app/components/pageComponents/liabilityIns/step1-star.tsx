@@ -251,7 +251,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                     <input
                         type={'text'}
                         readOnly={true}
-                        {...register("driverRange")}
+                        defaultValue={formData.driverRange}
                         className={'w-[800px]'}
                     />
                 </div>
@@ -353,7 +353,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                         )}
                         className={'w-[800px]'}
                     >
-                        <option value={''} disabled={true}>
+                        <option value={'-'} disabled={true}>
                             선택
                         </option>
                         <option value={'신용카드'}>

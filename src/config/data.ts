@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+import {ClaimRowType} from "@/@types/common";
 
 export const ClosingCode= {
     '00' : '확인중',
@@ -7,7 +9,8 @@ export const ClosingCode= {
     '04' : '면책',
     '05' : '종결',
     '06' : '추산',
-    '07' : '합의'
+    '07' : '합의',
+    null : '선택'
 }
 
 
@@ -120,3 +123,54 @@ export const optionDoughnut = {
     cutout: '75%',
 };
 
+export const initRowData : ClaimRowType = {
+    irpk: 0,                      // Primary key, auto-increment
+    bpk: null,                     // 업체키
+    pNo: "",                       // 계약번호 또는 프로젝트 번호
+    bNumber: "",                   // 사업자 번호
+    platform: "",                  // 플랫폼 정보
+    sDay: "",                      // 시작일
+    eDay: "",                      // 종료일
+    cpk: null,                     // simg 통합 CMS 업체키
+    insuNum: '-',                 // 사고 접수 번호
+    pklName: null,                 // 주차장명
+    wName: null,                   // 접수자 이름
+    wCell: null,                   // 접수자 휴대폰번호
+    inCargeName: null,             // 담당자 이름
+    inCargePhone: null,            // 담당자 연락처
+    wEmail: null,                   // 접수자 이메일
+    PJTcode: null,                 // 프로젝트 코드
+    pklAddress: null,              // 사고 지역
+    vCarType: null,                // 차종
+    vCarColor: null,               // 차량 색상
+    vCarNum: null,                 // 피해 차량 번호
+    accidentType: null,            // 사고 유형
+    accidentDetailType: null,      // 사고 세부 유형
+    accidentDetail: null,          // 사고 상세 내용
+    requestDate: dayjs().format('YYYY-MM-DD'),             // 접수일
+    accidentDate: dayjs().format('YYYY-MM-DD'),            // 사고일자
+    accidentDateTime: dayjs().format('YYYY-MM-DD'),        // 사고일시
+    wOpinion: null,                // 접수자 기타 의견
+    memo: null,                    // 메모
+    closingCode: null,             // 처리 코드
+    closingStatus: null,           // 처리 상태
+    estimateAmt: null,             // 추산액
+    closingAmt: null,              // 종결액
+    repairAmt: null,               // 손조비용
+    total: null,                   // 지급액(합계)
+    rentPay: null,                 // 렌트비
+    selfPay: null,                 // 자기부담금
+    vat: null,                     // 부가세
+    bCargeName: null,              // 업체 담당자 이름
+    bCell: null,                   // 업체 담당자 연락처
+    bMail: null,                   // 업체 담당자 이메일
+    selfTotal: null,               // 합계(자기부담금)
+    selfYN: null,                  // 정산여부(자기부담금)
+    depositYN: null,               // 입금 여부
+    payDate: null,                 // 청구 월자
+    infoUseAgree: null,            // 개인정보 제공 동의
+    infoOfferAgree: null,          // 개인정보 제3자 제공 동의
+    approvalYN: null,              // 내부 결재 여부
+    useYNull: null,                // 사용 여부
+    createdYMD: null               // 생성일자 (datetime)
+};

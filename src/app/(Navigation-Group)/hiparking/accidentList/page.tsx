@@ -13,6 +13,7 @@ import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContai
 import {ButtonConfig, ClaimRowType, UptClaim, ParamType} from "@/@types/common";
 import Error from "@/assets/images/icon/error-icon.png";
 import AccidentDetailList from "@/app/components/pageComponents/parking/accidentDetail";
+import {initRowData} from "@/config/data";
 
 interface ColumnDefinition<T> {
     key: keyof T;
@@ -28,7 +29,7 @@ export default function Page() {
     const [isNew, setIsNew] = useState(false);
     const [selectedRow, setSelectedRow] = useState<number | null>(null);
     const [data, setData] = useState<ClaimRowType[]>([]);
-    const [rowData, setRowData] = useState<ClaimRowType | null>();
+    const [rowData, setRowData] = useState<ClaimRowType | initRowData>();
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [param, setParam] = useState<ParamType>({
@@ -93,7 +94,7 @@ export default function Page() {
     const handleNewEntry = () => {
         setIsNew(true);
         setSelectedRow(null);
-        setRowData()
+        setRowData(initRowData)
         setIsOpen(true);
         document.body.style.overflow = 'hidden';
     };
@@ -267,7 +268,7 @@ export default function Page() {
                     </Button>
                 </div>
                 <Button color={"green"} height={32} width={120} className={'ml-5'}>
-                    <Image src={Excel.src} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
+                    <Image src={Excel} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
                     엑셀다운
                 </Button>
             </div>
@@ -280,7 +281,7 @@ export default function Page() {
                             삭제
                         </Button>
                         <Button color={"main"} fill height={32} width={120} onClick={handleNewEntry}>
-                            <Image src={Plus.src} alt={'추가'} width={16} height={16} className={'mr-1'}/>
+                            <Image src={Plus} alt={'추가'} width={16} height={16} className={'mr-1'}/>
                             신규등록
                         </Button>
                     </div>
