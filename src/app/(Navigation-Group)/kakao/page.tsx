@@ -16,7 +16,7 @@ export default function Page() {
         datasets: [
             {
                 data: [doughnutValue || 0, 100 - (doughnutValue || 0)],
-                backgroundColor: ["#f8a455", "#eeeeee"], // color-main
+                backgroundColor: ["#ffc830", "#eeeeee"], // color-main
             },
         ],
     };
@@ -30,12 +30,12 @@ export default function Page() {
                 {
                     label: '추가 사업장',
                     data: tableData?.changeGraphData?.map((d) => d.pAdd) || [],
-                    backgroundColor: '#fdae68',
+                    backgroundColor: '#ffd459',
                 },
                 {
                     label: '종료 사업장',
                     data: tableData?.changeGraphData?.map((d) => -d.pEnd) || [],
-                    backgroundColor: '#fcd174',
+                    backgroundColor: '#654f4f',
                 },
             ],
         };
@@ -50,12 +50,12 @@ export default function Page() {
             topCounsel: {
                 labels: tableData?.topCounselData?.map((d) => d.pklName) || [],
                 values: tableData?.topCounselData?.map((d) => d.total_sum) || [],
-                color: '#fdae68',
+                color: '#ffd459',
             },
             topBusiness: {
                 labels: tableData?.topBusinessData?.map((d) => d.pklName) || [],
                 values: tableData?.topBusinessData?.map((d) => d.count) || [],
-                color: '#fdae68',
+                color: '#ffd459',
             },
         };
 
