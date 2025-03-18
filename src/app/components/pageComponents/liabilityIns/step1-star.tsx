@@ -16,21 +16,43 @@ const ErrorMessage = ({ message }: { message?: string }) => {
 const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
     const {data} = useSession();
     const { register, handleSubmit, formState: { errors }, reset, control, watch } = useForm<dutyRowType>({
-        defaultValues: formData
+        defaultValues:  formData || {}
     });
 
     const Ncase = watch('Ncase');
     const regi = watch('registYMD');
     const payType = watch('payMethod');
 
-    useEffect(() => {
+/*    useEffect(() => {
         if (data?.user) {
             reset({
                 bName: data.user.bName,
                 bizId: data.user.bNo,
             });
         }
-    }, [data, reset]);
+    }, [data, reset]);*/
+
+    useEffect(() => {
+        if (data?.user) {
+            // formData가 있는 경우, 플랫폼과 사업자번호 정보를 유지하면서 기존 formData 값도 유지
+            if (formData) {
+                reset({
+                    ...formData,
+                    bName: data.user.bName,
+                    bizId: data.user.bNo,
+                });
+            } else {
+                // formData가 없는 경우에는 플랫폼과 사업자번호만 설정
+                reset({
+                    bName: data.user.bName,
+                    bizId: data.user.bNo,
+                });
+            }
+        } else if (formData) {
+            // 세션 데이터는 없지만 formData가 있는 경우
+            reset(formData);
+        }
+    }, [data, reset, formData]);
 
 
     const onSubmit = (formData: dutyRowType) => {
