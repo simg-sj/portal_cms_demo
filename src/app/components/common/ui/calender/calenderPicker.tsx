@@ -135,7 +135,7 @@ const CalenderPicker = ({ maxDate, minDate, selected, onChange }: CalenderPicker
         <PickerWrapper>
             <CustomPicker>
                 <Image
-                    src={Calender.src}
+                    src={Calender}
                     alt={'달력'}
                     width={15}
                     height={15}

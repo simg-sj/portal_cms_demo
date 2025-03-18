@@ -31,7 +31,7 @@ export default function Page() {
             handlerPhone: "",
             job: "",
             payMethod: "",
-            registYMD: "",
+            registYMD: null,
             viNum: ""
         }
     );

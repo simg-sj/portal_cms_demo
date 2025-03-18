@@ -12,7 +12,6 @@ const Step2= ({onNext, onPrev, param} : Step2PropsDT) =>  {
         privacy: false,
         thirdParty: false
     });
-    console.log(param);
 
     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, checked} = e.target;
@@ -24,9 +23,12 @@ const Step2= ({onNext, onPrev, param} : Step2PropsDT) =>  {
     const handleSubmit = async () => {
         try {
             if (isAllChecked) {
-                let {code} = await dutyApi1001(param);
+                console.log(param);
+                let {code,msg} = await dutyApi1001(param);
                 if(code === '200'){
                     onNext();
+                }else {
+                    alert(msg);
                 }
             } else {
                 alert("모든 약관에 동의해주세요.");
