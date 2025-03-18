@@ -22,7 +22,7 @@ function GetList({ userList }: { userList: UserListType[] }) {
                         <h2 className="leading-[40px] text-gray-500 text-lg border-b mb-2 mt-14">
                             담당자 이메일
                         </h2>
-                        <h2>{item.uEmail}</h2>
+                        <h2>{item.uMail}</h2>
                         <h2 className="leading-[40px] text-gray-500 text-lg border-b mb-2 mt-14">
                             담당자 연락처
                         </h2>

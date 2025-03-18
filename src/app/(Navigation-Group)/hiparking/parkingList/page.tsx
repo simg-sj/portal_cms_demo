@@ -307,7 +307,7 @@ export default function Page() {
                     </Button>
                 </div>
                 <Button color={"green"} height={32} use={'down'} width={120} className={'ml-5'} params={{bpk : "02", type : 'down'}} fileName={'하이파킹_sample'}>
-                    <Image src={Excel.src} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
+                    <Image src={Excel} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
                     엑셀다운
                 </Button>
             </div>

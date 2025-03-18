@@ -26,13 +26,16 @@ const AddUser = forwardRef<AddUserRef>((props, ref) => {
             uName: '',
             platform: '',
             userPwd: '',
-            bpk : '',
+            bpk : data.user.bpk,
             userId: '',
             uMail: '',
             uCell: '',
             work: '',
         }
     });
+
+    const platform = watch('platform');
+
 
     const clearForm = () => {
         reset();
@@ -149,25 +152,37 @@ const AddUser = forwardRef<AddUserRef>((props, ref) => {
             <div className={'flex my-3'}>
                 <div className={'w-[150px]'}>플랫폼 <span className={'text-red-500'}>*</span></div>
                 <div className="flex-1 h-[50px]">
-                    <select
-                        className={'w-full border rounded px-2 py-1'}
-                        {...register('platform', {
-                            required: "사용자 플랫폼을 선택해주세요",
-                            validate: value => value !== '' || '플랫폼을 선택해주세요'
-                        })}
-                    >
-                        <option disabled hidden value={''}>플랫폼을 선택해주세요</option>
-                        {data.user.bpk && platformList[data.user.bpk] ? (
-                            platformList[data.user.bpk].map((idx, index) => (
-                                <option key={index} value={idx}>{idx}</option>
-                            ))
-                        ) : (
-                            <option disabled>플랫폼 데이터 없음</option>
-                        )}
-                    </select>
-                    {errors.platform && (
-                        <p className={'text-red-500 text-sm mt-1'}>{errors.platform.message}</p>
-                    )}
+                    {
+                        platform ?
+                            <>
+                                <input
+                                    type="text"
+                                    readOnly={true}
+                                    className={'w-full border rounded px-2 py-1'}
+                                    {...register('platform')}
+                                />
+                            </>
+                            :
+                            <>
+                                <select
+                                    className={'w-full border rounded px-2 py-1'}
+                                    {...register('platform', {
+                                        required: "사용자 플랫폼을 선택해주세요",
+                                        validate: value => value !== '' || '플랫폼을 선택해주세요'
+                                    })}
+                                >
+                                    <option disabled hidden value={''}>플랫폼을 선택해주세요</option>
+                                    {data.user.bpk && platformList[data.user.bpk] ? (
+                                        platformList[data.user.bpk].map((idx, index) => (
+                                            <option key={index} value={idx}>{idx}</option>
+                                        ))
+                                    ) : (
+                                        <option disabled>플랫폼 데이터 없음</option>
+                                    )}
+                                </select>
+                                {errors.platform && (<p className={'text-red-500 text-sm mt-1'}>{errors.platform.message}</p>)}
+                            </>
+                    }
                 </div>
             </div>
 
@@ -197,6 +212,7 @@ const AddUser = forwardRef<AddUserRef>((props, ref) => {
                     <input
                         type="text"
                         placeholder={'등록할 사용자 직책을 입력하세요'}
+                        {...register('work')}
                         className={'w-full border rounded px-2 py-1'}
                     />
                 </div>

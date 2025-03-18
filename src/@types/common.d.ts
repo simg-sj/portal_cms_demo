@@ -117,6 +117,12 @@ interface SearchParams {
     searchKeyword: string;
     gbn : string;
     job : string;
+    bpk : string;
+}
+
+interface resultCode {
+    code : string;
+    msg : string;
 }
 
 interface UserListType {
@@ -130,6 +136,7 @@ interface UserListType {
     userPwd : string;
     platform : string;
     gbn?: string;
+    code ?: string;
 
 }
 

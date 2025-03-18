@@ -10,7 +10,7 @@ import dayjs from "dayjs";
 import {
     deleteGroup,
     getRcAccidentList,
-    rcPortalRoute,
+    rcPortalRoute, rentBikeUnderWrite,
 } from "@/app/(Navigation-Group)/action";
 import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContainer";
 import {
@@ -38,7 +38,7 @@ export default function Page() {
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [param, setParam] = useState<ParamType>({
-        bpk: 4,
+        bpk: 8,
         condition: "partnerName",
         endDate: dayjs().format('YYYY-MM-DD'),
         startDate: dayjs().format('YYYY-MM-DD'),
@@ -75,7 +75,7 @@ export default function Page() {
                     data.arrivalETA = dayjs(data.arrivalETA).format('YYYY-MM-DD');
                     let result = await rcPortalRoute(data);
                     if (result.code === '200') {
-                        let reload = await getRcAccidentList(param);
+                        let reload = await rentBikeUnderWrite(param);
                         setData(reload || []);
                         closePopup();
                     } else {
@@ -139,7 +139,7 @@ export default function Page() {
                 let result = await deleteGroup(Array.from(selectedItems));
                 if (result?.code === '200') {
                     setSelectedItems([]); // 초기화
-                    let reload = await getRcAccidentList(param);
+                    let reload = await rentBikeUnderWrite(param);
                     setData(reload); // 데이터 업데이트
                     closePopup();
                 } else {
@@ -160,7 +160,7 @@ export default function Page() {
             rowData.job = 'DELETE';
             let result = await rcPortalRoute(rowData);
             if(result.code === '200'){
-                let reload = await getRcAccidentList(param);
+                let reload = await rentBikeUnderWrite(param);
                 setData(reload);
                 closePopup();
             }else {
@@ -172,7 +172,7 @@ export default function Page() {
     };
 
     const onSearchClick = async () => {
-        const result = await getRcAccidentList(param);
+        const result = await rentBikeUnderWrite(param);
         setData(result || []);
         setCurrentPage(0);
     }

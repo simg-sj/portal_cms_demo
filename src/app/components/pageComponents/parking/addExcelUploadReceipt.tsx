@@ -236,8 +236,8 @@ const AddExcelUploadReceipt = ({setExcelData}: AddProps) => {
                     className={'text-red-500'}>*</span>
                     <Tooltip content={<ExcelGuide/>} width={600}/>
                 </div>
-                <Button color={"green"} height={30} width={200}>
-                    <Image src={ExcelDown.src} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
+                <Button color={"green"} height={30} width={200} use={'down'} params={{bpk : "05", type : 'down'}} fileName={'다중 접수_sample'}>
+                    <Image src={ExcelDown} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
                     엑셀 샘플 다운로드
                 </Button>
             </div>

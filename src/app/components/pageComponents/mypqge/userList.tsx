@@ -1,5 +1,5 @@
 'use client'
-import React, {SetStateAction, useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState} from "react";
 import Button from "@/app/components/common/ui/button/button";
 import Image from "next/image";
 import Plus from "@/assets/images/icon/plus-icon.png";
@@ -57,15 +57,17 @@ export default function UserList({ userList, reloadUserList, onSearch }: { userL
             if (!window.confirm(confirmMessage)) {
                 return;
             }
-
+            console.log(formData)
             console.log("추가된 데이터:", formData);
-            formData.gbn = "editUser";
+            formData.job = "CUD";
+            formData.gbn = "ADD";
 
             const { code } = await userService(formData);
 
             if (code === "200") {
-                alert("수정되었습니다.");
+                alert("계정이 생성되었습니다.");
                 setIsOpen(false);
+                reloadUserList();
             } else {
                 alert("서비스 오류입니다.");
             }
@@ -133,7 +135,7 @@ export default function UserList({ userList, reloadUserList, onSearch }: { userL
         if (addUserRef.current) {
             const formData = addUserRef.current.getFormData();
             if (window.confirm(`${formData.uName} ${authText[formData.uAuth]} 를 삭제하시겠습니까?`)) {
-                formData.gbn = 'UPD'
+                formData.gbn = 'DEL'
                 formData.job = 'CUD';
                 let {code} = await userService(formData);
                 if (code === "200") {
@@ -176,7 +178,8 @@ export default function UserList({ userList, reloadUserList, onSearch }: { userL
         gbn : 'SEARCH',
         uAuth: 'all',
         searchCondition: 'userId',
-        searchKeyword: ''
+        searchKeyword: '',
+        bpk : '5'
     });
 
     const handleParamChange = (key: keyof SearchParams, value: string) => {
@@ -192,20 +195,7 @@ export default function UserList({ userList, reloadUserList, onSearch }: { userL
             return;
         }
         onSearch(searchParams);
-        /*const keyword = searchParams.searchKeyword.toLowerCase(); // 소문자로 변환
-        const condition = searchParams.searchCondition;
 
-        let filteredUsers = userList.filter(item =>
-            item[condition]?.toLowerCase().includes(keyword) // 대소문자 구분 없이 검색
-        );
-        console.log(filteredUsers);
-        if (searchParams.authority !== 'all') {
-            console.log(filteredUsers);
-            filteredUsers = filteredUsers.filter(item =>
-                searchParams.authority.includes(item.uAuth)
-            );
-        }
-        setDisplayUsers(filteredUsers);*/
         setCurrentPage(1); // 검색 시 첫 페이지로 이동
     };
 

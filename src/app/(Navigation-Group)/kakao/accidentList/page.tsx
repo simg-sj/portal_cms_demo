@@ -1,5 +1,5 @@
 "use client"
-import React, {useCallback, useEffect, useState} from "react";
+import React, { useEffect, useState} from "react";
 import DayTerm from "@/app/components/common/ui/calender/dayTerm";
 import Button from "@/app/components/common/ui/button/button";
 import Image from "next/image";
@@ -8,11 +8,10 @@ import Plus from "@/assets/images/icon/plus-icon.png";
 import SlidePopup from "@/app/components/popup/SlidePopup";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
-import {deleteClaimData, deleteGroup, getClaim, getImage, updateClaimData} from "@/app/(Navigation-Group)/action";
+import {deleteClaimData, deleteGroup, getClaim, updateClaimData} from "@/app/(Navigation-Group)/action";
 import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContainer";
 import {ButtonConfig, ClaimRowType, UptClaim, ParamType} from "@/@types/common";
-import Error from "@/assets/images/icon/error-icon.png";
-import AccidentDetailList from "@/app/components/pageComponents/parking/accidentDetail";
+import AccidentDetailList from "@/app/components/pageComponents/cargoInsu/accidentDetail";
 
 interface ColumnDefinition<T> {
     key: keyof T;
@@ -93,7 +92,7 @@ export default function Page() {
     const handleNewEntry = () => {
         setIsNew(true);
         setSelectedRow(null);
-        setRowData()
+        setRowData();
         setIsOpen(true);
         document.body.style.overflow = 'hidden';
     };
@@ -188,38 +187,34 @@ export default function Page() {
         },
         {
             key: 'insuNum',
-            header: '접수번호'
-        },
-        {
-            key: 'accidentDate',
-            header: '사고일',
+            header: '사고일자',
             render: (item) => item.accidentDate
                 ? dayjs(item.accidentDate).format('YYYY-MM-DD')
                 : '-'
         },
         {
+            key: 'accidentDate',
+            header: '기사이름',
+        },
+        {
             key: 'closingAmt',
-            header: '지급보험금',
-            render: (item) => item.closingAmt
-                ? `${item.closingAmt.toLocaleString()}원`
-                : '-'
+            header: '피해물품'
         },
         {
             key: 'pklAddress',
-            header: '사고장소'
+            header: '접수번호'
         },
         {
             key: 'wName',
-            header: '피해자'
+            header: '상태'
         },
         {
             key: 'wCell',
-            header: '피해자연락처'
-        },
-        {
-            key: 'vCarNum',
-            header: '차량번호'
-        },
+            header: '추산금액(종결금액)',
+            render: (item) => item.closingAmt
+                ? `${item.closingAmt.toLocaleString()}원`
+                : '-'
+        }
     ];
 
 
@@ -267,7 +262,7 @@ export default function Page() {
                     </Button>
                 </div>
                 <Button color={"green"} height={32} width={120} className={'ml-5'}>
-                    <Image src={Excel.src} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
+                    <Image src={Excel} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
                     엑셀다운
                 </Button>
             </div>
@@ -280,7 +275,7 @@ export default function Page() {
                             삭제
                         </Button>
                         <Button color={"main"} fill height={32} width={120} onClick={handleNewEntry}>
-                            <Image src={Plus.src} alt={'추가'} width={16} height={16} className={'mr-1'}/>
+                            <Image src={Plus} alt={'추가'} width={16} height={16} className={'mr-1'}/>
                             신규등록
                         </Button>
                     </div>

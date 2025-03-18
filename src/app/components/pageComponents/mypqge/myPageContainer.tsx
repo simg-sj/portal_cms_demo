@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import UserIcon from "@/assets/images/icon/user-icon.png";
 import MyPageTabs from "@/app/components/common/MyPageTabs";
-import {SearchParams, UserListType, UserType} from "@/@types/common";
+import {resultCode, SearchParams, UserListType, UserType} from "@/@types/common";
 import { authText, tabs } from "@/config/data";
 import {getUserData, userService} from "@/app/(Navigation-Group)/action";
 
@@ -17,8 +17,14 @@ export default function MyPageContainer({ userInfo }: { userInfo: UserType }) {
 
     const onSearchClick = async (param : SearchParams) => {
 
-        const result : UserListType[] = await userService(param);
-        setUserList(result || []);
+        const result : resultCode | UserListType[] = await userService(param);
+        console.log(result);
+        if (Array.isArray(result) && result.length > 0 && "code" in result[0] && result[0].code === '200') {
+            setUserList(result);
+        }else{
+            setUserList([]);
+            alert('조회된 정보가 없습니다.');
+        }
     }
     useEffect(() => {
         onReload();

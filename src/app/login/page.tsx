@@ -2,8 +2,8 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-09-30 15:46:29
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2024-10-10 13:32:56
- * @FilePath: portal_cms_demo_next/src/app/login/page.tsx
+ * @LastEditTime: 2025-03-18 16:07:42
+ * @FilePath: src/app/login/page.tsx
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
 "use client"
@@ -26,7 +26,7 @@ export default function Page() {
         try{
             const formData = new FormData(e.currentTarget);
             const response = await signInWithCredentials(formData);
-            
+            console.log(response)
             if(!response.success){
                 setError(response.message);
                 if(errorDiv.current){

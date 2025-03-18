@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { UserType } from "@/@types/common";
 import ButtonGroup from "@/app/components/common/ui/button/buttonGroup";
+import {authText} from "@/config/data";
 
 
 interface EditUserProps {
@@ -21,12 +22,13 @@ export default function EditUser({ userInfo, onSave }: EditUserProps) {
 
     const handleSave = () => {
         if (window.confirm('수정하시겠습니까?')) {
+            console.log(editedData);
             const param = {
-                아이디 : editedData.userId,
-                성함 : editedData.name,
-                연락처 : editedData.phone,
-                이메일 : editedData.email,
-                직책 : editedData.work,
+                userId : editedData.userId,
+                uName : editedData.name,
+                uCell : editedData.phone,
+                uMail : editedData.email,
+                work : editedData.work,
             }
             console.log(param);
             onSave?.(editedData);
@@ -103,7 +105,7 @@ export default function EditUser({ userInfo, onSave }: EditUserProps) {
                 {renderField('직책', 'work')}
                 <div>
                     <h2 className='leading-[40px] text-gray-500 text-lg border-b mb-2'>권한</h2>
-                    <div className="px-2 py-1">{editedData.auth}</div>
+                    <div className="px-2 py-1">{authText[userInfo.auth]}</div>
                 </div>
             </div>
 

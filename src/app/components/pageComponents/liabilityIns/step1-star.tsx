@@ -204,8 +204,8 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                                 <option value={''}>
                                     선택
                                 </option>
-                                <option value={'가솔린'}>
-                                    가솔린
+                                <option value={'전기 外'}>
+                                    전기 外
                                 </option>
                                 <option value={'전기'}>
                                     전기

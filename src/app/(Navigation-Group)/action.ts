@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-11-05 16:27:57
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2025-03-10 16:25:54
+ * @LastEditTime: 2025-03-18 13:40:17
  * @FilePath: src/app/(Navigation-Group)/action.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -16,7 +16,7 @@ import {
     ParamDashType2,
     ParamType,
     ParkingParamType,
-    ParkingType, rcAccidentRowType, rcAccidentType, RcFormData, SearchParams,
+    ParkingType, rcAccidentRowType, rcAccidentType, RcFormData, resultCode, SearchParams,
     UptClaim, UserCudType, UserListType, UserType, UserUpk
 } from "@/@types/common";
 import dayjs from "dayjs";
@@ -99,10 +99,7 @@ export async function getDashBoard(param: ParamDashType2): Promise<DashBoardType
 
 
 
-interface resultCode {
-    code : string;
-    msg : string;
-}
+
 export async function updateClaimData(param: ClaimRowType| UptClaim): Promise<resultCode> {
     try {
         
@@ -303,6 +300,32 @@ export async function rcPortalRoute(param: rcAccidentRowType) : Promise<resultCo
     }
 }
 
+export async function rentBikeUnderWrite(param : ParamType) {
+    try {
+        const response = await fetch(`https://center-api.simg.kr/api/portal/rentBikeUnderWrite`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-API-SECRET': '9E5B88A0-E902-11EF-BCF2-D938A5A3430D'
+            },
+            body: JSON.stringify(param)
+        });
+
+        if (!response.ok) {
+            // 에러 핸들링: 상태 코드와 메시지를 포함한 에러
+            const errorDetails = await response.text();
+            throw new Error(`Error ${response.status}: ${response.statusText} - ${errorDetails}`);
+        }
+
+        return await response.json();
+
+
+    } catch (error) {
+        console.error('Failed to fetch getRcAccidentList:', error);
+        throw new Error(`Failed to fetch getRcAccidentList: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+}
+
 export async function dutyApi1001(param: dutyType) : Promise<resultCode> {
     try {
         const response = await fetch(`https://rider-link-test.simg.kr/api/v1/dPolicy/insert`, {
@@ -370,7 +393,7 @@ export async function userService(param : UserCudType | UserUpk | SearchParams) 
             const errorDetails = await response.text();
             throw new Error(`Error ${response.status}: ${response.statusText} - ${errorDetails}`);
         }
-
+        
         return await response.json();
 
 
