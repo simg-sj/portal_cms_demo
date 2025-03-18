@@ -128,6 +128,14 @@ input[type=file]::file-selector-button {
         --color-sub-light: #c0c0c0;
         --color-sub-lighter: #ffe898;
     }
+    html[data-theme='kakao'] {
+        --color-main: #ffc411;
+        --color-main-light: #ffd459;
+        --color-main-lighter: #fff1d3;
+        --color-sub: #3b1e1e;
+        --color-sub-light: #654f4f;
+        --color-sub-lighter: #a9a1a1;
+    }
 }
 
 

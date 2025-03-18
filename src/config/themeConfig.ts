@@ -2,6 +2,7 @@ import HiparkingLogo from '@/assets/images/logo/hiparking-logo.png'
 import SimgLogo from '@/assets/images/logo/simg-round-logo.png'
 import KmparkLogo from '@/assets/images/logo/kmpark-logo.png'
 import StarPickerLogo from '@/assets/images/logo/별따러가자-logo-white.png';
+import KakaoLogo from '@/assets/images/logo/kakao-logo.png';
 import DashboardIcon from "@/assets/images/icon/dashboard-icon.png";
 import AccidentIcon from "@/assets/images/icon/accident-icon.png";
 import MotocycleIcon from "@/assets/images/icon/motocycle.png";
@@ -58,7 +59,7 @@ const themeConfigs: ThemeConfig = {
         ]
     },
     kakao: {
-        logoSrc: HiparkingLogo,
+        logoSrc: KakaoLogo,
         menuItems: [
             {title: "dashboard", icon: DashboardIcon, label: "대시보드", link: "/kakao", authLevel : 1},
             {title: "accidentList", icon: ListIcon, label: "사고리스트", link: "/kakao/accidentList", authLevel : 1},
