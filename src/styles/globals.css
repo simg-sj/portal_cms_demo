@@ -129,7 +129,7 @@ input[type=file]::file-selector-button {
         --color-sub-lighter: #ffe898;
     }
     html[data-theme='kakao'] {
-        --color-main: #ffc830;
+        --color-main: #ffc411;
         --color-main-light: #ffd459;
         --color-main-lighter: #fff1d3;
         --color-sub: #3b1e1e;
