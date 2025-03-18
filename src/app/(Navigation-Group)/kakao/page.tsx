@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
-import Dashboard from "@/app/components/pageComponents/parking/dashboard";
+import Dashboard from "@/app/components/pageComponents/insuranceDashboard";
+// import Dashboard from "@/app/components/pageComponents/parking/dashboard";
 import useFetchDashboard from "@/app/lib/hooks/useFetchDashboard";
 import Loading from "@/app/(Navigation-Group)/loading";
 
