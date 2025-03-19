@@ -26,6 +26,7 @@ import Error from "@/assets/images/icon/error-icon.png";
 import React, {useEffect} from "react";
 import {usePathname} from "next/navigation";
 import CountCard from "@/app/components/common/CountCard";
+import Search from "@/assets/images/icon/detail-icon.png"
 
 interface DashboardProps {
     chartData: {
@@ -252,7 +253,10 @@ export default function DashboardComponent({
                     </div>
                     <div className={'w-full'}>
                         <div className={"flex justify-end mb-4 text-lg"}>
-                            <DayTerm type="month" setParam={setParam}></DayTerm>
+                            <div className={'border w-fit px-5 py-1 rounded-lg flex items-center'}>
+                                <DayTerm type="month" setParam={setParam}></DayTerm>
+                                <Image src={Search} alt={"검색"} width={22} height={20} className={'cursor-pointer ml-3'}></Image>
+                            </div>
                         </div>
                         <div className={'max-h-[260px] overflow-y-auto'}>
                             <table className={'w-full relative'}>
@@ -346,7 +350,11 @@ export default function DashboardComponent({
                     <div className={'flex justify-between'}>
                         <div className={'text-lg font-light mb-6'}>Top 5</div>
                         <div className={"flex justify-end mb-4 text-lg"}>
-                            <DayTerm type="month" setParam={setParam}></DayTerm>
+                            <div className={'border w-fit px-5 py-1 rounded-lg flex items-center'}>
+                                <DayTerm type="month" setParam={setParam}></DayTerm>
+                                <Image src={Search} alt={"검색"} width={22} height={20}
+                                       className={'cursor-pointer ml-3'}></Image>
+                            </div>
                         </div>
                     </div>
                     <Tab tabs={tabs}/>
@@ -357,7 +365,11 @@ export default function DashboardComponent({
                         <div className={'flex justify-between'}>
                             <div className={'text-lg font-light mb-6'}>월별 사고접수현황</div>
                             <div className={"flex justify-end mb-4 text-lg"}>
-                                <DayTerm type="month" setParam={setParam}></DayTerm>
+                                <div className={'border w-fit px-5 py-1 rounded-lg flex items-center'}>
+                                    <DayTerm type="month" setParam={setParam}></DayTerm>
+                                    <Image src={Search} alt={"검색"} width={22} height={20}
+                                           className={'cursor-pointer ml-3'}></Image>
+                                </div>
                             </div>
                         </div>
                         <div className={'w-full'}>
