@@ -8,9 +8,9 @@ import Plus from "@/assets/images/icon/plus-icon.png";
 import SlidePopup from "@/app/components/popup/SlidePopup";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
-import {deleteClaimData, deleteGroup, getClaim, updateClaimData} from "@/app/(Navigation-Group)/action";
+import {cargoInsuList, deleteClaimData, deleteGroup, getClaim, updateClaimData} from "@/app/(Navigation-Group)/action";
 import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContainer";
-import {ButtonConfig, ClaimRowType, UptClaim, ParamType} from "@/@types/common";
+import {ButtonConfig, ClaimRowType, UptClaim, ParamType, CargoInsuType} from "@/@types/common";
 import AccidentDetailList from "@/app/components/pageComponents/cargoInsu/accidentDetail";
 
 interface ColumnDefinition<T> {
@@ -26,8 +26,8 @@ export default function Page() {
     const [isOpen, setIsOpen] = useState(false);
     const [isNew, setIsNew] = useState(false);
     const [selectedRow, setSelectedRow] = useState<number | null>(null);
-    const [data, setData] = useState<ClaimRowType[]>([]);
-    const [rowData, setRowData] = useState<ClaimRowType | null>();
+    const [data, setData] = useState<CargoInsuType[]>([]);
+    const [rowData, setRowData] = useState<CargoInsuType | null>();
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [param, setParam] = useState<ParamType>({
@@ -155,7 +155,7 @@ export default function Page() {
     };
 
     //삭제버튼 클릭
-    const handleDelete = async (rowData : ClaimRowType) => {
+    const handleDelete = async (rowData : CargoInsuType) => {
         try{
                 let result = await deleteClaimData(rowData);
                 if(result.code === '200'){
@@ -171,7 +171,7 @@ export default function Page() {
     };
 
     const onSearchClick = async () => {
-        const result = await getClaim(param);
+        const result = await cargoInsuList(param);
         setData(result || []);
         setCurrentPage(0);
     }
@@ -179,40 +179,40 @@ export default function Page() {
         onSearchClick();
     }, []);
     // 사고접수 리스트 컬럼
-    const columns: ColumnDefinition<ClaimRowType>[] = [
+    const columns: ColumnDefinition<CargoInsuType>[] = [
         {
-            key: 'irpk',
+            key: 'id',
             header: '고유번호',
             defaultValue: '-'
         },
         {
-            key: 'insuNum',
+            key: 'accidentDate',
             header: '사고일자',
             render: (item) => item.accidentDate
                 ? dayjs(item.accidentDate).format('YYYY-MM-DD')
                 : '-'
         },
         {
-            key: 'accidentDate',
+            key: 'riderName',
             header: '기사이름',
         },
         {
-            key: 'closingAmt',
+            key: 'damagedGoods',
             header: '피해물품'
         },
         {
-            key: 'pklAddress',
+            key: 'reportNumber',
             header: '접수번호'
         },
         {
-            key: 'wName',
+            key: 'status',
             header: '상태'
         },
         {
-            key: 'wCell',
+            key: 'estimatedAmount',
             header: '추산금액(종결금액)',
-            render: (item) => item.closingAmt
-                ? `${item.closingAmt.toLocaleString()}원`
+            render: (item) => item.estimatedAmount
+                ? `${item.estimatedAmount.toLocaleString()}원`
                 : '-'
         }
     ];
@@ -235,9 +235,10 @@ export default function Page() {
                         }
                         }
                     >
-                        <option value={'wCell'}>피해자 연락처</option>
-                        <option value={'vCarNum'}>피해 차량번호</option>
-                        <option value={'pklName'}>주차장명</option>
+                        <option value={'riderName'}>기사 이름</option>
+                        <option value={'reportNumber'}>접수 번호</option>
+                        <option value={'damagedGoods'}>피해 물품</option>
+                        <option value={'receiverContact'}>협의 대상자 이름</option>
                     </select>
                     <input
                         type={'text'}
@@ -292,14 +293,14 @@ export default function Page() {
                 <div className={'mt-4'}>
                     <CheckboxContainer
                         items={getPaginatedData()}
-                        getItemId={(item) => item.irpk}
+                        getItemId={(item) => item.id}
                         columns={columns}
                         selectedRow={selectedRow}
                         selectedItems={selectedItems}
                         onSelectionChange={setSelectedItems}
                         onRowClick={(item) => {
                             setIsNew(false);
-                            setSelectedRow(item.irpk);
+                            setSelectedRow(item.id);
                             setIsOpen(true);
                             setRowData(item);
                             document.body.style.overflow = 'hidden';

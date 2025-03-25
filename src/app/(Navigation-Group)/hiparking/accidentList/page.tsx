@@ -174,6 +174,8 @@ export default function Page() {
 
     const onSearchClick = async () => {
         const result = await getClaim(param);
+        console.log(result);
+
         setData(result || []);
         setCurrentPage(0);
     }
@@ -248,7 +250,7 @@ export default function Page() {
                     <input
                         type={'text'}
                         placeholder={'검색조건 설정 후 검색해주세요'}
-                        className={'w-[300px] h-[35px] rounded-tr-none rounded-br-none ml-5'}
+                        className={'w-[300px] h-[35px] rounded-tr-none rounded-br-none ml-5'}ㄹ어
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                             setParam((prev: ParamType) => ({
                                 ...prev,
