@@ -58,8 +58,50 @@ const BarHorizonChart = ({data, options}: BarHorizonChartProps) => {
         },
     }];
 
+    const defaultOptions = {
+        indexAxis: 'y' as const,
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false,
+            },
+            tooltip: {
+                enabled: false,
+            },
+        },
+        scales: {
+            x: {
+                beginAtZero: true,
+                grid: {
+                    display: false,
+                },
+                ticks: {
+                    display: false,
+                },
+            },
+            y: {
+                grid: {
+                    display: false,
+                },
+                ticks: {
+                    font: {
+                        size: 15,
+                    },
+                },
+            },
+        },
+        layout: {
+            padding: {
+                right: 120,
+            },
+        },
+        cutout: '75%',
+    }
 
-    return <Bar data={chartData} options={options} plugins={plugins}/>;
+    const mergedOptions = {...defaultOptions, ...options};
+
+
+    return <Bar data={chartData} options={mergedOptions} plugins={plugins}/>;
 };
 
 export default BarHorizonChart;

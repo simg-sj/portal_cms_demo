@@ -72,57 +72,6 @@ export const tabs = {
     'user': [{'label': '마이페이지' , 'Yn' : 'Y'}, {'label': '관리자 정보', 'Yn' : 'Y'}, {'listType' : 'adminList' , 'Yn' : 'N'}],
     'admin': [{'label': '마이페이지' , 'Yn' : 'Y'}, {'label': '사용자 목록' , 'Yn' : 'Y'}, {'listType' : 'userList' , 'Yn' : 'N'}]
 }
-//가로막대 옵션
-export const optionBarHorizon = {
-    indexAxis: 'y' as const,
-    responsive: true,
-    plugins: {
-        legend: {
-            display: false,
-        },
-        tooltip: {
-            enabled: false,
-        },
-    },
-    scales: {
-        x: {
-            beginAtZero: true,
-            grid: {
-                display: false,
-            },
-            ticks: {
-                display: false,
-            },
-        },
-        y: {
-            grid: {
-                display: false,
-            },
-            ticks: {
-                font: {
-                    size: 15,
-                },
-            },
-        },
-    },
-    layout: {
-        padding: {
-            right: 120,
-        },
-    },
-    cutout: '75%',
-};
-
-//도넛차트 옵션
-export const optionDoughnut = {
-    responsive: true,
-    plugins: {
-        tooltip: {
-            enabled: false,
-        },
-    },
-    cutout: '75%',
-};
 
 export const initRowData : ClaimRowType = {
     irpk: 0,                      // Primary key, auto-increment

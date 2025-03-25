@@ -22,6 +22,45 @@ function PieChart({ data, options }: PieChartProps) {
             </div>
         )
     }
+
+    const defaultOptions: ChartOptions<'pie'> = {
+        plugins: {
+            legend: {
+                display: false,
+            },
+            tooltip: {
+                backgroundColor: 'white',
+                titleColor: 'black',
+                bodyColor: 'black',
+                borderWidth: 1,
+                borderColor: '#e7e7e7',
+                bodyAlign: 'center',
+                titleAlign: 'center',
+                position: 'nearest',
+                yAlign: 'bottom',
+            },
+            datalabels: {
+                formatter: function (value: number, context: Context) {
+                    const dataset = context.chart.data.datasets[0];
+                    const total = dataset.data.reduce((acc: number, val: unknown) => acc + (typeof val === 'number' ? val : 0), 0);
+                    if (total === 0) return '0%';
+                    const percentage = ((value / total) * 100).toFixed(0) + "%";
+                    return percentage;
+                },
+                color: '#fff',
+                anchor: 'center',
+                align: 'center',
+                font: {
+                    size: 15,
+                    weight: 'normal',
+                },
+            },
+        },
+        responsive: false,
+    }
+
+    const mergedOptions = {...defaultOptions, ...options};
+
     return (
         <div className={'flex justify-between w-full'}>
             <div className={'flex flex-col justify-center mt-16'}>
@@ -39,7 +78,7 @@ function PieChart({ data, options }: PieChartProps) {
             </div>
             <Pie
                 data={data}
-                options={options}
+                options={mergedOptions}
                 plugins={[ChartDataLabels as Plugin<"pie">]}
                 width={180}
                 height={220}
@@ -49,42 +88,3 @@ function PieChart({ data, options }: PieChartProps) {
 }
 
 export default PieChart;
-
-
-
-/*
-const optionPie = {
-    plugins: {
-        legend: {
-            display: false,
-        },
-        tooltip: {
-            backgroundColor: 'white',
-            titleColor: 'black',
-            bodyColor: 'black',
-            borderWidth: 1,
-            borderColor: '#e7e7e7',
-            bodyAlign: 'center',
-            titleAlign: 'center',
-            position: 'nearest',
-            yAlign: 'bottom',
-        },
-        datalabels: {
-            formatter: function (value: number, context: Context) {
-                const dataset = context.chart.data.datasets[0];
-                const total = dataset.data.reduce((acc: number, val: unknown) => acc + (typeof val === 'number' ? val : 0), 0);
-                if (total === 0) return '0%';
-                const percentage = ((value / total) * 100).toFixed(0) + "%";
-                return percentage;
-            },
-            color: '#fff',
-            anchor: 'center',
-            align: 'center',
-            font: {
-                size: 15,
-                weight: 'normal',
-            },
-        },
-    },
-    responsive: false,
-};*/
