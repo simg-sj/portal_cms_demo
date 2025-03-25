@@ -12,7 +12,7 @@ import {
     STATE_OPTIONS
 } from "@/config/data";
 
-import {ClaimRowType, ImageType} from "@/@types/common";
+import {CargoInsuType, ClaimRowType, ImageType} from "@/@types/common";
 import Button from "@/app/components/common/ui/button/button";
 import FormatNumber from "@/app/components/common/ui/formatNumber";
 import {getImage} from "@/app/(Navigation-Group)/action";
@@ -21,8 +21,8 @@ import cn from 'classnames';
 interface ListProps {
     isEditing: boolean;
     isNew?: boolean;
-    rowData : ClaimRowType;
-    onSave: (data: ClaimRowType) => void;
+    rowData : CargoInsuType;
+    onSave: (data: CargoInsuType) => void;
 }
 
 

@@ -374,3 +374,42 @@ interface Step3Props {
     onReset: () => void;
 }
 
+
+// 적재물 타입
+interface CargoInsuType  {
+    id: string; // 고유 ID
+    accidentDate?: string | null; // 사고 일자 (YYYY-MM-DD)
+    accidentTime?: string | null; // 사고 시간 (HH:MM:SS)
+    reportDate?: string | null; // 접수 일자 (YYYY-MM-DD)
+    accidentLocation?: string | null; // 사고 장소
+    accidentDetails?: string | null; // 사고 내용
+    riderName?: string | null; // 이름
+    contactNumber?: string | null; // 연락처
+    email?: string | null; // 이메일
+    orderNumber?: string | null; // 오더번호
+    departureLocation?: string | null; // 물품 배송 출발지
+    destinationLocation?: string | null; // 물품 배송 목적지
+    senderContact?: string | null; // 물품 보낸 사람 연락처
+    receiverContact?: string | null; // 물품 받는 사람 연락처
+    damagedGoods?: string | null; // 피해물품
+    damageAmount?: number | null; // 피해금액
+    reportNumber?: string | null; // 접수번호
+    platform?: string | null; // 플랫폼
+    status?: string | null; // 상태 (예: 접수, 진행 중, 종결)
+    estimatedAmount?: number | null; // 추산 금액
+    finalAmount?: number | null; // 종결 금액
+    investigationCost?: number | null; // 손해조사 비용
+    residualGoods?: string | null; // 잔존물
+    insuranceTotal?: number | null; // 보험금계
+    insuranceStatus?: string | null; // 보험 진행상황 or 처리 결과
+    customerSettlement?: number | null; // 고객 합의금
+    simgDeposit?: number | null; // SIMG 입금액
+    depositReceipt?: "Y" | "N"; // 입금증 유/무 (Y/N)
+    agreementDoc?: string | null; // 합의서 종류
+    paymentDate?: string | null; // 지급(입금) 일자 (YYYY-MM-DD)
+    officialRequest?: string | null; // 공문 요청일
+    remarks?: string | null; // 비고
+    createdAt?: string; // 생성 일시 (ISO 형식 문자열)
+    updatedAt?: string; // 수정 일시 (ISO 형식 문자열)
+};
+

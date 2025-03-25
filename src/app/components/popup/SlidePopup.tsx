@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import Button from "@/app/components/common/ui/button/button";
-import {ClaimRowType, ParkingRowType, rcAccidentType, RcFormData} from "@/@types/common";
+import {CargoInsuType, ClaimRowType, ParkingRowType, rcAccidentType, RcFormData} from "@/@types/common";
 import {deleteClaimData, getClaim} from "@/app/(Navigation-Group)/action";
 
 
 
 interface SlidePopupProps {
     isOpen: boolean;
-    onClose: (data?: ClaimRowType | ParkingRowType) => void;
+    onClose: (data?: ClaimRowType | ParkingRowType | CargoInsuType) => void;
     title: string;
     Content: React.ComponentType<{ isEditing: boolean, onSave: (data: any) => void }>;
     buttons: ButtonConfig[];
-    rowData : ClaimRowType | ParkingRowType | RcFormData;
+    rowData : ClaimRowType | ParkingRowType | RcFormData |  CargoInsuType;
     onDelete: (data: ClaimRowType) => void;
 }
 
 interface ButtonConfig {
     label: string;
     onClick: (() => void) ;
-    onDelete : ((data: ClaimRowType | ParkingRowType) => void);
+    onDelete : ((data: ClaimRowType | ParkingRowType | CargoInsuType) => void);
     color: "main" | "sub" | "blue" | "green" | "red" | "gray" | "dark-gray";
     fill?: boolean;
     rounded?: boolean;

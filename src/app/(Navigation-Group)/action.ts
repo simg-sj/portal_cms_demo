@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-11-05 16:27:57
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2025-03-18 13:40:17
+ * @LastEditTime: 2025-03-24 17:49:35
  * @FilePath: src/app/(Navigation-Group)/action.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -11,6 +11,7 @@
 'use server';
 
 import {
+    CargoInsuType,
     ClaimRowType,
     DashBoardType, dutyType,
     ParamDashType2,
@@ -100,7 +101,7 @@ export async function getDashBoard(param: ParamDashType2): Promise<DashBoardType
 
 
 
-export async function updateClaimData(param: ClaimRowType| UptClaim): Promise<resultCode> {
+export async function updateClaimData(param: ClaimRowType| UptClaim ): Promise<resultCode> {
     try {
         
         const response = await fetch(`https://center-api.simg.kr/api/portal/updateClaimData`, {
@@ -403,5 +404,30 @@ export async function userService(param : UserCudType | UserUpk | SearchParams) 
     }
 }
 
+// 적하 보험
+
+export async function cargoInsuList(param :  ParamType) : Promise<CargoInsuType[] | []> {
+    try {
+        const response = await fetch(`https://center-api.simg.kr/api/portal/getCargoInsuList`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(param)
+        });
+
+        if (!response.ok) {
+            // 에러 핸들링: 상태 코드와 메시지를 포함한 에러
+            const errorDetails = await response.text();
+            throw new Error(`Error ${response.status}: ${response.statusText} - ${errorDetails}`);
+        }
+
+        return await response.json();
 
 
+    } catch (error) {
+        console.error('Failed to getUserList:', error);
+        throw new Error(`Failed to rcAccident: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+}
+      
