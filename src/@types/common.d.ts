@@ -15,21 +15,22 @@ interface MenuItemProps extends MenuItemType {
     onClick: () => void;
 }
 
-
+//주차장대시보드 계약현황
 interface CounselData {
-    pNo: string;
-    sDay: string;
-    eDay: string;
-    bCount: number
+    pNo: string; //증권번호
+    sDay: string; //보험시작일
+    eDay: string; //보험종료일
+    bCount: number //사업장수
     estimateAmt: number;
     repairAmt: number;
-    total: number;
-    closingAmt: number;
-    repairCost: number;
-    lossRatio: number;
+    total: number; //총보험료
+    closingAmt: number; //지급보험금
+    repairCost: number; //손조비용
+    lossRatio: number; //손해율
     dPremiums?: number;
 }
 
+//주차장대시보드 계약변경현황
 interface ChangeCounselData {
     cNo: number;
     cDay: string;
@@ -40,17 +41,18 @@ interface ChangeCounselData {
     EndAmt: number;
 }
 
-
+//주차장대시보드 계약변경현황 그래프
 interface ChangeGraph {
     cNo: number;
-    cDay: string;
-    pNo: string;
-    pAdd: number;
-    pEnd: number;
-    AddAmt: number;
-    EndAmt: number;
+    cDay: string; //변경일
+    pNo: string; //증권번호
+    pAdd: number; //추가사업장
+    pEnd: number; //종료사업장
+    AddAmt: number; //변경보험료 추가
+    EndAmt: number; //변경보험료 종료
 }
 
+//주차장대시보드 월누적사현황
 interface MonthCumulativeData {
     bpk: number
     changeDay: string
@@ -59,17 +61,17 @@ interface MonthCumulativeData {
     counts_percent_change: number
     total_percent_change: number
 }
-
+//주차장대시보드 지급보험금 top5
 interface TopCounselData {
     pklName: string;
     total_sum: string;
 }
-
+//주차장대시보드 사고발생업소 top5
 interface TopBusinessData {
     pklName: string;
     count: number;
 }
-
+//주차장대시보드 월별사고접수현황
 interface MonthAccidentData {
     changeDay: string;
     acceptNum: number;
@@ -373,4 +375,32 @@ interface Step2PropsLC {
 interface Step3Props {
     onReset: () => void;
 }
+
+//카카오 보험대시보드
+interface kakaoDashboard {
+    year: number;                         // 년도
+    month: number;                        // 월
+    policyNumber: string;                 // 증권번호
+    tripCount: number;                    // 운행건
+    premium: number;                      // 보험료
+    cumulativePremium: number;            // 누적보험료
+    inboundCaseCount: number;             // 인입건
+    receivedCaseCount: number;            // 접수건
+    estimatedAmount: number;              // 추산금액
+    settledAmount: number;                // 종결금액
+    investigationCost: number;            // 손해조사비용
+    insurancePayout: number;              // 보험금
+    cumulativeInsurancePayout: number;    // 누적보험금
+    lossRatio: number;                    // 손해율
+    cumulativeLossRatio: number;          // 누적손해율
+}
+
+interface kakaoDashboardData extends kakaoDashboard {
+    periodLossRatio: number;              // 기간별 손해율
+    policyLossRatio: number;              // 증권별 손해율
+    yearlyLossRatio: number;              // 년도별 손해율
+    yearlyInsurancePayout: number;        // 년도별 보험금
+    yearlyPremium: number;                // 년도별 보험료
+}
+
 

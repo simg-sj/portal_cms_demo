@@ -1,11 +1,39 @@
 'use client';
 import React from 'react';
 import Dashboard from "@/app/components/pageComponents/insuranceDashboard";
-// import Dashboard from "@/app/components/pageComponents/parking/dashboard";
 import useFetchDashboard from "@/app/lib/hooks/useFetchDashboard";
 import Loading from "@/app/(Navigation-Group)/loading";
 
 export default function Page() {
+    //임의데이터
+    const kakaoDashboardMockData = [
+        {
+            year: 2025,
+            month: 2,
+            policyNumber: "FA20247350967000",
+            tripCount: 439867,
+            premium: 14504985,
+            cumulativePremium: 375736378,
+            inboundCaseCount: 18,
+            receivedCaseCount: 1,
+            estimatedAmount: 1531000,
+            settledAmount: 0,
+            investigationCost: 0,
+            insurancePayout: 1531000,
+            cumulativeInsurancePayout: 178636535,
+            lossRatio: 11,
+            cumulativeLossRatio: 48,
+            periodLossRatio: 40,
+            policyLossRatio: 40,
+            yearlyLossRatio: 40,
+            yearlyInsurancePayout: 200000,
+            yearlyPremium: 500000
+        },
+
+    ];
+
+
+
     const { tableData, doughnutValue, loading, error, updateParams } = useFetchDashboard(2);
 
     if (error) {
@@ -17,29 +45,29 @@ export default function Page() {
         datasets: [
             {
                 data: [doughnutValue || 0, 100 - (doughnutValue || 0)],
-                backgroundColor: ["#ffc830", "#eeeeee"], // color-main
+                backgroundColor: ["#ffe07b", "#eeeeee"], // color-main
             },
         ],
     };
 
-    // 양방향 막대 데이터
-    const dataTwowayBar = loading
-        ? { labels: [], datasets: [] }
-        : {
-            labels: tableData?.changeGraphData?.map((d) => d.cDay) || [],
-            datasets: [
-                {
-                    label: '추가 사업장',
-                    data: tableData?.changeGraphData?.map((d) => d.pAdd) || [],
-                    backgroundColor: '#ffd459',
-                },
-                {
-                    label: '종료 사업장',
-                    data: tableData?.changeGraphData?.map((d) => -d.pEnd) || [],
-                    backgroundColor: '#654f4f',
-                },
-            ],
-        };
+    //세로막대그래프 데이터
+    const dataBarstand = {
+        labels: ['2025-03', '2025-02', '2025-01', '2024-12', '2024-11'],
+        datasets: [
+            {
+                label: '인입건',
+                data: [12, 19, 3, 5, 1],
+                backgroundColor: '#ffe49c',
+            },
+            {
+                label: '접수건',
+                data: [8, 15, 7, 9, 5],
+                backgroundColor: '#a9a1a1',
+            },
+        ],
+    };
+
+
 
     // 차트 데이터
     const chartData = loading
@@ -47,17 +75,7 @@ export default function Page() {
         : {
             doughnut: dataDoughnut,
             doughnutValue: doughnutValue || 0,
-            twowayBar: dataTwowayBar,
-            topCounsel: {
-                labels: tableData?.topCounselData?.map((d) => d.pklName) || [],
-                values: tableData?.topCounselData?.map((d) => d.total_sum) || [],
-                color: '#ffd459',
-            },
-            topBusiness: {
-                labels: tableData?.topBusinessData?.map((d) => d.pklName) || [],
-                values: tableData?.topBusinessData?.map((d) => d.count) || [],
-                color: '#ffd459',
-            },
+            barStand: dataBarstand,
         };
 
     return (

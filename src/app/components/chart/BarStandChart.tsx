@@ -6,7 +6,7 @@ import {
     BarElement,
     Title,
     Tooltip,
-    Legend, ChartOptions, ChartData,
+    Legend, ChartOptions, ChartData, TooltipItem,
 } from 'chart.js';
 import {Bar} from 'react-chartjs-2';
 import Image from "next/image";
@@ -27,7 +27,7 @@ interface BarChartProps {
     height?: number;
 }
 
-const BarChart = ({data, options, height = 400}: BarChartProps) => {
+const BarChart = ({data, options, height=350}: BarChartProps) => {
     if (!data) {
         console.error("data prop is required.");
         return(
@@ -38,16 +38,17 @@ const BarChart = ({data, options, height = 400}: BarChartProps) => {
         )
     }
 
-    // Default options for a standard upward bar chart
     const defaultOptions: ChartOptions<'bar'> = {
         responsive: true,
         maintainAspectRatio: true,
-        aspectRatio: 2,  // 가로 세로 비율 설정
         scales: {
             y: {
                 beginAtZero: true,
                 ticks: {
-                    maxTicksLimit: 8  // y축 눈금 최대 개수 제한
+                    maxTicksLimit: 10  // y축 눈금 최대 개수 제한
+                },
+                grid: {
+                    display: false
                 }
             },
             x: {
@@ -58,12 +59,26 @@ const BarChart = ({data, options, height = 400}: BarChartProps) => {
         },
         plugins: {
             legend: {
-                position: 'top' as const,
+                display: true,
+                position: 'left',
+                align: 'end'
+            },
+            tooltip: {
+                backgroundColor: 'white',
+                titleColor: 'black',
+                bodyColor: 'black',
+                borderWidth: 1,
+                borderColor: '#e7e7e7',
+                bodyAlign: 'center' as const,
+                titleAlign: 'center' as const,
+                position: 'average' as const,
+                yAlign: 'bottom' as const,
+
             },
         },
         layout: {
             padding: {
-                top: 10,
+                top: 20,
                 right: 10,
                 bottom: 10,
                 left: 10
@@ -71,11 +86,10 @@ const BarChart = ({data, options, height = 400}: BarChartProps) => {
         }
     };
 
-    // Merge provided options with defaults
     const mergedOptions = {...defaultOptions, ...options};
 
     return (
-        <div style={{ height: `${height}px`, width: '100%' }}>
+        <div className={'w-full'} style={{ height: `${height}px`}}>
             <Bar options={mergedOptions} data={data} />
         </div>
     );

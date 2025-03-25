@@ -21,7 +21,20 @@ const DoughnutChart = ({ data, options }: DoughnutChartProps) => {
             </div>
         )
     }
-    return <Doughnut data={data} options={options} />;
+
+    const defaultOptions: ChartOptions<'doughnut'> = {
+        responsive: true,
+        plugins: {
+            tooltip: {
+                enabled: false,
+            },
+        },
+        cutout: '75%',
+    }
+
+    const mergedOptions = {...defaultOptions, ...options};
+
+    return <Doughnut data={data} options={mergedOptions} />;
 };
 
 export default DoughnutChart;
