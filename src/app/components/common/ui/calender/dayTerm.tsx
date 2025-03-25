@@ -7,7 +7,7 @@ import {ParamDashType2} from "@/@types/common";
 interface DayTermProps {
     sDay ?: Date;
     eDay ?: Date;
-    type?: 'month' | 'day';
+    type?: 'month' | 'day' | 'oneYear';
     setParam: (newParams: Partial<ParamDashType2>) => void;
 
 }
@@ -35,7 +35,19 @@ const DayTerm = ({sDay, eDay, type , setParam }: DayTermProps) => {
             }));
             setStartDate(threeMonthsAgo);
             setEndDate(new Date());
-        } // 일달력: 오늘 날짜
+        }
+        // 1년달력: 12개월 전부터 현재까지
+        if (type === 'oneYear') {
+            const oneyearAgo = new Date(new Date().getFullYear(), new Date().getMonth() - 11, 1);
+            setParam((prev: ParamDashType2) => ({
+                ...prev,
+                sDay: dayjs(oneyearAgo).format('YYYY-MM'),
+                eDay : dayjs().format('YYYY-MM')
+            }));
+            setStartDate(oneyearAgo);
+            setEndDate(new Date());
+        }
+        // 일달력: 오늘 날짜
         else {
             setParam((prev:  ParamDashType2) => ({
                 ...prev,
@@ -64,7 +76,14 @@ const DayTerm = ({sDay, eDay, type , setParam }: DayTermProps) => {
                 ...prev,
                 sDay: dayjs(date).format('YYYY-MM'),
             }));
-        } else {
+        }
+        if (type === 'oneYear' && date) {
+            setParam((prev: ParamDashType2) => ({
+                ...prev,
+                sDay: dayjs(date).format('YYYY-MM'),
+            }));
+        }
+        else {
             setParam((prev: ParamType) => ({
                 ...prev,
                 startDate: dayjs(date).format('YYYY-MM-DD'),
@@ -100,7 +119,7 @@ const DayTerm = ({sDay, eDay, type , setParam }: DayTermProps) => {
     };
 
     // ** 타입지정안하면 기본값(캘린더형태), type="month" 컴포넌트내 작성 시 월별달력 전환
-    const DatePickerComponent = type === 'month' ? YearMonthPicker : CalenderPicker;
+    const DatePickerComponent = type === 'month' || type === 'oneYear' ? YearMonthPicker : CalenderPicker;
 
     return (
         <div className="flex items-center justify-start">

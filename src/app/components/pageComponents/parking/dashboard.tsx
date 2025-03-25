@@ -21,9 +21,8 @@ import {
 } from "@/@types/common";
 import CountUp from "@/app/components/common/ui/countUp";
 import {TooltipItem} from "chart.js";
-import {optionBarHorizon, optionDoughnut} from "@/config/data";
 import Error from "@/assets/images/icon/error-icon.png";
-import React, {useEffect} from "react";
+import React from "react";
 import {usePathname} from "next/navigation";
 import CountCard from "@/app/components/common/CountCard";
 import Search from "@/assets/images/icon/detail-icon.png"
@@ -128,7 +127,7 @@ export default function DashboardComponent({
             content: (
                 <>
                     <div className={'my-5 font-medium text-lg'}>지급보험금 TOP 5</div>
-                    <BarHorizonChart data={chartData.topCounsel} options={optionBarHorizon}/>
+                    <BarHorizonChart data={chartData.topCounsel}/>
                 </>
             ),
         },
@@ -137,7 +136,7 @@ export default function DashboardComponent({
             content: (
                 <>
                     <div className={'my-5 font-medium text-lg'}>사고발생업소 TOP 5</div>
-                    <BarHorizonChart data={chartData.topBusiness} options={optionBarHorizon}/>
+                    <BarHorizonChart data={chartData.topBusiness}/>
                 </>
             ),
         },
@@ -158,7 +157,7 @@ export default function DashboardComponent({
                 <div className={'flex'}>
                     <div className={'w-[200px] mr-16'}>
                         <div className={'relative'}>
-                            <DoughnutChart data={chartData.doughnut} options={optionDoughnut}></DoughnutChart>
+                            <DoughnutChart data={chartData.doughnut}></DoughnutChart>
                             <div
                                 className={'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center'}>
                                 <div className={'text-gray-600 mb-1'}>손해율</div>
@@ -329,7 +328,7 @@ export default function DashboardComponent({
                     <div>
                         <CountCard
                             icon={ChargeIcon}
-                            title={'월 누적 사고접수'}
+                            title={'월 누적 보험금'}
                             value={tableData.monthCumulativeData[0]?.total
                                 ? FormatNumber(tableData.monthCumulativeData[0].total)
                                 : 0}
