@@ -1,4 +1,5 @@
-import React, {SetStateAction, useEffect, useState} from "react";
+
+import React, {useEffect, useState} from "react";
 import YearMonthPicker from "@/app/components/common/ui/calender/yearMonthPicker";
 import CalenderPicker from "@/app/components/common/ui/calender/calenderPicker";
 import dayjs from "dayjs";
@@ -8,7 +9,9 @@ interface DayTermProps {
     sDay ?: Date;
     eDay ?: Date;
     type?: 'month' | 'day' | 'oneYear';
-    setParam: (newParams: Partial<ParamDashType2>) => void;
+    //setParam: (newParams: Partial<ParamDashType2>) => void;
+    setParam: React.Dispatch<React.SetStateAction<ParamDashType2 | ParamType>>;
+
 
 }
 

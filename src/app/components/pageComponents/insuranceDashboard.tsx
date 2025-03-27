@@ -12,22 +12,26 @@ import Image from "next/image";
 import Search from "@/assets/images/icon/detail-icon.png";
 import YearRangePicker from "@/app/components/common/ui/calender/yearTerm";
 import {
+    dashboardMonthType, dashboardPolicyType, dashboardYearType,
     kakaoDashboard,
     ParamDashType2
 } from "@/@types/common";
+import Error from "@/assets/images/icon/error-icon.png";
 
 interface DashboardProps {
     chartData: {
-        doughnut: any;
-        doughnutValue: number;
+        monthDoughnut: any;
+        yearDoughnut: any;
         barStand: any;
         barMonthData: any;
         barYearData: any;
-        barLine: any;
     };
     //수정해야됨 밑에 tableData, setParam
     tableData: {
         kakaoDashboard: kakaoDashboard[];
+        monthTermData: dashboardMonthType;
+        policyData: dashboardPolicyType;
+        yearData: dashboardYearType[];
     }
     setParam: (newParams: Partial<ParamDashType2>) => void;
 }
@@ -38,47 +42,14 @@ export default function DashboardComponents({
                                                 setParam
                                             }: DashboardProps) {
 
-    //증권 데이터
-    const optionsCertificate = [
-        "FA20247350967000",
-        "FA20234719000000",
-        "FA20221647354000",
-        "FA20217790748000",
-    ];
+
+    //증권 임의 데이터에서 추출
+    const optionsCertificate = Array.from(
+        new Set(tableData.kakaoDashboard.map(item => item.policyNumber))
+    );
 
     const selectCertificate = (selected: string) => {
-        console.log("선택된 값:", selected);
-    };
-
-    //월별추이 데이터
-    const barMonthData = {
-        barData: [65, 70, 75, 68, 72, 78, 80, 74, 85, 76, 70, 69],
-        lineData1: [120, 115, 125, 130, 120, 135, 150, 140, 170, 145, 135, 125],
-        lineData2: [180, 175, 190, 185, 172, 195, 205, 195, 210, 185, 180, 175],
-        labels: ['2025-03', '2025-02', '2025-01', '2024-12', '2024-11', '2024-10', '2024-09', '2024-08', '2024-07', '2024-06', '2024-05', '2024-04'],
-        barLabel: '손해율',
-        line1Label: '보험금',
-        line2Label: '보험료',
-        configColor: {
-            barColor1: '#ffe49c',
-            lineColor1: '#a9a1a1',
-            lineColor2: '#654f4f',
-        }
-    };
-    //년도별추이 데이터
-    const barYearData = {
-        barData: [65, 70, 75, 68, 72],
-        lineData1: [120, 115, 125, 130, 120],
-        lineData2: [180, 175, 190, 185, 172],
-        labels: ['2025', '2024', '2023', '2022', '2021'],
-        barLabel: '손해율',
-        line1Label: '보험금',
-        line2Label: '보험료',
-        configColor: {
-            barColor1: '#ffe49c',
-            lineColor1: '#a9a1a1',
-            lineColor2: '#654f4f',
-        }
+        console.log("선택 증권:", selected);
     };
 
     //년도 선택범위
@@ -105,7 +76,7 @@ export default function DashboardComponents({
                                    className={'cursor-pointer ml-3'}></Image>
                         </div>
                     </div>
-                    <BarLineChart chartData={barMonthData}/>
+                    <BarLineChart chartData={chartData.barMonthData}/>
                 </>
             ),
         },
@@ -120,7 +91,7 @@ export default function DashboardComponents({
                                    className={'cursor-pointer ml-3'} onClick={handleYearSelect}></Image>
                         </div>
                     </div>
-                    <BarLineChart chartData={barYearData}/>
+                    <BarLineChart chartData={chartData.barYearData}/>
                 </>
             ),
         },
@@ -141,14 +112,14 @@ export default function DashboardComponents({
                                    className={'cursor-pointer ml-3'}></Image>
                         </div>
                     </div>
-                    <div className={'flex items-end'}>
+                    <div className={'flex items-end justify-between'}>
                         <div className={'w-[200px] mr-16'}>
                             <div className={'relative'}>
-                                <DoughnutChart data={chartData.doughnut}></DoughnutChart>
+                                <DoughnutChart data={chartData.monthDoughnut}></DoughnutChart>
                                 <div
                                     className={'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center'}>
                                     <div className={'text-gray-600 mb-1'}>손해율</div>
-                                    <CountUp end={38} duration={5} className={'text-2xl font-semibold'}
+                                    <CountUp end={tableData.monthTermData.periodLossRatio} duration={5} className={'text-2xl font-semibold'}
                                              suffix={'%'}/>
                                 </div>
                             </div>
@@ -157,14 +128,14 @@ export default function DashboardComponents({
                             <div className={'mt-4 text-right'}>
                                 <div className={'text-gray-600'}>누적보험금</div>
                                 <CountUp
-                                    end={168178432}
-                                    duration={2} className={'text-2xl font-semibold'} suffix={'원'}/>
+                                    end={tableData.monthTermData.periodInsurancePayout}
+                                    duration={2} className={'text-xl font-semibold'} suffix={'원'}/>
                             </div>
                             <div className={'mt-4 text-right'}>
                                 <div className={'text-gray-600'}>누적보험료</div>
                                 <CountUp
-                                    end={375736378}
-                                    duration={2} className={'text-2xl font-semibold'} suffix={'원'}/>
+                                    end={tableData.monthTermData.periodPremium}
+                                    duration={2} className={'text-xl font-semibold'} suffix={'원'}/>
                             </div>
                         </div>
                     </div>
@@ -179,14 +150,14 @@ export default function DashboardComponents({
                                             onSelect={selectCertificate}/>
                         </div>
                     </div>
-                    <div className={'flex items-end'}>
+                    <div className={'flex items-end justify-between'}>
                         <div className={'w-[200px] mr-16'}>
                             <div className={'relative'}>
-                                <DoughnutChart data={chartData.doughnut}></DoughnutChart>
+                                <DoughnutChart data={chartData.yearDoughnut}></DoughnutChart>
                                 <div
                                     className={'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center'}>
                                     <div className={'text-gray-600 mb-1'}>손해율</div>
-                                    <CountUp end={46} duration={5} className={'text-2xl font-semibold'}
+                                    <CountUp end={tableData.policyData.policyLossRatio} duration={5} className={'text-2xl font-semibold'}
                                              suffix={'%'}/>
                                 </div>
                             </div>
@@ -195,14 +166,14 @@ export default function DashboardComponents({
                             <div className={'mt-4 text-right'}>
                                 <div className={'text-gray-600'}>누적보험금</div>
                                 <CountUp
-                                    end={168178432}
-                                    duration={2} className={'text-2xl font-semibold'} suffix={'원'}/>
+                                    end={tableData.policyData.policyInsurancePayout}
+                                    duration={2} className={'text-xl font-semibold'} suffix={'원'}/>
                             </div>
                             <div className={'mt-4 text-right'}>
                                 <div className={'text-gray-600'}>누적보험료</div>
                                 <CountUp
-                                    end={375736378}
-                                    duration={2} className={'text-2xl font-semibold'} suffix={'원'}/>
+                                    end={tableData.policyData.policyPremium}
+                                    duration={2} className={'text-xl font-semibold'} suffix={'원'}/>
                             </div>
                         </div>
                     </div>
@@ -224,8 +195,9 @@ export default function DashboardComponents({
                                 <colgroup>
                                     <col style={{width: ""}}/>
                                     <col style={{width: ""}}/>
-                                    <col style={{width: "200px"}}/>
-                                    <col style={{width: "200px"}}/>
+                                    <col style={{width: ""}}/>
+                                    <col style={{width: ""}}/>
+                                    <col style={{width: ""}}/>
                                 </colgroup>
                                 <thead className={'sticky left-0 top-0'}>
                                 <tr>
@@ -237,19 +209,27 @@ export default function DashboardComponents({
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {tableData.counselData.map((counsel, index) => (
-                                    <tr key={index}>
-                                        <td>{counsel.pNo}</td>
-                                        <td>{counsel.sDay}</td>
-                                        <td>{FormatNumber(Number(20508))}</td>
-                                        <td>
-                                        00 %
-                                        </td>
-                                        <td>
-                                            00 %
+                                {tableData?.kakaoDashboard?.length ? (
+                                    tableData.kakaoDashboard.map((kakao, index) => (
+                                        <tr key={index}>
+                                            <td>{kakao.policyNumber}</td>
+                                            <td>{kakao.year + '-' + kakao.month}</td>
+                                            <td>{FormatNumber(Number(kakao.tripCount))}</td>
+                                            <td>{kakao.lossRatio}%</td>
+                                            <td>{kakao.cumulativeLossRatio}%</td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan={5} className="text-center">
+                                            <div className={'flex items-centers justify-center my-[30px]'}>
+                                                <Image src={Error.src} alt={'에러'} width={30} height={30}
+                                                       className={'mr-5'}/>
+                                                <div className={'text-gray-700 text-lg'}>데이터가 없습니다.</div>
+                                            </div>
                                         </td>
                                     </tr>
-                                ))}
+                                )}
                                 </tbody>
                             </table>
                         </div>
@@ -280,8 +260,12 @@ export default function DashboardComponents({
                                 <colgroup>
                                     <col style={{width: ""}}/>
                                     <col style={{width: ""}}/>
-                                    <col style={{width: "200px"}}/>
-                                    <col style={{width: "200px"}}/>
+                                    <col style={{width: ""}}/>
+                                    <col style={{width: ""}}/>
+                                    <col style={{width: ""}}/>
+                                    <col style={{width: ""}}/>
+                                    <col style={{width: ""}}/>
+                                    <col style={{width: ""}}/>
                                 </colgroup>
                                 <thead className={'sticky left-0 top-0'}>
                                 <tr>
@@ -289,28 +273,40 @@ export default function DashboardComponents({
                                     <th colSpan={2}>사고접수</th>
                                     <th rowSpan={2}>추산금액</th>
                                     <th rowSpan={2}>종결금액</th>
-                                    <th rowSpan={2}>손해조사비용</th>
+                                    <th rowSpan={2}>손해조사비</th>
                                     <th rowSpan={2}>보험금</th>
                                     <th rowSpan={2}>누적보험금</th>
                                 </tr>
                                 <tr>
-                                    <th>인입건</th>
-                                    <th>접수건</th>
+                                    <th>인입</th>
+                                    <th>접수</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {tableData.counselData.map((counsel, index) => (
-                                    <tr key={index}>
-                                        <td>{counsel.sDay}</td>
-                                        <td>12</td>
-                                        <td>4</td>
-                                        <td>{FormatNumber(Number(100000))}</td>
-                                        <td>{FormatNumber(Number(100000))}</td>
-                                        <td>{FormatNumber(Number(100000))}</td>
-                                        <td>{FormatNumber(Number(100000))}</td>
-                                        <td>{FormatNumber(Number(100000))}</td>
+                                {tableData?.kakaoDashboard?.length ? (
+                                    tableData.kakaoDashboard.map((kakao, index) => (
+                                        <tr key={index}>
+                                            <td>{kakao.year + '-' + kakao.month}</td>
+                                            <td>{kakao.inboundCaseCount}</td>
+                                            <td>{kakao.receivedCaseCount}</td>
+                                            <td>{FormatNumber(Number(kakao.estimatedAmount))}</td>
+                                            <td>{FormatNumber(Number(kakao.settledAmount))}</td>
+                                            <td>{FormatNumber(Number(kakao.investigationCost))}</td>
+                                            <td>{FormatNumber(Number(kakao.insurancePayout))}</td>
+                                            <td>{FormatNumber(Number(kakao.cumulativeInsurancePayout))}</td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan={5} className="text-center">
+                                            <div className={'flex items-centers justify-center my-[30px]'}>
+                                                <Image src={Error.src} alt={'에러'} width={30} height={30}
+                                                       className={'mr-5'}/>
+                                                <div className={'text-gray-700 text-lg'}>데이터가 없습니다.</div>
+                                            </div>
+                                        </td>
                                     </tr>
-                                ))}
+                                )}
                                 </tbody>
                             </table>
                         </div>
