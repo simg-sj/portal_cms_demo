@@ -378,8 +378,8 @@ interface Step3Props {
 
 //카카오 보험대시보드
 interface kakaoDashboard {
-    year: number;                         // 년도
-    month: number;                        // 월
+    year: string;                         // 년도
+    month: string;                        // 월
     policyNumber: string;                 // 증권번호
     tripCount: number;                    // 운행건
     premium: number;                      // 보험료
@@ -395,14 +395,34 @@ interface kakaoDashboard {
     cumulativeLossRatio: number;          // 누적손해율
 }
 
-interface kakaoDashboardData extends kakaoDashboard {
+//카카오대시보드 - 기간별현황
+interface dashboardMonthType {
     periodLossRatio: number;              // 기간별 손해율
+    periodInsurancePayout: number;        // 기간별 누적보험금
+    periodPremium: number;                // 기간별 누적보험료
+}
+//카카오대시보드 - 증권별현황
+interface dashboardPolicyType {
     policyLossRatio: number;              // 증권별 손해율
-    yearlyLossRatio: number;              // 년도별 손해율
-    yearlyInsurancePayout: number;        // 년도별 보험금
-    yearlyPremium: number;                // 년도별 보험료
+    policyInsurancePayout: number;        // 증권별 누적보험금
+    policyPremium: number;                // 증권별 누적보험료
+}
+//카카오대시보드 - 년도별 추이현황
+interface dashboardYearType {
+    year: string;                       // 년도
+    yearLossRatio: number;              // 년도별 손해율
+    yearInsurancePayout: number;        // 년도별 보험금
+    yearPremium: number;                // 년도별 보험료
 }
 
+interface kakaoPayType {
+    year: string;
+    month: string;
+    twoPay: number;
+    twoCount: number;
+    fourPay: number;
+    fourCount: number;
+}
 
 // 적재물 타입
 interface CargoInsuType  {

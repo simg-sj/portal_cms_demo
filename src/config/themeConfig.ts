@@ -63,6 +63,7 @@ const themeConfigs: ThemeConfig = {
         menuItems: [
             {title: "dashboard", icon: DashboardIcon, label: "대시보드", link: "/kakao", authLevel : 1},
             {title: "accidentList", icon: ListIcon, label: "사고리스트", link: "/kakao/accidentList", authLevel : 1},
+            {title: "insurancePay", icon: ScheduleIcon, label: "보험료관리", link: "/kakao/payManager", authLevel : 1},
             {title: "mypage", icon: UserIcon, label: `님`, link: "/kakao/mypage", authLevel : 1}
         ]
     },

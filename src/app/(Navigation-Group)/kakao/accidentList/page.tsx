@@ -10,7 +10,7 @@ import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
 import {cargoInsuList, deleteClaimData, deleteGroup, getClaim, updateClaimData} from "@/app/(Navigation-Group)/action";
 import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContainer";
-import {ButtonConfig, ClaimRowType, UptClaim, ParamType, CargoInsuType} from "@/@types/common";
+import {ButtonConfig,  UptClaim, ParamType, CargoInsuType} from "@/@types/common";
 import AccidentDetailList from "@/app/components/pageComponents/cargoInsu/accidentDetail";
 
 interface ColumnDefinition<T> {

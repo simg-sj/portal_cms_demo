@@ -5,10 +5,9 @@ import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from 'next/navigation';
 
 interface Props {
-    range?: number;
-    maxNumber: number;
+    range?: number; //한번에 표시 갯수(기본5)
+    maxNumber: number; //전체페이지수
     numberParameter?: string;
-    sizeParameter?: string;
     onChange?(number: number): void;
 }
 
