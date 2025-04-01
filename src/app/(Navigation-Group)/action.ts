@@ -2,7 +2,7 @@
  * @Author: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
  * @Date: 2024-11-05 16:27:57
  * @LastEditors: rlarlejrwl56 63471869+rlarlejrwl56@users.noreply.github.com
- * @LastEditTime: 2025-03-24 17:49:35
+ * @LastEditTime: 2025-03-28 11:00:16
  * @FilePath: src/app/(Navigation-Group)/action.ts
  * @Description: 这是默认设置,可以在设置》工具》File Description中进行配置
  */
@@ -12,7 +12,7 @@
 
 import {
     CargoInsuType,
-    ClaimRowType,
+    ClaimRowType, DashboardData,
     DashBoardType, dutyType,
     ParamDashType2,
     ParamType,
@@ -76,7 +76,7 @@ export async function getClaim(param: ParamType): Promise<ClaimRowType[]> {
 }
 
 
-export async function getDashBoard(param: ParamDashType2): Promise<DashBoardType[]> {
+export async function getDashBoard(param: ParamDashType2): Promise<DashboardData> {
     try {
         const response = await fetch(`https://center-api.simg.kr/api/portal/getDashBoard`, {
             method: 'POST',

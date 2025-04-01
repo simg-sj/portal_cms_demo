@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Button from "@/app/components/common/ui/button/button";
-import {CargoInsuType, ClaimRowType, ParkingRowType, rcAccidentType, RcFormData} from "@/@types/common";
+import {CargoInsuType, ClaimRowType, ParkingRowType, rcAccidentType} from "@/@types/common";
 import {deleteClaimData, getClaim} from "@/app/(Navigation-Group)/action";
 
 
@@ -11,7 +11,7 @@ interface SlidePopupProps {
     title: string;
     Content: React.ComponentType<{ isEditing: boolean, onSave: (data: any) => void }>;
     buttons: ButtonConfig[];
-    rowData : ClaimRowType | ParkingRowType | RcFormData |  CargoInsuType;
+    rowData : ClaimRowType | ParkingRowType |  CargoInsuType;
     onDelete: (data: ClaimRowType) => void;
 }
 

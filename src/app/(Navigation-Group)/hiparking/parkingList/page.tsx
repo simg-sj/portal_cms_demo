@@ -38,6 +38,7 @@ export default function Page() {
     const [totalPages, setTotalPages] = useState(0);
     const [param, setParam] = useState<ParkingParamType>({
         bpk: 2,
+        status : 'all',
         condition: "pklName",
         text: ''
     });
@@ -270,6 +271,21 @@ export default function Page() {
         <>
             <div className={'border border-gray-100 p-6 rounded-lg bg-white flex items-center justify-between'}>
                 <div className={'flex items-center'}>
+                    <div className={'text-gray-700 font-medium pt-1 ml-2 mr-5'}>상태</div>
+                    <select
+                        className={'w-[200px] mr-5'}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                            setParam((prev: ParkingParamType) => ({
+                                ...prev,
+                                status: e.target.value,
+                            }))
+                        }
+                        }
+                    >
+                        <option value={'all'}>전체</option>
+                        <option value={'NORMAL'}>정상</option>
+                        <option value={'EXPIRED'}>종료</option>
+                    </select>
                     <div className={'text-gray-700 font-medium pt-1 ml-2 mr-5'}>검색조건</div>
                     <select
                         className={'w-[200px]'}
@@ -306,7 +322,8 @@ export default function Page() {
                         조회
                     </Button>
                 </div>
-                <Button color={"green"} height={32} use={'down'} width={120} className={'ml-5'} params={{bpk : "02", type : 'down'}} fileName={'하이파킹_sample'}>
+                <Button color={"green"} height={32} use={'down'} width={120} className={'ml-5'}
+                        params={{bpk: "02", type: 'down'}} fileName={'하이파킹_sample'}>
                     <Image src={Excel} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
                     엑셀다운
                 </Button>

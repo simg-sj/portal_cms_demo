@@ -1,11 +1,11 @@
 'use client';
-import React from 'react';
+import React, {useEffect} from 'react';
 import Dashboard from "@/app/components/pageComponents/parking/dashboard";
 import useFetchDashboard from "@/app/lib/hooks/useFetchDashboard";
 import Loading from "@/app/(Navigation-Group)/loading";
 
 export default function Page() {
-    const { tableData, doughnutValue, loading, error, updateParams } = useFetchDashboard(2);
+    const { tableData, doughnutValue, setDoughnutValue, loading, error, updateParams, updateTableData } = useFetchDashboard(2);
 
     if (error) {
         return <div>Error: {error.message}</div>;
@@ -57,6 +57,8 @@ export default function Page() {
                 values: tableData?.topBusinessData?.map((d) => d.count) || [],
                 color: '#ffde97',
             },
+            pieCounsel: [],  // 추가
+            pieAccident: [], // 추가
         };
 
     return (
@@ -64,7 +66,7 @@ export default function Page() {
             {loading ? (
                 <Loading />
             ) : (
-                <Dashboard chartData={chartData} tableData={tableData} setParam={updateParams}/>
+                <Dashboard chartData={chartData} tableData={tableData} setDoughnutValue={setDoughnutValue}  updateTableData={updateTableData} />
             )}
         </>
     );

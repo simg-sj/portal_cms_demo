@@ -13,7 +13,8 @@ import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContai
 import {ButtonConfig, ClaimRowType, UptClaim, ParamType} from "@/@types/common";
 import Error from "@/assets/images/icon/error-icon.png";
 import AccidentDetailList from "@/app/components/pageComponents/parking/accidentDetail";
-import {initRowData} from "@/config/data";
+import {hiparkingAccidentColumns, initRowData} from "@/config/data";
+import {onClickExcel} from "@/app/lib/onClickExcel";
 
 interface ColumnDefinition<T> {
     key: keyof T;
@@ -225,7 +226,6 @@ export default function Page() {
         },
     ];
 
-
     return (
         <>
             <div className={'border border-gray-100 p-6 rounded-lg bg-white flex items-center justify-between'}>
@@ -250,7 +250,7 @@ export default function Page() {
                     <input
                         type={'text'}
                         placeholder={'검색조건 설정 후 검색해주세요'}
-                        className={'w-[300px] h-[35px] rounded-tr-none rounded-br-none ml-5'}ㄹ어
+                        className={'w-[300px] h-[35px] rounded-tr-none rounded-br-none ml-5'}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                             setParam((prev: ParamType) => ({
                                 ...prev,
@@ -269,7 +269,7 @@ export default function Page() {
                         조회
                     </Button>
                 </div>
-                <Button color={"green"} height={32} width={120} className={'ml-5'}>
+                <Button color={"green"} height={32} width={120} className={'ml-5'} onClick={()  => onClickExcel(hiparkingAccidentColumns,'accident', data, '하이파킹_사고_리스트.xlsx')}>
                     <Image src={Excel} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
                     엑셀다운
                 </Button>

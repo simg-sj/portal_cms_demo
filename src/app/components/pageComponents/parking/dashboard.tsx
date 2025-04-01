@@ -15,17 +15,21 @@ import DayTerm from "@/app/components/common/ui/calender/dayTerm";
 import {
     ChangeCounselData,
     ChangeGraph,
-    CounselData,
+    CounselData, DashboardData,
     MonthAccidentData,
     MonthCumulativeData, ParamDashType2,
 } from "@/@types/common";
 import CountUp from "@/app/components/common/ui/countUp";
 import {TooltipItem} from "chart.js";
 import Error from "@/assets/images/icon/error-icon.png";
-import React from "react";
+import React, {Dispatch, SetStateAction, useCallback, useEffect, useState} from "react";
 import {usePathname} from "next/navigation";
 import CountCard from "@/app/components/common/CountCard";
 import Search from "@/assets/images/icon/detail-icon.png"
+import {number} from "prop-types";
+import dayjs from "dayjs";
+import {onClickExcel} from "@/app/lib/onClickExcel";
+import {hiparkingAccidentColumns, monthColumns, policyColumns} from "@/config/data";
 
 interface DashboardProps {
     chartData: {
@@ -37,27 +41,46 @@ interface DashboardProps {
         pieCounsel: any;
         pieAccident: any;
     };
-    tableData: {
-        counselData: CounselData[];
-        changeData: ChangeCounselData[];
-        monthAccidentData: MonthAccidentData[];
-        changeGraphData: ChangeGraph[];
-        monthCumulativeData: MonthCumulativeData[];
-    }
-    setParam: (newParams: Partial<ParamDashType2>) => void;
+    tableData: DashboardData;
+    setDoughnutValue : React.Dispatch<SetStateAction<number | null>>;
+    updateTableData : (param : ParamDashType2, type : string) => void;
 }
 
+interface DoughnutValueType {
+    lossRatio: number
+    closingAmt : number
+}
 
 export default function DashboardComponent({
                                                chartData,
                                                tableData,
-                                               setParam,
+                                               updateTableData,
+                                               setDoughnutValue,
                                            }: DashboardProps) {
     //업체별 라우팅 옵션
     const pathname = usePathname();
     const isHiparkingRoute = pathname.includes('/hiparking')
+    const [donutValues, setDounutValues] = useState<DoughnutValueType>({
+        lossRatio: tableData.counselData.at(-1).lossRatio,
+        closingAmt: tableData.counselData.at(-1).closingAmt,
+    })
 
+    const [param, setParam] = useState<ParamDashType2>({
+        job: 'dash',
+        bpk: 2,
+        gbn: '',
+        sDay: dayjs().subtract(6, 'month').format('YYYY-MM'),
+        eDay: dayjs().format('YYYY-MM')
+    })
 
+    const handleParam = (type: string) => {
+        updateTableData(param, type);
+    };
+
+    const handleDoughnut = (counsel) => {
+        setDounutValues({lossRatio : counsel.lossRatio, closingAmt : counsel.closingAmt});
+        setDoughnutValue(counsel.lossRatio);
+    }
     //양방향막대 옵션
     const optionTwowayBar = {
         responsive: true,
@@ -110,7 +133,7 @@ export default function DashboardComponent({
                         }
                         return (
                             <div className={'flex items-centers justify-center my-[150px]'}>
-                                <Image src={Error.src} alt={'에러'} width={30} height={30} className={'mr-5'}/>
+                                <Image src={Error} alt={'에러'} width={30} height={30} className={'mr-5'}/>
                                 <div className={'text-gray-700 text-lg'}>데이터가 없습니다.</div>
                             </div>
                         )
@@ -147,12 +170,10 @@ export default function DashboardComponent({
             <div className={'px-8 py-6 bg-white rounded-xl'}>
                 <div className={'flex justify-between items-start'}>
                     <div className={'text-lg font-light mb-6'}>계약현황</div>
-                    {/*갱신알림*/}
-                    {/* <div className={'flex items-center text-sm py-2 px-5 bg-gray-100 rounded-lg'}>
-                        <Image src={WarningIcon.src} alt={'경고'} width={18} height={18}
-                               className={'cursor-pointer mr-2'}/>
-                        <div>다가오는 보험 갱신일정이 1건 있습니다. 보험관리메뉴에서 확인해주세요.</div>
-                    </div>*/}
+                    <Button color={"green"} height={32} width={120} onClick={()  => onClickExcel(policyColumns,'policy', tableData.counselData, '증권별_손해자료.xlsx')}>
+                        <Image src={Excel} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
+                        엑셀다운
+                    </Button>
                 </div>
                 <div className={'flex'}>
                     <div className={'w-[200px] mr-16'}>
@@ -161,14 +182,14 @@ export default function DashboardComponent({
                             <div
                                 className={'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center'}>
                                 <div className={'text-gray-600 mb-1'}>손해율</div>
-                                <CountUp end={chartData.doughnutValue} duration={5} className={'text-2xl font-semibold'}
+                                <CountUp end={donutValues.lossRatio} duration={5} className={'text-2xl font-semibold'}
                                          suffix={'%'}/>
                             </div>
                         </div>
                         <div className={'mt-4 text-right'}>
                             <div className={'text-gray-600'}>지급보험금</div>
                             <CountUp
-                                end={(tableData) && (tableData.counselData[0].closingAmt) ? FormatNumber(tableData.counselData[0].closingAmt) : 0}
+                                end={donutValues.closingAmt}
                                 duration={2} className={'text-2xl font-semibold'} suffix={'원'}/>
                         </div>
                     </div>
@@ -190,46 +211,26 @@ export default function DashboardComponent({
                                     <th>증권번호</th>
                                     <th>보험기간</th>
                                     <th>사업장수</th>
-                                    {/* <th>변경보험료</th>*/}
                                     <th>총보험료</th>
                                     <th>지급보험금</th>
                                     <th>손조비용</th>
                                     <th>손해율</th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody className={'colTable'}>
                                 {tableData.counselData.map((counsel, index) => (
-                                    <tr key={index}>
+                                    <tr key={index}  onClick={() => handleDoughnut(counsel)} className={'cursor-pointer hover:bg-main-lighter'}>
                                         <td>{counsel.pNo}</td>
                                         <td>{counsel.sDay + '~' + counsel.eDay}</td>
                                         <td>{counsel.bCount}</td>
-                                        {/*<td className={'text-right'}>
-                                            <EditableField
-                                                type={'number'}
-                                                value={counsel.repairAmt}
-                                                onChange={(value) => handleInputChange(index, 'repairAmt', value)}
-                                            />
-                                        </td>*/}
-                                        <td className={'text-right'}>
-                                            <EditableField
-                                                type={'number'}
-                                                value={counsel.total}
-                                                onChange={(value) => handleInputChange(index, 'total', value)}
-                                            />
+                                        <td className={'text-center'}>
+                                            {counsel.total.toLocaleString()}원
                                         </td>
-                                        <td className={'text-right'}>
-                                            <EditableField
-                                                type={'number'}
-                                                value={counsel.closingAmt}
-                                                onChange={(value) => handleInputChange(index, 'closingAmt', value)}
-                                            />
+                                        <td className={'text-center'}>
+                                            {counsel.closingAmt.toLocaleString()}원
                                         </td>
-                                        <td className={'text-right'}>
-                                            <EditableField
-                                                type={'number'}
-                                                value={counsel.repairCost}
-                                                onChange={(value) => handleInputChange(index, 'repairCost', value)}
-                                            />
+                                        <td className={'text-center'}>
+                                            {counsel.repairCost.toLocaleString()}원
                                         </td>
                                         <td>{counsel.lossRatio} %</td>
                                     </tr>
@@ -253,8 +254,10 @@ export default function DashboardComponent({
                     <div className={'w-full'}>
                         <div className={"flex justify-end mb-4 text-lg"}>
                             <div className={'border w-fit px-5 py-1 rounded-lg flex items-center'}>
-                                <DayTerm type="month" setParam={setParam}></DayTerm>
-                                <Image src={Search} alt={"검색"} width={22} height={20} className={'cursor-pointer ml-3'}></Image>
+                                <DayTerm type="month" sDay={new Date(param.sDay)} eDay={new Date(param.eDay)} setParam={setParam}></DayTerm>
+                                <button onClick={() => handleParam('contract')}>
+                                    <Image src={Search} alt={"검색"} width={22} height={20} className={'cursor-pointer ml-3'}></Image>
+                                </button>
                             </div>
                         </div>
                         <div className={'max-h-[260px] overflow-y-auto'}>
@@ -350,9 +353,11 @@ export default function DashboardComponent({
                         <div className={'text-lg font-light mb-6'}>Top 5</div>
                         <div className={"flex justify-end mb-4 text-lg"}>
                             <div className={'border w-fit px-5 py-1 rounded-lg flex items-center'}>
-                                <DayTerm type="month" setParam={setParam}></DayTerm>
-                                <Image src={Search} alt={"검색"} width={22} height={20}
-                                       className={'cursor-pointer ml-3'}></Image>
+                                <DayTerm type="month" sDay={new Date(param.sDay)} eDay={new Date(param.eDay)} setParam={setParam}></DayTerm>
+                                <button onClick={() => handleParam('top')}>
+                                    <Image src={Search} alt={"검색"} width={22} height={20}
+                                           className={'cursor-pointer ml-3'}></Image>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -365,16 +370,18 @@ export default function DashboardComponent({
                             <div className={'text-lg font-light mb-6'}>월별 사고접수현황</div>
                             <div className={"flex justify-end mb-4 text-lg"}>
                                 <div className={'border w-fit px-5 py-1 rounded-lg flex items-center'}>
-                                    <DayTerm type="month" setParam={setParam}></DayTerm>
-                                    <Image src={Search} alt={"검색"} width={22} height={20}
-                                           className={'cursor-pointer ml-3'}></Image>
+                                    <DayTerm type="month" sDay={new Date(param.sDay)} eDay={new Date(param.eDay)} setParam={setParam}></DayTerm>
+                                    <button onClick={() => handleParam('month')}>
+                                        <Image src={Search} alt={"검색"} width={22} height={20}
+                                               className={'cursor-pointer ml-3'}></Image>
+                                    </button>
                                 </div>
                             </div>
                         </div>
                         <div className={'w-full'}>
                             <div className={"flex justify-end mb-4"}>
-                                <Button color={"green"} height={32} width={120}>
-                                    <Image src={Excel.src} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
+                                <Button color={"green"} height={32} width={120} onClick={()  => onClickExcel(monthColumns,'month', tableData.monthAccidentData, '월별_사고접수_현황.xlsx')}>
+                                    <Image src={Excel} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
                                     엑셀다운
                                 </Button>
                             </div>
@@ -385,9 +392,9 @@ export default function DashboardComponent({
                                         <th>변경일</th>
                                         <th>접수건수</th>
                                         <th>종결건수</th>
-                                        <th>보험금</th>
+                                        <th>추산건수</th>
                                         <th>면책건수</th>
-                                        <th>미결건수</th>
+                                        <th>보험금</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -396,9 +403,9 @@ export default function DashboardComponent({
                                             <td>{month.changeDay}</td>
                                             <td>{month.acceptNum}</td>
                                             <td>{month.endNum}</td>
-                                            <td>{month.counselConst}</td>
+                                            <td>{month.estimateNum}</td>
                                             <td>{month.disclaimerNum}</td>
-                                            <td>{month.suspense}</td>
+                                            <td>{month.total}</td>
                                         </tr>
                                     ))}
                                     </tbody>

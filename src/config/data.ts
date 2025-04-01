@@ -124,3 +124,40 @@ export const initRowData : ClaimRowType = {
     useYNull: null,                // 사용 여부
     createdYMD: null               // 생성일자 (datetime)
 };
+
+
+export const hiparkingAccidentColumns = [
+    { title: '순번', col: 'row' },
+    { title: '연도', col: 'year' },
+    { title: '접수 월', col: 'month' },
+    { title: '상태', col: 'status' },
+    { title: '주차장명', col: 'pklName' },
+    { title: '접수번호', col: 'insuNum' },
+    { title: '사고일자', col: 'accidentDate' },
+    { title: '접수일자', col: 'requestDate' },
+    { title: '사고내용', col: 'accidentDetail' },
+    { title: '보험금', col: 'total' },
+    { title: '피해자', col: 'wName' },
+    { title: '피해자 연락처', col: 'wCell' },
+    { title: '차량번호', col: 'vCarNum' },
+    { title: '비고(메모)', col: 'memo' },
+];
+
+export const policyColumns = [
+    { title: '증권번호', col: 'pNo' },
+    { title: '보험기간', col: 'insuTerm' },
+    { title: '총 보험료', col: 'total' },
+    { title: '지급 보험금(추산+종결)', col: 'closingAmt' },
+    { title: '손조비용', col: 'repairCost' },
+    { title: '보험금 + 손조비용', col: 'clrc' },
+    { title: '손해율', col: 'lossRatio' }
+];
+
+export const monthColumns = [
+    { title: '연도', col: 'changeDay' },
+    { title: '접수건수', col: 'acceptNum' },
+    { title: '종결건수', col: 'endNum' },
+    { title: '추산건수', col: 'estimateNum' },
+    { title: '면책건수', col: 'disclaimerNum' },
+    { title: '지급 보험금(추산+종결)', col: 'closingAmt' }
+];

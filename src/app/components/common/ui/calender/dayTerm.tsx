@@ -49,9 +49,8 @@ const DayTerm = ({sDay, eDay, type , setParam }: DayTermProps) => {
             }));
             setStartDate(oneyearAgo);
             setEndDate(new Date());
-        }
-        // 일달력: 오늘 날짜
-        else {
+        } else {
+            // 일달력: 오늘 날짜
             setParam((prev:  ParamDashType2) => ({
                 ...prev,
                 startDate: dayjs().format('YYYY-MM-DD'),

@@ -28,7 +28,8 @@
     "react-hook-form": "^7.54.2",
     "react-time-picker": "^7.0.0",
     "sharp": "^0.33.5",
-    "styled-components": "^6.1.13"
+    "styled-components": "^6.1.13",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/chart.js": "^2.9.41",

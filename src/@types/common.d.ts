@@ -30,6 +30,18 @@ interface CounselData {
     dPremiums?: number;
 }
 
+
+type DashboardData = {
+    counselData: CounselData[];
+    changeData: ChangeCounselData[];
+    topBusinessData: TopBusinessData[];
+    topCounselData: TopCounselData[];
+    monthAccidentData: MonthAccidentData[];
+    changeGraphData: ChangeGraph[];
+    monthCumulativeData: MonthCumulativeData[] | [];
+    code ? : string;
+};
+
 //주차장대시보드 계약변경현황
 interface ChangeCounselData {
     cNo: number;
@@ -76,9 +88,9 @@ interface MonthAccidentData {
     changeDay: string;
     acceptNum: number;
     endNum: number;
-    counselConst: number;
+    total: number;
     disclaimerNum: number;
-    suspense: number;
+    estimateNum: number;
 }
 
 
@@ -158,6 +170,7 @@ interface ParamType {
 // 주차장 검색 조건 타입
 interface ParkingParamType {
     bpk: number;
+    status : string;
     condition: string;
     text: string;
 }
@@ -297,7 +310,6 @@ interface DashBoardType {
     length: number;
     counselData: CounselData[];
     changeCounselData: ChangeCounselData[];
-
 }
 
 interface ParamDashType2 {
