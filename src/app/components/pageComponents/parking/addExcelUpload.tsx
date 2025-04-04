@@ -149,7 +149,7 @@ const AddExcelUpload = ({setExcelData}: AddProps) => {
         try {
             const formData = new FormData();
             const uploadedFileDetails = [];
-            Array.from(files).forEach((file, index) => {
+            Array.from(files as File[]).forEach((file, index) => {
                 formData.append("files", file);
                 uploadedFileDetails.push({
                     id: `${file.name}-${index}`, // 고유 ID 추가
@@ -180,6 +180,12 @@ const AddExcelUpload = ({setExcelData}: AddProps) => {
                     setUploadedFiles((prev) => [...prev, ...uploadedFileDetails]);
                     setExcelData(res.data);
                 }
+                uploadedFileDetails.forEach((file) => {
+                    file.addedBusinessCount = countNew;
+                    file.deletedBusinessCount = countDel;
+                });
+                setUploadedFiles((prev) => [...prev, ...uploadedFileDetails]);
+                setExcelData(res.data);
             } else {
                 alert(res.msg);
             }

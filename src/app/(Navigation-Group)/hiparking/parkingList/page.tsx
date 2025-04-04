@@ -8,7 +8,7 @@ import ExcelUpload from "@/assets/images/icon/upload-white-icon.png";
 import SlidePopup from "@/app/components/popup/SlidePopup";
 import ParkingDetailList from "@/app/components/pageComponents/parking/parkingDetail";
 import Pagination from "@/app/components/common/ui/pagination";
-import {addExcelParking, deleteClaimData, getClaim, getParking} from "@/app/(Navigation-Group)/action";
+import {addExcelParking, deleteClaimData, deleteGroup, getClaim, getParking} from "@/app/(Navigation-Group)/action";
 import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContainer";
 import {ButtonConfig, ParamType, ParkingParamType, ParkingRowType, ParkingType} from "@/@types/common";
 import CenterPopup from "@/app/components/popup/CenterPopup";
@@ -32,7 +32,7 @@ export default function Page() {
     const [excelData, setExcelData] = useState<ParkingType[]>([]);
     const businessRef = useRef<AddBusinessRef>(null);
     const [selectedRow, setSelectedRow] = useState<number | null>(null);
-    const [data, setData] = useState<ParkingType[]>([]);
+    const [data, setData] = useState<ParkingRowType[]>([]);
     const [rowData, setRowData] = useState<ParkingRowType>();
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
@@ -47,6 +47,7 @@ export default function Page() {
     const getPaginatedData = () => {
         const startIndex = currentPage * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
+
         return data.slice(startIndex, endIndex);
     }
 
@@ -74,9 +75,23 @@ export default function Page() {
         }
     };
 
-    const slideDelete = (data: ParkingRowType) => {
-            console.log('삭제 데이터:', data);
-            slideClose();
+    const slideDelete = async () => {
+        if (selectedItems.length === 0) {
+            alert('삭제할 항목을 선택해주세요.');
+            return;
+        }
+        console.log(selectedItems);
+        if (window.confirm(`선택한 ${selectedItems.length}개의 항목을 삭제하시겠습니까?`)) {
+            let result = await deleteGroup([selectedItems[0]]);
+            if(result.code === '200') {
+                setSelectedItems([]);
+               /* let reload = await getClaim(param);
+                setData(reload);*/
+                slideClose();
+            }else {
+                alert("서비스 오류입니다.");
+            }
+        }
     };
 
     const SlideButtons: ButtonConfig[] =
@@ -369,20 +384,19 @@ export default function Page() {
                     title={"상세보기"}
                     rowData={rowData}
                     onDelete={slideDelete}
-                    Content={(props) => <ParkingDetailList {...props} rowData={rowData} onSave={slideSave}/>}
+                    Content={(props) => <ParkingDetailList {...props} rowData={rowData} onSave={slideSave} isEditing={false} setRowData={setRowData} />}
                     buttons={SlideButtons}
                 />
                 <div className={'mt-4'}>
                     <CheckboxContainer
                         items={getPaginatedData()}
-                        getItemId={(item) => item.pklpk}
+                        getItemId={(item) => item.irpk}
                         columns={columns}
                         selectedItems={selectedItems}
                         selectedRow={selectedRow}
                         onSelectionChange={setSelectedItems}
                         onRowClick={(item) => {
-                            console.log(item)
-                            setSelectedRow(item.pklpk);
+                            setSelectedRow(item.irpk);
                             setSlideOpen(true);
                             setRowData(item);
                             document.body.style.overflow = 'hidden';

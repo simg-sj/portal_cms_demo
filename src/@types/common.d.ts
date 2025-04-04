@@ -139,7 +139,14 @@ interface resultCode {
     msg : string;
 }
 
+// 유니언 타입
+type ExtendedParamType = ParamDashType2 | ParamType | BaseParamType;
+type ExtendedClaimRowType = ClaimRowType | rcAccidentRowType | dutyRowType | ParkingRowType;
+
+
+
 interface UserListType {
+    irpk: string;
     userId: string;
     uName: string;
     upk : string;
@@ -260,21 +267,22 @@ interface ParkingType {
 
 // 주차장 타입
 interface ParkingRowType {
-    pklName: string;
-    pklAddress: string;
-    form: string;
-    faceCount: string;
-    detailHistory: string;
-    indoor: boolean;                   // 실내 여부
-    outdoor: boolean;                  // 실외 여부
-    mechanical: boolean;               // 기계식 여부
-    carLift: boolean;                  // 차량 리프트 여부
-    memo: string;
+    irpk : number;
+    pklName?: string;
+    pklAddress?: string;
+    form?: string;
+    faceCount?: string;
+    detailHistory?: string;
+    indoor?: boolean;                   // 실내 여부
+    outdoor?: boolean;                  // 실외 여부
+    mechanical?: boolean;               // 기계식 여부
+    carLift?: boolean;                  // 차량 리프트 여부
+    memo?: string;
 }
 
 // 트루카 책임보험 사고 타입 정의
 interface rcAccidentType {
-    rcPk: number;
+    irpk: number;
     bpk: number; // 업체키
     insuNum?: string;
     partnerName: string; // 제휴사명
@@ -335,6 +343,7 @@ interface rcAccidentRowType extends rcAccidentType {
 
 // 책임보험 타입 정의
 interface dutyType {
+    irpk : number;
     ncase: 'single' | 'multiple' | '';
     bpk: number; // 업체키
     handlerName: string; // 담당자 이름

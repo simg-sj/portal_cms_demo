@@ -9,6 +9,7 @@
 
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials';
+import {token} from "stylis";
 
 export const {
     handlers,
@@ -23,12 +24,12 @@ export const {
                 password : {label : 'password', type : 'password'}
             },
             async authorize(credentials) {
-                    const res = await fetch('https://center-api.simg.kr/api/portal/auth', {method : 'POST', headers : {"Content-Type": "application/json"}, body : JSON.stringify(credentials)});
-                    const data = await res.json();
+                const res = await fetch('https://center-api.simg.kr/api/portal/auth', {method : 'POST', headers : {"Content-Type": "application/json"}, body : JSON.stringify(credentials)});
+                const data = await res.json();
 
-                    if (!res.ok) {
-                        throw new Error(data.message || "로그인에 실패했습니다.");
-                    }
+                if (!res.ok) {
+                    throw new Error(data.message || "로그인에 실패했습니다.");
+                }
                 const user = {
                     id: data.userId,
                     platform: data.platform,
@@ -36,13 +37,16 @@ export const {
                     bName : data.bName,
                     name: data.name,
                     email: data.mail,
+                    emailVerified: null, // Add emailVerified property with a default value
                     bNo : data.bNo,
                     phone : data.phone,
                     auth : data.auth,
                     bpk : data.bpk,
                     authLevel : data.authLevel,
                     service : data.service,
-                    subYn : data.subYn
+                    subYn : data.subYn,
+                    userId: data.userId,
+                    password: "" // Add a default password field to match the User type
                 };
 
                 if (user) {
@@ -65,46 +69,54 @@ export const {
     },
     callbacks: {
         jwt: async ({ token, user  }) => {
-            if(user){
-                return {
+            if (user) {
+                token = {
                     ...token,
                     id: user.id,
                     platform: user.platform,
-                    bName : user.bName,
-                    work : user.work,
+                    bName: user.bName,
+                    work: user.work,
                     name: user.name,
-                    auth : user.auth,
-                    bpk : user.bpk,
-                    bNo : user.bNo,
-                    authLevel : user.authLevel,
-                    phone : user.phone,
-                    email : user.email,
-                    subYn : user.subYn,
-                    service : user.service
-                }
+                    auth: user.auth,
+                    bpk: user.bpk,
+                    bNo: user.bNo,
+                    authLevel: user.authLevel,
+                    phone: user.phone,
+                    email: user.email,
+                    subYn: user.subYn,
+                    service: user.service,
+                };
             }
-            return token
-        },
-        session: async ({ session, token }) => {
-            if(token){
-                session.user.platform = token.platform;
-                session.user.work = token.work;
-                session.user.bName = token.bName;
-                session.user.email = token.email;
-                session.user.phone = token.phone;
-                session.user.id = token.id;
-                session.user.bpk = token.bpk;
-                session.user.auth = token.auth;
-                session.user.authLevel = token.authLevel;
-                session.user.service = token.service;
-                session.user.subYn = token.subYn;
-                session.user.bNo = token.bNo;
-            }
-            return session
-        },
-        async redirect({ url, baseUrl }) {
-            if (url.startsWith('/')) return `${baseUrl}${url}`;
-            return baseUrl;
-        },
+            console.log("JWT Token:", token); // 토큰 확인용 디버그 출력
+            return token;
+    },
+    session: async ({ session, token }) => {
+        session.user = {
+            emailVerified: undefined,
+            id: token.id as string,
+            platform: token.platform as string,
+            bName: token.bName as string,
+            work: token.work as string,
+            name: token.name as string,
+            auth: token.auth as string,
+            bpk: token.bpk as string,
+            bNo: token.bNo as string,
+            authLevel: token.authLevel as number,
+            phone: token.phone as string,
+            email: token.email as string,
+            subYn: token.subYn as string,
+            service: token.service as string,
+            userId: token.id as string,
+            password: "" // default password as required by AdapterUser
+        };
+
+        console.log("Session:", session); // session 확인용 디버그 출력
+        return session;
+    },
+
+    async redirect({ url, baseUrl }) {
+        if (url.startsWith('/')) return `${baseUrl}${url}`;
+        return baseUrl;
+    },
     }
 })

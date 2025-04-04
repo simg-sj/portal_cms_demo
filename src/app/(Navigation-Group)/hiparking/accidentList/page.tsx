@@ -30,7 +30,7 @@ export default function Page() {
     const [isNew, setIsNew] = useState(false);
     const [selectedRow, setSelectedRow] = useState<number | null>(null);
     const [data, setData] = useState<ClaimRowType[]>([]);
-    const [rowData, setRowData] = useState<ClaimRowType | initRowData>();
+    const [rowData, setRowData] = useState<ClaimRowType>();
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [param, setParam] = useState<ParamType>({
@@ -44,6 +44,7 @@ export default function Page() {
     const getPaginatedData = () => {
         const startIndex = currentPage * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
+        console.log(data.slice(startIndex, endIndex))
         return data.slice(startIndex, endIndex);
     }
 
@@ -143,9 +144,9 @@ export default function Page() {
             alert('삭제할 항목을 선택해주세요.');
             return;
         }
-        console.log(selectedItems);
+        console.log("@@@@@",selectedItems);
         if (window.confirm(`선택한 ${selectedItems.length}개의 항목을 삭제하시겠습니까?`)) {
-            let result = await deleteGroup(Array.from(selectedItems));
+            let result = await deleteGroup([selectedItems[0]]);
             if(result.code === '200') {
                 setSelectedItems([]);
                 let reload = await getClaim(param);
@@ -156,10 +157,10 @@ export default function Page() {
             }
         }
     };
-
-    //삭제버튼 클릭
-    const handleDelete = async (rowData : ClaimRowType) => {
-        try{
+// 삭제버튼 클릭
+    async function handleDelete<T extends ClaimRowType>(rowData: T): Promise<void> {
+        try {
+            if (window.confirm('삭제하시겠습니까?')) {
                 let result = await deleteClaimData(rowData);
                 if(result.code === '200'){
                     let reload = await getClaim(param);
@@ -168,10 +169,12 @@ export default function Page() {
                 }else {
                     alert("서비스 오류입니다.");
                 }
-        }catch(e){
+            }
+        } catch (e) {
             console.log(e);
         }
-    };
+    }
+
 
     const onSearchClick = async () => {
         const result = await getClaim(param);
@@ -295,7 +298,7 @@ export default function Page() {
                     rowData={rowData}
                     onDelete={handleDelete}
                     Content={(props) => <AccidentDetailList {...props} isNew={isNew} rowData={rowData} onSave={handleSave}/>}
-                    buttons={popupButtons}
+                    buttons={popupButtons.map(button => ({ ...button}))}
                 />
                 <div className={'mt-4'}>
                     <CheckboxContainer

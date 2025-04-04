@@ -159,5 +159,5 @@ export const monthColumns = [
     { title: '종결건수', col: 'endNum' },
     { title: '추산건수', col: 'estimateNum' },
     { title: '면책건수', col: 'disclaimerNum' },
-    { title: '지급 보험금(추산+종결)', col: 'closingAmt' }
+    { title: '지급 보험금(추산+종결)', col: 'total' }
 ];

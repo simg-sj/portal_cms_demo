@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Button from "@/app/components/common/ui/button/button";
-import {CargoInsuType, ClaimRowType, ParkingRowType, rcAccidentType} from "@/@types/common";
+import {CargoInsuType, ClaimRowType, ExtendedClaimRowType, ParkingRowType, rcAccidentType} from "@/@types/common";
 import {deleteClaimData, getClaim} from "@/app/(Navigation-Group)/action";
 
 
@@ -9,16 +9,16 @@ interface SlidePopupProps {
     isOpen: boolean;
     onClose: (data?: ClaimRowType | ParkingRowType | CargoInsuType) => void;
     title: string;
-    Content: React.ComponentType<{ isEditing: boolean, onSave: (data: any) => void }>;
+    Content: React.ComponentType<{ isEditing: boolean, onSave?: (data: any) => void }>;
     buttons: ButtonConfig[];
-    rowData : ClaimRowType | ParkingRowType |  CargoInsuType;
-    onDelete: (data: ClaimRowType) => void;
+    rowData : ExtendedClaimRowType;
+    onDelete: (data: ExtendedClaimRowType) => Promise<void>;
 }
 
 interface ButtonConfig {
     label: string;
     onClick: (() => void) ;
-    onDelete : ((data: ClaimRowType | ParkingRowType | CargoInsuType) => void);
+    onDelete ?: ((data: ClaimRowType | ParkingRowType | CargoInsuType) => void);
     color: "main" | "sub" | "blue" | "green" | "red" | "gray" | "dark-gray";
     fill?: boolean;
     rounded?: boolean;
@@ -59,24 +59,10 @@ const SlidePopup = ({isOpen, onClose, title, Content, buttons, onDelete, rowData
         setIsEditing(true);
     };
 
-    //삭제버튼 클릭
-    const handleDelete = async (e : React.MouseEvent<HTMLDivElement>) => {
-        try{
-            e.preventDefault();
-            if (window.confirm('삭제하시겠습니까?')) {
-                await onDelete(rowData);
-                }else {
-                    alert("서비스 오류입니다.")
-                }
-        }catch (e){
-            console.log(e);
-        }
-    };
-
     //**버튼 기능 추가 혹은 버튼종류 추가시 사용
     const modifiedButtons = buttons.map(button => {
         if (button.label === "삭제") {
-            return { ...button, onClick: handleDelete };
+            return { ...button, onClick: () => onDelete(rowData) };
         }
         if (button.label === "편집") {
             return { ...button, onClick: handleEdit };

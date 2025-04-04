@@ -76,7 +76,6 @@ function Button({
                     style = {} ,
                     params,
                     use,
-                    clickEvent,
                     onClick,
                     fileName,
                     ...props

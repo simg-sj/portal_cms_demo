@@ -62,7 +62,7 @@ const HiparkingList = ({isEditing, rowData, setRowData, onSave }: ListProps) => 
                     <textarea
                         name={key}
                         defaultValue={value}
-                        onChange={handleChange}
+                        onChange={() =>handleChange}
                         className={"w-full p-1 border rounded h-[100px]"}
                     />
                 );
@@ -85,7 +85,7 @@ const HiparkingList = ({isEditing, rowData, setRowData, onSave }: ListProps) => 
                 {isEditing
                     &&
                     <div className='absolute top-[32px] right-[272px] z-10'>
-                        <Button color={"blue"} fill={true} height={35} width={100} onClick={handleSave}>
+                        <Button color={"blue"} fill={true} height={35} width={100} onClick={() => handleSave}>
                             저장
                         </Button>
                     </div>

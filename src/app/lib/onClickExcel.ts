@@ -50,13 +50,13 @@ export const onClickExcel = (columns: any[], type: string, data: any[], fileName
 
         let totals: Record<string, number> = {}; // 합계 저장 객체
         const formattedData = data.map((row, index) => {
+            let calcValue = 0;
             const newRow: Record<string, any> = {};
             columns.forEach((col) => {
                 let value: any = row[col.col] || 0;
-
                 // 숫자 변환 처리
-                if (col.col === 'total' || col.col === 'closingAmt') {
-                    value = parseNumericValue(row.total);
+                if (col.col === 'total' || col.col === 'closingAmt' || col.col === 'repairCost') {
+                    value = parseNumericValue(row[col.col]);
                 } else if (typeof value === 'string') {
                     value = parseNumericValue(value);
                 }
@@ -64,26 +64,40 @@ export const onClickExcel = (columns: any[], type: string, data: any[], fileName
                 // 개별 컬럼 로직 처리
                 if (col.col === 'row') {
                     newRow[col.title] = index + 1; // 순번 자동 추가
-                } else if (col.col === 'reqestDate') {
-                    newRow['연도'] = row.reqestDate ? dayjs(row.reqestDate).format('YYYY') : '';
-                    newRow['접수 월'] = row.reqestDate ? dayjs(row.reqestDate).format('MM') : '';
-                } else if (col.col === 'changeDay') {
+                } else if (col.col === 'year') {
+                    newRow['연도'] = row.requestDate ? dayjs(row.requestDate).format('YYYY') : '';
+                } else if (col.col === 'month') {
+                    newRow['접수 월'] = row.requestDate ? dayjs(row.requestDate).format('MM') : '';
+                }else if (col.col === 'changeDay') {
                     newRow['연도'] = row.changeDay ? dayjs(row.changeDay).format('YYYY') : '';
                     newRow['월'] = row.changeDay ? dayjs(row.changeDay).format('MM') : '';
                 } else if (col.col === 'insuTerm') {
                     newRow['보험기간'] = `${row.sDay || ''}~${row.eDay || ''}`;
                 } else if (col.col === 'total') {
-                    newRow['총 보험료'] = value.toLocaleString();
+                    if(type === 'month') {
+                        newRow['지급 보험금(추산+종결)'] = value.toLocaleString();
+                    }else {
+                        newRow['총 보험료'] = value.toLocaleString();
+                    }
                 } else if (col.col === 'closingAmt') {
                     newRow['지급 보험금(추산+종결)'] = value.toLocaleString();
+                    calcValue += value
                     if (!isNaN(value)) {
                         totals['지급 보험금(추산+종결)'] = (totals['지급 보험금(추산+종결)'] || 0) + value;
                     }
-                }else if (col.col === 'clrc') {
-                    newRow['보험금 + 손조비용'] = value.toLocaleString();
+                } else if (col.col === 'repairCost') {
+                    newRow['손조비용'] = value.toLocaleString();
+                    calcValue += value
                     if (!isNaN(value)) {
-                        totals['보험금 + 손조비용'] = (totals['지급 보험금(추산+종결)'] + totals['손조비용'] || 0) + value;
+                        totals['손조비용'] = (totals['손조비용'] || 0) + value;
                     }
+                }else if (col.col === 'clrc') {
+                    newRow['보험금 + 손조비용'] = calcValue.toLocaleString() || 0;
+
+                    if (!isNaN(value)) {
+                        totals['보험금 + 손조비용'] = (totals['보험금 + 손조비용'] || 0) + calcValue;
+                    }
+
                 } else {
                     newRow[col.title] = row[col.col] || '';
                     if (type === 'policy' && !isNaN(value)) {
@@ -94,7 +108,7 @@ export const onClickExcel = (columns: any[], type: string, data: any[], fileName
 
             return newRow;
         });
-        console.log(totals);
+        console.table(formattedData);
 
         // 보험금 총합 계산
         const totalInsuranceAmount = formattedData.reduce(
@@ -131,7 +145,7 @@ export const onClickExcel = (columns: any[], type: string, data: any[], fileName
         // 엑셀 파일 생성 및 다운로드
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-        //XLSX.writeFile(workbook, fileName);
+        XLSX.writeFile(workbook, fileName);
     } catch (error) {
         console.error('엑셀 파일 생성 중 에러 발생:', error);
         alert('파일 생성에 실패했습니다.');

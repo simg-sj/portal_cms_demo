@@ -2,24 +2,24 @@ import React, { useState } from 'react';
 import Checkbox from '@/app/components/common/ui/input/checkbox';
 import Image from "next/image";
 import Error from "@/assets/images/icon/error-icon.png";
-import {UserListType, UserType} from "@/@types/common";
+import {ClaimRowType, ExtendedClaimRowType, UserListType, UserType} from "@/@types/common";
 import {authText} from "@/config/data";
 interface ColumType {
     key : string;
     header : string;
 }
-interface CheckboxContainerProps {
-    items: UserListType[];
+interface CheckboxContainerProps<T> {
+    items: T[];
     columns: ColumType[];
-    getItemId: (item: UserListType) => number;
+    getItemId: (item: T) => number;
     withCheckbox?: boolean;
     onSelectionChange?: (selectedIds: number[]) => void;
-    onRowClick?: (item: UserListType) => void;
+    onRowClick?: (item: T) => void;
     selectedRow: number | null;
     selectedItems: number[];
 }
 
-export function CheckboxContainer({
+export function CheckboxContainer<T>({
                                       items,
                                       columns,
                                       getItemId,
@@ -28,7 +28,7 @@ export function CheckboxContainer({
                                       onRowClick,
                                       selectedRow,
                                       selectedItems
-                                  }: CheckboxContainerProps) {
+                                  }: CheckboxContainerProps<T>) {
     const toggleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (!withCheckbox) return;
 
@@ -41,17 +41,18 @@ export function CheckboxContainer({
 
     const toggleSelectItem = (id: number) => {
         if (!withCheckbox) return;
+        console.log(id);
         const newSelectedItems = selectedItems.includes(id)
             ? selectedItems.filter(item => item !== id) // 제거
             : [...selectedItems, id]; // 추가
         onSelectionChange?.(newSelectedItems); // 부모 상태를 업데이트
     };
 
-    const handleRowClick = (item: UserListType) => {
+    const handleRowClick = (item: T) => {
         onRowClick?.(item);
     };
 
-    const safeRenderValue = (column: string, item: UserListType) => {
+    const safeRenderValue = (column: string, item: T) => {
         let value = item[column];
 
         if (value === null || value === undefined) {
@@ -77,7 +78,7 @@ export function CheckboxContainer({
                         <Checkbox
                             checked={isAllSelected}
                             indeterminate={isSomeSelected}
-                            onChange={toggleSelectAll}
+                            onChange={()=>toggleSelectAll}
                         />
                     </th>
                 )}

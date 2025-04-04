@@ -16,8 +16,8 @@ import {
     DashBoardType, dutyType,
     ParamDashType2,
     ParamType,
-    ParkingParamType,
-    ParkingType, rcAccidentRowType, rcAccidentType, RcFormData, resultCode, SearchParams,
+    ParkingParamType, ParkingRowType,
+    ParkingType, rcAccidentRowType, rcAccidentType, resultCode, SearchParams,
     UptClaim, UserCudType, UserListType, UserType, UserUpk
 } from "@/@types/common";
 import dayjs from "dayjs";
@@ -174,7 +174,7 @@ export async function deleteGroup(param: [number]): Promise<resultCode> {
     }
 }
 
-export async function getParking(param: ParkingParamType): Promise<ParkingType[]> {
+export async function getParking(param: ParkingParamType): Promise<ParkingRowType[]> {
     try {
         const response = await fetch(`https://center-api.simg.kr/api/portal/getParkingList`, {
             method: 'POST',
