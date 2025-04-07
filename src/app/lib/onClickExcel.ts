@@ -165,7 +165,7 @@ export const onClickExcel = (columns: any[], type: string, data: any[], fileName
         // 엑셀 파일 생성 및 다운로드
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-        //XLSX.writeFile(workbook, fileName);
+        XLSX.writeFile(workbook, fileName);
     } catch (error) {
         console.error('엑셀 파일 생성 중 에러 발생:', error);
         alert('파일 생성에 실패했습니다.');

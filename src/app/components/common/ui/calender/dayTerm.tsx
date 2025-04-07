@@ -28,13 +28,13 @@ const DayTerm = ({sDay, eDay, type , setParam }: DayTermProps) => {
     useEffect(() => {
         // 월달력: 3개월 전부터 현재까지
         if (type === 'month') {
-            const threeMonthsAgo = new Date(new Date().getFullYear(), new Date().getMonth() - 2, 1);
+            const sixMonthsAgo = new Date(new Date().getFullYear(), new Date().getMonth() - 6, 1);
             setParam((prev: ParamDashType2) => ({
                 ...prev,
-                sDay: dayjs(threeMonthsAgo).format('YYYY-MM'),
+                sDay: dayjs(sixMonthsAgo).format('YYYY-MM'),
                 eDay : dayjs().format('YYYY-MM')
             }));
-            setStartDate(threeMonthsAgo);
+            setStartDate(sixMonthsAgo);
             setEndDate(new Date());
         }
         // 1년달력: 12개월 전부터 현재까지
