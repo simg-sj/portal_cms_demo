@@ -1,40 +1,37 @@
 "use client"
 import React, {useState} from "react";
-import {ParkingRowType} from "@/@types/common";
+import { ParkingRowType, UptParking} from "@/@types/common";
 import Button from "@/app/components/common/ui/button/button";
+import { convertClaimToUptParking} from "@/app/lib/convertUptType";
 
 
 
 interface ListProps {
     isEditing: boolean;
-    onSave: (data: any) => void;
+    onSave: (data: ParkingRowType) => void;
     rowData : ParkingRowType;
-    setRowData : React.Dispatch<React.SetStateAction<ParkingRowType>>;
 }
 
-const HiparkingList = ({isEditing, rowData, setRowData, onSave }: ListProps) => {
+const HiparkingList = ({isEditing, rowData, onSave }: ListProps) => {
 
+    const [editData, setEditData] = useState<UptParking>(convertClaimToUptParking(rowData));
 
-    //input 빈값으로 변경
-    const [formData, setFormData] = useState({
-        pklName: '', //주차장명
-        pklAddress: '', //주차장주소
-        form : '', //형태
-        faceCount: '', //면수
-        detailHistory: '', //세부내역
-        memo: '' //메모 (공동피보험자)
-    });
 
     //필드값 변경시 formdata 업데이트
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        console.log(e.target.name, e.target.value);
+        setEditData((prev) => {
+            return {...prev, [e.target.name]: e.target.value};
+        });
     };
 
-    const handleSave = (e : React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-        if(formData) {
-            onSave(formData);
-        }
+    const handleSave = () => {
+            if(editData) {
+                onSave(editData);
+            }else {
+                alert('변경된 정보가 없습니다.');
+                return;
+            }
     }
 
     //입력필드 타입
@@ -85,7 +82,7 @@ const HiparkingList = ({isEditing, rowData, setRowData, onSave }: ListProps) => 
                 {isEditing
                     &&
                     <div className='absolute top-[32px] right-[272px] z-10'>
-                        <Button color={"blue"} fill={true} height={35} width={100} onClick={() => handleSave}>
+                        <Button color={"blue"} fill={true} height={35} width={100} onClick={() => handleSave()}>
                             저장
                         </Button>
                     </div>

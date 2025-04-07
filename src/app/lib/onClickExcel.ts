@@ -14,19 +14,21 @@ const parseNumericValue = (value: any): number => {
 // 마지막 행(합계) 생성 함수
 const createLastRow = (columns: any[], totals: Record<string, number>, type: string, totalInsuranceAmount: number) => {
     const lastRow: Record<string, string> = {};
-    if (type === 'policy' || type === 'month') {
+    if (type === 'policy' || 'month') {
         columns.forEach((col, index) => {
             if (index === 0) {
                 lastRow[col.title] = '합계';
             } else if (totals[col.title] !== undefined) {
-                console.log(col.title)
-                console.log(totals[col.title]);
                 lastRow[col.title] = totals[col.title].toLocaleString(); // 숫자 포맷 적용
             } else {
                 lastRow[col.title] = '';
             }
         });
-    } else if (type === 'accident') {
+    }
+
+
+
+    if (type === 'accident') {
         columns.forEach((col) => {
             if (col.col === 'row') {
                 lastRow[col.title] = '합계';
@@ -43,11 +45,12 @@ const createLastRow = (columns: any[], totals: Record<string, number>, type: str
 // 엑셀 파일 생성 함수
 export const onClickExcel = (columns: any[], type: string, data: any[], fileName: string) => {
     try {
+        console.log(data)
         if (!data || data.length === 0) {
             alert("데이터가 없습니다.");
             return;
         }
-
+        let totalInsuranceAmount = 0;
         let totals: Record<string, number> = {}; // 합계 저장 객체
         const formattedData = data.map((row, index) => {
             let calcValue = 0;
@@ -76,8 +79,12 @@ export const onClickExcel = (columns: any[], type: string, data: any[], fileName
                 } else if (col.col === 'total') {
                     if(type === 'month') {
                         newRow['지급 보험금(추산+종결)'] = value.toLocaleString();
+                        if (!isNaN(value)) {
+                            totals['지급 보험금(추산+종결)'] = (totals['지급 보험금(추산+종결)'] || 0) + value;
+                        }
                     }else {
-                        newRow['총 보험료'] = value.toLocaleString();
+                        newRow['보험금'] = value.toLocaleString();
+                        totalInsuranceAmount += value;
                     }
                 } else if (col.col === 'closingAmt') {
                     newRow['지급 보험금(추산+종결)'] = value.toLocaleString();
@@ -99,8 +106,8 @@ export const onClickExcel = (columns: any[], type: string, data: any[], fileName
                     }
 
                 } else {
-                    newRow[col.title] = row[col.col] || '';
-                    if (type === 'policy' && !isNaN(value)) {
+                    newRow[col.title] = row[col.col] || '-';
+                    if ((type === 'policy' || type === 'month') && !isNaN(value)) {
                         totals[col.title] = (totals[col.title] || 0) + value;
                     }
                 }
@@ -108,20 +115,33 @@ export const onClickExcel = (columns: any[], type: string, data: any[], fileName
 
             return newRow;
         });
+
+        if(type !== 'parking'){
+            // 마지막 행(합계) 추가
+            const lastRow = createLastRow(columns, totals, type, totalInsuranceAmount);
+            formattedData.push(lastRow);
+        }
+
         console.table(formattedData);
-
-        // 보험금 총합 계산
-        const totalInsuranceAmount = formattedData.reduce(
-            (sum, row) => sum + parseNumericValue(row['보험금']),
-            0
-        );
-
-        // 마지막 행(합계) 추가
-        const lastRow = createLastRow(columns, totals, type, totalInsuranceAmount);
-        formattedData.push(lastRow);
-
         // 엑셀 데이터 변환
         const worksheet = XLSX.utils.json_to_sheet(formattedData);
+
+        // 각 열의 최대 문자열 길이에 따라 열 너비 설정
+        const calculateColumnWidths = (data: any[], columns: any[]) => {
+            const widths = columns.map((col) => {
+                const titleLength = col.title.length; // 컬럼 제목 길이
+                const maxContentLength = data
+                    .map((row) => (row[col.title] ? row[col.title].toString().length : 0)) // 각 열의 데이터 길이 계산
+                    .reduce((max, curr) => Math.max(max, curr), 0);
+
+                // 문자열 길이에 가중치(1.5) 적용 후, 추가 여백 5를 더함
+                return Math.ceil(Math.max(titleLength, maxContentLength) * 1.5) + 5;
+            });
+
+            return widths.map((wch) => ({ wch })); // 열 너비의 형식으로 반환
+        };
+
+        worksheet['!cols'] = calculateColumnWidths(formattedData, columns); // 열 너비 설정
 
         // 첫 행의 스타일 설정
         const range = XLSX.utils.decode_range(worksheet['!ref']!);
@@ -145,7 +165,7 @@ export const onClickExcel = (columns: any[], type: string, data: any[], fileName
         // 엑셀 파일 생성 및 다운로드
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-        XLSX.writeFile(workbook, fileName);
+        //XLSX.writeFile(workbook, fileName);
     } catch (error) {
         console.error('엑셀 파일 생성 중 에러 발생:', error);
         alert('파일 생성에 실패했습니다.');

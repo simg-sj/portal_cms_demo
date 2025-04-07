@@ -12,24 +12,30 @@ import {
     STATE_OPTIONS
 } from "@/config/data";
 
-import {ClaimRowType, ImageType} from "@/@types/common";
+import {ClaimRowType, ImageType, UptClaim, UptParking} from "@/@types/common";
 import Button from "@/app/components/common/ui/button/button";
 import FormatNumber from "@/app/components/common/ui/formatNumber";
 import {getImage} from "@/app/(Navigation-Group)/action";
 import cn from 'classnames';
+import {convertClaimToUptClaim} from "@/app/lib/convertUptType";
 
 interface ListProps {
     isEditing: boolean;
     isNew?: boolean;
     rowData : ClaimRowType;
-    onSave: (data: ClaimRowType) => void;
+    onSave: (data: UptClaim) => void;
 }
 
 
 
 const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListProps) => {
     const [images, setImages] = useState<ImageType[]>([]);
-    const [editData, setEditData] = useState<ClaimRowType>();
+
+    // 초기에 rowData를 UptClaim으로 변환해서 editData로 설정
+    const [editData, setEditData] = useState<UptClaim>(convertClaimToUptClaim(rowData));
+
+
+
     const fetchImageData = useCallback(async (irpk: number) => {
         try {
             const fetchedImage = await getImage(irpk);
@@ -39,9 +45,8 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
         }
     }, []);
 
-    useEffect(() => {
 
-    }, [isNew]);
+
     useEffect(() => {
         // 이미지 데이터를 처음 로드하거나 irpk가 변경될 때만 호출
         if (!isNew && rowData.irpk) {
@@ -58,8 +63,7 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
             return {...prev, [e.target.name]: e.target.value};
         });
     };
-    const handleSave = (e : React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
+    const handleSave = () => {
         if(isEditing){
             if(editData) {
                 onSave(editData);
@@ -71,6 +75,7 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
 
         if(isNew){
             if(editData) {
+                
                 onSave(editData);
             }else {
                 alert('변경된 정보가 없습니다.');
@@ -79,11 +84,7 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
         }
 
     }
-    useEffect(() => {
-        console.log('edit' , isEditing);
-        console.log('new' , isNew);
 
-    }, [isNew, isEditing]);
     // 입력필드 타입
     const renderField = (key: string, value: any, type: 'text' | 'select' | 'date' | 'dayterm' | 'textarea' = 'text', options?: string[]) => {
         if (!isEditing && !isNew) {
@@ -155,7 +156,7 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                 {
                     (isEditing || isNew)  &&
                     <div className={cn("z-10", isEditing ? "absolute top-[32px] right-[272px]" : "absolute top-[32px] right-[160px]")}>
-                        <Button color={"blue"} fill={true} height={35} width={100} onClick={handleSave}>
+                        <Button color={"blue"} fill={true} height={35} width={100} onClick={()=>handleSave()}>
                             저장
                         </Button>
                     </div>
@@ -240,8 +241,9 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                             <div className="my-2">
                                 <ImageUploader
                                     initialImages={images}
-                                    isEditing={isEditing || isNew}
-                                />
+                                    isEditing={isEditing || isNew} onChange={function (images: ImageType[]): void {
+                                    throw new Error("Function not implemented.");
+                                }}                                />
                             </div>
                         </td>
                     </tr>

@@ -8,12 +8,27 @@ import ExcelUpload from "@/assets/images/icon/upload-white-icon.png";
 import SlidePopup from "@/app/components/popup/SlidePopup";
 import ParkingDetailList from "@/app/components/pageComponents/parking/parkingDetail";
 import Pagination from "@/app/components/common/ui/pagination";
-import {addExcelParking, deleteClaimData, deleteGroup, getClaim, getParking} from "@/app/(Navigation-Group)/action";
+import {
+    addExcelParking, deleteClaimData,
+    deleteGroup, getClaim,
+    getParking,
+    updateCommon
+} from "@/app/(Navigation-Group)/action";
 import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContainer";
-import {ButtonConfig, ParamType, ParkingParamType, ParkingRowType, ParkingType} from "@/@types/common";
+import {
+    ButtonConfig,
+    ClaimRowType,
+    ParamType,
+    ParkingParamType,
+    ParkingRowType,
+    ParkingType, UptClaim,
+    UptParking
+} from "@/@types/common";
 import CenterPopup from "@/app/components/popup/CenterPopup";
 import AddBusiness, {AddBusinessRef} from "@/app/components/pageComponents/parking/addBusiness-hiparking";
 import AddExcelUpload from "@/app/components/pageComponents/parking/addExcelUpload";
+import {onClickExcel} from "@/app/lib/onClickExcel";
+import {parkingColumns, parkingColumnsAll} from "@/config/data";
 
 interface ColumnDefinition<T> {
     key: keyof T;
@@ -68,29 +83,39 @@ export default function Page() {
         document.body.style.removeProperty('overflow');
     };
 
-    const slideSave = (data: ParkingRowType) => {
+    const slideSave = async (data: UptParking) => {
         if(window.confirm('저장하시겠습니까?')){
-            console.log('수정된 데이터:', data);
-            slideClose();
+            let result = await updateCommon(data);
+            if (result[0].code === '200') {
+                let reload = await getParking(param);
+                setData(reload || []);
+                alert(result[0].msg);
+                slideClose();
+            } else {
+                alert('서비스 오류')
+            }
+        }else {
+            return;
         }
     };
 
-    const slideDelete = async () => {
-        if (selectedItems.length === 0) {
-            alert('삭제할 항목을 선택해주세요.');
-            return;
-        }
-        console.log(selectedItems);
-        if (window.confirm(`선택한 ${selectedItems.length}개의 항목을 삭제하시겠습니까?`)) {
-            let result = await deleteGroup([selectedItems[0]]);
-            if(result.code === '200') {
-                setSelectedItems([]);
-               /* let reload = await getClaim(param);
-                setData(reload);*/
-                slideClose();
-            }else {
-                alert("서비스 오류입니다.");
+    async function slideDelete<T extends UptParking>(rowData: T): Promise<void> {
+        try {
+            if (window.confirm('삭제하시겠습니까?')) {
+                rowData.table = 'parkinglot';
+
+                let result = await deleteClaimData(rowData);
+                if(result.code === '200'){
+                    let reload = await getParking(param);
+                    setData(reload);
+                    alert(result.msg);
+                    slideClose();
+                }else {
+                    alert("서비스 오류입니다.");
+                }
             }
+        } catch (e) {
+            console.log(e);
         }
     };
 
@@ -131,15 +156,17 @@ export default function Page() {
                 if (window.confirm(`${formData.pkName}사업장을 추가하시겠습니까?`)) {
                     const param = {
                         '주차장명': formData.pkName,
-                        '주차장주소:': formData.pkAddress,
-                        '옥내:': formData.indoor.checked ? formData.indoor.value : '',
-                        '옥외:': formData.outdoor.checked ? formData.outdoor.value : '',
-                        '기계식:': formData.mechanical.checked ? formData.mechanical.value : '',
-                        '카리프트:': formData.carLift.checked ? formData.carLift.value : '',
+                        '주차장주소': formData.pkAddress,
+                        '옥내:': formData.indoor.checked ? formData.indoor.value : '-',
+                        '옥외:': formData.outdoor.checked ? formData.outdoor.value : '-',
+                        '기계식:': formData.mechanical.checked ? formData.mechanical.value : '-',
+                        '카리프트': formData.carLift.checked ? formData.carLift.value : '-',
                         '면수': formData.pkArea,
                         '세부내역': formData.pkDetail,
                         '메모': formData.pkMemo
                     };
+
+
                     console.log(param);
                     setAddOpen(false);
                 } else {
@@ -225,17 +252,37 @@ export default function Page() {
 
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
-    const handleDeleteGroup = () => {
-        if (selectedItems.length === 0) {
-            alert('삭제할 항목을 선택해주세요.');
-            return;
+    const handleDeleteGroup = async () => {
+        try {
+            if (selectedItems.length === 0) {
+                alert('삭제할 항목을 선택해주세요.');
+                return;
+            }
+            if (window.confirm(`선택한 ${selectedItems.length}개의 항목을 삭제하시겠습니까?`)) {
+                let param2 = {
+                    bpk : 2,
+                    table : 'parkinglot',
+                    job : 'DEL_LIST',
+                    irpkList : selectedItems
+                }
+                let result = await deleteGroup(param2);
+                console.log(result);
+                if(result.code === '200') {
+                    setSelectedItems([]);
+                    let reload = await getParking(param);
+                    setData(reload);
+                    alert(result.msg);
+                }}else {
+                alert("서비스 오류입니다.");
+            }
+        }catch (e){
+            alert("서비스 오류입니다.");
         }
-        if (window.confirm(`선택한 ${selectedItems.length}개의 항목을 삭제하시겠습니까?`)) {
-            console.log(selectedItems);
-            console.log('삭제할 항목 인덱스:', Array.from(selectedItems));
-            return;
-        }
+
     };
+
+
+
 
 
     const onSearchClick = async () => {
@@ -337,8 +384,7 @@ export default function Page() {
                         조회
                     </Button>
                 </div>
-                <Button color={"green"} height={32} use={'down'} width={120} className={'ml-5'}
-                        params={{bpk: "02", type: 'down'}} fileName={'하이파킹_sample'}>
+                <Button color={"green"} height={32} width={120} onClick={()  => onClickExcel(param.status === 'all' ? parkingColumnsAll : parkingColumns,'parking', data, '월별_사고접수_현황.xlsx')}>
                     <Image src={Excel} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
                     엑셀다운
                 </Button>
@@ -384,8 +430,8 @@ export default function Page() {
                     title={"상세보기"}
                     rowData={rowData}
                     onDelete={slideDelete}
-                    Content={(props) => <ParkingDetailList {...props} rowData={rowData} onSave={slideSave} isEditing={false} setRowData={setRowData} />}
-                    buttons={SlideButtons}
+                    Content={(props) => <ParkingDetailList {...props} rowData={rowData} onSave={slideSave}  />}
+                    buttons={SlideButtons.map(button => ({ ...button}))}
                 />
                 <div className={'mt-4'}>
                     <CheckboxContainer

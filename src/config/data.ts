@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import {ClaimRowType} from "@/@types/common";
+import {ClaimRowType, UptClaim} from "@/@types/common";
 
 export const ClosingCode= {
     '00' : '확인중',
@@ -122,7 +122,7 @@ export const initRowData : ClaimRowType = {
     infoOfferAgree: null,          // 개인정보 제3자 제공 동의
     approvalYN: null,              // 내부 결재 여부
     useYNull: null,                // 사용 여부
-    createdYMD: null               // 생성일자 (datetime)
+    createdYMD: null,              // 생성일자 (datetime)
 };
 
 
@@ -130,7 +130,7 @@ export const hiparkingAccidentColumns = [
     { title: '순번', col: 'row' },
     { title: '연도', col: 'year' },
     { title: '접수 월', col: 'month' },
-    { title: '상태', col: 'status' },
+    { title: '상태', col: 'closingStatus' },
     { title: '주차장명', col: 'pklName' },
     { title: '접수번호', col: 'insuNum' },
     { title: '사고일자', col: 'accidentDate' },
@@ -160,4 +160,31 @@ export const monthColumns = [
     { title: '추산건수', col: 'estimateNum' },
     { title: '면책건수', col: 'disclaimerNum' },
     { title: '지급 보험금(추산+종결)', col: 'total' }
+];
+
+export const parkingColumns = [
+    { title: '순번', col: 'row' },
+    { title: '사업장명', col: 'pklName' },
+    { title: '사업장주소', col: 'pklAddress' },
+    { title: '사업장코드', col: 'PJTcode' },
+    { title: '형태', col: 'form' },
+    { title: '면수', col: 'faceCount' },
+    { title: '옥내(m2)', col: 'indoor' },
+    { title: '옥외(m2)', col: 'outdoor' },
+    { title: '기계식(대수)', col: 'mechanical' },
+    { title: '카리프트(대수)', col: 'carLift' },
+];
+
+export const parkingColumnsAll = [
+    { title: '순번', col: 'row' },
+    { title: '사업장명', col: 'pklName' },
+    { title: '사업장주소', col: 'pklAddress' },
+    { title: '사업장코드', col: 'PJTcode' },
+    { title: '형태', col: 'form' },
+    { title: '면수', col: 'faceCount' },
+    { title: '옥내(m2)', col: 'indoor' },
+    { title: '옥외(m2)', col: 'outdoor' },
+    { title: '기계식(대수)', col: 'mechanical' },
+    { title: '카리프트(대수)', col: 'carLift' },
+    { title: '종료일자(', col: 'deletedYMD' }
 ];

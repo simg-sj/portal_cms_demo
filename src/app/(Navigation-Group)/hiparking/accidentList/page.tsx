@@ -8,10 +8,14 @@ import Plus from "@/assets/images/icon/plus-icon.png";
 import SlidePopup from "@/app/components/popup/SlidePopup";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
-import {deleteClaimData, deleteGroup, getClaim, getImage, updateClaimData} from "@/app/(Navigation-Group)/action";
+import {
+    deleteClaimData,
+    deleteGroup,
+    getClaim,
+    updateCommon
+} from "@/app/(Navigation-Group)/action";
 import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContainer";
 import {ButtonConfig, ClaimRowType, UptClaim, ParamType} from "@/@types/common";
-import Error from "@/assets/images/icon/error-icon.png";
 import AccidentDetailList from "@/app/components/pageComponents/parking/accidentDetail";
 import {hiparkingAccidentColumns, initRowData} from "@/config/data";
 import {onClickExcel} from "@/app/lib/onClickExcel";
@@ -44,7 +48,7 @@ export default function Page() {
     const getPaginatedData = () => {
         const startIndex = currentPage * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
-        console.log(data.slice(startIndex, endIndex))
+
         return data.slice(startIndex, endIndex);
     }
 
@@ -71,11 +75,11 @@ export default function Page() {
                 console.log('신규등록 데이터:', data);
             } else {
                 if(window.confirm('저장하시겠습니까?')){
-                    data.job = 'UPT';
                     data.requestDate = dayjs(data.requestDate).format('YYYY-MM-DD HH:mm:ss');
                     data.accidentDateTime = dayjs(data.accidentDateTime).format('YYYY-MM-DD HH:mm:ss');
 
-                    let result = await updateClaimData(data);
+                    console.log(data);
+                    let result = await updateCommon(data);
 
                     if (result[0].code === '200') {
                         let reload = await getClaim(param);
@@ -144,13 +148,19 @@ export default function Page() {
             alert('삭제할 항목을 선택해주세요.');
             return;
         }
-        console.log("@@@@@",selectedItems);
         if (window.confirm(`선택한 ${selectedItems.length}개의 항목을 삭제하시겠습니까?`)) {
-            let result = await deleteGroup([selectedItems[0]]);
+            let param2 = {
+                bpk : 2,
+                table : 'claimRequest',
+                job : 'DEL_LIST',
+                irpkList : selectedItems
+            }
+            let result = await deleteGroup(param2);
             if(result.code === '200') {
                 setSelectedItems([]);
                 let reload = await getClaim(param);
                 setData(reload);
+                alert(result.msg);
                 closePopup();
             }else {
                 alert("서비스 오류입니다.");
@@ -158,9 +168,10 @@ export default function Page() {
         }
     };
 // 삭제버튼 클릭
-    async function handleDelete<T extends ClaimRowType>(rowData: T): Promise<void> {
+    async function handleDelete<T extends UptClaim>(rowData: T): Promise<void> {
         try {
             if (window.confirm('삭제하시겠습니까?')) {
+                rowData.table = 'claimRequest';
                 let result = await deleteClaimData(rowData);
                 if(result.code === '200'){
                     let reload = await getClaim(param);
@@ -178,7 +189,6 @@ export default function Page() {
 
     const onSearchClick = async () => {
         const result = await getClaim(param);
-        console.log(result);
 
         setData(result || []);
         setCurrentPage(0);

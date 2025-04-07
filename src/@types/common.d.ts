@@ -192,11 +192,11 @@ interface ImageType {
 interface ClaimRowType {
     irpk: number;                       // Primary key, auto-increment
     bpk?: number | null;                // 업체키
-    pNo: string;
-    bNumber: string;
-    platform: string;
-    sDay: string;
-    eDay: string;
+    pNo?: string;
+    bNumber ?: string;
+    platform?: string;
+    sDay?: string;
+    eDay?: string;
     cpk?: number | null;                // simg 통합 CMS에서의 업체키 세팅값
     insuNum?: string | null;            // 사고 접수 번호
     pklName?: string | null;            // 주차장명
@@ -267,6 +267,7 @@ interface ParkingType {
 
 // 주차장 타입
 interface ParkingRowType {
+    bpk: number;
     irpk : number;
     pklName?: string;
     pklAddress?: string;
@@ -330,6 +331,16 @@ interface ParamDashType2 {
 
 interface UptClaim extends ClaimRowType {
     job: string;
+    table : string;
+    irpk : number;
+    bpk : number;
+}
+
+interface UptParking extends ParkingRowType {
+    job: string;
+    table : string;
+    irpk : number;
+    bpk : number;
 }
 
 // 트루카

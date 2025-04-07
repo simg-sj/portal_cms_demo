@@ -18,7 +18,7 @@ import {
     ParamType,
     ParkingParamType, ParkingRowType,
     ParkingType, rcAccidentRowType, rcAccidentType, resultCode, SearchParams,
-    UptClaim, UserCudType, UserListType, UserType, UserUpk
+    UptClaim, UptParking, UserCudType, UserListType, UserType, UserUpk
 } from "@/@types/common";
 import dayjs from "dayjs";
 import {list} from "postcss";
@@ -101,7 +101,7 @@ export async function getDashBoard(param: ParamDashType2): Promise<DashboardData
 
 
 
-export async function updateClaimData(param: ClaimRowType| UptClaim ): Promise<resultCode> {
+export async function updateCommon(param: ClaimRowType| UptClaim | UptParking ): Promise<resultCode> {
     try {
         
         const response = await fetch(`https://center-api.simg.kr/api/portal/updateClaimData`, {
@@ -124,12 +124,13 @@ export async function updateClaimData(param: ClaimRowType| UptClaim ): Promise<r
     }
 }
 
-export async function deleteClaimData(param: ClaimRowType): Promise<resultCode> {
+export async function deleteClaimData(param: UptClaim | UptParking): Promise<resultCode> {
     try {
         let deleteParam = {
             bpk : param.bpk,
             irpk : param.irpk,
             job : 'DELETE',
+            table : param.table
         }
         const response = await fetch(`https://center-api.simg.kr/api/portal/deleteClaimData`, {
             method: 'POST',
@@ -152,7 +153,7 @@ export async function deleteClaimData(param: ClaimRowType): Promise<resultCode> 
 }
 
 
-export async function deleteGroup(param: [number]): Promise<resultCode> {
+export async function deleteGroup(param: any): Promise<resultCode> {
     try {
         const response = await fetch(`https://center-api.simg.kr/api/portal/deleteGroup`, {
             method: 'POST',
