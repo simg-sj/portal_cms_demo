@@ -56,7 +56,9 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
 
     }, [rowData]);
 
-
+    useEffect(()=>{
+       console.log(editData);
+    },[editData])
     // 필드값 변경시 formdata 업데이트
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         setEditData((prev) => {
@@ -113,11 +115,13 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                 );
             case 'date':
                 return (
-                    <CalenderPicker selected={dayjs(rowData[key]).toDate()} onChange={(date: Date | null) =>
+                    <CalenderPicker selected={dayjs(editData[key]).toDate()} onChange={(date: Date | null) => {
+                        console.log(date);
                         setEditData((prevState) => ({
                             ...prevState,
                             [key]: dayjs(date).format('YYYY-MM-DD')
                         }))
+                    }
                     }/>
                 );
             case 'dayterm':

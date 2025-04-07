@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import { getYear, getMonth } from 'date-fns';
 import Image from "next/image";
 import Calender from '@/assets/images/icon/calender-icon.png';
+import {useEffect} from "react";
+import dayjs from "dayjs";
 
 interface CalenderPickerProps {
     maxDate?: Date;
@@ -130,7 +132,9 @@ const CalenderPicker = ({ maxDate, minDate, selected, onChange }: CalenderPicker
         "11월",
         "12월",
     ];
-
+    useEffect(() => {
+        console.log(dayjs(selected).format('YYYY-MM-DD'))
+    }, [selected]);
     return (
         <PickerWrapper>
             <CustomPicker>
