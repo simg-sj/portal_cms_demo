@@ -1,10 +1,9 @@
 "use client"
-import React, {useCallback, useEffect, useState} from "react";
+import React, { useEffect, useState} from "react";
 import DayTerm from "@/app/components/common/ui/calender/dayTerm";
 import Button from "@/app/components/common/ui/button/button";
 import Image from "next/image";
 import Excel from "@/assets/images/icon/excel-icon.png";
-import Plus from "@/assets/images/icon/plus-icon.png";
 import SlidePopup from "@/app/components/popup/SlidePopup";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
@@ -19,6 +18,7 @@ import {ButtonConfig, ClaimRowType, UptClaim, ParamType} from "@/@types/common";
 import AccidentDetailList from "@/app/components/pageComponents/parking/accidentDetail";
 import {hiparkingAccidentColumns, initRowData} from "@/config/data";
 import {onClickExcel} from "@/app/lib/onClickExcel";
+import FormatNumber from "@/app/components/common/ui/formatNumber";
 
 interface ColumnDefinition<T> {
     key: keyof T;
@@ -81,7 +81,7 @@ export default function Page() {
                     console.log(data);
                     let result = await updateCommon(data);
 
-                    if (result[0].code === '200') {
+                    if (result.code === '200') {
                         let reload = await getClaim(param);
                         setData(reload || []);
                         closePopup();
@@ -189,7 +189,7 @@ export default function Page() {
 
     const onSearchClick = async () => {
         const result = await getClaim(param);
-
+        console.log(result);
         setData(result || []);
         setCurrentPage(0);
     }
@@ -215,14 +215,14 @@ export default function Page() {
                 : '-'
         },
         {
-            key: 'closingAmt',
+            key: 'total',
             header: '지급보험금',
-            render: (item) => item.closingAmt
-                ? `${item.closingAmt.toLocaleString()}원`
+            render: (item) => item.total
+                ? `${FormatNumber(Number(item.total))}+'원'`
                 : '-'
         },
         {
-            key: 'pklAddress',
+            key: 'pklName',
             header: '사고장소'
         },
         {
@@ -295,10 +295,10 @@ export default function Page() {
                         <Button color={"red"} fill={false} height={32} width={120} onClick={handleDeleteGroup}>
                             삭제
                         </Button>
-                        <Button color={"main"} fill height={32} width={120} onClick={handleNewEntry}>
+                        {/*<Button color={"main"} fill height={32} width={120} onClick={handleNewEntry}>
                             <Image src={Plus} alt={'추가'} width={16} height={16} className={'mr-1'}/>
                             신규등록
-                        </Button>
+                        </Button>*/}
                     </div>
                 </div>
                 <SlidePopup

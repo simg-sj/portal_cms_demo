@@ -106,6 +106,7 @@ interface ThemeConfig {
 interface UserType {
     upk?: number,
     bpk : number,
+    irpk : number,
     auth: string ,
     name: string ,
     bName : string,
@@ -146,23 +147,24 @@ type ExtendedClaimRowType = ClaimRowType | rcAccidentRowType | dutyRowType | Par
 
 
 interface UserListType {
-    irpk: string;
+    irpk: number;
     userId: string;
     uName: string;
-    upk : string;
-    bpk : string;
+    upk : number;
+    bpk : number;
     uMail: string;
     uCell: string;
     uAuth : string;
-    userPwd : string;
-    platform : string;
+    userPwd ?: string;
+    platform ?: string;
     gbn?: string;
     code ?: string;
-
+    work ?: string;
 }
 
 interface UserCudType extends UserListType{
    job : string;
+   table ?: string;
 }
 
 // 주차장 사고접수 타입
@@ -223,7 +225,7 @@ interface ClaimRowType {
     estimateAmt?: string | null;        // 추산액
     closingAmt?: string | null;         // 종결액
     repairAmt?: string | null;          // 손조비용
-    total?: string | null;              // 지급액(합계)
+    total?: number | null;              // 지급액(합계)
     rentPay?: string | null;            // 렌트비
     selfPay?: string | null;            // 자기부담금
     vat?: string | null;                // 부가세
@@ -265,6 +267,31 @@ interface ParkingType {
     createdYMD: Date;                  // 생성일자
 }
 
+interface ParkingTypeKm {
+    pklpk: number;                     // 고유 식별자, 주차장 키 (Primary Key)
+    bpk: number;                       // 업체 키 (Business Primary Key)
+    pklName: string;                   // 주차장 이름
+    PJTcode: string;                   // 프로젝트 코드
+    pklAddress: string;                // 주차장 주소
+    region: string;                    // 지역
+    area : string;
+    insuType : string;
+    city: string;                      // 도시
+    form: string;                      // 주차장 형태 (예: 지하, 지상 등)
+    faceCount: number;                 // 면수 (주차장 면수)
+    indoor: boolean;                   // 실내 여부
+    outdoor: boolean;                  // 실외 여부
+    mechanical: boolean;               // 기계식 여부
+    carLift: boolean;                  // 차량 리프트 여부
+    detailHistory: string;             // 상세 이력
+    coInsured: boolean;                // 공동 보험 여부
+    town: string;                      // 소속된 마을/구역
+    fileDay: string;                   // 파일 기록 날짜
+    status: string;                    // 상태 (예: 활성, 비활성 등)
+    useYNull: string;                  // 사용 여부
+    createdYMD: Date;                  // 생성일자
+}
+
 // 주차장 타입
 interface ParkingRowType {
     bpk: number;
@@ -279,6 +306,9 @@ interface ParkingRowType {
     mechanical?: boolean;               // 기계식 여부
     carLift?: boolean;                  // 차량 리프트 여부
     memo?: string;
+    status? : string;
+    updatedYMD?: Date;
+    deletedYMD?: Date;
 }
 
 // 트루카 책임보험 사고 타입 정의
@@ -334,6 +364,8 @@ interface UptClaim extends ClaimRowType {
     table : string;
     irpk : number;
     bpk : number;
+    requestDate : string;
+    accidentDate : string;
 }
 
 interface UptParking extends ParkingRowType {

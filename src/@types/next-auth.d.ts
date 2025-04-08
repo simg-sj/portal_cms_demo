@@ -11,7 +11,7 @@ declare module "next-auth" {
         userId: string;
         email: string | null;
         work: string | null;
-        bpk : string;
+        bpk : number;
         bNo : string;
         authLevel : number;
         phone : string;
@@ -31,7 +31,7 @@ declare module "next-auth" {
         work: string;
         name: string;
         auth: string;
-        bpk: string;
+        bpk: number;
         bNo: string;
         authLevel: number;
         phone: string;

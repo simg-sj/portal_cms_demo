@@ -8,7 +8,7 @@ import Plus from "@/assets/images/icon/plus-icon.png";
 import SlidePopup from "@/app/components/popup/SlidePopup";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
-import {cargoInsuList, deleteClaimData, deleteGroup, getClaim, updateClaimData} from "@/app/(Navigation-Group)/action";
+import {cargoInsuList, deleteClaimData, deleteGroup, getClaim} from "@/app/(Navigation-Group)/action";
 import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContainer";
 import {ButtonConfig,  UptClaim, ParamType, CargoInsuType} from "@/@types/common";
 import AccidentDetailList from "@/app/components/pageComponents/cargoInsu/accidentDetail";

@@ -13,15 +13,14 @@
 import {
     CargoInsuType,
     ClaimRowType, DashboardData,
-    DashBoardType, dutyType,
+    dutyType,
     ParamDashType2,
     ParamType,
     ParkingParamType, ParkingRowType,
     ParkingType, rcAccidentRowType, rcAccidentType, resultCode, SearchParams,
-    UptClaim, UptParking, UserCudType, UserListType, UserType, UserUpk
+    UptClaim, UptParking, UserCudType, UserListType, UserUpk
 } from "@/@types/common";
-import dayjs from "dayjs";
-import {list} from "postcss";
+import {isResultCode, isUserListArray} from "@/app/lib/common";
 
 // 주차장 업체용
 interface ImageType {
@@ -104,7 +103,7 @@ export async function getDashBoard(param: ParamDashType2): Promise<DashboardData
 export async function updateCommon(param: ClaimRowType| UptClaim | UptParking ): Promise<resultCode> {
     try {
         
-        const response = await fetch(`https://center-api.simg.kr/api/portal/updateClaimData`, {
+        const response = await fetch(`https://center-api.simg.kr/api/portal/claimCommon`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -132,7 +131,7 @@ export async function deleteClaimData(param: UptClaim | UptParking): Promise<res
             job : 'DELETE',
             table : param.table
         }
-        const response = await fetch(`https://center-api.simg.kr/api/portal/deleteClaimData`, {
+        const response = await fetch(`https://center-api.simg.kr/api/portal/claimCommon`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -396,7 +395,16 @@ export async function userService(param : UserCudType | UserUpk | SearchParams) 
             throw new Error(`Error ${response.status}: ${response.statusText} - ${errorDetails}`);
         }
         
-        return await response.json();
+        const data = await response.json();
+
+        // 타입 가드 로직: 결과가 `resultCode`인지, `UserListType[]`인지 판별
+        if (isResultCode(data)) {
+            return data; // resultCode 타입 반환
+        }
+
+        if (Array.isArray(data) && isUserListArray(data)) {
+            return data; // UserListType[] 타입 반환
+        }
 
 
     } catch (error) {

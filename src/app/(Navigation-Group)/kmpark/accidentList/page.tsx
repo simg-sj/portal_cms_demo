@@ -9,9 +9,11 @@ import SlidePopup from "@/app/components/popup/SlidePopup";
 import AccidentDetailList from "@/app/components/pageComponents/parking/accidentDetail";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
-import {getClaim, updateClaimData} from "@/app/(Navigation-Group)/action";
+import {deleteClaimData, getClaim, updateCommon} from "@/app/(Navigation-Group)/action";
 import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContainer";
 import {ButtonConfig, ClaimRowType, UptClaim} from "@/@types/common";
+import {hiparkingAccidentColumns, initRowData} from "@/config/data";
+import {onClickExcel} from "@/app/lib/onClickExcel";
 
 interface ColumnDefinition<T> {
     key: keyof T;
@@ -91,7 +93,7 @@ export default function Page() {
                 data.requestDate = dayjs(data.requestDate).format('YYYY-MM-DD HH:mm:ss');
                 data.accidentDateTime = dayjs(data.accidentDateTime).format('YYYY-MM-DD HH:mm:ss');
 
-                let result = await updateClaimData(data);
+                let result = await updateCommon(data);
 
                 if(result[0].code === '200'){
 
@@ -108,7 +110,7 @@ export default function Page() {
     const handleNewEntry = () => {
         setIsNew(true);
         setSelectedRow(null);
-        setRowData()
+        setRowData(initRowData);
         setIsOpen(true);
         document.body.style.overflow = 'hidden';
     };
@@ -147,18 +149,37 @@ export default function Page() {
             },
         ];
 
-    const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
+    const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
     const handleDeleteGroup = () => {
-        if (selectedItems.size === 0) {
+        if (selectedItems.length === 0) {
             alert('삭제할 항목을 선택해주세요.');
             return;
         }
-        if (window.confirm(`선택한 ${selectedItems.size}개의 항목을 삭제하시겠습니까?`)) {
+        if (window.confirm(`선택한 ${selectedItems.length}개의 항목을 삭제하시겠습니까?`)) {
             console.log('삭제할 항목 인덱스:', Array.from(selectedItems));
             return;
         }
     };
+
+    // 삭제버튼 클릭
+    async function handleDelete<T extends UptClaim>(rowData: T): Promise<void> {
+        try {
+            if (window.confirm('삭제하시겠습니까?')) {
+                rowData.table = 'claimRequest';
+                let result = await deleteClaimData(rowData);
+                if(result.code === '200'){
+                    let reload = await getClaim(param);
+                    setData(reload);
+                    closePopup();
+                }else {
+                    alert("서비스 오류입니다.");
+                }
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
 
     const onSearchClick = async () => {
         const result = await getClaim(param);
@@ -254,7 +275,7 @@ export default function Page() {
                         조회
                     </Button>
                 </div>
-                <Button color={"green"} height={32} width={120} className={'ml-5'}>
+                <Button color={"green"} height={32} width={120} className={'ml-5'} onClick={()  => onClickExcel(hiparkingAccidentColumns,'accident', data, '케이엠파크_사고_리스트.xlsx')}>
                     <Image src={Excel.src} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
                     엑셀다운
                 </Button>
@@ -265,17 +286,19 @@ export default function Page() {
                     <Button color={"red"} fill={false} height={32} width={120} onClick={handleDeleteGroup}>
                         삭제
                     </Button>
-                    <Button color={"main"} fill height={32} width={120} onClick={handleNewEntry}>
+                    {/*<Button color={"main"} fill height={32} width={120} onClick={handleNewEntry}>
                         <Image src={Plus.src} alt={'추가'} width={16} height={16} className={'mr-1'}/>
                         신규등록
-                    </Button>
+                    </Button>*/}
                 </div>
                 <SlidePopup
                     isOpen={isOpen}
                     onClose={closePopup}
                     title={isNew ? "신규 등록" : "상세보기"}
-                    Content={(props) => <AccidentDetailList {...props} isNew={isNew} rowData={rowData || {}} onSave={handleSave}/>}
-                    buttons={popupButtons}
+                    rowData={rowData}
+                    onDelete={handleDelete}
+                    Content={(props) => <AccidentDetailList {...props} isNew={isNew} rowData={rowData} onSave={handleSave}/>}
+                    buttons={popupButtons.map(button => ({ ...button}))}
                 />
                 <div className={'mt-4'}>
                     <CheckboxContainer
@@ -283,6 +306,7 @@ export default function Page() {
                         getItemId={(item) => item.irpk}
                         columns={columns}
                         selectedRow={selectedRow}
+                        selectedItems={selectedItems}
                         onSelectionChange={setSelectedItems}
                         onRowClick={(item) => {
                             setIsNew(false);

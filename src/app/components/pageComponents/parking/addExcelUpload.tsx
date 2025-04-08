@@ -163,8 +163,9 @@ const AddExcelUpload = ({setExcelData}: AddProps) => {
 
             formData.append("bpk", BSN_CODE[data.user.bName].bpk);
             formData.append("type", "up");
+
             const res = await uploadExcel(formData);
-            console.log(res)
+
             if (res.status === "200") {
                 const countNew = res.data.filter((item) => item.status === "NEW").length;
                 const countDel = res.data.filter((item) => item.status === "EXP").length;
@@ -184,8 +185,7 @@ const AddExcelUpload = ({setExcelData}: AddProps) => {
                     file.addedBusinessCount = countNew;
                     file.deletedBusinessCount = countDel;
                 });
-                setUploadedFiles((prev) => [...prev, ...uploadedFileDetails]);
-                setExcelData(res.data);
+
             } else {
                 alert(res.msg);
             }

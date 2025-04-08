@@ -1,5 +1,5 @@
 "use client"
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState} from "react";
 import Button from "@/app/components/common/ui/button/button";
 import Image from "next/image";
 import Excel from "@/assets/images/icon/excel-icon.png";
@@ -10,18 +10,16 @@ import ParkingDetailList from "@/app/components/pageComponents/parking/parkingDe
 import Pagination from "@/app/components/common/ui/pagination";
 import {
     addExcelParking, deleteClaimData,
-    deleteGroup, getClaim,
+    deleteGroup,
     getParking,
     updateCommon
 } from "@/app/(Navigation-Group)/action";
 import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContainer";
 import {
     ButtonConfig,
-    ClaimRowType,
-    ParamType,
     ParkingParamType,
     ParkingRowType,
-    ParkingType, UptClaim,
+    ParkingType,
     UptParking
 } from "@/@types/common";
 import CenterPopup from "@/app/components/popup/CenterPopup";
@@ -86,10 +84,10 @@ export default function Page() {
     const slideSave = async (data: UptParking) => {
         if(window.confirm('저장하시겠습니까?')){
             let result = await updateCommon(data);
-            if (result[0].code === '200') {
+            if (result.code === '200') {
                 let reload = await getParking(param);
                 setData(reload || []);
-                alert(result[0].msg);
+                alert(result.msg);
                 slideClose();
             } else {
                 alert('서비스 오류')
@@ -167,7 +165,8 @@ export default function Page() {
                     };
 
 
-                    console.log(param);
+
+
                     setAddOpen(false);
                 } else {
                     setAddOpen(true);
@@ -214,7 +213,7 @@ export default function Page() {
                 // bpk 컬럼 추가
                 const addBpkData = excelData.map((row) => ({
                     ...row,
-                    bpk: 4, // bpk 컬럼 추가 및 값 설정
+                    bpk: 2, // bpk 컬럼 추가 및 값 설정
                 }));
                 let res = await addExcelParking(addBpkData);
                 if(res.status ==='200'){
@@ -266,7 +265,7 @@ export default function Page() {
                     irpkList : selectedItems
                 }
                 let result = await deleteGroup(param2);
-                console.log(result);
+
                 if(result.code === '200') {
                     setSelectedItems([]);
                     let reload = await getParking(param);
@@ -284,12 +283,13 @@ export default function Page() {
 
 
 
-
     const onSearchClick = async () => {
         const result = await getParking(param);
         setData(result);
         setCurrentPage(0);
     }
+
+
 
     // 사고접수 리스트 컬럼
     const columns: ColumnDefinition<ParkingType>[] = [
@@ -346,6 +346,7 @@ export default function Page() {
                     >
                         <option value={'all'}>전체</option>
                         <option value={'NORMAL'}>정상</option>
+                        <option value={'NEW'}>신규</option>
                         <option value={'EXPIRED'}>종료</option>
                     </select>
                     <div className={'text-gray-700 font-medium pt-1 ml-2 mr-5'}>검색조건</div>

@@ -1,4 +1,4 @@
-'use client'
+
 import React, { useEffect, useRef, useState} from "react";
 import Button from "@/app/components/common/ui/button/button";
 import Image from "next/image";
@@ -10,12 +10,14 @@ import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContai
 import {SearchParams, UserCudType, UserListType, UserUpk} from "@/@types/common";
 import {authText} from "@/config/data";
 import {userService} from "@/app/(Navigation-Group)/action";
+import {getPaginatedData} from "@/app/lib/common";
 
 
-export default function UserList({ userList, reloadUserList, onSearch }: { userList: UserListType[], reloadUserList : () => void, onSearch : (param : SearchParams) => void}) {
+export default function UserList({ userList, onSearch }: { userList: UserListType[], onSearch : (param : SearchParams) => void}) {
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
     const columns = [{header : '이름',key:"uName"}, {header : '연락처',key:"uCell"}, {header : '이메일',key:"uMail"}, {header : '아이디',key:"userId"}, {header : '권한',key:"uAuth"}];
     const addUserRef = useRef<AddUserRef>(null);
+    const [selectedRow, setSelectedRow] = useState<number | null>(null);
     const [isOpen, setIsOpen] = useState(false);
     const [mode, setMode] = useState<'add' | 'edit'>('add');
     const [selectedUser, setSelectedUser] = useState<UserListType | null>(null);
@@ -23,6 +25,15 @@ export default function UserList({ userList, reloadUserList, onSearch }: { userL
     const itemsPerPage = 10; //페이지당 항목수
     const totalPages = Math.ceil(userList.length / itemsPerPage);
 
+    //조회
+    const [searchParams, setSearchParams] = useState<SearchParams>({
+        job : 'LIST',
+        gbn : 'SEARCH',
+        uAuth: 'all',
+        searchCondition: 'userId',
+        searchKeyword: '',
+        bpk : '2'
+    });
     // pagination 페이지
     const [displayedUsers, setDisplayUsers] = useState<UserListType[]>(userList.slice(0, itemsPerPage));
 
@@ -57,20 +68,26 @@ export default function UserList({ userList, reloadUserList, onSearch }: { userL
             if (!window.confirm(confirmMessage)) {
                 return;
             }
-            console.log(formData)
-            console.log("추가된 데이터:", formData);
             formData.job = "CUD";
             formData.gbn = "ADD";
 
-            const { code } = await userService(formData);
+            let result = await userService(formData);
 
-            if (code === "200") {
-                alert("계정이 생성되었습니다.");
-                setIsOpen(false);
-                reloadUserList();
-            } else {
-                alert("서비스 오류입니다.");
+            if("code" in result){
+                if (result.code === "200") {
+                    alert("계정이 생성되었습니다.");
+                    setIsOpen(false);
+                    onSearch(searchParams);
+                } else {
+                    if("msg" in result){
+                        alert(result.msg);
+                    }else {
+                        alert("서비스 오류입니다.");
+                    }
+                }
             }
+
+
         } catch (error) {
             console.error("사용자 추가 중 오류 발생:", error);
             alert("예기치 않은 오류가 발생했습니다.");
@@ -83,23 +100,24 @@ export default function UserList({ userList, reloadUserList, onSearch }: { userL
             const isValid = await addUserRef.current.validateForm();
             if (isValid) {
                 const formData : UserCudType = addUserRef.current.getFormData();
-                console.log(formData);
 
                 if (window.confirm(`${formData.uName} ${authText[formData.uAuth]} 를 수정하시겠습니까?`)) {
-                    console.log('수정된 데이터:', formData);
                     formData.gbn = 'UPD'
                     formData.job = 'CUD';
-                    let {code} = await userService(formData);
-                    if (code === "200") {
-                        alert('수정되었습니다.');
-                        reloadUserList();
-                    }else {
-                        alert('서비스 오류입니다.');
+                    let result = await userService(formData);
+
+                    if("code" in result){
+                        if (result.code === "200") {
+                            alert('수정되었습니다.');
+                            onSearch(searchParams);
+                        }else {
+                            alert('서비스 오류입니다.');
+                        }
                     }
+
                     setIsOpen(false);
                 } else {
                     setIsOpen(true);
-                    console.log('저장취소');
                 }
             }
         }
@@ -118,12 +136,15 @@ export default function UserList({ userList, reloadUserList, onSearch }: { userL
                 job : 'CUD',
                 gbn : 'MDEL'
             };
-            let {code, msg} = await userService(param);
-            if (code === "200") {
-                alert(msg);
-                reloadUserList();
-            }else {
-                alert('서비스 오류입니다.');
+            let result = await userService(param);
+
+            if("code" in result){
+                if (result.code === "200") {
+                    alert('삭제되었습니다.');
+                    onSearch(searchParams);
+                }else {
+                    alert('서비스 오류입니다.');
+                }
             }
 
             return;
@@ -137,12 +158,15 @@ export default function UserList({ userList, reloadUserList, onSearch }: { userL
             if (window.confirm(`${formData.uName} ${authText[formData.uAuth]} 를 삭제하시겠습니까?`)) {
                 formData.gbn = 'DEL'
                 formData.job = 'CUD';
-                let {code} = await userService(formData);
-                if (code === "200") {
-                    alert('삭제하였습니다');
-                    reloadUserList();
-                }else {
-                    alert('서비스 오류입니다.');
+                let result = await userService(formData);
+
+                if("code" in result){
+                    if (result.code === "200") {
+                        alert('삭제하였습니다');
+                        onSearch(searchParams);
+                    }else {
+                        alert('서비스 오류입니다.');
+                    }
                 }
                 setIsOpen(false);
             }
@@ -158,6 +182,7 @@ export default function UserList({ userList, reloadUserList, onSearch }: { userL
     };
 
     const handleRowClick = (user: UserListType) => {
+        setSelectedRow(user.irpk);
         setSelectedUser(user);
         setMode('edit');
         setIsOpen(true);
@@ -172,15 +197,7 @@ export default function UserList({ userList, reloadUserList, onSearch }: { userL
         }
     };
 
-    //조회
-    const [searchParams, setSearchParams] = useState<SearchParams>({
-        job : 'LIST',
-        gbn : 'SEARCH',
-        uAuth: 'all',
-        searchCondition: 'userId',
-        searchKeyword: '',
-        bpk : '5'
-    });
+
 
     const handleParamChange = (key: keyof SearchParams, value: string) => {
         setSearchParams(prev => ({
@@ -190,10 +207,10 @@ export default function UserList({ userList, reloadUserList, onSearch }: { userL
     };
 
     const onSearchClick = () => {
-        if (!searchParams.searchKeyword || !searchParams.searchCondition) {
+        /*if (!searchParams.searchKeyword || !searchParams.searchCondition) {
             alert("검색 키워드 또는 검색 조건이 비어 있습니다.");
             return;
-        }
+        }*/
         onSearch(searchParams);
 
         setCurrentPage(1); // 검색 시 첫 페이지로 이동
@@ -304,13 +321,14 @@ export default function UserList({ userList, reloadUserList, onSearch }: { userL
                 Content={() => <AddUser ref={addUserRef}/>}
                 buttons={getPopupButtons()}/>
             <div className={'mt-4'}>
-                <CheckboxContainer<UserListType[]>
+                <CheckboxContainer
                     items={displayedUsers}
-                    getItemId={({upk}) => upk}
+                    getItemId={(item) => item.upk}
                     columns={columns}
                     selectedItems={selectedItems}
                     onRowClick={handleRowClick}
                     onSelectionChange={setSelectedItems}
+                    selectedRow={selectedRow}
                 />
                 <Pagination
                     maxNumber={totalPages}

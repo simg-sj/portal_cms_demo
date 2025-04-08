@@ -99,7 +99,7 @@ export const {
             work: token.work as string,
             name: token.name as string,
             auth: token.auth as string,
-            bpk: token.bpk as string,
+            bpk: token.bpk as number,
             bNo: token.bNo as string,
             authLevel: token.authLevel as number,
             phone: token.phone as string,

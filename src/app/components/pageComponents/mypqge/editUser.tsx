@@ -1,54 +1,63 @@
 import React, { useState } from "react";
-import { UserType } from "@/@types/common";
+import {UptClaim, UserCudType, UserListType, UserType} from "@/@types/common";
 import ButtonGroup from "@/app/components/common/ui/button/buttonGroup";
 import {authText} from "@/config/data";
+import {userService} from "@/app/(Navigation-Group)/action";
+import {convertClaimToUptClaim, convertUser} from "@/app/lib/common";
 
 
 interface EditUserProps {
     userInfo: UserType;
-    onSave?: (updatedData: UserType) => void;
     onClose?: () => void;
 }
 
-export default function EditUser({ userInfo, onSave }: EditUserProps) {
+export default function EditUser({ userInfo }: EditUserProps) {
     const [isEditing, setIsEditing] = useState(false);
-    const [editedData, setEditedData] = useState<UserType>(userInfo);
-    const [originalData, setOriginalData] = useState<UserType>(userInfo);
-
+    // 초기에 rowData를 UptClaim으로 변환해서 editData로 설정
+    const [editedData, setEditedData] = useState<UserCudType>(convertUser(userInfo));
+    console.log(editedData);
     const handleEdit = () => {
         setIsEditing(true);
-        setOriginalData({ ...editedData });
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (window.confirm('수정하시겠습니까?')) {
             console.log(editedData);
-            const param = {
-                userId : editedData.userId,
-                uName : editedData.name,
-                uCell : editedData.phone,
-                uMail : editedData.email,
-                work : editedData.work,
+
+            if (window.confirm(`${userInfo.name} ${authText[userInfo.auth]} 를 수정하시겠습니까?`)) {
+                let param : any  = {
+                    ...userInfo,
+                    job : 'CUD',
+                    gbn : 'UPD'
+                }
+
+                let result = await userService(param);
+
+
+                if("code" in result){
+                    if (result.code === "200") {
+                        alert('수정되었습니다.');
+                    }else {
+                        alert('서비스 오류입니다.');
+                    }
+                    setIsEditing(false);
+                }
             }
-            console.log(param);
-            onSave?.(editedData);
-            setIsEditing(false);
         }
     };
 
     const handleCancel = () => {
-        setEditedData(originalData);
         setIsEditing(false);
     };
 
-    const handleChange = (field: keyof UserType) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (field: keyof UserCudType) => (e: React.ChangeEvent<HTMLInputElement>) => {
         setEditedData(prev => ({
             ...prev,
             [field]: e.target.value ?? ""
         }));
     };
 
-    const renderField = (label: string, field: keyof UserType) => (
+    const renderField = (label: string, field: keyof UserCudType) => (
         <div>
             <h2 className='leading-[40px] text-gray-500 text-lg border-b mb-2'>{label}</h2>
             {isEditing ? (
@@ -98,10 +107,13 @@ export default function EditUser({ userInfo, onSave }: EditUserProps) {
     return (
         <div className="relative pb-20">
             <div className='mt-8 flex flex-col text-xl space-y-4'>
-                {renderField('아이디', 'userId')}
-                {renderField('성함', 'name')}
-                {renderField('연락처', 'phone')}
-                {renderField('이메일', 'email')}
+                <div>
+                    <h2 className='leading-[40px] text-gray-500 text-lg border-b mb-2'>권한</h2>
+                    <div className="px-2 py-1">{userInfo.userId}</div>
+                </div>
+                {renderField('성함', 'uName')}
+                {renderField('연락처', 'uCell')}
+                {renderField('이메일', 'uMail')}
                 {renderField('직책', 'work')}
                 <div>
                     <h2 className='leading-[40px] text-gray-500 text-lg border-b mb-2'>권한</h2>
@@ -109,7 +121,7 @@ export default function EditUser({ userInfo, onSave }: EditUserProps) {
                 </div>
             </div>
 
-            {editedData.auth === 'user' ? (
+            {userInfo.auth === 'user' ? (
                 <div className={'my-16 text-gray-700'}>
                     * 비밀번호 변경 및 권한 변경은 업체 관리자에게 문의 바랍니다.
                 </div>

@@ -41,10 +41,9 @@ interface MypageType {
     userInfo: UserType;
     userList: UserListType[]; // userList 기본값을 빈 배열로 설정
     onSearchClick : (param : any) => void;
-    reloadUserList: (param : SearchParams) => void; // 부모에서 전달받은 reloadUserList 함수
 }
 
-export default function MyPageTabs({ userInfo, userList = [], reloadUserList, onSearchClick }: MypageType) {
+export default function MyPageTabs({ userInfo, userList = [], onSearchClick }: MypageType) {
     const [activeTab, setActiveTab] = useState(0);
 
     return (
@@ -71,7 +70,7 @@ export default function MyPageTabs({ userInfo, userList = [], reloadUserList, on
                     activeTab === 0 ?
                         <EditUser userInfo={userInfo} />
                         :
-                        userInfo.auth === 'admin' ? <UserList userList={userList} reloadUserList={reloadUserList} onSearch={onSearchClick}/>  : <GetList userList={userList} />
+                        userInfo.auth === 'admin' ? <UserList userList={userList}  onSearch={onSearchClick}/>  : <GetList userList={userList} />
                 }
             </div>
         </div>

@@ -17,7 +17,7 @@ import Button from "@/app/components/common/ui/button/button";
 import FormatNumber from "@/app/components/common/ui/formatNumber";
 import {getImage} from "@/app/(Navigation-Group)/action";
 import cn from 'classnames';
-import {convertClaimToUptClaim} from "@/app/lib/convertUptType";
+import {convertClaimToUptClaim} from "@/app/lib/common";
 
 interface ListProps {
     isEditing: boolean;
@@ -56,9 +56,6 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
 
     }, [rowData]);
 
-    useEffect(()=>{
-       console.log(editData);
-    },[editData])
     // 필드값 변경시 formdata 업데이트
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         setEditData((prev) => {
@@ -86,6 +83,12 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
         }
 
     }
+    useEffect(() => {
+        console.log(rowData);
+    }, []);
+    useEffect(() => {
+        console.log(editData);
+    }, [editData]);
 
     // 입력필드 타입
     const renderField = (key: string, value: any, type: 'text' | 'select' | 'date' | 'dayterm' | 'textarea' = 'text', options?: string[]) => {
@@ -116,7 +119,6 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
             case 'date':
                 return (
                     <CalenderPicker selected={dayjs(editData[key]).toDate()} onChange={(date: Date | null) => {
-                        console.log(date);
                         setEditData((prevState) => ({
                             ...prevState,
                             [key]: dayjs(date).format('YYYY-MM-DD')

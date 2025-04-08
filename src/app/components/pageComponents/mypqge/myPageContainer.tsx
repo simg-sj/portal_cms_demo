@@ -6,19 +6,16 @@ import {resultCode, SearchParams, UserListType, UserType} from "@/@types/common"
 import { authText, tabs } from "@/config/data";
 import {getUserData, userService} from "@/app/(Navigation-Group)/action";
 
-export default function MyPageContainer({ userInfo }: { userInfo: UserType }) {
+export default function MyPageContainer({ userInfo, setUserInfo }: { userInfo: UserType, setUserInfo: React.Dispatch<React.SetStateAction<UserType>> }) {
     const [userData, setUserData] = useState<UserType>(userInfo);
     const [userList, setUserList] = useState<UserListType[]>([]);
-
     const onReload = async () => {
         const result = await getUserData(userInfo.bpk, tabs[userInfo.auth]?.[2]?.listType, 'LIST');
         setUserList(result || []);
     }
 
     const onSearchClick = async (param : SearchParams) => {
-
         const result : resultCode | UserListType[] = await userService(param);
-        console.log(result);
         if (Array.isArray(result) && result.length > 0 && "code" in result[0] && result[0].code === '200') {
             setUserList(result);
         }else{
@@ -26,6 +23,8 @@ export default function MyPageContainer({ userInfo }: { userInfo: UserType }) {
             alert('조회된 정보가 없습니다.');
         }
     }
+
+
     useEffect(() => {
         onReload();
     }, []);
@@ -56,7 +55,6 @@ export default function MyPageContainer({ userInfo }: { userInfo: UserType }) {
                 <MyPageTabs
                     userInfo={userData}
                     userList={userList}
-                    reloadUserList={onReload} // 자식에게 reloadUserList 함수 전달
                     onSearchClick={onSearchClick}
                 />
             </div>

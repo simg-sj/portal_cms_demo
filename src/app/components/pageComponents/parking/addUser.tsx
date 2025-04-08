@@ -15,12 +15,11 @@ const AddUser = forwardRef<AddUserRef>((props, ref) => {
     const { data } = useSession();
     const {
         register,
-        setValue,
         watch,
         reset,
         trigger,
         formState: { errors },
-    } = useForm<UserListType>({
+    } = useForm<UserCudType>({
         defaultValues: {
             uAuth: '',
             uName: '',
@@ -31,6 +30,7 @@ const AddUser = forwardRef<AddUserRef>((props, ref) => {
             uMail: '',
             uCell: '',
             work: '',
+            job : ''
         }
     });
 
@@ -46,11 +46,11 @@ const AddUser = forwardRef<AddUserRef>((props, ref) => {
         return result;
     };
 
-    const getFormData = () => {
+    const getFormData = () : UserCudType => {
         return watch();
     };
 
-    const setFormData = (data: UserType) => {
+    const setFormData = (data: UserListType) => {
         reset(data);
     }
 

@@ -15,7 +15,7 @@ interface CheckboxContainerProps<T> {
     withCheckbox?: boolean;
     onSelectionChange?: (selectedIds: number[]) => void;
     onRowClick?: (item: T) => void;
-    selectedRow: number | null;
+    selectedRow?: number | null;
     selectedItems: number[];
 }
 
@@ -29,19 +29,19 @@ export function CheckboxContainer<T>({
                                       selectedRow,
                                       selectedItems
                                   }: CheckboxContainerProps<T>) {
-    const toggleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const toggleSelectAll = (event : boolean) => {
         if (!withCheckbox) return;
 
-        const checked = event.target.checked;
+        const checked = event;
         const allIds = items.map(item => getItemId(item));
         const newSelectedItems = checked ? allIds : [];
-
         onSelectionChange?.(newSelectedItems); // 부모 상태를 업데이트
+
     };
+
 
     const toggleSelectItem = (id: number) => {
         if (!withCheckbox) return;
-        console.log(id);
         const newSelectedItems = selectedItems.includes(id)
             ? selectedItems.filter(item => item !== id) // 제거
             : [...selectedItems, id]; // 추가
@@ -78,7 +78,7 @@ export function CheckboxContainer<T>({
                         <Checkbox
                             checked={isAllSelected}
                             indeterminate={isSomeSelected}
-                            onChange={()=>toggleSelectAll}
+                            onChange={(event)=>toggleSelectAll(event)}
                         />
                     </th>
                 )}

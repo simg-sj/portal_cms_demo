@@ -166,21 +166,25 @@ const AddExcelUploadReceipt = ({setExcelData}: AddProps) => {
             const formData = new FormData();
             const uploadedFileDetails = [];
             Array.from(files).forEach((file, index) => {
-                formData.append("files", file);
-                uploadedFileDetails.push({
-                    id: `${file.name}-${index}`, // 고유 ID 추가
-                    name: file.name,
-                    size: `${(file.size / 1024).toFixed(2)} KB`,
-                    addedBusinessCount: 0,
-                    deletedBusinessCount: 0,
-                    errorCount: 0,
-                });
+                if (file instanceof File) {
+                    formData.append("files", file);
+                }
+                if (file instanceof File) {
+                    uploadedFileDetails.push({
+                        id: `${file.name}-${index}`, // 고유 ID 추가
+                        name: file.name,
+                        size: `${(file.size / 1024).toFixed(2)} KB`,
+                        addedBusinessCount: 0,
+                        deletedBusinessCount: 0,
+                        errorCount: 0,
+                    });
+                }
             });
 
             formData.append("bpk", BSN_CODE[data.user.bName].bpk);
             formData.append("type", "up");
             const res = await uploadExcel(formData);
-            console.log(res)
+
             if (res.status === "200") {
                 const countNew = res.data.filter((item) => item.status === "NEW").length;
                 const countDel = res.data.filter((item) => item.status === "EXP").length;

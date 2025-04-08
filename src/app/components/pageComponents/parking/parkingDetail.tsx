@@ -2,7 +2,9 @@
 import React, {useState} from "react";
 import { ParkingRowType, UptParking} from "@/@types/common";
 import Button from "@/app/components/common/ui/button/button";
-import { convertClaimToUptParking} from "@/app/lib/convertUptType";
+import {convertClaimToUptParking} from "@/app/lib/common";
+import dayjs from "dayjs";
+import {parkingStatus} from "@/config/data";
 
 
 
@@ -16,10 +18,8 @@ const HiparkingList = ({isEditing, rowData, onSave }: ListProps) => {
 
     const [editData, setEditData] = useState<UptParking>(convertClaimToUptParking(rowData));
 
-
     //필드값 변경시 formdata 업데이트
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        console.log(e.target.name, e.target.value);
         setEditData((prev) => {
             return {...prev, [e.target.name]: e.target.value};
         });
@@ -35,9 +35,13 @@ const HiparkingList = ({isEditing, rowData, onSave }: ListProps) => {
     }
 
     //입력필드 타입
-    const renderField = (key: string, value: any, type: 'text' | 'select' | 'textarea' = 'text', options?: string[]) => {
+    const renderField = (key: string, value: any, type: 'text' | 'date' | 'select' | 'textarea' = 'text', options?: string[]) => {
         if (!isEditing) {
-            return <span>{value || '-'}</span>;
+            if (type === 'date') {
+                return <span>{value ? dayjs(value).format('YYYY-MM-DD') : ''}</span>;
+            }else {
+                return <span>{value || '-'}</span>;
+            }
         }
         switch (type) {
             case 'select':
@@ -159,6 +163,25 @@ const HiparkingList = ({isEditing, rowData, onSave }: ListProps) => {
                         <th>공동피보험자</th>
                         <td colSpan={3}>{renderField('memo', rowData.memo ? rowData.memo : '-', 'textarea')}</td>
                     </tr>
+                    <tr>
+                        <th>상태</th>
+                        <td colSpan={3}>{renderField('status', rowData.status ? parkingStatus(rowData.status) : '-', 'text')}</td>
+                    </tr>
+                    {
+                        rowData.status === 'NEW' &&
+                        <tr>
+                            <th>등록일</th>
+                            <td>{renderField('updatedYMD', dayjs(rowData.updatedYMD).toDate(), 'date')}</td>
+                        </tr>
+                    }
+
+                    {
+                        rowData.status === 'EXPIRED' &&
+                        <tr>
+                            <th>만료일</th>
+                            <td>{renderField('deletedYMD', dayjs(rowData.deletedYMD).toDate(), 'date')}</td>
+                        </tr>
+                    }
                     </tbody>
                 </table>
             </div>
