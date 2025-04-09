@@ -55,6 +55,7 @@ export default function MyPageContainer({ userInfo, setUserInfo }: { userInfo: U
                 <MyPageTabs
                     userInfo={userData}
                     userList={userList}
+                    setUserInfo={setUserInfo}
                     onSearchClick={onSearchClick}
                 />
             </div>

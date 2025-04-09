@@ -92,6 +92,9 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                                 <option value="" disabled>
                                     제휴사를 선택하세요
                                 </option>
+                                <option value="투루카">
+                                    투푸카
+                                </option>
                                 <option value="partnerNameA">
                                     제휴사A
                                 </option>

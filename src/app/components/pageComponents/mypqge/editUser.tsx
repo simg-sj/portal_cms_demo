@@ -9,22 +9,22 @@ import {convertClaimToUptClaim, convertUser} from "@/app/lib/common";
 interface EditUserProps {
     userInfo: UserType;
     onClose?: () => void;
+    setUserInfo : React.Dispatch<React.SetStateAction<UserType>>
 }
 
 export default function EditUser({ userInfo }: EditUserProps) {
     const [isEditing, setIsEditing] = useState(false);
     // 초기에 rowData를 UptClaim으로 변환해서 editData로 설정
     const [editedData, setEditedData] = useState<UserCudType>(convertUser(userInfo));
-    console.log(editedData);
     const handleEdit = () => {
         setIsEditing(true);
     };
 
     const handleSave = async () => {
         if (window.confirm('수정하시겠습니까?')) {
-            console.log(editedData);
-
-            if (window.confirm(`${userInfo.name} ${authText[userInfo.auth]} 를 수정하시겠습니까?`)) {
+            console.log("e",editedData);
+            console.log("u",userInfo);
+            /*if (window.confirm(`${userInfo.name} ${authText[userInfo.auth]} 를 수정하시겠습니까?`)) {
                 let param : any  = {
                     ...userInfo,
                     job : 'CUD',
@@ -42,7 +42,7 @@ export default function EditUser({ userInfo }: EditUserProps) {
                     }
                     setIsEditing(false);
                 }
-            }
+            }*/
         }
     };
 
