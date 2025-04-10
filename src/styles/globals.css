@@ -108,9 +108,9 @@ input[type=file]::file-selector-button {
         --color-main: #f1923e;
         --color-main-light: #fdae68;
         --color-main-lighter: #fff3e7;
-        --color-sub: #efb944;
-        --color-sub-light: #fcd174;
-        --color-sub-lighter: #fadfaf;
+        --color-sub: #00a6ff;
+        --color-sub-light: #6ec9ff;
+        --color-sub-lighter: #e9f7ff;
     }
     html[data-theme='kmpark'] {
         --color-main: #6a95f6;

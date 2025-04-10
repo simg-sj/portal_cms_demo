@@ -1,5 +1,5 @@
 'use client';
-import React, {useEffect} from 'react';
+import React from 'react';
 import Dashboard from "@/app/components/pageComponents/parking/dashboard";
 import useFetchDashboard from "@/app/lib/hooks/useFetchDashboard";
 import Loading from "@/app/(Navigation-Group)/loading";
@@ -30,12 +30,12 @@ export default function Page() {
                 {
                     label: '추가 사업장',
                     data: tableData?.changeGraphData?.map((d) => d.pAdd) || [],
-                    backgroundColor: '#ffcb9c',
+                    backgroundColor: '#fdae68',
                 },
                 {
                     label: '종료 사업장',
                     data: tableData?.changeGraphData?.map((d) => -d.pEnd) || [],
-                    backgroundColor: '#ffde97',
+                    backgroundColor: '#00a6ff',
                 },
             ],
         };
@@ -50,12 +50,12 @@ export default function Page() {
             topCounsel: {
                 labels: tableData?.topCounselData?.map((d) => d.pklName) || [],
                 values: tableData?.topCounselData?.map((d) => d.total_sum) || [],
-                color: '#ffcb9c',
+                color: '#fdae68',
             },
             topBusiness: {
                 labels: tableData?.topBusinessData?.map((d) => d.pklName) || [],
                 values: tableData?.topBusinessData?.map((d) => d.count) || [],
-                color: '#ffde97',
+                color: '#00a6ff',
             },
             pieCounsel: [],  // 추가
             pieAccident: [], // 추가
