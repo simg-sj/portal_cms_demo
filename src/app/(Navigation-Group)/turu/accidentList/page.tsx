@@ -295,7 +295,8 @@ export default function Page() {
                     {totalPages > 0 && (
                         <Pagination
                             maxNumber={totalPages}
-                            onChange={handlePageChange}
+                            currentPage={currentPage + 1}
+                            onChange={(page) => {setCurrentPage(page);}}
                         />
                     )}
                 </div>

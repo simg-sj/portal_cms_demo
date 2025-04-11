@@ -2,7 +2,6 @@
 import Image from "next/image";
 import ChargeIcon from "@/assets/images/icon/charge-icon.png";
 import CheckChargeIcon from "@/assets/images/icon/checckCharge-icon.png";
-import CancelChargeIcon from "@/assets/images/icon/cancelCharge-icon.png";
 import AlarmIcon from "@/assets/images/icon/alarm-icon.png";
 import Button from "@/app/components/common/ui/button/button";
 import Tooltip from "@/app/components/common/ui/tooltip"
@@ -75,8 +74,6 @@ export default function Page() {
     // 총 보험료 계산
     const totalInsuranceCost = insuranceData.reduce((total, item) => total + item.insuranceCost, 0);
 
-    // 만료된 보험 수 계산
-    const expiredInsuranceCount = insuranceData.filter(item => new Date() > item.endDate).length;
 
     // 갱신 예정 보험 수 계산
     const renewalSoonCount = insuranceData.filter(item => {

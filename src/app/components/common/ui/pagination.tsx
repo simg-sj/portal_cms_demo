@@ -1,89 +1,124 @@
-"use client"
+import React from "react";
 import cls from "classnames";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from 'next/navigation';
 
 interface Props {
-    range?: number; //한번에 표시 갯수(기본5)
-    maxNumber: number; //전체페이지수
-    numberParameter?: string;
-    onChange?(number: number): void;
+    range?: number; // 한 번에 표시할 페이지 갯수
+    maxNumber: number; // 전체 페이지 수
+    currentPage: number; // 현재 활성화된 페이지 (부모에서 관리)
+    numberParameter?: string; // 페이지 번호 쿼리 파라미터 이름
+    onChange: (page: number) => void; // 페이지 변경 핸들러
 }
 
-function A({ children, href, isActive = false, onClick }: { children: React.ReactNode; href: string; isActive?: boolean; onClick(): void }) {
-    return (
-        <Link href={href} className={cls({ selected: isActive })} onClick={onClick}>
-            {children}
-        </Link>
-    );
-}
+function Pagination({
+                        range = 5,
+                        maxNumber,
+                        currentPage,
+                        numberParameter = "pageNumber",
+                        onChange
+                    }: Props) {
+    const startNum = currentPage - ((currentPage - 1) % range);
 
-function Pagination({ range = 5, maxNumber, numberParameter = "pageNumber", onChange = () => {} }: Props) {
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const [isReady, setIsReady] = useState(false);
-
-    useEffect(() => {
-        setIsReady(true);
-    }, []);
-
-    if (!isReady) return null;
-
-    const params = Object.fromEntries(searchParams.entries());
-    const currentNumber = Number(params[numberParameter]) || 1;
-    const startNum = currentNumber - ((currentNumber - 1) % range);
-
+    // URL 생성 함수
     function combineUrl(num: number) {
-        const newParams = new URLSearchParams(params);
-        newParams.set(numberParameter, num.toString());
-        return "?" + newParams.toString();
+        return `?${numberParameter}=${num}`;
     }
 
+    // 페이지 버튼 생성 함수
     function numbers() {
         const jsx = [];
-
         for (let i = 0; startNum + i <= maxNumber && i < range; i++) {
             const num = startNum + i;
             jsx.push(
                 <li key={num}>
-                    <A href={combineUrl(num)} isActive={currentNumber === num} onClick={() => onChange(num-1)}>
+                    <Link
+                        href={combineUrl(num)}
+                        className={cls({ selected: currentPage === num })}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            onChange(num - 1); // 페이지 번호 변경 핸들러 호출
+                        }}
+                    >
                         {num}
-                    </A>
+                    </Link>
                 </li>
             );
         }
-
         return jsx;
     }
 
     return (
         <div className="pagenumBox">
             <ul className="page_num">
-                {currentNumber !== 1 && (
+                {/* 이전 페이지 그룹 */}
+                {currentPage !== 1 && (
                     <>
                         <li className="first">
-                            <A href={combineUrl(1)} onClick={() => onChange(0)}>&lt;&lt;</A>
+                            <Link
+                                href={combineUrl(1)}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    onChange(0); // 첫 번째 페이지
+                                }}
+                            >
+                                &lt;&lt;
+                            </Link>
                         </li>
                         <li className="prev">
-                            <A href={combineUrl(currentNumber - range < 1 ? 1 : currentNumber - range)}
-                               onClick={() => onChange(currentNumber - range < 1 ? 0 : currentNumber - range - 1)}>
+                            <Link
+                                href={combineUrl(
+                                    currentPage - range < 1 ? 1 : currentPage - range
+                                )}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    onChange(
+                                        currentPage - range < 1
+                                            ? 0
+                                            : currentPage - range - 1
+                                    );
+                                }}
+                            >
                                 &lt;
-                            </A>
+                            </Link>
                         </li>
                     </>
                 )}
+
+                {/* 페이지 번호 */}
                 {numbers()}
-                {currentNumber !== maxNumber && (
+
+                {/* 다음 페이지 그룹 */}
+                {currentPage !== maxNumber && (
                     <>
                         <li className="next">
-                            <A href={combineUrl(currentNumber + range > maxNumber ? maxNumber : currentNumber + range)}
-                               onClick={() => onChange(currentNumber + range > maxNumber ? maxNumber - 1 : currentNumber + range - 1)}>
+                            <Link
+                                href={combineUrl(
+                                    currentPage + range > maxNumber
+                                        ? maxNumber
+                                        : currentPage + range
+                                )}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    onChange(
+                                        currentPage + range > maxNumber
+                                            ? maxNumber - 1
+                                            : currentPage + range - 1
+                                    );
+                                }}
+                            >
                                 &gt;
-                            </A>
+                            </Link>
                         </li>
                         <li className="last">
-                            <A href={combineUrl(maxNumber)} onClick={() => onChange(maxNumber - 1)}>&gt;&gt;</A>
+                            <Link
+                                href={combineUrl(maxNumber)}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    onChange(maxNumber - 1); // 마지막 페이지
+                                }}
+                            >
+                                &gt;&gt;
+                            </Link>
                         </li>
                     </>
                 )}

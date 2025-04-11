@@ -164,7 +164,8 @@ export default function Page() {
             <div className="flex justify-center mt-4">
                 <Pagination
                     maxNumber={totalPages}
-                    onChange={(pageIndex) => setCurrentPage(pageIndex)}
+                    currentPage={currentPage + 1}
+                    onChange={(page) => {setCurrentPage(page);}}
                 />
             </div>
         ) : null;

@@ -332,7 +332,8 @@ export default function UserList({ userList, onSearch }: { userList: UserListTyp
                 />
                 <Pagination
                     maxNumber={totalPages}
-                    onChange={handlePageChange}
+                    currentPage={currentPage + 1}
+                    onChange={(page) => {setCurrentPage(page);}}
                 />
             </div>
         </>
