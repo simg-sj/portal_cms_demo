@@ -21,6 +21,7 @@ const themeConfigs: ThemeConfig = {
             {title: "dashboard", icon: DashboardIcon, label: "대시보드", link: "/hiparking", authLevel : 1},
             {title: "accidentList", icon: ListIcon, label: "사고리스트", link: "/hiparking/accidentList", authLevel : 1},
             {title: "parkingList", icon: CarIcon, label: "사업장관리", link: "/hiparking/parkingList", authLevel : 1},
+            {title: "insuManager", icon: ScheduleIcon, label: "보험관리", link: "/hiparking/insuManager", authLevel : 1},
             {title: "mypage", icon: UserIcon, label: `님`, link: "/hiparking/mypage", authLevel : 1}
         ]
     },

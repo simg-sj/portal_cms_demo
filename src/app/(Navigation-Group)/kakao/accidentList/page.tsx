@@ -50,10 +50,6 @@ export default function Page() {
         }
     }, [data]);
 
-    const handlePageChange = (page: number) => {
-        setCurrentPage(page);
-    }
-
     const closePopup = () => {
         setIsOpen(false);
         setSelectedRow(null);
@@ -308,8 +304,9 @@ export default function Page() {
                     />
                     {totalPages > 0 && (
                         <Pagination
+                            currentPage={currentPage + 1}
+                            onChange={(page) => {setCurrentPage(page);}}
                             maxNumber={totalPages}
-                            onChange={handlePageChange}
                         />
                     )}
                 </div>

@@ -385,7 +385,7 @@ export default function DashboardComponent({
                                     엑셀다운
                                 </Button>
                             </div>
-                            <div className={'max-h-[205px] overflow-y-auto'}>
+                            <div className={'max-h-[350px] overflow-y-auto'}>
                                 <table className={'w-full relative'}>
                                     <thead className={'sticky left-0 top-0'}>
                                     <tr>

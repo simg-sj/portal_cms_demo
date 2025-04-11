@@ -11,6 +11,7 @@ interface DayTermProps {
     type?: 'month' | 'day' | 'oneYear';
     //setParam: (newParams: Partial<ParamDashType2>) => void;
     setParam: React.Dispatch<React.SetStateAction<ExtendedParamType>>;
+    allowFutureEndDate?: boolean; // 오늘 이후 날짜 허용 여부 (true: 가능, false: 제한)
 }
 
 interface ParamType {
@@ -20,7 +21,7 @@ interface ParamType {
     condition ?: string;
 }
 
-const DayTerm = ({sDay, eDay, type , setParam }: DayTermProps) => {
+const DayTerm = ({sDay, eDay, type , setParam, allowFutureEndDate = false}: DayTermProps) => {
     const [startDate, setStartDate] = useState<Date | null>(sDay);
     const [endDate, setEndDate] = useState<Date | null>(eDay);
 
@@ -54,6 +55,8 @@ const DayTerm = ({sDay, eDay, type , setParam }: DayTermProps) => {
                 startDate: dayjs().format('YYYY-MM-DD'),
                 endDate : dayjs().format('YYYY-MM-DD')
             }));
+            setStartDate(new Date());
+            setEndDate(new Date());
         }
     }, [type]);
 
@@ -131,7 +134,7 @@ const DayTerm = ({sDay, eDay, type , setParam }: DayTermProps) => {
             />
             <div className="font-bold mx-2">~</div>
             <DatePickerComponent
-                maxDate={new Date()}
+                maxDate={allowFutureEndDate ? undefined : new Date()}
                 minDate={startDate || undefined}
                 selected={endDate}
                 onChange={handleEndDateChange}

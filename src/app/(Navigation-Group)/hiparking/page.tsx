@@ -35,7 +35,7 @@ export default function Page() {
                 {
                     label: '종료 사업장',
                     data: tableData?.changeGraphData?.map((d) => -d.pEnd) || [],
-                    backgroundColor: '#00a6ff',
+                    backgroundColor: '#8e52fd',
                 },
             ],
         };
@@ -55,7 +55,7 @@ export default function Page() {
             topBusiness: {
                 labels: tableData?.topBusinessData?.map((d) => d.pklName) || [],
                 values: tableData?.topBusinessData?.map((d) => d.count) || [],
-                color: '#00a6ff',
+                color: '#8e52fd',
             },
             pieCounsel: [],  // 추가
             pieAccident: [], // 추가
