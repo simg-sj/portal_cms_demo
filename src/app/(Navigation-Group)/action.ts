@@ -439,4 +439,30 @@ export async function cargoInsuList(param :  ParamType) : Promise<CargoInsuType[
         throw new Error(`Failed to rcAccident: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
 }
+
+// 증권 정보
+export async function getPolicyList(param :  ParamType) : Promise<CargoInsuType[] | []> {
+    try {
+        const response = await fetch(`https://center-api.simg.kr/api/portal/getPolicyList`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(param)
+        });
+
+        if (!response.ok) {
+            // 에러 핸들링: 상태 코드와 메시지를 포함한 에러
+            const errorDetails = await response.text();
+            throw new Error(`Error ${response.status}: ${response.statusText} - ${errorDetails}`);
+        }
+
+        return await response.json();
+
+
+    } catch (error) {
+        console.error('Failed to getUserList:', error);
+        throw new Error(`Failed to rcAccident: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+}
       

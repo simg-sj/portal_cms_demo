@@ -12,7 +12,9 @@ import dayjs from "dayjs";
 interface CalenderPickerProps {
     maxDate?: Date;
     minDate?: Date;
-    selected: Date | null;
+    sDay: Date | null;
+    eDay: Date | null;
+    type: string;
     onChange: (date: Date | null) => void;
 }
 
@@ -116,7 +118,7 @@ const PickerWrapper = styled.div`
     position: relative;
 `;
 
-const CalenderPicker = ({ maxDate, minDate, selected, onChange }: CalenderPickerProps) => {
+const CalenderPicker = ({ maxDate, minDate, sDay,eDay, type, onChange }: CalenderPickerProps) => {
     const years = Range(2000, getYear(new Date()) + 20, 1);
     const months = [
         "1월",
@@ -132,9 +134,8 @@ const CalenderPicker = ({ maxDate, minDate, selected, onChange }: CalenderPicker
         "11월",
         "12월",
     ];
-    useEffect(() => {
-        console.log(dayjs(selected).format('YYYY-MM-DD'))
-    }, [selected]);
+
+
     return (
         <PickerWrapper>
             <CustomPicker>
@@ -200,7 +201,7 @@ const CalenderPicker = ({ maxDate, minDate, selected, onChange }: CalenderPicker
                     shouldCloseOnSelect
                     maxDate={maxDate}
                     minDate={minDate}
-                    selected={selected}
+                    selected={type === 'sDay' ? sDay : eDay}
                     onChange={onChange}
                     onFocus={(e) => {
                         const target = e.target as HTMLInputElement;

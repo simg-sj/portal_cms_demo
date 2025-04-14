@@ -8,29 +8,36 @@ const useFetchDashboard = (bpk: number) => {
     const [doughnutValue, setDoughnutValue] = useState<number | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<any>(null);
-    const initDash : ParamDashType2 =  {
+    let initDash : ParamDashType2 =  {
         job: 'dash',
         bpk: bpk,
         gbn: 'init',
+        pNo : '',
         sDay: dayjs().subtract(6, 'month').format('YYYY-MM'),
         eDay: dayjs().format('YYYY-MM')
     };
 
-    const fetchData = async () => {
+    let emptyMonth: MonthCumulativeData[] = [{
+        bpk: bpk,
+        changeDay: "",
+        counts: 0,
+        total: 0,
+        counts_percent_change: 0,
+        total_percent_change: 0
+    }];
+
+    const fetchData = async (pNo : string | null) => {
         try {
+            if (pNo) {
+                initDash.pNo = pNo;
+            }
+
             setLoading(true);
             const result = await getDashBoard(initDash);
 
-            let emptyMonth: MonthCumulativeData[] = [{
-                bpk: bpk,
-                changeDay: "",
-                counts: 0,
-                total: 0,
-                counts_percent_change: 0,
-                total_percent_change: 0
-            }];
+
             const monthCumulativeData = Array.isArray(result[6]) && result[6].length > 0 ? result[6] : emptyMonth;
-            console.log(result);
+
             // 데이터 구조에 맞게 테이블 데이터 설정
             const dashboardData: DashboardData = {
                 counselData: result[0] as CounselData[],
@@ -47,6 +54,8 @@ const useFetchDashboard = (bpk: number) => {
             if (dashboardData.counselData && dashboardData.counselData.length > 0) {
                 setDoughnutValue(dashboardData.counselData.at(- 1).lossRatio);
             }
+
+            return pNo;
         } catch (e) {
             setError(e);
         } finally {
@@ -55,7 +64,7 @@ const useFetchDashboard = (bpk: number) => {
     };
 
     useEffect(() => {
-        fetchData();
+        fetchData(null);
     }, []);
 
     // ✅ 특정 데이터 업데이트
@@ -63,11 +72,9 @@ const useFetchDashboard = (bpk: number) => {
         try{
             param.gbn = type;
 
-            console.log(param);
-
             const result = await getDashBoard(param);
 
-            console.log(result);
+            const monthCumulativeData = Array.isArray(result[6]) && result[6].length > 0 ? result[6] : emptyMonth;
             if (result[0][0].code === '401') {
                 alert('데이터가 없습니다.');
                 return ;
@@ -94,7 +101,17 @@ const useFetchDashboard = (bpk: number) => {
                             monthAccidentData: result[0],  // result를 changeData에 할당
                         }));
                         break;
-
+                    case  'init' :
+                        setTableData((prev) => ({
+                            counselData: result[0] as CounselData[],
+                            changeData: result[1] as ChangeCounselData[],
+                            topBusinessData: result[2] as TopBusinessData[],
+                            topCounselData: result[3] as TopCounselData[],
+                            monthAccidentData: result[4] as MonthAccidentData[],
+                            changeGraphData: result[5] as ChangeGraph[],
+                            monthCumulativeData: monthCumulativeData
+                        }));
+                    break;
                 }
 
             }

@@ -299,14 +299,15 @@ interface ParkingRowType {
     pklName?: string;
     pklAddress?: string;
     form?: string;
-    faceCount?: string;
+    faceCount?: number;
     detailHistory?: string;
-    indoor?: boolean;                   // 실내 여부
-    outdoor?: boolean;                  // 실외 여부
-    mechanical?: boolean;               // 기계식 여부
-    carLift?: boolean;                  // 차량 리프트 여부
+    indoor?: string;                   // 실내 여부
+    outdoor?: string;                  // 실외 여부
+    mechanical?: string;               // 기계식 여부
+    carLift?: string;                  // 차량 리프트 여부
     memo?: string;
     status? : string;
+    coInsured?:string;
     updatedYMD?: Date;
     deletedYMD?: Date;
 }
@@ -355,6 +356,7 @@ interface ParamDashType2 {
     job: string;
     bpk: number;
     gbn : string;
+    pNo : string | null;
     sDay: string;
     eDay: string;
 }
@@ -370,6 +372,7 @@ interface UptClaim extends ClaimRowType {
 
 interface UptParking extends ParkingRowType {
     job: string;
+    gbn : string;
     table : string;
     irpk : number;
     bpk : number;

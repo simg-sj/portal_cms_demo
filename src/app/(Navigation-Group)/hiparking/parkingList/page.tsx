@@ -26,7 +26,7 @@ import CenterPopup from "@/app/components/popup/CenterPopup";
 import AddBusiness, {AddBusinessRef} from "@/app/components/pageComponents/parking/addBusiness-hiparking";
 import AddExcelUpload from "@/app/components/pageComponents/parking/addExcelUpload";
 import {onClickExcel} from "@/app/lib/onClickExcel";
-import {parkingColumns, parkingColumnsAll} from "@/config/data";
+import { parkingColumns} from "@/config/data";
 
 interface ColumnDefinition<T> {
     key: keyof T;
@@ -147,23 +147,53 @@ export default function Page() {
 
             if (isValid) {
                 const formData = businessRef.current.getFormData();
+                let form = '';
+                if (formData.indoor?.checked) {
+                    form += '옥내';
+                }
+
+                if (formData.outdoor?.checked) {
+                    form += form ? ',옥외' : '옥외'; // 중간에 콤마 추가
+                }
+
+                if (formData.carLift?.checked) {
+                    form += form ? ',카리프트' : '카리프트'; // 중간에 콤마 추가
+                }
+
+                if (formData.mechanical?.checked) {
+                    form += form ? ',기계식' : '기계식'; // 중간에 콤마 추가
+                }
+
+                console.log('최종 form 값:', form);
+
                 if (window.confirm(`${formData.pkName}사업장을 추가하시겠습니까?`)) {
-                    const param = {
-                        '주차장명': formData.pkName,
-                        '주차장주소': formData.pkAddress,
-                        '옥내:': formData.indoor.checked ? formData.indoor.value : '-',
-                        '옥외:': formData.outdoor.checked ? formData.outdoor.value : '-',
-                        '기계식:': formData.mechanical.checked ? formData.mechanical.value : '-',
-                        '카리프트': formData.carLift.checked ? formData.carLift.value : '-',
-                        '면수': formData.pkArea,
-                        '세부내역': formData.pkDetail,
-                        '메모': formData.pkMemo
+                    const param : UptParking = {
+                        bpk: 2,
+                        irpk: 0,
+                        job: "PARKING",
+                        gbn : 'NEW',
+                        table: "",
+                        'pklName': formData.pkName,
+                        'pklAddress': formData.pkAddress,
+                        'form': form,
+                        'indoor': formData.indoor.checked ? formData.indoor.value : '-',
+                        'outdoor': formData.outdoor.checked ? formData.outdoor.value : '-',
+                        'mechanical': formData.mechanical.checked ? formData.mechanical.value : '-',
+                        'carLift': formData.carLift.checked ? formData.carLift.value : '-',
+                        'faceCount': formData.faceCount,
+                        'detailHistory': formData.detailHistory,
+                        'coInsured': formData.coInsured
                     };
 
 
+                    let {code, msg} = await updateCommon(param);
 
-
-                    setAddOpen(false);
+                    if(code === '200'){
+                        alert(msg);
+                        setAddOpen(false);
+                    }else {
+                        alert(msg);
+                    }
                 } else {
                     setAddOpen(true);
                 }
@@ -381,7 +411,7 @@ export default function Page() {
                         조회
                     </Button>
                 </div>
-                <Button color={"green"} height={32} width={120} onClick={()  => onClickExcel(param.status === 'all' ? parkingColumnsAll : parkingColumns,'parking', data, '주차장_현황.xlsx')}>
+                <Button color={"green"} height={32} width={120} onClick={()  => onClickExcel(parkingColumns[param.status],'parking', data, '주차장_현황.xlsx')}>
                     <Image src={Excel} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
                     엑셀다운
                 </Button>

@@ -21,9 +21,9 @@ interface ParkingFormData {
         checked: boolean;
         value: string;
     };
-    pkArea: number;
-    pkDetail: string;
-    pkMemo: string;
+    faceCount: number;
+    detailHistory: string;
+    coInsured: string;
 }
 
 export interface AddBusinessRef {
@@ -48,9 +48,9 @@ const AddBusinessHiparking = forwardRef<AddBusinessRef>((props, ref) => {
             outdoor: { checked: false, value: '' },
             mechanical: { checked: false, value: '' },
             carLift: { checked: false, value: '' },
-            pkArea: null,
-            pkDetail: '',
-            pkMemo: '',
+            faceCount: null,
+            detailHistory: '',
+            coInsured: '',
         }
     });
 
@@ -164,7 +164,7 @@ const AddBusinessHiparking = forwardRef<AddBusinessRef>((props, ref) => {
                 </div>
             </div>
 
-            <div className={'flex my-3'}>
+           {/* <div className={'flex my-3'}>
                 <div className={'w-[110px]'}>형태 <span className={'text-red-500'}>*</span></div>
                 <div className="flex-1">
                     <input
@@ -179,7 +179,7 @@ const AddBusinessHiparking = forwardRef<AddBusinessRef>((props, ref) => {
                         <p className={'text-red-500 text-sm mt-1'}>{errors.pkAddress.message}</p>
                     )}
                 </div>
-            </div>
+            </div>*/}
 
             <div className={'flex my-3'}>
                 <div className={'w-[150px]'}>주차장구분 <span className={'text-red-500'}>*</span></div>
@@ -226,7 +226,7 @@ const AddBusinessHiparking = forwardRef<AddBusinessRef>((props, ref) => {
                         type="text"
                         placeholder={'면수를 입력하세요'}
                         className={'border rounded px-2 py-1 w-[331px]'}
-                        {...register('pkArea', {
+                        {...register('faceCount', {
                             pattern: {
                                 value: /^[0-9]*$/,
                                 message: "숫자만 입력 가능합니다."
@@ -243,6 +243,8 @@ const AddBusinessHiparking = forwardRef<AddBusinessRef>((props, ref) => {
                         type="text"
                         placeholder={'ex) 옥내10면, 옥외10면'}
                         className={'w-full border rounded px-2 py-1'}
+                        {...register('detailHistory', {
+                        })}
                     />
                 </div>
             </div>
@@ -252,6 +254,8 @@ const AddBusinessHiparking = forwardRef<AddBusinessRef>((props, ref) => {
                     <input
                         type="text"
                         placeholder={'공동피보험자를 입력해주세요'}
+                        {...register('coInsured', {
+                        })}
                         className={'w-full border rounded px-2 py-1'}
                     />
                 </div>

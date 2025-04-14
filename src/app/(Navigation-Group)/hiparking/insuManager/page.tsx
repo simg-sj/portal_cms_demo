@@ -15,16 +15,17 @@ import FormatNumber from "@/app/components/common/ui/formatNumber";
 import CenterPopup from "@/app/components/popup/CenterPopup";
 import DayTerm from "@/app/components/common/ui/calender/dayTerm";
 import { useForm } from "react-hook-form";
+import {getPolicyList} from "@/app/(Navigation-Group)/action";
 
 interface InsuFormData {
-    id?: string; // 각 ID
-    insuName: string; // 보험명
-    policyNumber: string; // 증권번호
-    insuCompany: string; // 보험사
-    inchargeCompany: string; // 담당사
-    startDate: string; // 보험시작일
-    endDate: string; // 보험종료일
-    premium: number; // 보험료
+    irPk?: string; // 각 ID
+    productName: string; // 보험명
+    pNo: string; // 증권번호
+    insurer: string; // 보험사
+    inchargeCompany?: string; // 담당사
+    sDay: string; // 보험시작일
+    eDay: string; // 보험종료일
+    yPremiums: number; // 보험료
 }
 
 interface InsuranceItem extends InsuFormData {
@@ -33,18 +34,7 @@ interface InsuranceItem extends InsuFormData {
 
 export default function Page() {
     // 보험 목록 예비데이터
-    const [insuranceList, setInsuranceList] = useState<InsuranceItem[]>([
-        {
-            id: "1",
-            insuName: "보험명",
-            policyNumber: "DB42154225124",
-            insuCompany: "보험사 A",
-            inchargeCompany: "SIMG",
-            startDate: "2024-01-01",
-            endDate: "2025-05-09",
-            premium: 100000
-        }
-    ]);
+    const [insuranceList, setInsuranceList] = useState<InsuranceItem[]>([]);
 
     // 팝업 상태 관리
     const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -66,14 +56,14 @@ export default function Page() {
     // 보험 통계 계산 함수
     const calculateStats = () => {
         const renewalCount = insuranceList.filter(item => {
-            const endDate = new Date(item.endDate);
+            const endDate = new Date(item.eDay);
             const differenceInDays = (endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24);
 
             // 오늘 이후 30일 이내인 경우만 카운트
             return differenceInDays > 0 && differenceInDays <= 30;
         }).length;
 
-        const totalPremium = insuranceList.reduce((sum, item) => sum + item.premium, 0);
+        const totalPremium = insuranceList.reduce((sum, item) => sum + item.yPremiums, 0);
 
         setStats({
             renewalCount,
@@ -87,16 +77,43 @@ export default function Page() {
         calculateStats();
     }, [insuranceList]);
 
+    const fetch = async () => {
+        let param = {
+            bpk: 2,
+            startDate: '',
+            endDate: '',
+            condition: '',
+            text: ''
+        }
+        let result = await getPolicyList(param);
+        console.log(result);
+
+        setInsuranceList(result.map(item => ({
+            id: item.irPk, // Assign a unique ID if not present
+            productName: item.productName,
+            pNo: item.pNo,
+            insurer: item.insurer,
+            inchargeCompany: item.inchargeCompany,
+            sDay: item.sDay,
+            eDay: item.eDay,
+            yPremiums: item.yPremiums,
+        })));
+    }
+    useEffect(() => {
+        fetch();
+
+    }, []);
+
     // Form 설정
     const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<InsuFormData>({
         defaultValues: {
-            insuName: "",
-            policyNumber: "",
-            insuCompany: "",
+            productName: "",
+            pNo: "",
+            insurer: "",
             inchargeCompany: "",
-            startDate: "",
-            endDate: "",
-            premium: 0,
+            sDay: "",
+            eDay: "",
+            yPremiums: 0,
         },
     });
 
@@ -140,11 +157,11 @@ export default function Page() {
 
     // 날짜 업데이트
     const updateDateRange = (newParams: Partial<InsuFormData>) => {
-        if (newParams.startDate) {
-            setValue('startDate', newParams.startDate);
+        if (newParams.sDay) {
+            setValue('sDay', newParams.sDay);
         }
-        if (newParams.endDate) {
-            setValue('endDate', newParams.endDate);
+        if (newParams.eDay) {
+            setValue('eDay', newParams.eDay);
         }
     };
 
@@ -203,11 +220,11 @@ export default function Page() {
                     <div className="flex-1">
                         <input
                             type="text"
-                            {...register("insuName", { required: "보험명을 입력해주세요" })}
+                            {...register("productName", { required: "보험명을 입력해주세요" })}
                             placeholder={'보험명을 입력하세요'}
                             className={'w-full border rounded px-2 py-1'}
                         />
-                        {errors.insuName && <p className="text-red-500 text-sm mt-1">{errors.insuName.message}</p>}
+                        {errors.productName && <p className="text-red-500 text-sm mt-1">{errors.productName.message}</p>}
                     </div>
                 </div>
 
@@ -216,11 +233,11 @@ export default function Page() {
                     <div className="flex-1">
                         <input
                             type="text"
-                            {...register("policyNumber", { required: "증권번호를 입력해주세요" })}
+                            {...register("pNo", { required: "증권번호를 입력해주세요" })}
                             placeholder={'증권번호를 입력하세요'}
                             className={'w-full border rounded px-2 py-1'}
                         />
-                        {errors.policyNumber && <p className="text-red-500 text-sm mt-1">{errors.policyNumber.message}</p>}
+                        {errors.pNo && <p className="text-red-500 text-sm mt-1">{errors.pNo.message}</p>}
                     </div>
                 </div>
 
@@ -229,11 +246,11 @@ export default function Page() {
                     <div className="flex-1">
                         <input
                             type="text"
-                            {...register("insuCompany", { required: "보험사를 입력해주세요" })}
+                            {...register("insurer", { required: "보험사를 입력해주세요" })}
                             placeholder={'보험사를 입력하세요'}
                             className={'w-full border rounded px-2 py-1'}
                         />
-                        {errors.insuCompany && <p className="text-red-500 text-sm mt-1">{errors.insuCompany.message}</p>}
+                        {errors.insurer && <p className="text-red-500 text-sm mt-1">{errors.insurer.message}</p>}
                     </div>
                 </div>
 
@@ -255,14 +272,14 @@ export default function Page() {
                     <div className="flex-1">
                         <DayTerm
                             setParam={(newParams: Partial<InsuFormData>) => updateDateRange({
-                                startDate: newParams.startDate,
-                                endDate: newParams.endDate,
+                                sDay: newParams.sDay,
+                                eDay: newParams.eDay,
                             })}
-                            sDay={watch('startDate') ? new Date(watch('startDate')) : new Date()}
-                            eDay={watch('endDate') ? new Date(watch('endDate')) : new Date()}
+                            sDay={watch('sDay') ? new Date(watch('sDay')) : new Date()}
+                            eDay={watch('eDay') ? new Date(watch('eDay')) : new Date()}
                             allowFutureEndDate={true}
                         />
-                        {(!watch('startDate') || !watch('endDate')) && (
+                        {(!watch('sDay') || !watch('eDay')) && (
                             <p className="text-red-500 text-sm mt-1">보험기간을 선택해주세요</p>
                         )}
                     </div>
@@ -273,11 +290,11 @@ export default function Page() {
                     <div className="flex-1">
                         <input
                             type="number"
-                            {...register("premium", { required: "보험료를 입력해주세요", valueAsNumber: true })}
+                            {...register("yPremiums", { required: "보험료를 입력해주세요", valueAsNumber: true })}
                             placeholder={'보험료를 입력하세요'}
                             className={'w-full border rounded px-2 py-1'}
                         />
-                        {errors.premium && <p className="text-red-500 text-sm mt-1">{errors.premium.message}</p>}
+                        {errors.yPremiums && <p className="text-red-500 text-sm mt-1">{errors.yPremiums.message}</p>}
                     </div>
                 </div>
             </form>
@@ -333,15 +350,15 @@ export default function Page() {
                 </div>
 
                 {/* 보험 리스트 렌더링 */}
-                {insuranceList.map((insurance) => {
-                    const isExpired = new Date(insurance.endDate) < today;
-                    const daysLeft = daysUntilExpiration(insurance.endDate);
+                {insuranceList.map((insurance, index) => {
+                    const isExpired = new Date(insurance.eDay) < today;
+                    const daysLeft = daysUntilExpiration(insurance.eDay);
                     const showWarning = !isExpired && daysLeft <= 30;
-                    const status = getInsuranceStatus(insurance.endDate);
-                    const formattedEndDate = formatDate(insurance.endDate);
+                    const status = getInsuranceStatus(insurance.eDay);
+                    const formattedEndDate = formatDate(insurance.eDay);
 
                     return (
-                        <div className={'rounded-xl border border-gray-200 my-3'} key={insurance.id}>
+                        <div className={'rounded-xl border border-gray-200 my-3'} key={index}>
                             <div className={'flex justify-between items-start px-7 pt-5 mb-5'}>
                                 <div>
                                     <Button
@@ -356,7 +373,7 @@ export default function Page() {
                                         {formattedEndDate} {status}
                                     </Button>
                                     <div className={'font-semibold text-lg my-4 mx-2 relative'}>
-                                        <div>{insurance.insuName}</div>
+                                        <div>{insurance.productName}</div>
                                     </div>
                                 </div>
                                 <div className={'flex items-center space-x-4'}>
@@ -395,11 +412,11 @@ export default function Page() {
                             <div className={'flex justify-between items-end px-7 mb-5'}>
                                 <div className={'w-[300px]'}>
                                     <div className={'text-gray-600 mb-2 text-sm'}>증권번호</div>
-                                    <div>{insurance.policyNumber}</div>
+                                    <div>{insurance.pNo}</div>
                                 </div>
                                 <div className={'w-[300px]'}>
                                     <div className={'text-gray-600 mb-2 text-sm'}>보험사</div>
-                                    <div>{insurance.insuCompany}</div>
+                                    <div>{insurance.insurer}</div>
                                 </div>
                                 <div className={'w-[300px]'}>
                                     <div className={'text-gray-600 mb-2 text-sm'}>담당사</div>
@@ -407,11 +424,11 @@ export default function Page() {
                                 </div>
                                 <div className={'w-[400px]'}>
                                     <div className={'text-gray-600 mb-2 text-sm'}>보험기간</div>
-                                    <div>{insurance.startDate} ~ {insurance.endDate}</div>
+                                    <div>{insurance.sDay} ~ {insurance.eDay}</div>
                                 </div>
                                 <div className={'w-[300px]'}>
                                     <div className={'text-gray-600 mb-2 text-sm'}>보험료</div>
-                                    <div><span>{FormatNumber(insurance.premium)}</span> 원</div>
+                                    <div><span>{FormatNumber(insurance.yPremiums)}</span> 원</div>
                                 </div>
                             </div>
                         </div>

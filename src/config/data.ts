@@ -168,18 +168,63 @@ export const monthColumns = [
     { title: '지급 보험금(추산+종결)', col: 'total' }
 ];
 
-export const parkingColumns = [
-    { title: '순번', col: 'row' },
-    { title: '사업장명', col: 'pklName' },
-    { title: '사업장주소', col: 'pklAddress' },
-    { title: '사업장코드', col: 'PJTcode' },
-    { title: '형태', col: 'form' },
-    { title: '면수', col: 'faceCount' },
-    { title: '옥내(m2)', col: 'indoor' },
-    { title: '옥외(m2)', col: 'outdoor' },
-    { title: '기계식(대수)', col: 'mechanical' },
-    { title: '카리프트(대수)', col: 'carLift' },
-];
+export const parkingColumns =
+    {
+        all: [{ title: '순번', col: 'row' },
+            { title: '사업장명', col: 'pklName' },
+            { title: '사업장주소', col: 'pklAddress' },
+            { title: '사업장코드', col: 'PJTcode' },
+            { title: '형태', col: 'form' },
+            { title: '면수', col: 'faceCount' },
+            { title: '옥내(m2)', col: 'indoor' },
+            { title: '옥외(m2)', col: 'outdoor' },
+            { title: '기계식(대수)', col: 'mechanical' },
+            { title: '카리프트(대수)', col: 'carLift' },
+            { title: '상태', col: 'status' },
+            { title: '등록일자', col: 'updatedYMD' },
+            { title: '종료일자', col: 'deletedYMD' }
+        ],
+
+        NORMAL : [{ title: '순번', col: 'row' },
+            { title: '사업장명', col: 'pklName' },
+            { title: '사업장주소', col: 'pklAddress' },
+            { title: '사업장코드', col: 'PJTcode' },
+            { title: '형태', col: 'form' },
+            { title: '면수', col: 'faceCount' },
+            { title: '옥내(m2)', col: 'indoor' },
+            { title: '옥외(m2)', col: 'outdoor' },
+            { title: '기계식(대수)', col: 'mechanical' },
+            { title: '상태', col: 'status' },
+            { title: '카리프트(대수)', col: 'carLift' }
+           ],
+        NEW : [{ title: '순번', col: 'row' },
+            { title: '사업장명', col: 'pklName' },
+            { title: '사업장주소', col: 'pklAddress' },
+            { title: '사업장코드', col: 'PJTcode' },
+            { title: '형태', col: 'form' },
+            { title: '면수', col: 'faceCount' },
+            { title: '옥내(m2)', col: 'indoor' },
+            { title: '옥외(m2)', col: 'outdoor' },
+            { title: '기계식(대수)', col: 'mechanical' },
+            { title: '카리프트(대수)', col: 'carLift' },
+            { title: '상태', col: 'status' },
+            { title: '등록일자', col: 'updatedYMD' }
+        ],
+
+        EXPIRED : [{ title: '순번', col: 'row' },
+            { title: '사업장명', col: 'pklName' },
+            { title: '사업장주소', col: 'pklAddress' },
+            { title: '사업장코드', col: 'PJTcode' },
+            { title: '형태', col: 'form' },
+            { title: '면수', col: 'faceCount' },
+            { title: '옥내(m2)', col: 'indoor' },
+            { title: '옥외(m2)', col: 'outdoor' },
+            { title: '기계식(대수)', col: 'mechanical' },
+            { title: '카리프트(대수)', col: 'carLift' },
+            { title: '상태', col: 'status' },
+            { title: '종료일자', col: 'deletedYMD' }
+        ]
+    };
 
 export const parkingColumnsAll = [
     { title: '순번', col: 'row' },

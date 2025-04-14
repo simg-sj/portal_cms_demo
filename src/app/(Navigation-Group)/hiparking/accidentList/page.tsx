@@ -195,8 +195,8 @@ export default function Page() {
     // 사고접수 리스트 컬럼
     const columns: ColumnDefinition<ClaimRowType>[] = [
         {
-            key: 'irpk',
-            header: '고유번호',
+            key: 'pNo',
+            header: '증권번호',
             defaultValue: '-'
         },
         {
@@ -213,9 +213,6 @@ export default function Page() {
         {
             key: 'total',
             header: '지급보험금',
-            render: (item) => item.total
-                ? `${FormatNumber(Number(item.total))}+'원'`
-                : '-'
         },
         {
             key: 'pklName',

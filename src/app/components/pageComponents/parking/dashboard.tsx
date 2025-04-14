@@ -5,31 +5,24 @@ import "react-datepicker/dist/react-datepicker.css";
 import DoughnutChart from "@/app/components/chart/DoughnutChart";
 import BarTwowayChart from "@/app/components/chart/BarTwowayChart";
 import FormatNumber from "@/app/components/common/ui/formatNumber";
-import EditableField from "@/app/components/common/ui/input/editField";
 import Tab from "@/app/components/common/ui/tab";
 import Image from "next/image";
 import CarIcon from '@/assets/images/icon/car-icon.png'
 import ChargeIcon from '@/assets/images/icon/charge-icon.png'
 import BarHorizonChart from "@/app/components/chart/BarHorizonChart";
 import DayTerm from "@/app/components/common/ui/calender/dayTerm";
-import {
-    ChangeCounselData,
-    ChangeGraph,
-    CounselData, DashboardData,
-    MonthAccidentData,
-    MonthCumulativeData, ParamDashType2,
-} from "@/@types/common";
+import { DashboardData,ParamDashType2,} from "@/@types/common";
 import CountUp from "@/app/components/common/ui/countUp";
 import {TooltipItem} from "chart.js";
 import Error from "@/assets/images/icon/error-icon.png";
-import React, {Dispatch, SetStateAction, useCallback, useEffect, useState} from "react";
+import React, {SetStateAction, useEffect, useState} from "react";
 import {usePathname} from "next/navigation";
 import CountCard from "@/app/components/common/CountCard";
 import Search from "@/assets/images/icon/detail-icon.png"
-import {number} from "prop-types";
 import dayjs from "dayjs";
 import {onClickExcel} from "@/app/lib/onClickExcel";
-import {hiparkingAccidentColumns, monthColumns, policyColumns} from "@/config/data";
+import {monthColumns, policyColumns} from "@/config/data";
+import cn from "classnames";
 
 interface DashboardProps {
     chartData: {
@@ -64,11 +57,11 @@ export default function DashboardComponent({
         lossRatio: tableData.counselData.at(-1).lossRatio,
         closingAmt: tableData.counselData.at(-1).closingAmt,
     })
-
     const [param, setParam] = useState<ParamDashType2>({
         job: 'dash',
         bpk: 2,
         gbn: '',
+        pNo : '',
         sDay: dayjs().subtract(6, 'month').format('YYYY-MM'),
         eDay: dayjs().format('YYYY-MM')
     })
@@ -77,10 +70,48 @@ export default function DashboardComponent({
         updateTableData(param, type);
     };
 
-    const handleDoughnut = (counsel) => {
-        setDounutValues({lossRatio : counsel.lossRatio, closingAmt : counsel.closingAmt});
+    const handleDoughnut = async (counsel) => {
+        const pNo = counsel.pNo;
+
+        setParam({...param, pNo});
+
+
+        // ✅ 도넛 차트용 값만 로컬 상태에 반영
+        setDounutValues({
+            lossRatio: counsel.lossRatio,
+            closingAmt: counsel.closingAmt,
+        });
+
         setDoughnutValue(counsel.lossRatio);
-    }
+    };
+
+    useEffect(() => {
+        if (tableData?.counselData?.length > 0) {
+            const maxLossItem = tableData.counselData.reduce((prev, curr) =>
+                curr.lossRatio > prev.lossRatio ? curr : prev
+            );
+
+            // 상태 업데이트
+            setDounutValues({
+                lossRatio: maxLossItem.lossRatio,
+                closingAmt: maxLossItem.closingAmt,
+            });
+
+            setDoughnutValue(maxLossItem.lossRatio); // 도넛 차트에도 반영
+
+            console.log(maxLossItem)
+            setParam((prev) => ({
+                ...prev,
+                pNo: maxLossItem.pNo,
+            }));
+        }
+    }, []);
+
+    useEffect(() => {
+        console.log(param)
+        updateTableData(param, 'init');
+    }, [param.pNo]);
+
     //양방향막대 옵션
     const optionTwowayBar = {
         responsive: true,
@@ -219,7 +250,7 @@ export default function DashboardComponent({
                                 </thead>
                                 <tbody className={'colTable'}>
                                 {tableData.counselData.map((counsel, index) => (
-                                    <tr key={index}  onClick={() => handleDoughnut(counsel)} className={'cursor-pointer hover:bg-main-lighter'}>
+                                    <tr key={index}  onClick={() => handleDoughnut(counsel)} className={cn('cursor-pointer hover:bg-main-lighter',{'bg-main-lighter' : param.pNo === counsel.pNo})}>
                                         <td>{counsel.pNo}</td>
                                         <td>{counsel.sDay + '~' + counsel.eDay}</td>
                                         <td>{counsel.bCount}</td>

@@ -54,7 +54,11 @@ export function CheckboxContainer<T>({
 
     const safeRenderValue = (column: string, item: T) => {
         let value = item[column];
-
+        if(column === 'total') {
+            if(item[column]) {
+                return Number(value).toLocaleString() + '원'
+            }
+        }
         if (value === null || value === undefined) {
             return "-";
         }

@@ -27,15 +27,16 @@ const DayTerm = ({sDay, eDay, type , setParam, allowFutureEndDate = false}: DayT
 
     //타입 월달력, 전체달력 지정 : 월달력 3달단위 전체달력 오늘날짜 기본값
     useEffect(() => {
-        // 월달력: 3개월 전부터 현재까지
+        // 월달력: 6개월 전부터 현재까지
         if (type === 'month') {
-            const sixMonthsAgo = new Date(new Date().getFullYear(), new Date().getMonth() - 6, 1);
+            const sixMonthsAgo = new Date(dayjs().subtract(6, 'month').format('YYYY-MM'));
+
             setParam((prev: ParamDashType2) => ({
                 ...prev,
-                sDay: dayjs(sixMonthsAgo).format('YYYY-MM'),
+                sDay: dayjs(sDay).format('YYYY-MM'),
                 eDay : dayjs().format('YYYY-MM')
             }));
-            setStartDate(sixMonthsAgo);
+            setStartDate(sDay);
             setEndDate(new Date());
         }
         // 1년달력: 12개월 전부터 현재까지
@@ -128,15 +129,19 @@ const DayTerm = ({sDay, eDay, type , setParam, allowFutureEndDate = false}: DayT
         <div className="flex items-center justify-start">
             <DatePickerComponent
                 maxDate={endDate || new Date()}
+                type = {'sDay'}
+                sDay={sDay}
+                eDay={eDay}
                 minDate={undefined}
-                selected={startDate}
                 onChange={handleStartDateChange}
             />
             <div className="font-bold mx-2">~</div>
             <DatePickerComponent
                 maxDate={allowFutureEndDate ? undefined : new Date()}
+                type = {'eDay'}
+                eDay={eDay}
+                sDay={sDay}
                 minDate={startDate || undefined}
-                selected={endDate}
                 onChange={handleEndDateChange}
             />
         </div>

@@ -122,7 +122,6 @@ export const onClickExcel = (columns: any[], type: string, data: any[], fileName
             formattedData.push(lastRow);
         }
 
-        console.table(formattedData);
         // 엑셀 데이터 변환
         const worksheet = XLSX.utils.json_to_sheet(formattedData);
 
