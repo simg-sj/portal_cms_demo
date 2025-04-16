@@ -207,7 +207,7 @@ export default function Page() {
                 )
             );
             updatedInsurance.job = 'UPT';
-            updatedInsurance.tableName = 'policyMaster';
+            updatedInsurance.table = 'policyMaster';
             console.log("수정된 데이터:", updatedInsurance);
 
 

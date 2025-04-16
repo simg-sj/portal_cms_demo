@@ -1,39 +1,51 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, {createContext, useContext, useEffect, useState} from "react";
 
-// 알림 데이터 타입
-interface RenewalData {
+// 알림 타입 정의
+export interface RenewalData {
     irpk: string;
     productName: string;
     expirationDate: string;
     daysRemaining: number;
 }
 
-// 알림 팝업 UI 상태 타입
-interface NotiState {
+export interface NotiButton {
+    label: string;
+    onClick: () => void | Promise<void>;
+    color?: string;
+    fill?: boolean;
+    width?: number;
+    height?: number;
+}
+
+export interface NotiState {
     type: string;
     isOpen: boolean;
     title: string;
     text: string;
     subText: string;
+    buttons?: NotiButton[];
 }
 
 interface NotificationContextType {
     renewals: RenewalData[];
     setRenewals: (renewals: RenewalData[]) => void;
     clearNotifications: () => void;
+    resetNotiThen: (callback: () => void) => void;
 
     noti: NotiState;
     setNoti: React.Dispatch<React.SetStateAction<NotiState>>;
     resetNoti: () => void;
+
+    showAlert: (text: string, onClose?: () => void) => void;
+    showConfirm: (text: string, onConfirm: () => Promise<void>, onCancel?: () => void) => void;
 }
 
-const NotificationContext = createContext<NotificationContextType | undefined>(
-    undefined
-);
+const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
 export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const [afterResetCallback, setAfterResetCallback] = useState<(() => void) | null>(null);
     const [renewals, setRenewals] = useState<RenewalData[]>([]);
     const [noti, setNoti] = useState<NotiState>({
         type: "",
@@ -43,20 +55,74 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         subText: "",
     });
 
-    const clearNotifications = () => {
-        setRenewals([]);
+    const clearNotifications = () => setRenewals([]);
+    const resetNoti = () => setNoti({ type: "", isOpen: false, title: "", text: "", subText: "" });
+    const resetNotiThen = (callback: () => void) => {
+        resetNoti();
+        setAfterResetCallback(() => callback);
     };
 
-    const resetNoti = () => {
-        console.log("@@@");
+    const showAlert = (text: string, onClose?: () => void) => {
         setNoti({
-            type: "",
-            isOpen: false,
-            title: "",
-            text: "",
+            type: "alert",
+            isOpen: true,
+            title: "알림",
+            text,
             subText: "",
+            buttons: [
+                {
+                    label: "확인",
+                    onClick: () => {
+                        resetNoti();
+                        onClose?.();
+                    },
+                    color: "main",
+                    fill: true,
+                },
+            ],
         });
     };
+
+    const showConfirm = (
+        text: string,
+        onConfirm: () => Promise<void>,
+        onCancel?: () => void
+    ) => {
+        setNoti({
+            type: "confirm",
+            isOpen: true,
+            title: "알림",
+            text,
+            subText: "",
+            buttons: [
+                {
+                    label: "취소",
+                    onClick: () => {
+                        resetNoti();
+                        onCancel?.();
+                    },
+                    color: "gray",
+                },
+                {
+                    label: "확인",
+                    onClick: async () => {
+                        await onConfirm();
+                        resetNoti();
+                    },
+                    color: "main",
+                    fill: true,
+                },
+            ],
+        });
+    };
+
+    useEffect(() => {
+        if (!noti.isOpen && afterResetCallback) {
+            afterResetCallback();
+            setAfterResetCallback(null); // 콜백 한 번만 실행되도록 초기화
+        }
+    }, [noti.isOpen, afterResetCallback]);
+
 
     return (
         <NotificationContext.Provider
@@ -67,6 +133,9 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
                 noti,
                 setNoti,
                 resetNoti,
+                resetNotiThen,
+                showAlert,
+                showConfirm,
             }}
         >
             {children}
@@ -77,7 +146,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
 export const useNotifications = () => {
     const context = useContext(NotificationContext);
     if (!context) {
-        throw new Error("useNotifications는 NotificationProvider 내부에서만 호출할 수 있습니다.");
+        throw new Error("useNotifications는 NotificationProvider 내부에서만 호출해야 합니다.");
     }
     return context;
 };

@@ -35,9 +35,9 @@ export default function Page() {
     const [isNew, setIsNew] = useState(false);
     const [selectedRow, setSelectedRow] = useState<number | null>(null);
     const [data, setData] = useState<ClaimRowType[]>([]);
-    const {setNoti} = useNotifications();
-    const [rowData, setRowData] = useState<ClaimRowType>();
+    const {showAlert, showConfirm, resetNotiThen } = useNotifications();
     const [currentPage, setCurrentPage] = useState(0);
+    const [rowData, setRowData] = useState<ClaimRowType>(initRowData);
     const [totalPages, setTotalPages] = useState(0);
     const [param, setParam] = useState<ParamType>({
         bpk: 2,
@@ -71,36 +71,24 @@ export default function Page() {
             if (isNew) {
                 window.confirm('등록하시겠습니까?')
             } else {
-                if(window.confirm('저장하시겠습니까?')){
-                    data.requestDate = dayjs(data.requestDate).format('YYYY-MM-DD HH:mm:ss');
-                    data.accidentDateTime = dayjs(data.accidentDateTime).format('YYYY-MM-DD HH:mm:ss');
-
-                    console.log(data);
+                showConfirm("수정하시겠습니까?", async () => {
                     let result = await updateCommon(data);
-
-                    if (result.code === '200') {
-                        let reload = await getClaim(param);
+                    if (result.code === "200") {
+                        const reload = await getClaim(param);
                         setData(reload || []);
-                        setNoti({
-                            type : 'noti',
-                            title : '알림',
-                            isOpen : true,
-                            text : '저장되었습니다.',
-                            subText : ''
-                        });
-                        closePopup();
+
+                        resetNotiThen(() => {
+                            showAlert("수정되었습니다.", () => {
+                                closePopup();
+                            });
+                        })
                     } else {
-                        setNoti({
-                            type : 'noti',
-                            title : '알림',
-                            isOpen : true,
-                            text : '서비스 오류',
-                            subText : ''
-                        });
+                        resetNotiThen(() => {
+                            showAlert("서비스 오류입니다.", () => {
+                            });
+                        })
                     }
-                }else {
-                    return;
-                }
+                })
             }
         } catch (e) {
             console.log(e);
@@ -155,10 +143,10 @@ export default function Page() {
 
     const handleDeleteGroup = async () => {
         if (selectedItems.length === 0) {
-            alert('삭제할 항목을 선택해주세요.');
+            showAlert('삭제할 항목을 선택해주세요.');
             return;
         }
-        if (window.confirm(`선택한 ${selectedItems.length}개의 항목을 삭제하시겠습니까?`)) {
+        showConfirm(`선택한 ${selectedItems.length}개의 항목을 삭제하시겠습니까?`, async () => {
             let param2 = {
                 bpk : 2,
                 table : 'claimRequest',
@@ -170,27 +158,41 @@ export default function Page() {
                 setSelectedItems([]);
                 let reload = await getClaim(param);
                 setData(reload);
-                alert(result.msg);
+
+                resetNotiThen(() => {
+                    showAlert(result.msg, () => {
+                        closePopup();
+                    });
+                })
+
                 closePopup();
             }else {
                 alert("서비스 오류입니다.");
             }
-        }
+        });
     };
 // 삭제버튼 클릭
     async function handleDelete<T extends UptClaim>(rowData: T): Promise<void> {
         try {
-            if (window.confirm('삭제하시겠습니까?')) {
+            showConfirm('삭제하시겠습니까?', async () => {
                 rowData.table = 'claimRequest';
                 let result = await deleteClaimData(rowData);
                 if(result.code === '200'){
                     let reload = await getClaim(param);
                     setData(reload);
-                    closePopup();
+                    resetNotiThen(() => {
+                        showAlert("삭제되었습니다.", () => {
+                            closePopup();
+                        });
+                    })
                 }else {
-                    alert("서비스 오류입니다.");
+                    resetNotiThen(() => {
+                        showAlert("서비스 오류입니다..", () => {
+                            closePopup();
+                        });
+                    })
                 }
-            }
+            });
         } catch (e) {
             console.log(e);
         }
@@ -199,7 +201,7 @@ export default function Page() {
 
     const onSearchClick = async () => {
         const result = await getClaim(param);
-        console.log(result);
+
         setData(result || []);
         setCurrentPage(0);
     }

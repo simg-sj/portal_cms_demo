@@ -27,6 +27,7 @@ import AddBusiness, {AddBusinessRef} from "@/app/components/pageComponents/parki
 import AddExcelUpload from "@/app/components/pageComponents/parking/addExcelUpload";
 import {onClickExcel} from "@/app/lib/onClickExcel";
 import { parkingColumns} from "@/config/data";
+import {useNotifications} from "@/context/NotificationContext";
 
 interface ColumnDefinition<T> {
     key: keyof T;
@@ -43,6 +44,7 @@ export default function Page() {
     const [addOpen, setAddOpen] = useState(false);
     const [excelOpen, setExcelOpen] = useState(false);
     const [excelData, setExcelData] = useState<ParkingType[]>([]);
+    const {showAlert, showConfirm, resetNotiThen } = useNotifications();
     const businessRef = useRef<AddBusinessRef>(null);
     const [selectedRow, setSelectedRow] = useState<number | null>(null);
     const [data, setData] = useState<ParkingRowType[]>([]);
@@ -78,36 +80,45 @@ export default function Page() {
     };
 
     const slideSave = async (data: UptParking) => {
-        if(window.confirm('저장하시겠습니까?')){
+        showConfirm("수정하시겠습니까?", async () => {
+            data.table = 'parkinglot';
             let result = await updateCommon(data);
             if (result.code === '200') {
                 let reload = await getParking(param);
                 setData(reload || []);
-                alert(result.msg);
-                slideClose();
+                resetNotiThen(() => {
+                    showAlert(result.msg, () => {
+                        slideClose();
+                    });
+                })
             } else {
-                alert('서비스 오류')
+                resetNotiThen(() => {
+                    showAlert('서비스 오류입니다.');
+                })
             }
-        }else {
-            return;
-        }
+        })
     };
 
     async function slideDelete<T extends UptParking>(rowData: T): Promise<void> {
         try {
-            if (window.confirm('삭제하시겠습니까?')) {
+            showConfirm("삭제하시겠습니까?", async () => {
                 rowData.table = 'parkinglot';
 
                 let result = await deleteClaimData(rowData);
                 if(result.code === '200'){
                     let reload = await getParking(param);
                     setData(reload);
-                    alert(result.msg);
-                    slideClose();
+                    resetNotiThen(() => {
+                        showAlert(result.msg, () => {
+                            slideClose();
+                        });
+                    })
                 }else {
-                    alert("서비스 오류입니다.");
+                    resetNotiThen(() => {
+                        showAlert('서비스 오류입니다.');
+                    })
                 }
-            }
+            });
         } catch (e) {
             console.log(e);
         }
@@ -166,13 +177,13 @@ export default function Page() {
 
                 console.log('최종 form 값:', form);
 
-                if (window.confirm(`${formData.pkName}사업장을 추가하시겠습니까?`)) {
+                showConfirm("사업장을 추가하시겠습니까?", async () => {
                     const param : UptParking = {
                         bpk: 2,
                         irpk: 0,
                         job: "PARKING",
                         gbn : 'NEW',
-                        table: "",
+                        table: "parkinglot",
                         'pklName': formData.pkName,
                         'pklAddress': formData.pkAddress,
                         'form': form,
@@ -189,14 +200,18 @@ export default function Page() {
                     let {code, msg} = await updateCommon(param);
 
                     if(code === '200'){
-                        alert(msg);
-                        setAddOpen(false);
+                        resetNotiThen(() => {
+                            showAlert(msg, () => {
+                                setAddOpen(false);
+                            });
+                        })
                     }else {
-                        alert(msg);
+                        resetNotiThen(() => {
+                            showAlert(msg, () => {
+                            });
+                        })
                     }
-                } else {
-                    setAddOpen(true);
-                }
+                });
             }
         }
     };
@@ -235,7 +250,8 @@ export default function Page() {
         try{
             const countNew = excelData.filter((item) => item.status === "NEW").length;
             const countDel = excelData.filter((item) => item.status === "EXP").length;
-            if (window.confirm(`추가: ${countNew} 삭제: ${countDel} 엑셀을 업로드 하시겠습니까?`)) {
+
+            showConfirm(`추가: ${countNew} 삭제: ${countDel} 엑셀을 업로드 하시겠습니까?`, async () => {
                 // bpk 컬럼 추가
                 const addBpkData = excelData.map((row) => ({
                     ...row,
@@ -243,14 +259,19 @@ export default function Page() {
                 }));
                 let res = await addExcelParking(addBpkData);
                 if(res.status ==='200'){
-                    alert('저장완료');
-                    excelClose();
+                    resetNotiThen(() => {
+                        showAlert('업체 등록이 완료되었습니다.', () => {
+                            excelClose();
+                        });
+                    })
                 }else {
-                    alert('서비스 오류입니다.');
+                    resetNotiThen(() => {
+                        showAlert('서비스 오류입니다.', () => {
+                            excelClose();
+                        });
+                    })
                 }
-            } else {
-                return;
-            }
+            })
         }catch (e){
             console.log(e);
         }
@@ -279,29 +300,35 @@ export default function Page() {
 
     const handleDeleteGroup = async () => {
         try {
+            console.log(selectedItems.length)
             if (selectedItems.length === 0) {
-                alert('삭제할 항목을 선택해주세요.');
-                return;
-            }
-            if (window.confirm(`선택한 ${selectedItems.length}개의 항목을 삭제하시겠습니까?`)) {
-                let param2 = {
-                    bpk : 2,
-                    table : 'parkinglot',
-                    job : 'DEL_LIST',
-                    irpkList : selectedItems
-                }
-                let result = await deleteGroup(param2);
+                showAlert('삭제할 항목을 선택해주세요.');
+            }else {
+                showConfirm(`선택한 ${selectedItems.length}개의 항목을 삭제하시겠습니까?`, async () => {
+                    let param2 = {
+                        bpk: 2,
+                        table: 'parkinglot',
+                        job: 'DEL_LIST',
+                        irpkList: selectedItems
+                    }
+                    let result = await deleteGroup(param2);
 
-                if(result.code === '200') {
-                    setSelectedItems([]);
-                    let reload = await getParking(param);
-                    setData(reload);
-                    alert(result.msg);
-                }}else {
-                alert("서비스 오류입니다.");
+                    if (result.code === '200') {
+                        setSelectedItems([]);
+                        let reload = await getParking(param);
+                        setData(reload);
+                        resetNotiThen(() => {
+                            showAlert(result.msg);
+                        })
+                    } else {
+                        resetNotiThen(() => {
+                            showAlert('서비스 오류입니다.');
+                        })
+                    }
+                })
             }
         }catch (e){
-            alert("서비스 오류입니다.");
+            showAlert('서비스 오류입니다.');
         }
 
     };
@@ -446,7 +473,6 @@ export default function Page() {
                     isOpen={excelOpen}
                     onClose={excelClose}
                     title="엑셀업로드"
-                    setExcelData={setExcelData}
                     Content={AddExcelUpload}
                     contentProps={{ setExcelData }}
                     buttons={ExcelButton}

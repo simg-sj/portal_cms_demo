@@ -306,7 +306,6 @@ interface ParkingRowType {
     outdoor?: string;                  // 실외 여부
     mechanical?: string;               // 기계식 여부
     carLift?: string;                  // 차량 리프트 여부
-    memo?: string;
     status? : string;
     coInsured?:string;
     updatedYMD?: Date;
@@ -367,8 +366,6 @@ interface UptClaim extends ClaimRowType {
     table : string;
     irpk : number;
     bpk : number;
-    requestDate : string;
-    accidentDate : string;
 }
 
 interface UptParking extends ParkingRowType {
@@ -550,7 +547,7 @@ interface InsuFormData {
     yPremiums: number | null; // 보험료
     job : string;
     gbn : string;
-    tableName : string;
+    table : string;
 }
 
 interface InsuranceItem extends InsuFormData {

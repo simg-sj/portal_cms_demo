@@ -17,8 +17,8 @@ import Button from "@/app/components/common/ui/button/button";
 import FormatNumber from "@/app/components/common/ui/formatNumber";
 import {getImage} from "@/app/(Navigation-Group)/action";
 import cn from 'classnames';
-import {convertClaimToUptClaim} from "@/app/lib/common";
-import CenterPopup from "@/app/components/popup/CenterPopup";
+import {convertClaimToUptClaim, getChangedFields} from "@/app/lib/common";
+import {useNotifications} from "@/context/NotificationContext";
 
 interface ListProps {
     isEditing: boolean;
@@ -31,10 +31,10 @@ interface ListProps {
 
 const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListProps) => {
     const [images, setImages] = useState<ImageType[]>([]);
-
+    const {showAlert} = useNotifications();
 
     // 초기에 rowData를 UptClaim으로 변환해서 editData로 설정
-    const [editData, setEditData] = useState<UptClaim>(convertClaimToUptClaim(rowData));
+    const [editData, setEditData] = useState<ClaimRowType>(rowData);
 
 
 
@@ -52,7 +52,6 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
     useEffect(() => {
         // 이미지 데이터를 처음 로드하거나 irpk가 변경될 때만 호출
         if (!isNew && rowData.irpk) {
-
             fetchImageData(rowData.irpk);
         }
 
@@ -65,22 +64,31 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
         });
     };
     const handleSave = () => {
-        console.log("EEE",editData)
+        const changed = getChangedFields(editData, rowData);
+        const merged = {
+            ...changed,
+            bpk: rowData.bpk,
+            irpk: rowData.irpk
+        };
         if(isEditing){
-            if(editData) {
-                onSave(editData);
+            if (JSON.stringify(editData) !== JSON.stringify(rowData)) {
+                console.log('test',changed);
+
+                onSave(convertClaimToUptClaim(merged));
+
+            } else {
+                showAlert("변경된 정보가 없습니다.");
             }
         }
 
-        if(isNew){
+        /*if(isNew){
             if(editData) {
-                
-                onSave(editData);
+                onSave(param);
             }else {
                 alert('변경된 정보가 없습니다.');
                 return;
             }
-        }
+        }*/
 
     }
 

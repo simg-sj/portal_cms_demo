@@ -20,6 +20,7 @@ const HiparkingList = ({isEditing, rowData, onSave }: ListProps) => {
 
     //필드값 변경시 formdata 업데이트
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        console.log(e.target.value);
         setEditData((prev) => {
             return {...prev, [e.target.name]: e.target.value};
         });
@@ -161,7 +162,7 @@ const HiparkingList = ({isEditing, rowData, onSave }: ListProps) => {
                     </tr>
                     <tr>
                         <th>공동피보험자</th>
-                        <td colSpan={3}>{renderField('memo', rowData.memo ? rowData.memo : '-', 'textarea')}</td>
+                        <td colSpan={3}>{renderField('coInsured', rowData.coInsured ? rowData.coInsured : '-', 'text')}</td>
                     </tr>
                     <tr>
                         <th>상태</th>
