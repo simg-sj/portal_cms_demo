@@ -19,6 +19,7 @@ import AccidentDetailList from "@/app/components/pageComponents/parking/accident
 import {hiparkingAccidentColumns, initRowData} from "@/config/data";
 import {onClickExcel} from "@/app/lib/onClickExcel";
 import FormatNumber from "@/app/components/common/ui/formatNumber";
+import {useNotifications} from "@/context/NotificationContext";
 
 interface ColumnDefinition<T> {
     key: keyof T;
@@ -34,6 +35,7 @@ export default function Page() {
     const [isNew, setIsNew] = useState(false);
     const [selectedRow, setSelectedRow] = useState<number | null>(null);
     const [data, setData] = useState<ClaimRowType[]>([]);
+    const {setNoti} = useNotifications();
     const [rowData, setRowData] = useState<ClaimRowType>();
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
@@ -68,7 +70,6 @@ export default function Page() {
         try {
             if (isNew) {
                 window.confirm('등록하시겠습니까?')
-                console.log('신규등록 데이터:', data);
             } else {
                 if(window.confirm('저장하시겠습니까?')){
                     data.requestDate = dayjs(data.requestDate).format('YYYY-MM-DD HH:mm:ss');
@@ -80,9 +81,22 @@ export default function Page() {
                     if (result.code === '200') {
                         let reload = await getClaim(param);
                         setData(reload || []);
+                        setNoti({
+                            type : 'noti',
+                            title : '알림',
+                            isOpen : true,
+                            text : '저장되었습니다.',
+                            subText : ''
+                        });
                         closePopup();
                     } else {
-                        alert('서비스 오류')
+                        setNoti({
+                            type : 'noti',
+                            title : '알림',
+                            isOpen : true,
+                            text : '서비스 오류',
+                            subText : ''
+                        });
                     }
                 }else {
                     return;

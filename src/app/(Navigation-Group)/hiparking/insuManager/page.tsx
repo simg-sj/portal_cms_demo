@@ -20,14 +20,14 @@ import {DeleteType, InsuFormData, InsuranceItem} from "@/@types/common";
 import dayjs from "dayjs";
 import {modeString} from "@/config/data";
 import {useSession} from "next-auth/react";
-import {update} from "next-auth/lib/actions";
+import {useNotifications} from "@/context/NotificationContext";
 
 
 
 export default function Page() {
     // 보험 목록 예비데이터
     const [insuranceList, setInsuranceList] = useState<InsuranceItem[]>([]);
-
+    const {setNoti} = useNotifications();
     const {data } = useSession();
 
     // 팝업 상태 관리
@@ -154,7 +154,9 @@ export default function Page() {
 
     // 삭제 확인 팝업 열기
     const openDeleteConfirmPopup = (id: string) => {
+
         setConfirmDeleteId(id);
+
     };
 
     // 보험 항목 삭제
@@ -171,8 +173,14 @@ export default function Page() {
 
         if(code === '200'){
             setConfirmDeleteId(null);
-
-            alert(msg);
+            await fetch(2);
+            setNoti({
+                type : 'noti',
+                title : '알림',
+                isOpen : true,
+                text : '삭제 되었습니다.',
+                subText : ''
+            });
         }else {
             alert(msg);
         }
@@ -199,7 +207,7 @@ export default function Page() {
                 )
             );
             updatedInsurance.job = 'UPT';
-            updatedInsurance.table = 'policyMaster';
+            updatedInsurance.tableName = 'policyMaster';
             console.log("수정된 데이터:", updatedInsurance);
 
 
@@ -542,6 +550,7 @@ export default function Page() {
                     },
                 ]}
             />
+
         </>
     );
 }

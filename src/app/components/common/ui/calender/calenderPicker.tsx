@@ -14,6 +14,7 @@ interface CalenderPickerProps {
     minDate?: Date;
     sDay: Date | null;
     eDay: Date | null;
+    allowDate : boolean;
     type: string;
     onChange: (date: Date | null) => void;
 }
@@ -118,7 +119,9 @@ const PickerWrapper = styled.div`
     position: relative;
 `;
 
-const CalenderPicker = ({ maxDate, minDate, sDay,eDay, type, onChange }: CalenderPickerProps) => {
+const CalenderPicker = ({ maxDate, allowDate ,minDate, sDay,eDay, type, onChange }: CalenderPickerProps) => {
+
+
     const years = Range(2000, getYear(new Date()) + 20, 1);
     const months = [
         "1월",
@@ -199,7 +202,7 @@ const CalenderPicker = ({ maxDate, minDate, sDay,eDay, type, onChange }: Calende
                     dateFormat="yyyy. MM. dd"
                     locale={ko}
                     shouldCloseOnSelect
-                    maxDate={maxDate}
+                    maxDate={allowDate ? maxDate : new Date()}
                     minDate={minDate}
                     selected={type === 'sDay' ? sDay : eDay}
                     onChange={onChange}

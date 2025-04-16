@@ -18,6 +18,7 @@ import FormatNumber from "@/app/components/common/ui/formatNumber";
 import {getImage} from "@/app/(Navigation-Group)/action";
 import cn from 'classnames';
 import {convertClaimToUptClaim} from "@/app/lib/common";
+import CenterPopup from "@/app/components/popup/CenterPopup";
 
 interface ListProps {
     isEditing: boolean;
@@ -30,6 +31,7 @@ interface ListProps {
 
 const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListProps) => {
     const [images, setImages] = useState<ImageType[]>([]);
+
 
     // 초기에 rowData를 UptClaim으로 변환해서 editData로 설정
     const [editData, setEditData] = useState<UptClaim>(convertClaimToUptClaim(rowData));
@@ -63,12 +65,10 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
         });
     };
     const handleSave = () => {
+        console.log("EEE",editData)
         if(isEditing){
             if(editData) {
                 onSave(editData);
-            }else {
-                alert('변경된 정보가 없습니다.');
-                return;
             }
         }
 
@@ -83,12 +83,7 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
         }
 
     }
-    useEffect(() => {
-        console.log(rowData);
-    }, []);
-    useEffect(() => {
-        console.log(editData);
-    }, [editData]);
+
 
     // 입력필드 타입
     const renderField = (key: string, value: any, type: 'text' | 'select' | 'date' | 'dayterm' | 'textarea' = 'text', options?: string[]) => {
@@ -118,7 +113,7 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                 );
             case 'date':
                 return (
-                    <CalenderPicker sDay={new Date(editData[key])} eDay={null} type={'sDay'} onChange={(date: Date | null) => {
+                    <CalenderPicker sDay={new Date(editData[key])} allowDate={false} eDay={null} type={'sDay'} onChange={(date: Date | null) => {
                         setEditData((prevState) => ({
                             ...prevState,
                             [key]: dayjs(date).format('YYYY-MM-DD')
@@ -336,6 +331,7 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                     </tbody>
                 </table>
             </div>
+
         </>
     )
         ;

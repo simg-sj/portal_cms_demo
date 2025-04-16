@@ -1,8 +1,8 @@
-"use client"; // 클라이언트 컴포넌트
+"use client";
 
 import React, { createContext, useContext, useState } from "react";
 
-// 알림 데이터 타입 정의
+// 알림 데이터 타입
 interface RenewalData {
     irpk: string;
     productName: string;
@@ -10,29 +10,64 @@ interface RenewalData {
     daysRemaining: number;
 }
 
+// 알림 팝업 UI 상태 타입
+interface NotiState {
+    type: string;
+    isOpen: boolean;
+    title: string;
+    text: string;
+    subText: string;
+}
+
 interface NotificationContextType {
-    renewals: RenewalData[]; // 알림 데이터 배열
-    setRenewals: (renewals: RenewalData[]) => void; // 갱신 데이터 설정 함수
-    clearNotifications: () => void; // 알림 전체 삭제 (초기화)
+    renewals: RenewalData[];
+    setRenewals: (renewals: RenewalData[]) => void;
+    clearNotifications: () => void;
+
+    noti: NotiState;
+    setNoti: React.Dispatch<React.SetStateAction<NotiState>>;
+    resetNoti: () => void;
 }
 
 const NotificationContext = createContext<NotificationContextType | undefined>(
     undefined
 );
 
-export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
-                                                                                  children,
-                                                                              }) => {
+export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [renewals, setRenewals] = useState<RenewalData[]>([]);
+    const [noti, setNoti] = useState<NotiState>({
+        type: "",
+        isOpen: false,
+        title: "",
+        text: "",
+        subText: "",
+    });
 
-    // 알림 데이터 초기화
     const clearNotifications = () => {
         setRenewals([]);
     };
 
+    const resetNoti = () => {
+        console.log("@@@");
+        setNoti({
+            type: "",
+            isOpen: false,
+            title: "",
+            text: "",
+            subText: "",
+        });
+    };
+
     return (
         <NotificationContext.Provider
-            value={{ renewals, setRenewals, clearNotifications }}
+            value={{
+                renewals,
+                setRenewals,
+                clearNotifications,
+                noti,
+                setNoti,
+                resetNoti,
+            }}
         >
             {children}
         </NotificationContext.Provider>
@@ -42,9 +77,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({
 export const useNotifications = () => {
     const context = useContext(NotificationContext);
     if (!context) {
-        throw new Error(
-            "useNotifications는 NotificationProvider 내부에서만 호출할 수 있습니다."
-        );
+        throw new Error("useNotifications는 NotificationProvider 내부에서만 호출할 수 있습니다.");
     }
     return context;
 };

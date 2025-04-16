@@ -21,12 +21,16 @@ interface ParamType {
     condition ?: string;
 }
 
-const DayTerm = ({sDay, eDay, type , setParam, allowFutureEndDate = false}: DayTermProps) => {
+const DayTerm = ({sDay, eDay, type , setParam, allowFutureEndDate}: DayTermProps) => {
     const [startDate, setStartDate] = useState<Date | null>(sDay);
     const [endDate, setEndDate] = useState<Date | null>(eDay);
 
     //타입 월달력, 전체달력 지정 : 월달력 3달단위 전체달력 오늘날짜 기본값
     useEffect(() => {
+
+        console.log('sDay', sDay);
+        console.log('eDay', eDay);
+
         // 월달력: 6개월 전부터 현재까지
         if (type === 'month') {
             const sixMonthsAgo = new Date(dayjs().subtract(6, 'month').format('YYYY-MM'));
@@ -141,7 +145,7 @@ const DayTerm = ({sDay, eDay, type , setParam, allowFutureEndDate = false}: DayT
                 type = {'eDay'}
                 eDay={eDay}
                 sDay={sDay}
-                minDate={startDate || undefined}
+                minDate={undefined}
                 onChange={handleEndDateChange}
             />
         </div>

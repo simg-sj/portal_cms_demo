@@ -407,7 +407,7 @@ export default function DashboardComponent({
                             <div className={'text-lg font-light mb-6'}>월별 사고접수현황</div>
                             <div className={"flex justify-end mb-4 text-lg"}>
                                 <div className={'border w-fit px-5 py-1 rounded-lg flex items-center'}>
-                                    <DayTerm type="month" sDay={new Date(param.sDay)} eDay={new Date(param.eDay)} setParam={setParam}></DayTerm>
+                                    <DayTerm type="month" allowFutureEndDate={false} sDay={new Date(param.sDay)} eDay={new Date(param.eDay)} setParam={setParam}></DayTerm>
                                     <button onClick={() => handleParam('month')}>
                                         <Image src={Search} alt={"검색"} width={22} height={20}
                                                className={'cursor-pointer ml-3'}></Image>

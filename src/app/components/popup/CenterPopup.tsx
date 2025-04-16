@@ -15,11 +15,19 @@ interface ButtonConfig {
     height?: number;
 }
 
+interface NotiType {
+    type : string;
+    title : string;
+    text : string;
+    subText ?: string;
+}
+
 interface CenterPopupProps {
     isOpen: boolean;
     onClose: () => void;
     title: string;
-    Content: React.ComponentType;
+    noti ?: NotiType;
+    Content?: React.ComponentType;
     buttons: ButtonConfig[];
     onConfirm?: () => void;
     onDelete?: () => void;
@@ -27,7 +35,18 @@ interface CenterPopupProps {
 }
 
 
-const CenterPopup = ({isOpen, onClose, title, Content, buttons, onConfirm, onDelete, contentProps}: CenterPopupProps) => {
+const CenterPopup = ({isOpen, onClose, title, Content, noti , buttons, onConfirm, onDelete, contentProps}: CenterPopupProps) => {
+    // 삭제 확인 팝업 컴포넌트
+    const NotiContents = () => {
+        return (
+            <div className="text-center mb-5">
+                <p className="text-lg">{noti.text}</p>
+                <p className="text-gray-500 text-sm mt-2">{noti.subText}</p>
+            </div>
+        );
+    };
+
+
 
     if (!isOpen) return null;
 
@@ -54,7 +73,12 @@ const CenterPopup = ({isOpen, onClose, title, Content, buttons, onConfirm, onDel
                            onClick={onClose}/>
                 </div>
                 <div className="px-8 py-3">
-                    <Content {...contentProps} />
+                    {
+                        noti && !!noti.type ?
+                            <NotiContents />
+                            :
+                            <Content {...contentProps} />
+                    }
                 </div>
                 <div className="flex justify-center px-8 py-5 space-x-10">
                     {buttons.map((button, index) => (
