@@ -87,7 +87,6 @@ export const {
                     service: user.service,
                 };
             }
-            console.log("JWT Token:", token); // 토큰 확인용 디버그 출력
             return token;
     },
     session: async ({ session, token }) => {
@@ -110,7 +109,6 @@ export const {
             password: "" // default password as required by AdapterUser
         };
 
-        console.log("Session:", session); // session 확인용 디버그 출력
         return session;
     },
 

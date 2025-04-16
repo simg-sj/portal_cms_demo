@@ -15,30 +15,24 @@ import FormatNumber from "@/app/components/common/ui/formatNumber";
 import CenterPopup from "@/app/components/popup/CenterPopup";
 import DayTerm from "@/app/components/common/ui/calender/dayTerm";
 import { useForm } from "react-hook-form";
-import {getPolicyList} from "@/app/(Navigation-Group)/action";
+import {getPolicyList, updateCommon} from "@/app/(Navigation-Group)/action";
+import {DeleteType, InsuFormData, InsuranceItem} from "@/@types/common";
+import dayjs from "dayjs";
+import {modeString} from "@/config/data";
+import {useSession} from "next-auth/react";
+import {update} from "next-auth/lib/actions";
 
-interface InsuFormData {
-    irPk?: string; // 각 ID
-    productName: string; // 보험명
-    pNo: string; // 증권번호
-    insurer: string; // 보험사
-    inchargeCompany?: string; // 담당사
-    sDay: string; // 보험시작일
-    eDay: string; // 보험종료일
-    yPremiums: number; // 보험료
-}
 
-interface InsuranceItem extends InsuFormData {
-    id: string; // 고유 식별자
-}
 
 export default function Page() {
     // 보험 목록 예비데이터
     const [insuranceList, setInsuranceList] = useState<InsuranceItem[]>([]);
 
+    const {data } = useSession();
+
     // 팝업 상태 관리
     const [isPopupOpen, setIsPopupOpen] = useState(false);
-    const [isEditMode, setIsEditMode] = useState(false);
+    const [isMode, setIsMode] = useState('' as 'add' | 'edit' | 'reNew');
     const [selectedInsurance, setSelectedInsurance] = useState<InsuranceItem | null>(null);
     const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
@@ -63,7 +57,7 @@ export default function Page() {
             return differenceInDays > 0 && differenceInDays <= 30;
         }).length;
 
-        const totalPremium = insuranceList.reduce((sum, item) => sum + item.yPremiums, 0);
+        const totalPremium = insuranceList.reduce((sum, item) => sum + Number(item.yPremiums), 0);
 
         setStats({
             renewalCount,
@@ -77,57 +71,51 @@ export default function Page() {
         calculateStats();
     }, [insuranceList]);
 
-    const fetch = async () => {
+    const fetch = async (bpk : number) => {
         let param = {
-            bpk: 2,
+            bpk: bpk,
             startDate: '',
             endDate: '',
             condition: '',
             text: ''
         }
         let result = await getPolicyList(param);
-        console.log(result);
 
-        setInsuranceList(result.map(item => ({
-            id: item.irPk, // Assign a unique ID if not present
-            productName: item.productName,
-            pNo: item.pNo,
-            insurer: item.insurer,
-            inchargeCompany: item.inchargeCompany,
-            sDay: item.sDay,
-            eDay: item.eDay,
-            yPremiums: item.yPremiums,
-        })));
+        setInsuranceList(result);
     }
     useEffect(() => {
-        fetch();
-
-    }, []);
+        if(data && data.user.bpk){
+            const {bpk} = data.user;
+            fetch(bpk);
+            setValue("bpk",bpk)
+        }
+    }, [data]);
 
     // Form 설정
     const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<InsuFormData>({
         defaultValues: {
+            bpk : 0,
             productName: "",
             pNo: "",
             insurer: "",
-            inchargeCompany: "",
+            nickName: "",
             sDay: "",
             eDay: "",
-            yPremiums: 0,
+            yPremiums: null,
         },
     });
 
     // 팝업 열기 (추가)
     const openAddPopup = () => {
         reset();
-        setIsEditMode(false);
+        setIsMode('add');
         setSelectedInsurance(null);
         setIsPopupOpen(true);
     };
 
     // 팝업 열기 (편집)
     const openEditPopup = (insurance: InsuranceItem) => {
-        setIsEditMode(true);
+        setIsMode('edit');
         setSelectedInsurance(insurance);
         // 폼 필드 초기화
         Object.keys(insurance).forEach((key) => {
@@ -135,6 +123,26 @@ export default function Page() {
                 setValue(key as keyof InsuFormData, insurance[key as keyof InsuranceItem]);
             }
         });
+        setIsPopupOpen(true);
+    };
+
+    // 팝업 열기 (갱신)
+    const openReNewPopup = (insurance: InsuranceItem) => {
+        setIsMode('reNew');
+        setSelectedInsurance(insurance);
+        let reSday = dayjs(insurance["sDay"]).add(1, 'days').format('YYYY-MM-DD');
+        let reEday = dayjs(reSday).add(1, 'years').format('YYYY-MM-DD');
+
+
+        setValue('nickName', insurance["nickName"]);
+        setValue('productName', insurance["productName"]);
+        setValue('pNo', '');
+        setValue('insurer', '');
+        setValue('sDay', reSday);
+        setValue('eDay', reEday);
+        setValue('yPremiums', null);
+
+
         setIsPopupOpen(true);
     };
 
@@ -150,9 +158,24 @@ export default function Page() {
     };
 
     // 보험 항목 삭제
-    const deleteInsurance = (id: string) => {
-        setInsuranceList(prevList => prevList.filter(item => item.id !== id));
-        setConfirmDeleteId(null);
+    const deleteInsurance = async (id: string) => {
+        setInsuranceList(prevList => prevList.filter(item => item.irpk !== id));
+        let param : DeleteType = {
+            bpk : 2,
+            irpk : id,
+            tableName : 'policyMaster',
+            job : 'DELETE',
+        }
+
+        const {code, msg} = await updateCommon(param);
+
+        if(code === '200'){
+            setConfirmDeleteId(null);
+
+            alert(msg);
+        }else {
+            alert(msg);
+        }
     };
 
     // 날짜 업데이트
@@ -166,32 +189,54 @@ export default function Page() {
     };
 
     // 보험 데이터 제출
-    const onSubmit = (data: InsuFormData) => {
-        if (isEditMode && selectedInsurance) {
+    const onSubmit = async (data: InsuFormData) => {
+        if (isMode === 'edit' && selectedInsurance) {
             // 편집 모드: 기존 항목 업데이트
-            const updatedInsurance = { ...data, id: selectedInsurance.id };
+            let updatedInsurance = { ...data, irpk: selectedInsurance.irpk };
             setInsuranceList(prevList =>
                 prevList.map(item =>
-                    item.id === selectedInsurance.id ? { ...data, id: item.id } : item
+                    item.irpk === selectedInsurance.irpk ? { ...data, irpk: item.irpk } : item
                 )
             );
+            updatedInsurance.job = 'UPT';
+            updatedInsurance.table = 'policyMaster';
             console.log("수정된 데이터:", updatedInsurance);
-            alert("보험이 수정되었습니다.");
+
+
+
+            let result = await updateCommon(updatedInsurance);
+            console.log(result)
+          /*
+            if(code === '200'){
+                alert(msg);
+            }else {
+                alert(msg);
+            }*/
         } else {
             // 추가 모드: 새 항목 추가
             const newInsurance: InsuranceItem = {
                 ...data,
-                id: Date.now().toString() // 간단한 ID 생성
+                irpk: Date.now().toString() // 간단한 ID 생성
             };
             setInsuranceList(prevList => [...prevList, newInsurance]);
-            console.log("추가된 데이터:", newInsurance);
 
-            alert("보험이 추가되었습니다.");
+            newInsurance.gbn = 'add';
+            let {code, msg} = await updateCommon(newInsurance);
+
+            if(code === '200'){
+                alert(msg);
+            }else {
+                alert(msg);
+            }
+
+            console.log("추가된 데이터:", newInsurance);
         }
 
         reset(); // 데이터 초기화
         closePopup(); // 팝업 닫기
     };
+
+
 
     // 만료일까지 남은 일수 계산
     const daysUntilExpiration = (endDateStr: string) => {
@@ -215,6 +260,19 @@ export default function Page() {
     const PopupContent = () => {
         return (
             <form className="space-y-4">
+                <div className={'flex my-3'}>
+                    <div className={'w-[110px]'}>별칭 <span className="text-red-500">*</span></div>
+                    <div className="flex-1">
+                        <input
+                            type="text"
+                            {...register("nickName", { required: "별칭을 입력해주세요" })}
+                            placeholder={'별칭을 입력하세요'}
+                            className={'w-full border rounded px-2 py-1'}
+                        />
+                        {errors.nickName && <p className="text-red-500 text-sm mt-1">{errors.nickName.message}</p>}
+                    </div>
+                </div>
+
                 <div className={'flex my-3'}>
                     <div className={'w-[110px]'}>보험명 <span className="text-red-500">*</span></div>
                     <div className="flex-1">
@@ -254,18 +312,7 @@ export default function Page() {
                     </div>
                 </div>
 
-                <div className={'flex my-3'}>
-                    <div className={'w-[110px]'}>담당사 <span className="text-red-500">*</span></div>
-                    <div className="flex-1">
-                        <input
-                            type="text"
-                            {...register("inchargeCompany", { required: "담당사를 입력해주세요" })}
-                            placeholder={'담당사를 입력하세요'}
-                            className={'w-full border rounded px-2 py-1'}
-                        />
-                        {errors.inchargeCompany && <p className="text-red-500 text-sm mt-1">{errors.inchargeCompany.message}</p>}
-                    </div>
-                </div>
+
 
                 <div className={'flex my-3'}>
                     <div className={'w-[110px]'}>보험기간 <span className="text-red-500">*</span></div>
@@ -373,21 +420,34 @@ export default function Page() {
                                         {formattedEndDate} {status}
                                     </Button>
                                     <div className={'font-semibold text-lg my-4 mx-2 relative'}>
-                                        <div>{insurance.productName}</div>
+                                        <div>{insurance.nickName}</div>
                                     </div>
                                 </div>
                                 <div className={'flex items-center space-x-4'}>
                                     {/* 만료 예정 경고 섹션 */}
                                     {showWarning && (
-                                        <div className={'flex items-center text-sm py-2 px-5 bg-gray-100 rounded-lg'}>
-                                            <Image
-                                                src={WarningIcon.src}
-                                                alt={'경고'}
-                                                width={18}
-                                                height={18}
-                                                className={'mr-2'}
-                                            />
-                                            <div>갱신일정이 {daysLeft}일 남았습니다.</div>
+                                        <div className='flex space-x-2 items-center'>
+                                            <div className={'flex items-center text-sm py-2 px-5 bg-gray-100 rounded-lg'}>
+                                                <Image
+                                                    src={WarningIcon.src}
+                                                    alt={'경고'}
+                                                    width={18}
+                                                    height={18}
+                                                    className={'mr-2'}
+                                                />
+                                                <div>갱신일정이 {daysLeft}일 남았습니다.</div>
+                                            </div>
+                                            <div className={'flex items-center text-sm py-2 px-5 bg-gray-100 rounded-lg'}>
+                                                <button className='flex' onClick={() => openReNewPopup(insurance)}>갱신하기
+                                                <Image
+                                                    src={WarningIcon.src}
+                                                    alt={'경고'}
+                                                    width={18}
+                                                    height={18}
+                                                    className={'ml-2'}
+                                                />
+                                                </button>
+                                            </div>
                                         </div>
                                     )}
                                     <Image
@@ -404,7 +464,7 @@ export default function Page() {
                                         width={60}
                                         height={60}
                                         className={'cursor-pointer object-cover object-[0px] h-[20px] w-[20px] hover:object-[-31px]'}
-                                        onClick={() => openDeleteConfirmPopup(insurance.id)}
+                                        onClick={() => openDeleteConfirmPopup(insurance.irpk)}
                                     />
                                 </div>
                             </div>
@@ -415,12 +475,12 @@ export default function Page() {
                                     <div>{insurance.pNo}</div>
                                 </div>
                                 <div className={'w-[300px]'}>
-                                    <div className={'text-gray-600 mb-2 text-sm'}>보험사</div>
-                                    <div>{insurance.insurer}</div>
+                                    <div className={'text-gray-600 mb-2 text-sm'}>상품명</div>
+                                    <div>{insurance.productName}</div>
                                 </div>
                                 <div className={'w-[300px]'}>
-                                    <div className={'text-gray-600 mb-2 text-sm'}>담당사</div>
-                                    <div>{insurance.inchargeCompany}</div>
+                                    <div className={'text-gray-600 mb-2 text-sm'}>보험사</div>
+                                    <div>{insurance.insurer}</div>
                                 </div>
                                 <div className={'w-[400px]'}>
                                     <div className={'text-gray-600 mb-2 text-sm'}>보험기간</div>
@@ -447,7 +507,7 @@ export default function Page() {
             <CenterPopup
                 isOpen={isPopupOpen}
                 onClose={closePopup}
-                title={isEditMode ? "보험관리 수정" : "보험관리 추가"}
+                title={'보험관리 ' + modeString[isMode]}
                 Content={PopupContent}
                 buttons={[
                     {

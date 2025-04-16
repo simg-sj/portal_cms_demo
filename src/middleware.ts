@@ -71,7 +71,6 @@ export const signOutWithForm = async () => {
 export async function middleware(request: NextRequest) {
     const userInfo = await auth(); // 사용자 인증 정보 가져오기
 
-    console.log(userInfo);
     const { pathname } = request.nextUrl;
 
     // 사용자 플랫폼 및 허용 경로

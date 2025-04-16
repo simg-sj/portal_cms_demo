@@ -12,7 +12,7 @@ interface EditUserProps {
     setUserInfo : React.Dispatch<React.SetStateAction<UserType>>
 }
 
-export default function EditUser({ userInfo }: EditUserProps) {
+export default function EditUser({ userInfo, setUserInfo }: EditUserProps) {
     const [isEditing, setIsEditing] = useState(false);
     // 초기에 rowData를 UptClaim으로 변환해서 editData로 설정
     const [editedData, setEditedData] = useState<UserCudType>(convertUser(userInfo));
@@ -21,28 +21,31 @@ export default function EditUser({ userInfo }: EditUserProps) {
     };
 
     const handleSave = async () => {
-        if (window.confirm('수정하시겠습니까?')) {
             console.log("e",editedData);
             console.log("u",userInfo);
-            /*if (window.confirm(`${userInfo.name} ${authText[userInfo.auth]} 를 수정하시겠습니까?`)) {
-                let param : any  = {
+            if (window.confirm(`${userInfo.name} ${authText[userInfo.auth]} 를 수정하시겠습니까?`)) {
+
+
+                let result = await userService(editedData);
+
+                setUserInfo({
                     ...userInfo,
-                    job : 'CUD',
-                    gbn : 'UPD'
-                }
-
-                let result = await userService(param);
-
+                    ...editedData,
+                });
+                setIsEditing(false);
 
                 if("code" in result){
                     if (result.code === "200") {
+                        setUserInfo({
+                            ...userInfo,
+                            ...editedData,
+                        });
                         alert('수정되었습니다.');
                     }else {
                         alert('서비스 오류입니다.');
                     }
                     setIsEditing(false);
                 }
-            }*/
         }
     };
 

@@ -61,6 +61,8 @@ export default function Page() {
             pieAccident: [], // 추가
         };
 
+
+
     return (
         <>
             {loading ? (

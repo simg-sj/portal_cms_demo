@@ -118,7 +118,7 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                 );
             case 'date':
                 return (
-                    <CalenderPicker selected={dayjs(editData[key]).toDate()} onChange={(date: Date | null) => {
+                    <CalenderPicker sDay={new Date(editData[key])} eDay={null} type={'sDay'} onChange={(date: Date | null) => {
                         setEditData((prevState) => ({
                             ...prevState,
                             [key]: dayjs(date).format('YYYY-MM-DD')

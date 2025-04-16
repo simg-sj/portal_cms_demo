@@ -18,6 +18,7 @@ interface MenuItemProps extends MenuItemType {
 //주차장대시보드 계약현황
 interface CounselData {
     pNo: string; //증권번호
+    nickName : string;
     sDay: string; //보험시작일
     eDay: string; //보험종료일
     bCount: number //사업장수
@@ -117,7 +118,6 @@ interface UserType {
     platform?: string,
     work?: string,
     authLevel: number,
-    userInfo?: UserType
 }
 
 interface UserUpk {
@@ -150,14 +150,15 @@ interface UserListType {
     irpk: number;
     userId: string;
     uName: string;
-    upk : number;
     bpk : number;
     uMail: string;
     uCell: string;
     uAuth : string;
     userPwd ?: string;
     platform ?: string;
+    bName ?: string;
     gbn?: string;
+    authLevel ?: number;
     code ?: string;
     work ?: string;
 }
@@ -527,5 +528,31 @@ interface CargoInsuType  {
     remarks?: string | null; // 비고
     createdAt?: string; // 생성 일시 (ISO 형식 문자열)
     updatedAt?: string; // 수정 일시 (ISO 형식 문자열)
-};
+}
 
+interface DeleteType {
+    irpk : string;
+    job : string;
+    table : string;
+    bpk : number;
+}
+
+// 보험 관리 타입
+interface InsuFormData {
+    irpk : string; // 각 ID
+    bpk : number;
+    productName: string; // 보험명
+    pNo: string; // 증권번호
+    insurer: string; // 보험사
+    nickName?: string; // 별칭
+    sDay: string; // 보험시작일
+    eDay: string; // 보험종료일
+    yPremiums: number | null; // 보험료
+    job : string;
+    gbn : string;
+    table : string;
+}
+
+interface InsuranceItem extends InsuFormData {
+    irpk: string; // 고유 식별자
+}

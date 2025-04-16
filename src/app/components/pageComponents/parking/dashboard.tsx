@@ -23,6 +23,8 @@ import dayjs from "dayjs";
 import {onClickExcel} from "@/app/lib/onClickExcel";
 import {monthColumns, policyColumns} from "@/config/data";
 import cn from "classnames";
+import {useNotifications} from "@/context/NotificationContext";
+import Notifications from "@/app/components/popup/Notifications";
 
 interface DashboardProps {
     chartData: {
@@ -53,6 +55,7 @@ export default function DashboardComponent({
     //업체별 라우팅 옵션
     const pathname = usePathname();
     const isHiparkingRoute = pathname.includes('/hiparking')
+    const { renewals } = useNotifications(); // 알림 데이터 가져오기
     const [donutValues, setDounutValues] = useState<DoughnutValueType>({
         lossRatio: tableData.counselData.at(-1).lossRatio,
         closingAmt: tableData.counselData.at(-1).closingAmt,
@@ -65,7 +68,7 @@ export default function DashboardComponent({
         sDay: dayjs().subtract(6, 'month').format('YYYY-MM'),
         eDay: dayjs().format('YYYY-MM')
     })
-
+    console.log(renewals)
     const handleParam = (type: string) => {
         updateTableData(param, type);
     };
@@ -99,7 +102,6 @@ export default function DashboardComponent({
 
             setDoughnutValue(maxLossItem.lossRatio); // 도넛 차트에도 반영
 
-            console.log(maxLossItem)
             setParam((prev) => ({
                 ...prev,
                 pNo: maxLossItem.pNo,
@@ -108,7 +110,6 @@ export default function DashboardComponent({
     }, []);
 
     useEffect(() => {
-        console.log(param)
         updateTableData(param, 'init');
     }, [param.pNo]);
 
@@ -240,6 +241,7 @@ export default function DashboardComponent({
                                 <thead className={'sticky left-0 top-0'}>
                                 <tr>
                                     <th>증권번호</th>
+                                    <th>별칭</th>
                                     <th>보험기간</th>
                                     <th>사업장수</th>
                                     <th>총보험료</th>
@@ -252,6 +254,7 @@ export default function DashboardComponent({
                                 {tableData.counselData.map((counsel, index) => (
                                     <tr key={index}  onClick={() => handleDoughnut(counsel)} className={cn('cursor-pointer hover:bg-main-lighter',{'bg-main-lighter' : param.pNo === counsel.pNo})}>
                                         <td>{counsel.pNo}</td>
+                                        <td>{counsel.nickName}</td>
                                         <td>{counsel.sDay + '~' + counsel.eDay}</td>
                                         <td>{counsel.bCount}</td>
                                         <td className={'text-center'}>
@@ -445,6 +448,10 @@ export default function DashboardComponent({
                         </div>
                     </div>
                 </div>
+                {
+                    renewals.length > 0 &&
+                    <Notifications/>
+                }
             </div>
         </>
     )

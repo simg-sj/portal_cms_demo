@@ -11,6 +11,7 @@ import {useSession} from "next-auth/react";
 import {signOutWithForm} from "@/middleware";
 import Loading from "@/app/(Navigation-Group)/loading";
 import {Theme} from "@/@types/common";
+import {useNotifications} from "@/context/NotificationContext";
 
 
 export default function Navigation() {
@@ -18,9 +19,35 @@ export default function Navigation() {
     const {data } = useSession();
     const [themeConfig, setThemeConfig] = useState<Theme | undefined>( undefined);
     const [activeLink, setActiveLink] = useState<string | null>(null);
+    const { setRenewals } = useNotifications();
+
+    const fetchRenewals = async (bpk: number) => {
+        try {
+            const response = await fetch("https://center-api.simg.kr/api/portal/getPolicyRenew", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ bpk }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+
+                // daysRemaining이 30 미만인 데이터 필터링
+                return data.filter(
+                    (item: { daysRemaining: number }) => item.daysRemaining < 30
+                ); // NotificationContext에 저장
+            } else {
+                console.error("보험 갱신 데이터를 가져오는 데 실패했습니다.");
+            }
+        } catch (err) {
+            console.error("API 호출 중 오류 발생:", err);
+        }
+    };
+
+
     useEffect(() => {
         if (data && data.user) {
-            const { service, authLevel } = data.user; // data.user가 존재하는지 확인
+            const { service, authLevel,bpk } = data.user; // data.user가 존재하는지 확인
             const config = getThemeConfig(service);
             let authPage = [];
 
@@ -38,6 +65,9 @@ export default function Navigation() {
                 menuItems: authPage,
             });
             document.documentElement.setAttribute('data-theme', service);
+
+            fetchRenewals(bpk).then(setRenewals);
+
         }
     }, [data]);
 

@@ -12,13 +12,24 @@
 
 import {
     CargoInsuType,
-    ClaimRowType, DashboardData,
-    dutyType,
+    ClaimRowType,
+    DashboardData, DeleteType,
+    dutyType, InsuFormData,
+    InsuranceItem,
     ParamDashType2,
     ParamType,
-    ParkingParamType, ParkingRowType,
-    ParkingType, rcAccidentRowType, rcAccidentType, resultCode, SearchParams,
-    UptClaim, UptParking, UserCudType, UserListType, UserUpk
+    ParkingParamType,
+    ParkingRowType,
+    ParkingType,
+    rcAccidentRowType,
+    rcAccidentType,
+    resultCode,
+    SearchParams,
+    UptClaim,
+    UptParking,
+    UserCudType,
+    UserListType,
+    UserUpk
 } from "@/@types/common";
 import {isResultCode, isUserListArray} from "@/app/lib/common";
 
@@ -99,8 +110,7 @@ export async function getDashBoard(param: ParamDashType2): Promise<DashboardData
 
 
 
-
-export async function updateCommon(param: ClaimRowType| UptClaim | UptParking ): Promise<resultCode> {
+export async function updateCommon(param: ClaimRowType| UptClaim | UptParking | InsuFormData | DeleteType ): Promise<resultCode> {
     try {
         
         const response = await fetch(`https://center-api.simg.kr/api/portal/claimCommon`, {
@@ -353,14 +363,14 @@ export async function dutyApi1001(param: dutyType) : Promise<resultCode> {
     }
 }
 
-export async function getUserData(bpk : number, listType : string, job : string) : Promise<UserListType[] | null> {
+export async function getUserData(bpk : number, listType : string, job : string, userId ?: string) : Promise<UserListType[] | null> {
     try {
         const response = await fetch(`https://center-api.simg.kr/api/portal/getUser`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({bpk, listType, job})
+            body: JSON.stringify({bpk, listType, job, userId})
         });
 
         if (!response.ok) {
@@ -441,7 +451,7 @@ export async function cargoInsuList(param :  ParamType) : Promise<CargoInsuType[
 }
 
 // 증권 정보
-export async function getPolicyList(param :  ParamType) : Promise<CargoInsuType[] | []> {
+export async function getPolicyList(param :  ParamType) : Promise<InsuranceItem[] | []> {
     try {
         const response = await fetch(`https://center-api.simg.kr/api/portal/getPolicyList`, {
             method: 'POST',
@@ -465,4 +475,4 @@ export async function getPolicyList(param :  ParamType) : Promise<CargoInsuType[
         throw new Error(`Failed to rcAccident: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
 }
-      
+

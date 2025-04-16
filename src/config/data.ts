@@ -226,6 +226,11 @@ export const parkingColumns =
         ]
     };
 
+export const modeString = {
+    'edit' : '편집',
+    'add' : '추가',
+    'reNew' : '갱신'
+}
 export const parkingColumnsAll = [
     { title: '순번', col: 'row' },
     { title: '사업장명', col: 'pklName' },

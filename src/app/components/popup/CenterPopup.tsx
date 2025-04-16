@@ -2,7 +2,6 @@ import React from 'react';
 import Button from "@/app/components/common/ui/button/button";
 import Image from "next/image";
 import Close from "@/assets/images/icon/close-icon.png";
-import {ParkingType} from "@/@types/common";
 
 interface ButtonConfig {
     label: string;
@@ -24,12 +23,11 @@ interface CenterPopupProps {
     buttons: ButtonConfig[];
     onConfirm?: () => void;
     onDelete?: () => void;
-    setExcelData ?: React.Dispatch<React.SetStateAction<ParkingType[]>>;
-    contentProps?: T;
+    contentProps?: Record<string, any>;
 }
 
 
-const CenterPopup = ({isOpen, onClose, title, Content, buttons, onConfirm, onDelete, setExcelData, contentProps}: CenterPopupProps) => {
+const CenterPopup = ({isOpen, onClose, title, Content, buttons, onConfirm, onDelete, contentProps}: CenterPopupProps) => {
 
     if (!isOpen) return null;
 
