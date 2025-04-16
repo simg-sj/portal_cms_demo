@@ -435,18 +435,8 @@ export default function Page() {
                                                     height={18}
                                                     className={'mr-2'}
                                                 />
-                                                <div>갱신일정이 {daysLeft}일 남았습니다.</div>
-                                            </div>
-                                            <div className={'flex items-center text-sm py-2 px-5 bg-gray-100 rounded-lg'}>
-                                                <button className='flex' onClick={() => openReNewPopup(insurance)}>갱신하기
-                                                <Image
-                                                    src={WarningIcon.src}
-                                                    alt={'경고'}
-                                                    width={18}
-                                                    height={18}
-                                                    className={'ml-2'}
-                                                />
-                                                </button>
+                                                <div>보험 갱신일정이 {daysLeft}일 남았습니다.</div>
+                                                <Button className={'ml-2'} color={"red"} fill height={25} width={105} onClick={() => openReNewPopup(insurance)}>갱신정보추가</Button>
                                             </div>
                                         </div>
                                     )}
