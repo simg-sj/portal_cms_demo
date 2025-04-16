@@ -25,6 +25,7 @@ import {monthColumns, policyColumns} from "@/config/data";
 import cn from "classnames";
 import {useNotifications} from "@/context/NotificationContext";
 import Notifications from "@/app/components/popup/Notifications";
+import EmptyDataWrapper from "@/app/components/common/ui/input/EmptyDataWrapper";
 
 interface DashboardProps {
     chartData: {
@@ -329,6 +330,7 @@ export default function DashboardComponent({
                                         </>)}
                                 </tr>
                                 </thead>
+                                <EmptyDataWrapper data={tableData.changeGraphData}>
                                 <tbody>
                                 {tableData.changeData.map((changeData, index) => (
                                     <tr key={index}>
@@ -353,6 +355,7 @@ export default function DashboardComponent({
                                     </tr>
                                 ))}
                                 </tbody>
+                            </EmptyDataWrapper>
                             </table>
                         </div>
                     </div>
@@ -431,6 +434,7 @@ export default function DashboardComponent({
                                         <th>보험금</th>
                                     </tr>
                                     </thead>
+                                    <EmptyDataWrapper data={tableData.monthAccidentData}>
                                     <tbody>
                                     {tableData.monthAccidentData.map((month, index) => (
                                         <tr key={index}>
@@ -443,6 +447,7 @@ export default function DashboardComponent({
                                         </tr>
                                     ))}
                                     </tbody>
+                                    </EmptyDataWrapper>
                                 </table>
                             </div>
                         </div>

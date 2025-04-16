@@ -9,28 +9,12 @@
 import Link from "next/link";
 import Image from 'next/image';
 import {MenuItemProps} from "@/@types/common";
-import React, {useEffect} from "react";
-import Tooltip from "@/app/components/common/ui/tooltip";
+import React from "react";
 import {useNotifications} from "@/context/NotificationContext";
 
 
 export default function MenuItem({icon, label, link, isActive, onClick}: MenuItemProps){
     const { renewals } = useNotifications(); // 알림 데이터 가져오기
-
-    const NotiRenew = () => {
-        return (
-            <div>
-                <div className={'font-bold mb-3'}>갱신 알림</div>
-                {
-                    renewals.map((item, index) => (
-                        <div key={index} className={'text-sm font-semibold my-3 text-gray-800'}>
-                            {`${index + 1}. ${item.productName}`}
-                        </div>
-                    ))
-                }
-            </div>
-        );
-    };
 
     return (
         <Link
@@ -43,8 +27,8 @@ export default function MenuItem({icon, label, link, isActive, onClick}: MenuIte
             <div className="text-white text-[12px] mt-2">{label}</div>
             {
                 (label === '보험관리' && renewals.length > 0) &&
-                <div className='absolute right-1 top-0.5'>
-                    <Tooltip content={<NotiRenew/>} width={300}/>
+                <div className='absolute right-1 top-1.5 w-5 h-5 text-white text-sm rounded-full bg-red-500 flex justify-center items-center'>
+                    !
                 </div>
             }
         </Link>
