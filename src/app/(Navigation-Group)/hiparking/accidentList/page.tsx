@@ -43,10 +43,10 @@ export default function Page() {
         bpk: 2,
         condition: "wCell",
         endDate: dayjs().format('YYYY-MM-DD'),
-        startDate: dayjs().format('YYYY-MM-DD'),
+        startDate: dayjs().subtract(7, 'days').format('YYYY-MM-DD'),
         text: ''
     });
-
+    console.log(param)
     const getPaginatedData = () => {
         const startIndex = currentPage * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
@@ -220,11 +220,8 @@ export default function Page() {
             header: '접수번호'
         },
         {
-            key: 'accidentDate',
-            header: '사고일',
-            render: (item) => item.accidentDate
-                ? dayjs(item.accidentDate).format('YYYY-MM-DD')
-                : '-'
+            key: 'requestDate',
+            header: '접수일',
         },
         {
             key: 'total',

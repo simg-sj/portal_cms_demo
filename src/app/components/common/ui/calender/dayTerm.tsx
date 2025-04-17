@@ -26,6 +26,7 @@ const DayTerm = ({sDay, eDay, type ,onChange, setParam, allowFutureEndDate}: Day
     const [startDate, setStartDate] = useState<Date | null>(sDay);
     const [endDate, setEndDate] = useState<Date | null>(eDay);
 
+
     //타입 월달력, 전체달력 지정 : 월달력 3달단위 전체달력 오늘날짜 기본값
     useEffect(() => {
         // 월달력: 6개월 전부터 현재까지
@@ -51,14 +52,17 @@ const DayTerm = ({sDay, eDay, type ,onChange, setParam, allowFutureEndDate}: Day
             setStartDate(oneyearAgo);
             setEndDate(new Date());
         } else {
+            console.log('day');
+            console.log(startDate);
+            console.log(endDate);
             // 일달력: 오늘 날짜
             setParam((prev:  ParamDashType2) => ({
                 ...prev,
-                startDate: dayjs().format('YYYY-MM-DD'),
-                endDate : dayjs().format('YYYY-MM-DD')
+                startDate: sDay,
+                endDate : eDay
             }));
-            setStartDate(new Date());
-            setEndDate(new Date());
+            setStartDate(sDay);
+            setEndDate(eDay);
         }
     }, [type]);
 

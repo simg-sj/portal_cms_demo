@@ -4,6 +4,7 @@ import Image from "next/image";
 import Error from "@/assets/images/icon/error-icon.png";
 import {ClaimRowType, ExtendedClaimRowType, UserListType, UserType} from "@/@types/common";
 import {authText} from "@/config/data";
+import dayjs from "dayjs";
 interface ColumType {
     key : string;
     header : string;
@@ -57,6 +58,11 @@ export function CheckboxContainer<T>({
         if(column === 'total') {
             if(item[column]) {
                 return Number(value).toLocaleString() + '원'
+            }
+        }
+        if(column === 'requestDate') {
+            if(item[column]) {
+                return dayjs(value).format('YYYY-MM-DD')
             }
         }
         if (value === null || value === undefined) {

@@ -19,7 +19,7 @@ export default function Navigation() {
     const {data } = useSession();
     const [themeConfig, setThemeConfig] = useState<Theme | undefined>( undefined);
     const [activeLink, setActiveLink] = useState<string | null>(null);
-    const { setRenewals } = useNotifications();
+    const { setRenewals,showConfirm,resetNotiThen } = useNotifications();
 
     const fetchRenewals = async (bpk: number) => {
         try {
@@ -84,9 +84,10 @@ export default function Navigation() {
     }
 
     const logoutSubmit = async () => {
-        if (window.confirm('로그아웃하시겠습니까?')) {
+        showConfirm('로그아웃하시겠습니까?', async () => {
             await signOutWithForm();
-        }
+        })
+
     };
 
     return (
