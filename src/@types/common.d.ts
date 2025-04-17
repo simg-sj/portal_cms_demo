@@ -149,11 +149,11 @@ type ExtendedClaimRowType = ClaimRowType | rcAccidentRowType | dutyRowType | Par
 interface UserListType {
     irpk: number;
     userId: string;
-    uName: string;
+    uName?: string;
     bpk : number;
-    uMail: string;
-    uCell: string;
-    uAuth : string;
+    uMail?: string;
+    uCell?: string;
+    uAuth ?: string;
     userPwd ?: string;
     platform ?: string;
     bName ?: string;
@@ -161,6 +161,7 @@ interface UserListType {
     authLevel ?: number;
     code ?: string;
     work ?: string;
+    subContractYn ?: string;
 }
 
 interface UserCudType extends UserListType{

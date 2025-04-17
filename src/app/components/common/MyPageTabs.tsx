@@ -41,10 +41,11 @@ interface MypageType {
     userInfo: UserType;
     userList: UserListType[]; // userList 기본값을 빈 배열로 설정
     onSearchClick : (param : any) => void;
+    onReload : (pk : number, infoId : string) => Promise<void>;
     setUserInfo : React.Dispatch<React.SetStateAction<UserType>>;
 }
 
-export default function MyPageTabs({ userInfo, userList = [], onSearchClick, setUserInfo }: MypageType) {
+export default function MyPageTabs({ userInfo, userList = [], onSearchClick, setUserInfo, onReload }: MypageType) {
     const [activeTab, setActiveTab] = useState(0);
 
     return (
@@ -69,7 +70,7 @@ export default function MyPageTabs({ userInfo, userList = [], onSearchClick, set
             <div className="p-4">
                 {
                     activeTab === 0 ?
-                        <EditUser userInfo={userInfo} setUserInfo={setUserInfo}/>
+                        <EditUser userInfo={userInfo} setUserInfo={setUserInfo} onReload={onReload}/>
                         :
                         userInfo.auth === 'admin' ? <UserList userList={userList}  onSearch={onSearchClick}/>  : <GetList userList={userList} />
                 }

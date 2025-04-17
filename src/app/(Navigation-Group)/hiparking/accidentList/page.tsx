@@ -279,6 +279,11 @@ export default function Page() {
                                 text: e.target.value,
                             }))
                         }}
+                        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                            if (e.key === 'Enter') {
+                                onSearchClick(); // 엔터키를 누르면 onSearchClick 실행
+                            }
+                        }}
                     />
                     <Button
                         color={'main'}

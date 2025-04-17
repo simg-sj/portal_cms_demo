@@ -337,6 +337,7 @@ export default function Page() {
 
 
     const onSearchClick = async () => {
+        console.log(param)
         const result = await getParking(param);
         setData(result);
         setCurrentPage(0);
@@ -413,7 +414,7 @@ export default function Page() {
                         }
                         }
                     >
-                        <option value={'pkName'}>주차장명</option>
+                        <option value={'pklName'}>주차장명</option>
                         <option value={'pklAddress'}>주차장주소</option>
                     </select>
                     <input
@@ -425,6 +426,11 @@ export default function Page() {
                                 ...prev,
                                 text: e.target.value,
                             }))
+                        }}
+                        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                            if (e.key === 'Enter') {
+                                onSearchClick(); // 엔터키를 누르면 onSearchClick 실행
+                            }
                         }}
                     />
                     <Button

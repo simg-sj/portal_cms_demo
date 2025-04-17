@@ -39,7 +39,7 @@ interface DashboardProps {
     };
     tableData: DashboardData;
     setDoughnutValue : React.Dispatch<SetStateAction<number | null>>;
-    updateTableData : (param : ParamDashType2, type : string) => void;
+    updateTableData : (param : ParamDashType2, type : string) => Promise<string>;
 }
 
 interface DoughnutValueType {
@@ -55,6 +55,7 @@ export default function DashboardComponent({
                                            }: DashboardProps) {
     //업체별 라우팅 옵션
     const pathname = usePathname();
+    const {showAlert} = useNotifications();
     const isHiparkingRoute = pathname.includes('/hiparking')
     const { renewals } = useNotifications(); // 알림 데이터 가져오기
     const [donutValues, setDounutValues] = useState<DoughnutValueType>({
@@ -69,9 +70,11 @@ export default function DashboardComponent({
         sDay: dayjs().subtract(6, 'month').format('YYYY-MM'),
         eDay: dayjs().format('YYYY-MM')
     })
-    console.log(renewals)
-    const handleParam = (type: string) => {
-        updateTableData(param, type);
+    const handleParam = async (type: string) => {
+        let code = await updateTableData(param, type);
+        if(code === '401'){
+            showAlert('데이터가 없습니다.');
+        }
     };
 
     const handleDoughnut = async (counsel) => {
@@ -259,7 +262,7 @@ export default function DashboardComponent({
                                         <td>{counsel.sDay + '~' + counsel.eDay}</td>
                                         <td>{counsel.bCount}</td>
                                         <td className={'text-center'}>
-                                            {counsel.total.toLocaleString()}원
+                                            {Number(counsel.total).toLocaleString()}원
                                         </td>
                                         <td className={'text-center'}>
                                             {counsel.closingAmt.toLocaleString()}원
@@ -330,8 +333,10 @@ export default function DashboardComponent({
                                         </>)}
                                 </tr>
                                 </thead>
-                                <EmptyDataWrapper data={tableData.changeGraphData}>
                                 <tbody>
+                                <EmptyDataWrapper data={tableData.changeGraphData}>
+                                <tr>
+                                </tr>
                                 {tableData.changeData.map((changeData, index) => (
                                     <tr key={index}>
                                         <td>{index + 1}</td>
@@ -354,8 +359,8 @@ export default function DashboardComponent({
                                             </>)}
                                     </tr>
                                 ))}
+                                </EmptyDataWrapper>
                                 </tbody>
-                            </EmptyDataWrapper>
                             </table>
                         </div>
                     </div>
@@ -434,8 +439,9 @@ export default function DashboardComponent({
                                         <th>보험금</th>
                                     </tr>
                                     </thead>
-                                    <EmptyDataWrapper data={tableData.monthAccidentData}>
                                     <tbody>
+                                    <EmptyDataWrapper data={tableData.monthAccidentData}>
+                                    <tr></tr>
                                     {tableData.monthAccidentData.map((month, index) => (
                                         <tr key={index}>
                                             <td>{month.changeDay}</td>
@@ -446,8 +452,8 @@ export default function DashboardComponent({
                                             <td>{month.total}</td>
                                         </tr>
                                     ))}
-                                    </tbody>
                                     </EmptyDataWrapper>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>

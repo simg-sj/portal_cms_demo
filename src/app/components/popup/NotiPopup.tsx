@@ -15,7 +15,7 @@ interface Props {
 export default function NotiPopup({ isOpen, title, noti }: Props) {
     if (!isOpen) return null;
 
-    const { resetNoti } = useNotifications();
+    const { resetNoti,showAlert } = useNotifications();
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
@@ -45,7 +45,7 @@ export default function NotiPopup({ isOpen, title, noti }: Props) {
                                     try {
                                         await button.onClick(); // ✅ 여기가 핵심
                                     } catch (e) {
-                                        console.error("팝업 버튼 클릭 오류", e);
+                                        showAlert('서비스 오류입니다.');
                                     }
                                 }}
                                 color={button.color}

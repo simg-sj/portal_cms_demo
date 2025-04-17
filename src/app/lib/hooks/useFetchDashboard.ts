@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { DashboardData, MonthCumulativeData, ParamDashType2, CounselData, ChangeCounselData, TopBusinessData, TopCounselData, ChangeGraph, MonthAccidentData } from "@/@types/common";
 import { getDashBoard } from "@/app/(Navigation-Group)/action";
 import dayjs from "dayjs";
+import {useNotifications} from "@/context/NotificationContext";
 
 const useFetchDashboard = (bpk: number) => {
     const [tableData, setTableData] = useState<DashboardData | null>(null);
@@ -75,9 +76,10 @@ const useFetchDashboard = (bpk: number) => {
             const result = await getDashBoard(param);
 
             const monthCumulativeData = Array.isArray(result[6]) && result[6].length > 0 ? result[6] : emptyMonth;
+
+
             if (result[0][0].code === '401') {
-                alert('데이터가 없습니다.');
-                return ;
+                return '401';
             } else {
                 switch (type) {
                     case 'top' :

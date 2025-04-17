@@ -21,14 +21,25 @@ export const convertClaimToUptClaim = (
     };
 };
 
+export const convertUserToUserUpt = (
+    data: Partial<UserListType> & { bpk: number; irpk: number, userId: string }
+): UserCudType => {
+    return {
+        ...data, // ✅ changed된 필드 + bpk, irpk 포함
+        job: "CUD",
+        table: "userMaster",
+        gbn : 'UPT',
+    };
+};
+
 
 export const convertClaimToUptParking = (rowData: ParkingRowType): UptParking => {
     return {
-        job: "UPT", // UptClaim에 필요한 추가 필드 설정
+        job: "CUD", // UptClaim에 필요한 추가 필드 설정
         // 추가적으로 UptClaim 유형에서 필요한 필드가 있다면 여기에 추가
         bpk: rowData.bpk || 0,
         irpk: rowData.irpk || 0,
-        gbn : '',
+        gbn : 'UPT',
         table : 'parkinglot'
     };
 };
@@ -108,7 +119,7 @@ export const getChangedFields = (
         const valB = original[key];
 
         // bpk, irpk는 무조건 포함
-        if (key === "bpk" || key === "irpk") {
+        if (key === "bpk" || key === "irpk" || key === 'userId') {
             changed[key] = valA;
             continue;
         }

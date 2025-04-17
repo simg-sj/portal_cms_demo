@@ -4,7 +4,7 @@ import { ParkingRowType, UptParking} from "@/@types/common";
 import Button from "@/app/components/common/ui/button/button";
 import {convertClaimToUptParking} from "@/app/lib/common";
 import dayjs from "dayjs";
-import {parkingStatus} from "@/config/data";
+import {PARKING_STATUS, parkingStatus, STATE_OPTIONS} from "@/config/data";
 
 
 
@@ -166,7 +166,23 @@ const HiparkingList = ({isEditing, rowData, onSave }: ListProps) => {
                     </tr>
                     <tr>
                         <th>상태</th>
-                        <td colSpan={3}>{renderField('status', rowData.status ? parkingStatus(rowData.status) : '-', 'text')}</td>
+                            {
+                                isEditing ?
+                                    <td colSpan={3}>
+                                        <select
+                                            defaultValue={rowData.status}
+                                            onChange={handleChange}
+                                            className="w-full p-1 border rounded"
+                                        >
+                                            <option value="">선택하세요</option>
+                                            {PARKING_STATUS?.map(option => (
+                                                <option key={option} value={option}>{option}</option>
+                                            ))}
+                                        </select>
+                                    </td>
+                                    :
+                                    <td>{rowData.status ? rowData.status : '-'}</td>
+                            }
                     </tr>
                     {
                         rowData.status === 'NEW' &&

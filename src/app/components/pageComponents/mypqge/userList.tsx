@@ -10,7 +10,8 @@ import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContai
 import {SearchParams, UserCudType, UserListType, UserUpk} from "@/@types/common";
 import {authText} from "@/config/data";
 import {userService} from "@/app/(Navigation-Group)/action";
-import {getPaginatedData} from "@/app/lib/common";
+import {convertUserToUserUpt, getChangedFields, getPaginatedData} from "@/app/lib/common";
+import {useNotifications} from "@/context/NotificationContext";
 
 
 export default function UserList({ userList, onSearch }: { userList: UserListType[], onSearch : (param : SearchParams) => void}) {
@@ -24,6 +25,9 @@ export default function UserList({ userList, onSearch }: { userList: UserListTyp
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10; //페이지당 항목수
     const totalPages = Math.ceil(userList.length / itemsPerPage);
+
+    // 알림
+    const {showAlert, resetNotiThen, showConfirm} = useNotifications();
 
     //조회
     const [searchParams, setSearchParams] = useState<SearchParams>({
@@ -65,32 +69,34 @@ export default function UserList({ userList, onSearch }: { userList: UserListTyp
             const formData = addUserRef.current.getFormData();
             const confirmMessage = `${formData.uName} ${authText[formData.uAuth]} 를 추가하시겠습니까?`;
 
-            if (!window.confirm(confirmMessage)) {
-                return;
-            }
-            formData.job = "CUD";
-            formData.gbn = "ADD";
 
-            let result = await userService(formData);
+            showConfirm(confirmMessage, async () => {
+                formData.job = "CUD";
+                formData.gbn = "ADD";
 
-            if("code" in result){
-                if (result.code === "200") {
-                    alert("계정이 생성되었습니다.");
-                    setIsOpen(false);
-                    onSearch(searchParams);
-                } else {
-                    if("msg" in result){
-                        alert(result.msg);
-                    }else {
-                        alert("서비스 오류입니다.");
+                let result = await userService(formData);
+
+                if("code" in result){
+                    if (result.code === "200") {
+                        onSearch(searchParams);
+                        resetNotiThen(() => {
+                            showAlert("계정이 생성되었습니다.", () => {
+                                setIsOpen(false);
+                            });
+                        })
+                    } else {
+                        if("msg" in result){
+                            resetNotiThen(() => {
+                                showAlert(result.msg);
+                            });
+                        }else {
+                            showAlert("서비스 오류입니다.");
+                        }
                     }
                 }
-            }
-
-
+            })
         } catch (error) {
-            console.error("사용자 추가 중 오류 발생:", error);
-            alert("예기치 않은 오류가 발생했습니다.");
+            showAlert("예기치 않은 오류가 발생했습니다.");
         }
     };
 
@@ -98,27 +104,34 @@ export default function UserList({ userList, onSearch }: { userList: UserListTyp
     const handleSave = async () => {
         if (addUserRef.current) {
             const isValid = await addUserRef.current.validateForm();
+
             if (isValid) {
                 const formData : UserCudType = addUserRef.current.getFormData();
+                const orginal = userList.find(user => user.irpk === formData.irpk);
+                showConfirm(`${formData.uName} ${authText[formData.uAuth]} 를 수정하시겠습니까?`, async () => {
+                    const changed = getChangedFields(formData, orginal);
+                    const merged = {
+                        ...changed,
+                        bpk: orginal.bpk,
+                        irpk: orginal.irpk,
+                        userId : orginal.userId
+                    };
+                    let param = convertUserToUserUpt(merged);
 
-                if (window.confirm(`${formData.uName} ${authText[formData.uAuth]} 를 수정하시겠습니까?`)) {
-                    formData.gbn = 'UPD'
-                    formData.job = 'CUD';
-                    let result = await userService(formData);
+                    let result = await userService(param);
 
                     if("code" in result){
                         if (result.code === "200") {
-                            alert('수정되었습니다.');
-                            onSearch(searchParams);
+                            resetNotiThen(() => {
+                                showAlert('수정되었습니다');
+                                onSearch(searchParams);
+                            })
                         }else {
-                            alert('서비스 오류입니다.');
+                            showAlert('서비스 오류입니다.');
                         }
                     }
-
                     setIsOpen(false);
-                } else {
-                    setIsOpen(true);
-                }
+                })
             }
         }
     };
@@ -126,11 +139,16 @@ export default function UserList({ userList, onSearch }: { userList: UserListTyp
 
     //사용자 선택 삭제
     const handleDeleteGroup = async () => {
+        try{
+
+        }catch (e){
+
+        }
         if (selectedItems.length === 0) {
-            alert('삭제할 항목을 선택해주세요.');
+            showAlert('삭제할 항목을 선택해주세요.');
             return;
         }
-        if (window.confirm(`선택한 ${selectedItems.length}개의 항목을 삭제하시겠습니까?`)) {
+        showConfirm(`선택한 ${selectedItems.length}개의 항목을 삭제하시겠습니까?`, async () => {
             let param : UserUpk = {
                 upks : selectedItems.join(','),
                 job : 'CUD',
@@ -140,36 +158,42 @@ export default function UserList({ userList, onSearch }: { userList: UserListTyp
 
             if("code" in result){
                 if (result.code === "200") {
-                    alert('삭제되었습니다.');
-                    onSearch(searchParams);
+                    resetNotiThen(() => {
+                        showAlert('삭제되었습니다');
+                        onSearch(searchParams);
+                    })
                 }else {
-                    alert('서비스 오류입니다.');
+                    resetNotiThen(() => {
+                        showAlert('서비스 오류입니다.');
+                    })
                 }
             }
-
-            return;
-        }
+        })
     };
 
 
     const handleDeleteSingle = async () => {
         if (addUserRef.current) {
             const formData = addUserRef.current.getFormData();
-            if (window.confirm(`${formData.uName} ${authText[formData.uAuth]} 를 삭제하시겠습니까?`)) {
+            showConfirm(`${formData.uName} ${authText[formData.uAuth]} 를 삭제하시겠습니까?`, async () => {
                 formData.gbn = 'DEL'
                 formData.job = 'CUD';
                 let result = await userService(formData);
 
-                if("code" in result){
+                if ("code" in result) {
                     if (result.code === "200") {
-                        alert('삭제하였습니다');
-                        onSearch(searchParams);
-                    }else {
-                        alert('서비스 오류입니다.');
+                        resetNotiThen(() => {
+                            showAlert('삭제하였습니다.');
+                            onSearch(searchParams);
+                        })
+                    } else {
+                        resetNotiThen(() => {
+                            showAlert('서비스 오류입니다..');
+                        })
                     }
                 }
                 setIsOpen(false);
-            }
+            })
         }
     };
 
@@ -292,6 +316,11 @@ export default function UserList({ userList, onSearch }: { userList: UserListTyp
                         className={'w-[300px] h-[35px] rounded-tr-none rounded-br-none ml-5'}
                         value={searchParams.searchKeyword}
                         onChange={(e) => handleParamChange('searchKeyword', e.target.value)}
+                        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                            if (e.key === 'Enter') {
+                                onSearchClick(); // 엔터키를 누르면 onSearchClick 실행
+                            }
+                        }}
                     />
                     <Button
                         color={'main'}
@@ -323,7 +352,7 @@ export default function UserList({ userList, onSearch }: { userList: UserListTyp
             <div className={'mt-4'}>
                 <CheckboxContainer
                     items={displayedUsers}
-                    getItemId={(item) => item.upk}
+                    getItemId={(item) => item.irpk}
                     columns={columns}
                     selectedItems={selectedItems}
                     onRowClick={handleRowClick}

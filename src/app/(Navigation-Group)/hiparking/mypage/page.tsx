@@ -16,7 +16,6 @@ export default function Page() {
             const result = await getUserData(pk, '', 'SELECT', infoId);
             const {bpk,userId, uCell, bName, uAuth, authLevel, platform, uMail, uName, work} = result[0];
 
-            console.log(result);
             setUserInfo({
                 upk: 0,
                 bpk : bpk,
@@ -48,7 +47,7 @@ export default function Page() {
                 status === "loading" || !userInfo ?
                     <Loading/>
                     :
-                    <MyPageContainer userInfo={userInfo} setUserInfo={setUserInfo} />
+                    <MyPageContainer userInfo={userInfo} setUserInfo={setUserInfo} fetchUser={fetchUser} />
             }
         </>
     )

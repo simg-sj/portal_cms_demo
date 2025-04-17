@@ -30,7 +30,8 @@ const AddUser = forwardRef<AddUserRef>((props, ref) => {
             uMail: '',
             uCell: '',
             work: '',
-            job : ''
+            job : '',
+            subContractYn : ''
         }
     });
 

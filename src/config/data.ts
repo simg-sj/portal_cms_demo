@@ -70,6 +70,7 @@ export const parkingStatus = (status : string) => {
 }
 export const authText = {'user' : '사용자', 'admin' : '관리자'}
 export const STATE_OPTIONS = ['확인중', '접수', '접수 취소', '보류', '면책', '종결', '추산', '합의', '부재'];
+export const PARKING_STATUS = ['정상', '신규', '종료'];
 export const APPROVAL_OPTIONS = ['승인', '미승인'];
 export const ACCIDENT_TYPE_OPTIONS = ['주차장배상', '재물배상', '치료비'];
 export const ACCIDENT_DETAIL_TYPE_OPTIONS = ['차대차', '시설물사고','배상책임', '발렛사고','재물배상', '건물자체사고', '치료비', '기타'];

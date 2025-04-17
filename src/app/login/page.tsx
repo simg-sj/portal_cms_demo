@@ -37,6 +37,10 @@ export default function LoginPage() {
                 userPwd: password,
             });
 
+            console.log(res);
+
+
+
             if (!res?.ok) {
                 setError(res?.error || "로그인 실패. 다시 시도해주세요.");
                 if (errorDiv.current) errorDiv.current.style.display = "block";

@@ -5,12 +5,13 @@ import MyPageTabs from "@/app/components/common/MyPageTabs";
 import {resultCode, SearchParams, UserListType, UserType} from "@/@types/common";
 import { authText, tabs } from "@/config/data";
 import {getUserData, userService} from "@/app/(Navigation-Group)/action";
+import {useNotifications} from "@/context/NotificationContext";
 
-export default function MyPageContainer({ userInfo, setUserInfo }: { userInfo: UserType, setUserInfo: React.Dispatch<React.SetStateAction<UserType>> }) {
+export default function MyPageContainer({ userInfo, setUserInfo, fetchUser }: { userInfo: UserType, setUserInfo: React.Dispatch<React.SetStateAction<UserType>>, fetchUser: (pk : number, infoId : string) => Promise<void> }) {
     const [userList, setUserList] = useState<UserListType[]>([]);
+    const {showAlert} = useNotifications();
     const onReload = async () => {
         const result = await getUserData(userInfo.bpk, tabs[userInfo.auth]?.[2]?.listType, 'LIST');
-        console.log(result)
         setUserList(result || []);
     }
 
@@ -20,7 +21,7 @@ export default function MyPageContainer({ userInfo, setUserInfo }: { userInfo: U
             setUserList(result);
         }else{
             setUserList([]);
-            alert('조회된 정보가 없습니다.');
+            showAlert('조회된 정보가 없습니다.');
         }
     }
 
@@ -56,6 +57,7 @@ export default function MyPageContainer({ userInfo, setUserInfo }: { userInfo: U
                     userInfo={userInfo}
                     userList={userList}
                     setUserInfo={setUserInfo}
+                    onReload={fetchUser}
                     onSearchClick={onSearchClick}
                 />
             </div>

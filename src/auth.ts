@@ -30,6 +30,7 @@ export const {
                 if (!res.ok) {
                     throw new Error(data.message || "로그인에 실패했습니다.");
                 }
+
                 const user = {
                     id: data.userId,
                     platform: data.platform,

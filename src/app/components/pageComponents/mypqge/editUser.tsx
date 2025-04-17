@@ -4,18 +4,23 @@ import ButtonGroup from "@/app/components/common/ui/button/buttonGroup";
 import {authText} from "@/config/data";
 import {userService} from "@/app/(Navigation-Group)/action";
 import {convertClaimToUptClaim, convertUser} from "@/app/lib/common";
+import {useNotifications} from "@/context/NotificationContext";
 
 
 interface EditUserProps {
     userInfo: UserType;
     onClose?: () => void;
     setUserInfo : React.Dispatch<React.SetStateAction<UserType>>
+    onReload : (pk : number, infoId : string) => Promise<void>;
 }
 
-export default function EditUser({ userInfo, setUserInfo }: EditUserProps) {
+export default function EditUser({ userInfo, setUserInfo, onReload }: EditUserProps) {
     const [isEditing, setIsEditing] = useState(false);
     // 초기에 rowData를 UptClaim으로 변환해서 editData로 설정
     const [editedData, setEditedData] = useState<UserCudType>(convertUser(userInfo));
+
+    // 알림 창
+    const {showAlert, showConfirm, resetNotiThen} = useNotifications();
     const handleEdit = () => {
         setIsEditing(true);
     };
@@ -23,30 +28,25 @@ export default function EditUser({ userInfo, setUserInfo }: EditUserProps) {
     const handleSave = async () => {
             console.log("e",editedData);
             console.log("u",userInfo);
-            if (window.confirm(`${userInfo.name} ${authText[userInfo.auth]} 를 수정하시겠습니까?`)) {
-
-
+            showConfirm(`${userInfo.name} ${authText[userInfo.auth]} 를 수정하시겠습니까?`, async () => {
                 let result = await userService(editedData);
-
-                setUserInfo({
-                    ...userInfo,
-                    ...editedData,
-                });
-                setIsEditing(false);
-
                 if("code" in result){
                     if (result.code === "200") {
-                        setUserInfo({
-                            ...userInfo,
-                            ...editedData,
-                        });
-                        alert('수정되었습니다.');
+                        let result= await onReload(userInfo.bpk, String(userInfo.userId));
+                        console.log('result',result);
+                        resetNotiThen(() => {
+                            showAlert('수정되었습니다');
+                        })
                     }else {
-                        alert('서비스 오류입니다.');
+                        showAlert('서비스 오류입니다.');
                     }
                     setIsEditing(false);
+                } else {
+                    resetNotiThen(() => {
+                        showAlert('서비스 오류입니다.');
+                    })
                 }
-        }
+            })
     };
 
     const handleCancel = () => {

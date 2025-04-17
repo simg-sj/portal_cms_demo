@@ -213,6 +213,7 @@ export default function Page() {
 
 
             let result = await updateCommon(updatedInsurance);
+
             console.log(result)
             /*if(code === '200'){
                 alert(msg);
