@@ -27,7 +27,6 @@ import {useNotifications} from "@/context/NotificationContext";
 export default function Page() {
     // 보험 목록 예비데이터
     const [insuranceList, setInsuranceList] = useState<InsuranceItem[]>([]);
-    const {setNoti} = useNotifications();
     const {data } = useSession();
 
     // 팝업 상태 관리
@@ -189,6 +188,7 @@ export default function Page() {
 
     // 날짜 업데이트
     const updateDateRange = (newParams: Partial<InsuFormData>) => {
+        console.log(newParams)
         if (newParams.sDay) {
             setValue('sDay', newParams.sDay);
         }
@@ -207,19 +207,22 @@ export default function Page() {
                     item.irpk === selectedInsurance.irpk ? { ...data, irpk: item.irpk } : item
                 )
             );
+
             updatedInsurance.job = 'UPT';
             updatedInsurance.table = 'policyMaster';
 
+            showConfirm('수정하시겠습니까?', async () => {
+                let result = await updateCommon(updatedInsurance);
 
-
-            let result = await updateCommon(updatedInsurance);
-
-            console.log(result)
-            /*if(code === '200'){
-                alert(msg);
-            }else {
-                alert(msg);
-            }*/
+                console.log(result)
+                if(result.code === '200'){
+                    resetNotiThen(() =>{
+                        showAlert(result.msg);
+                    })
+                }else {
+                    showAlert(result.msg);
+                }
+            })
         } else {
             // 추가 모드: 새 항목 추가
             const newInsurance: InsuranceItem = {
@@ -264,6 +267,9 @@ export default function Page() {
         return dateStr.replace(/-/g, '.');
     };
 
+    useEffect(() => {
+
+    }, []);
     // 팝업 Content에 표시할 컴포넌트
     const PopupContent = () => {
         return (

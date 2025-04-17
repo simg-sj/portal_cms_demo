@@ -9,6 +9,7 @@ interface DayTermProps {
     sDay ?: Date;
     eDay ?: Date;
     type?: 'month' | 'day' | 'oneYear';
+    onChange ? : (sDay: Date, eDay: Date) => void;
     //setParam: (newParams: Partial<ParamDashType2>) => void;
     setParam: React.Dispatch<React.SetStateAction<ExtendedParamType>>;
     allowFutureEndDate?: boolean; // 오늘 이후 날짜 허용 여부 (true: 가능, false: 제한)
@@ -21,7 +22,7 @@ interface ParamType {
     condition ?: string;
 }
 
-const DayTerm = ({sDay, eDay, type , setParam, allowFutureEndDate}: DayTermProps) => {
+const DayTerm = ({sDay, eDay, type ,onChange, setParam, allowFutureEndDate}: DayTermProps) => {
     const [startDate, setStartDate] = useState<Date | null>(sDay);
     const [endDate, setEndDate] = useState<Date | null>(eDay);
 
