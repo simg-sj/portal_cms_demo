@@ -237,12 +237,12 @@ export default function DashboardComponent({
                                 <colgroup>
                                     <col style={{width: ""}}/>
                                     <col style={{width: ""}}/>
-                                    <col style={{width: ""}}/>
+                                    <col style={{width: "150px"}}/>
+                                    <col style={{width: "100px"}}/>
                                     <col style={{width: "200px"}}/>
                                     <col style={{width: "200px"}}/>
                                     <col style={{width: "200px"}}/>
-                                    <col style={{width: "200px"}}/>
-                                    <col style={{width: ""}}/>
+                                    <col style={{width: "100px"}}/>
                                 </colgroup>
                                 <thead className={'sticky left-0 top-0'}>
                                 <tr>
@@ -260,8 +260,8 @@ export default function DashboardComponent({
                                 {tableData.counselData.map((counsel, index) => (
                                     <tr key={index}  onClick={() => handleDoughnut(counsel)} className={cn('cursor-pointer hover:bg-main-lighter',{'bg-main-lighter' : param.pNo === counsel.pNo})}>
                                         <td>{counsel.pNo}</td>
-                                        <td>{counsel.nickName}</td>
-                                        <td>{counsel.sDay + '~' + counsel.eDay}</td>
+                                        <td className={'break-keep'}>{counsel.nickName}</td>
+                                        <td className={'break-keep'}>{counsel.sDay + ' ~ ' + counsel.eDay}</td>
                                         <td>{counsel.bCount}</td>
                                         <td className={'text-center'}>
                                             {Number(counsel.total).toLocaleString()}원
