@@ -7,7 +7,6 @@ declare module "next-auth" {
         phone: string;
         bName : string;
         name: string;
-        password : string;
         userId: string;
         email: string | null;
         work: string | null;
@@ -17,6 +16,7 @@ declare module "next-auth" {
         phone : string;
         subYn : string;
         service : string;
+        emailVerified?: Date | null;
         // 다른 필드들도 추가 가능
     }
 
