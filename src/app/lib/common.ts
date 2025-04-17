@@ -33,12 +33,10 @@ export const convertUserToUserUpt = (
 };
 
 
-export const convertClaimToUptParking = (rowData: ParkingRowType): UptParking => {
+export const convertClaimToUptParking = ( data: Partial<ParkingRowType> & { bpk: number; irpk: number}): UptParking => {
     return {
+        ...data, // ✅ changed된 필드 + bpk, irpk 포함
         job: "CUD", // UptClaim에 필요한 추가 필드 설정
-        // 추가적으로 UptClaim 유형에서 필요한 필드가 있다면 여기에 추가
-        bpk: rowData.bpk || 0,
-        irpk: rowData.irpk || 0,
         gbn : 'UPT',
         table : 'parkinglot'
     };
@@ -62,15 +60,6 @@ export const convertUser = (rowData: UserType): UserCudType => {
 };
 
 
-export const closePopup = (
-    ref: React.RefObject<any>,
-    setState: React.Dispatch<React.SetStateAction<boolean>>
-) => {
-    if (ref.current) {
-        ref.current.clearForm();
-    }
-    setState(false);
-};
 
 export const getPaginatedData = (data, currentPage) => {
     let itemsPerPage = 15;

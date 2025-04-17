@@ -175,7 +175,6 @@ export default function Page() {
                     form += form ? ',기계식' : '기계식'; // 중간에 콤마 추가
                 }
 
-                console.log('최종 form 값:', form);
 
                 showConfirm("사업장을 추가하시겠습니까?", async () => {
                     const param : UptParking = {
@@ -300,7 +299,6 @@ export default function Page() {
 
     const handleDeleteGroup = async () => {
         try {
-            console.log(selectedItems.length)
             if (selectedItems.length === 0) {
                 showAlert('삭제할 항목을 선택해주세요.');
             }else {
@@ -337,7 +335,6 @@ export default function Page() {
 
 
     const onSearchClick = async () => {
-        console.log(param)
         const result = await getParking(param);
         setData(result);
         setCurrentPage(0);

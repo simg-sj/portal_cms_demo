@@ -81,7 +81,7 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
             }
         }
 
-        /*if(isNew){
+       /* if(isNew){
             if(editData) {
                 onSave(param);
             }else {

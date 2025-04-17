@@ -46,7 +46,7 @@ export default function Page() {
         startDate: dayjs().subtract(7, 'days').format('YYYY-MM-DD'),
         text: ''
     });
-    console.log(param)
+
     const getPaginatedData = () => {
         const startIndex = currentPage * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;

@@ -2,7 +2,7 @@
 import React, {useState} from "react";
 import { ParkingRowType, UptParking} from "@/@types/common";
 import Button from "@/app/components/common/ui/button/button";
-import {convertClaimToUptParking} from "@/app/lib/common";
+import {convertClaimToUptParking, getChangedFields} from "@/app/lib/common";
 import dayjs from "dayjs";
 import {PARKING_STATUS, parkingStatus, STATE_OPTIONS} from "@/config/data";
 
@@ -16,23 +16,33 @@ interface ListProps {
 
 const HiparkingList = ({isEditing, rowData, onSave }: ListProps) => {
 
-    const [editData, setEditData] = useState<UptParking>(convertClaimToUptParking(rowData));
+    const [editData, setEditData] = useState<ParkingRowType>(rowData);
 
     //필드값 변경시 formdata 업데이트
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        console.log(e.target.value);
+        console.log(e.target.name, e.target.value);
         setEditData((prev) => {
             return {...prev, [e.target.name]: e.target.value};
         });
     };
 
     const handleSave = () => {
-            if(editData) {
-                onSave(editData);
-            }else {
-                alert('변경된 정보가 없습니다.');
-                return;
-            }
+        const changed = getChangedFields(editData, rowData);
+        console.log(changed);
+        const merged = {
+            ...changed,
+            bpk: rowData.bpk,
+            irpk: rowData.irpk
+        };
+        console.log(merged);
+        console.log(convertClaimToUptParking(merged));
+        if (JSON.stringify(editData) !== JSON.stringify(rowData)) {
+
+            onSave(convertClaimToUptParking(merged));
+        }else {
+            alert('변경된 정보가 없습니다.');
+            return;
+        }
     }
 
     //입력필드 타입

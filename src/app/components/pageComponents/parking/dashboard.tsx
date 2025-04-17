@@ -63,7 +63,6 @@ export default function DashboardComponent({
         closingAmt: tableData.counselData.at(-1).closingAmt,
     })
 
-    console.log(renewals);
     const [param, setParam] = useState<ParamDashType2>({
         job: 'dash',
         bpk: 2,
