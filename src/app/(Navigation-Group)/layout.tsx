@@ -6,7 +6,7 @@ import {ReactNode} from "react";
 import NotiPopup from "@/app/components/popup/NotiPopup";
     
 export default function Layout({children}: {children: ReactNode}) {
-    const {noti, resetNoti} = useNotifications();
+    const {noti} = useNotifications();
     return (
         <div className="flex h-full min-h-screen min-w-[1500px]">
             <div className="flex-none">

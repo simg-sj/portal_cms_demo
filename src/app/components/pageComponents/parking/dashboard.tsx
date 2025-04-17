@@ -62,6 +62,8 @@ export default function DashboardComponent({
         lossRatio: tableData.counselData.at(-1).lossRatio,
         closingAmt: tableData.counselData.at(-1).closingAmt,
     })
+
+    console.log(renewals);
     const [param, setParam] = useState<ParamDashType2>({
         job: 'dash',
         bpk: 2,
@@ -279,8 +281,6 @@ export default function DashboardComponent({
                     </div>
                 </div>
             </div>
-
-
             <div className={'px-8 py-6 bg-white rounded-xl my-5'}>
                 <div className={'text-lg font-light mb-6'}>계약변경현황</div>
                 <div className={'flex'}>
