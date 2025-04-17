@@ -188,7 +188,19 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                     </tr>
                     <tr>
                         <th>상태</th>
-                        <td>{renderField('closingStatus', ClosingCode[rowData.closingCode], 'select', STATE_OPTIONS)}</td>
+                        <td>
+                            <select
+                                defaultValue={editData.closingStatus}
+                                onChange={handleChange}
+                                className="w-full p-1 border rounded"
+                            >
+                                <option value="">선택하세요</option>
+                                {STATE_OPTIONS?.map(option => (
+                                    <option key={option} value={option}>{option}</option>
+                                ))}
+                            </select>
+                        </td>
+                       {/* <td>{renderField('closingStatus', ClosingCode[rowData.closingCode], 'select', STATE_OPTIONS)}</td>*/}
                         <th>지급보험금</th>
                         <td>{ renderField('total', rowData.total ? FormatNumber(Number(rowData.total))+'원' : '-', 'text')}</td>
                     </tr>

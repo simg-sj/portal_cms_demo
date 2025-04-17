@@ -15,7 +15,7 @@ import FormatNumber from "@/app/components/common/ui/formatNumber";
 import CenterPopup from "@/app/components/popup/CenterPopup";
 import DayTerm from "@/app/components/common/ui/calender/dayTerm";
 import { useForm } from "react-hook-form";
-import {getPolicyList, updateCommon} from "@/app/(Navigation-Group)/action";
+import {getClaim, getPolicyList, updateCommon} from "@/app/(Navigation-Group)/action";
 import {DeleteType, InsuFormData, InsuranceItem} from "@/@types/common";
 import dayjs from "dayjs";
 import {modeString} from "@/config/data";
@@ -36,6 +36,8 @@ export default function Page() {
     const [selectedInsurance, setSelectedInsurance] = useState<InsuranceItem | null>(null);
     const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
+    // 알림창
+    const {showAlert, showConfirm, resetNotiThen} = useNotifications();
     // 오늘 날짜
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -57,11 +59,15 @@ export default function Page() {
             return differenceInDays > 0 && differenceInDays <= 30;
         }).length;
 
-        const totalPremium = insuranceList.reduce((sum, item) => sum + Number(item.yPremiums), 0);
+        const totalPremium = insuranceList
+            .filter(item => item.useYNull === 'Y') // useYNull이 'Y'인 항목만 필터링
+            .reduce((sum, item) => sum + Number(item.yPremiums), 0); // 필터링된 항목의
+
 
         setStats({
             renewalCount,
-            totalCount: insuranceList.length,
+            totalCount: insuranceList
+                .filter(item => item.useYNull === 'Y').length,
             totalPremium
         });
     };
@@ -102,6 +108,7 @@ export default function Page() {
             sDay: "",
             eDay: "",
             yPremiums: null,
+            useYNull: "Y",
         },
     });
 
@@ -165,25 +172,19 @@ export default function Page() {
         let param : DeleteType = {
             bpk : 2,
             irpk : id,
-            tableName : 'policyMaster',
+            table : 'policyMaster',
             job : 'DELETE',
         }
+                const {code, msg} = await updateCommon(param);
+                if(code === '200'){
+                    showAlert(msg);
 
-        const {code, msg} = await updateCommon(param);
-
-        if(code === '200'){
-            setConfirmDeleteId(null);
-            await fetch(2);
-            setNoti({
-                type : 'noti',
-                title : '알림',
-                isOpen : true,
-                text : '삭제 되었습니다.',
-                subText : ''
-            });
-        }else {
-            alert(msg);
-        }
+                    setConfirmDeleteId(null);
+                    await fetch(2);
+                    closePopup();
+                } else {
+                        showAlert(msg);
+                }
     };
 
     // 날짜 업데이트
@@ -208,14 +209,12 @@ export default function Page() {
             );
             updatedInsurance.job = 'UPT';
             updatedInsurance.table = 'policyMaster';
-            console.log("수정된 데이터:", updatedInsurance);
 
 
 
             let result = await updateCommon(updatedInsurance);
             console.log(result)
-          /*
-            if(code === '200'){
+            /*if(code === '200'){
                 alert(msg);
             }else {
                 alert(msg);

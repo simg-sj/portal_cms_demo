@@ -530,7 +530,7 @@ interface CargoInsuType  {
 interface DeleteType {
     irpk : string;
     job : string;
-    tableName : string;
+    table : string;
     bpk : number;
 }
 
@@ -546,6 +546,8 @@ interface InsuFormData {
     eDay: string; // 보험종료일
     yPremiums: number | null; // 보험료
     job : string;
+    useYNull : string;
+    reNewYn : string | null;
     gbn : string;
     table : string;
 }
