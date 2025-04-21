@@ -68,7 +68,7 @@ export default function DashboardComponent({
         bpk: 2,
         gbn: '',
         pNo : '',
-        sDay: dayjs().subtract(6, 'month').format('YYYY-MM'),
+        sDay: dayjs().subtract(5, 'month').format('YYYY-MM'),
         eDay: dayjs().format('YYYY-MM')
     })
     const handleParam = async (type: string) => {

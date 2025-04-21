@@ -297,6 +297,7 @@ interface ParkingTypeKm {
 // 주차장 타입
 interface ParkingRowType {
     bpk: number;
+    pNo : string;
     irpk : number;
     pklName?: string;
     pklAddress?: string;

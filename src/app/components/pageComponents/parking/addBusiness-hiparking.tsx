@@ -3,6 +3,7 @@ import { useForm, UseFormRegister } from "react-hook-form";
 
 interface ParkingFormData {
     pkName: string;
+    pNo : string;
     pkAddress: string;
     form: string;
     indoor: {

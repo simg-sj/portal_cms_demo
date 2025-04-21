@@ -14,7 +14,7 @@ const useFetchDashboard = (bpk: number) => {
         bpk: bpk,
         gbn: 'init',
         pNo : '',
-        sDay: dayjs().subtract(6, 'month').format('YYYY-MM'),
+        sDay: dayjs().subtract(5, 'month').format('YYYY-MM'),
         eDay: dayjs().format('YYYY-MM')
     };
 

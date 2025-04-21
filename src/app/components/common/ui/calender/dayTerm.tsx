@@ -3,16 +3,18 @@ import React, {useEffect, useState} from "react";
 import YearMonthPicker from "@/app/components/common/ui/calender/yearMonthPicker";
 import CalenderPicker from "@/app/components/common/ui/calender/calenderPicker";
 import dayjs from "dayjs";
-import {ExtendedParamType, ParamDashType2} from "@/@types/common";
+import {ExtendedParamType, InsuFormData, ParamDashType2} from "@/@types/common";
 
 interface DayTermProps {
     sDay ?: Date;
     eDay ?: Date;
     type?: 'month' | 'day' | 'oneYear';
-    onChange ? : (sDay: Date, eDay: Date) => void;
+    onChange ?: (key : string , value : string, value2 : string) => void
+    //onChange ? : (sDay: Date, eDay: Date) => void;
     //setParam: (newParams: Partial<ParamDashType2>) => void;
-    setParam: React.Dispatch<React.SetStateAction<ExtendedParamType>>;
+    setParam ?: React.Dispatch<React.SetStateAction<ExtendedParamType>>;
     allowFutureEndDate?: boolean; // 오늘 이후 날짜 허용 여부 (true: 가능, false: 제한)
+    disabled ?: boolean
 }
 
 interface ParamType {
@@ -22,10 +24,13 @@ interface ParamType {
     condition ?: string;
 }
 
-const DayTerm = ({sDay, eDay, type ,onChange, setParam, allowFutureEndDate}: DayTermProps) => {
+const DayTerm = ({sDay, eDay, type ,onChange, setParam, allowFutureEndDate, disabled}: DayTermProps) => {
     const [startDate, setStartDate] = useState<Date | null>(sDay);
     const [endDate, setEndDate] = useState<Date | null>(eDay);
-
+    const newParams = {
+        sDay: dayjs(sDay).format("YYYY-MM"),
+        eDay: dayjs(eDay).format("YYYY-MM"),
+    };
 
     //타입 월달력, 전체달력 지정 : 월달력 3달단위 전체달력 오늘날짜 기본값
     useEffect(() => {
@@ -53,13 +58,15 @@ const DayTerm = ({sDay, eDay, type ,onChange, setParam, allowFutureEndDate}: Day
             setEndDate(new Date());
         } else {
             // 일달력: 오늘 날짜
-            setParam((prev:  ParamDashType2) => ({
-                ...prev,
-                startDate: sDay,
-                endDate : eDay
-            }));
-            setStartDate(sDay);
-            setEndDate(eDay);
+            setStartDate(sDay || new Date());
+            setEndDate(eDay || new Date());
+            if (setParam) {
+                setParam((prev: any) => ({
+                    ...prev,
+                    startDate: sDay,
+                    endDate: eDay,
+                }));
+            }
         }
     }, [type]);
 
@@ -90,10 +97,16 @@ const DayTerm = ({sDay, eDay, type ,onChange, setParam, allowFutureEndDate}: Day
             }));
         }
         else {
-            setParam((prev: ParamType) => ({
-                ...prev,
-                startDate: dayjs(date).format('YYYY-MM-DD'),
-            }));
+            if(setParam){
+                setParam((prev: ParamType) => ({
+                    ...prev,
+                    startDate: dayjs(date).format('YYYY-MM-DD'),
+                }));
+            }else {
+                let afterOneYear = dayjs(date).add(1, 'year').format('YYYY-MM-DD');
+                onChange('sDay', dayjs(date).format('YYYY-MM-DD'), afterOneYear);
+                setEndDate(new Date(afterOneYear));
+            }
             if (date && endDate && date > endDate) {
                 setEndDate(null);
             }
@@ -113,13 +126,18 @@ const DayTerm = ({sDay, eDay, type ,onChange, setParam, allowFutureEndDate}: Day
             eDay: dayjs(newEndDate).format('YYYY-MM'),
             }));
         } else {
-            setEndDate(date);
-            setParam((prev: ParamType) => ({
-                ...prev,
-                endDate: dayjs(date).format('YYYY-MM-DD'),
-            }));
             if (date && startDate && date < startDate) {
                 setStartDate(null);
+            }
+
+            setEndDate(date);
+            if(setParam){
+                setParam((prev: ParamType) => ({
+                    ...prev,
+                    endDate: dayjs(date).format('YYYY-MM-DD'),
+                }));
+            }else {
+
             }
         }
     };
@@ -137,15 +155,21 @@ const DayTerm = ({sDay, eDay, type ,onChange, setParam, allowFutureEndDate}: Day
                 minDate={undefined}
                 onChange={handleStartDateChange}
             />
-            <div className="font-bold mx-2">~</div>
-            <DatePickerComponent
-                maxDate={allowFutureEndDate ? undefined : new Date()}
-                type = {'eDay'}
-                eDay={eDay}
-                sDay={sDay}
-                minDate={undefined}
-                onChange={handleEndDateChange}
-            />
+            {
+                !disabled &&
+                    <>
+                        <div className="font-bold mx-2">~</div>
+                        <DatePickerComponent
+                            maxDate={allowFutureEndDate ? undefined : new Date()}
+                            type = {'eDay'}
+                            eDay={eDay}
+                            sDay={sDay}
+                            disabled={disabled}
+                            minDate={undefined}
+                            onChange={handleEndDateChange}
+                        />
+                    </>
+            }
         </div>
     );
 };

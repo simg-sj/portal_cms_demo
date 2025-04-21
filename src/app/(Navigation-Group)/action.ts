@@ -450,15 +450,16 @@ export async function cargoInsuList(param :  ParamType) : Promise<CargoInsuType[
     }
 }
 
+
 // 증권 정보
-export async function getPolicyList(param :  ParamType) : Promise<InsuranceItem[] | []> {
+export async function getPolicyList(bpk :  number) : Promise<InsuranceItem[] | []> {
     try {
         const response = await fetch(`https://center-api.simg.kr/api/portal/getPolicyList`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(param)
+            body: JSON.stringify({bpk : bpk})
         });
 
         if (!response.ok) {

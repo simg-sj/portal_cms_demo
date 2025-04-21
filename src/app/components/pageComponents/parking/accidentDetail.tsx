@@ -37,7 +37,6 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
     const [editData, setEditData] = useState<ClaimRowType>(rowData);
 
 
-
     const fetchImageData = useCallback(async (irpk: number) => {
         try {
             const fetchedImage = await getImage(irpk);
@@ -59,6 +58,7 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
 
     // 필드값 변경시 formdata 업데이트
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+       console.log(e.target.name)
         setEditData((prev) => {
             return {...prev, [e.target.name]: e.target.value};
         });
@@ -192,6 +192,7 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                                 isEditing ?
                                 <td>
                                 <select
+                                    name={'closingStatus'}
                                     defaultValue={editData.closingStatus}
                                     onChange={handleChange}
                                     className="w-full p-1 border rounded"
@@ -217,13 +218,14 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                             isEditing ?
                                 <td>
                                     <select
+                                        name = 'approvalYN'
                                         defaultValue={rowData.approvalYN}
                                         onChange={handleChange}
                                         className="w-full p-1 border rounded"
                                     >
                                         <option value="">선택하세요</option>
                                         {APPROVAL_OPTIONS?.map(option => (
-                                            <option key={option} value={option}>{option}</option>
+                                            <option key={option.title} value={option.value}>{option.title}</option>
                                         ))}
                                     </select>
                                 </td>

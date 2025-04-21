@@ -14,9 +14,10 @@ interface CalenderPickerProps {
     minDate?: Date;
     sDay: Date | null;
     eDay: Date | null;
-    allowDate : boolean;
+    allowDate ?: boolean;
     type: string;
     onChange: (date: Date | null) => void;
+    disabled ?: boolean;
 }
 
 const Range = (start: number, end: number, step: number): number[] => {
@@ -119,7 +120,7 @@ const PickerWrapper = styled.div`
     position: relative;
 `;
 
-const CalenderPicker = ({ maxDate, allowDate ,minDate, sDay,eDay, type, onChange }: CalenderPickerProps) => {
+const CalenderPicker = ({ maxDate, allowDate ,minDate, sDay,eDay, type, onChange, disabled }: CalenderPickerProps) => {
 
 
     const years = Range(2000, getYear(new Date()) + 20, 1);
@@ -206,6 +207,7 @@ const CalenderPicker = ({ maxDate, allowDate ,minDate, sDay,eDay, type, onChange
                     minDate={minDate}
                     selected={type === 'sDay' ? sDay : eDay}
                     onChange={onChange}
+                    disabled={disabled}
                     onFocus={(e) => {
                         const target = e.target as HTMLInputElement;
                         target.readOnly = true;

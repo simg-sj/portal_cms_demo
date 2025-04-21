@@ -88,9 +88,10 @@ interface YearMonthPickerProps {
     sDay: Date | null;
     eDay: Date | null;
     onChange: (date: Date | null) => void;
+    disabled ?: boolean;
 }
 
-const YearMonthPicker = ({type, maxDate, minDate, onChange, sDay, eDay}: YearMonthPickerProps) => {
+const YearMonthPicker = ({type, maxDate, minDate, onChange, sDay, eDay, disabled}: YearMonthPickerProps) => {
     return (
         <PickerWrapper>
             <CustomPicker>

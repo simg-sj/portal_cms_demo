@@ -72,6 +72,7 @@ export default function Page() {
                 window.confirm('등록하시겠습니까?')
             } else {
                 showConfirm("수정하시겠습니까?", async () => {
+                    console.log(data);
                     let result = await updateCommon(data);
                     if (result.code === "200") {
                         const reload = await getClaim(param);
@@ -176,6 +177,7 @@ export default function Page() {
         try {
             showConfirm('삭제하시겠습니까?', async () => {
                 rowData.table = 'claimRequest';
+                console.log(rowData)
                 let result = await deleteClaimData(rowData);
                 if(result.code === '200'){
                     let reload = await getClaim(param);

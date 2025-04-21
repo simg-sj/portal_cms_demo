@@ -5,6 +5,7 @@ import Button from "@/app/components/common/ui/button/button";
 import {convertClaimToUptParking, getChangedFields} from "@/app/lib/common";
 import dayjs from "dayjs";
 import {PARKING_STATUS, parkingStatus, STATE_OPTIONS} from "@/config/data";
+import useFetchPnoList from "@/app/lib/hooks/useFetchPnoList";
 
 
 
@@ -17,10 +18,10 @@ interface ListProps {
 const HiparkingList = ({isEditing, rowData, onSave }: ListProps) => {
 
     const [editData, setEditData] = useState<ParkingRowType>(rowData);
+    const {pNoList} = useFetchPnoList(rowData.bpk);
 
     //필드값 변경시 formdata 업데이트
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        console.log(e.target.name, e.target.value);
         setEditData((prev) => {
             return {...prev, [e.target.name]: e.target.value};
         });
@@ -28,14 +29,12 @@ const HiparkingList = ({isEditing, rowData, onSave }: ListProps) => {
 
     const handleSave = () => {
         const changed = getChangedFields(editData, rowData);
-        console.log(changed);
         const merged = {
             ...changed,
             bpk: rowData.bpk,
-            irpk: rowData.irpk
+            irpk: rowData.irpk,
+            pNo : rowData.pNo
         };
-        console.log(merged);
-        console.log(convertClaimToUptParking(merged));
         if (JSON.stringify(editData) !== JSON.stringify(rowData)) {
 
             onSave(convertClaimToUptParking(merged));
@@ -114,6 +113,26 @@ const HiparkingList = ({isEditing, rowData, onSave }: ListProps) => {
                         <col style={{width: "250px"}}/>
                     </colgroup>
                     <tbody>
+                    <tr>
+                    <th>증권번호</th>
+                        {
+                            isEditing ?
+                                    <td colSpan={3}>
+                                        <select
+                                            defaultValue={rowData.status}
+                                            onChange={handleChange}
+                                            className="w-full p-1 border rounded"
+                                        >
+                                            <option value="">선택하세요</option>
+                                            {pNoList?.map(option => (
+                                                <option key={option.irpk} value={option}>{option.nickName+ '['+option.pNo+']'}</option>
+                                            ))}
+                                        </select>
+                                    </td>
+                                :
+                                    <td colSpan={3}>{renderField('pNo', rowData.pNo, 'text')}</td>
+                        }
+                    </tr>
                     <tr>
                         <th>주차장명</th>
                         <td colSpan={3}>{renderField('pklName', rowData.pklName, 'text')}</td>

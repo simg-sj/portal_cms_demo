@@ -33,7 +33,7 @@ export const convertUserToUserUpt = (
 };
 
 
-export const convertClaimToUptParking = ( data: Partial<ParkingRowType> & { bpk: number; irpk: number}): UptParking => {
+export const convertClaimToUptParking = ( data: Partial<ParkingRowType> & { bpk: number; irpk: number; pNo : string;}): UptParking => {
     return {
         ...data, // ✅ changed된 필드 + bpk, irpk 포함
         job: "CUD", // UptClaim에 필요한 추가 필드 설정

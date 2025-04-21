@@ -103,7 +103,6 @@ export default function Page() {
         try {
             showConfirm("삭제하시겠습니까?", async () => {
                 rowData.table = 'parkinglot';
-
                 let result = await deleteClaimData(rowData);
                 if(result.code === '200'){
                     let reload = await getParking(param);
@@ -186,6 +185,7 @@ export default function Page() {
                         'pklName': formData.pkName,
                         'pklAddress': formData.pkAddress,
                         'form': form,
+                        'pNo' : formData.pNo,
                         'indoor': formData.indoor.checked ? formData.indoor.value : '-',
                         'outdoor': formData.outdoor.checked ? formData.outdoor.value : '-',
                         'mechanical': formData.mechanical.checked ? formData.mechanical.value : '-',
