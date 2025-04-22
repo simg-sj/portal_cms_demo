@@ -536,6 +536,13 @@ interface DeleteType {
     bpk : number;
 }
 
+interface DayRange {
+    type ?: string;
+    sDay: string; // 시작 날짜
+    eDay: string; // 종료 날짜
+}
+
+
 // 보험 관리 타입
 interface InsuFormData {
     irpk : string; // 각 ID

@@ -16,7 +16,7 @@ import CenterPopup from "@/app/components/popup/CenterPopup";
 import DayTerm from "@/app/components/common/ui/calender/dayTerm";
 import { useForm } from "react-hook-form";
 import {getPolicyList, updateCommon} from "@/app/(Navigation-Group)/action";
-import {DeleteType, InsuFormData, InsuranceItem} from "@/@types/common";
+import {DayRange, DeleteType, InsuFormData, InsuranceItem} from "@/@types/common";
 import dayjs from "dayjs";
 import {modeString} from "@/config/data";
 import {useSession} from "next-auth/react";
@@ -28,13 +28,15 @@ export default function Page() {
     // 보험 목록 예비데이터
     const [insuranceList, setInsuranceList] = useState<InsuranceItem[]>([]);
     const {data } = useSession();
-
     // 팝업 상태 관리
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [isMode, setIsMode] = useState('' as 'add' | 'edit' | 'reNew');
     const [selectedInsurance, setSelectedInsurance] = useState<InsuranceItem | null>(null);
     const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
-
+    const [days, setDays] = useState<DayRange>({
+        sDay: '',
+        eDay: ''
+    });
     // 알림창
     const {showAlert, showConfirm, resetNotiThen} = useNotifications();
     // 오늘 날짜
@@ -110,6 +112,8 @@ export default function Page() {
         reset();
         setIsMode('add');
         setSelectedInsurance(null);
+
+
         setIsPopupOpen(true);
     };
 
@@ -164,8 +168,10 @@ export default function Page() {
     // 보험 항목 삭제
     const deleteInsurance = async (id: string) => {
         setInsuranceList(prevList => prevList.filter(item => item.irpk !== id));
+        let bpk = insuranceList.find(item => item.irpk === id)?.bpk;
+
         let param : DeleteType = {
-            bpk : 2,
+            bpk : bpk,
             irpk : id,
             table : 'policyMaster',
             job : 'DELETE',
@@ -182,63 +188,65 @@ export default function Page() {
                 }
     };
 
-    // 날짜 업데이트
-    const updateDateRange = (key : string, sDay : string, eDay : string) => {
-        if(key === 'sDay') setValue('sDay',sDay);
-        if(key === 'eDay') setValue('eDay',eDay);
-    };
+
 
     // 보험 데이터 제출
     const onSubmit = async (data: InsuFormData) => {
+        let updatedInsurance : InsuranceItem;
+        let title = '';
         if (isMode === 'edit' && selectedInsurance) {
             // 편집 모드: 기존 항목 업데이트
-            let updatedInsurance = { ...data, irpk: selectedInsurance.irpk };
+            updatedInsurance = { ...data, irpk: selectedInsurance.irpk };
             setInsuranceList(prevList =>
                 prevList.map(item =>
                     item.irpk === selectedInsurance.irpk ? { ...data, irpk: item.irpk } : item
                 )
             );
-
+            title = '수정하시겠습니까?';
             updatedInsurance.job = 'UPT';
             updatedInsurance.table = 'policyMaster';
 
-            showConfirm('수정하시겠습니까?', async () => {
-                let result = await updateCommon(updatedInsurance);
+        }
 
-                if(result.code === '200'){
-                    resetNotiThen(() =>{
-                        showAlert(result.msg);
-                    })
-                }else {
-                    showAlert(result.msg);
-                }
-            })
-        } else if(isMode === 'reNew'){
-            console.log(data);
+        if(isMode === 'reNew'){
+            title = '갱신하시겠습니까?';
             // 추가 모드: 새 항목 추가
-            const newInsurance: InsuranceItem = {
+             updatedInsurance  = {
                 ...data
             };
-            setInsuranceList(prevList => [...prevList, newInsurance]);
 
-
-            newInsurance.job = 'Policy';
-            newInsurance.gbn = 'RENEW';
-            let {code, msg} = await updateCommon(newInsurance);
-
-            if(code === '200'){
-                alert(msg);
-            }else {
-                alert(msg);
-            }
-
-            console.log("추가된 데이터:", newInsurance);
-        }else {
+            setInsuranceList(prevList => [...prevList, updatedInsurance]);
+            updatedInsurance.job = 'Policy';
+            updatedInsurance.gbn = 'RENEW';
 
         }
 
-        /*reset(); // 데이터 초기화
-        closePopup(); // 팝업 닫기*/
+        if(isMode === 'add'){
+            title = '추가하시겠습니까?';
+            // 추가 모드: 새 항목 추가
+            updatedInsurance  = {
+                ...data
+            };
+            setInsuranceList(prevList => [...prevList, updatedInsurance]);
+            updatedInsurance.job = 'Policy';
+            updatedInsurance.gbn = 'ADD';
+
+        }
+
+        showConfirm(`${title}`, async () => {
+            let result = await updateCommon(updatedInsurance);
+
+            if(result.code === '200'){
+                showAlert(result.msg);
+                await fetch(2);
+
+                //reset(); // 데이터 초기화
+                closePopup(); // 팝업 닫기
+            }else {
+                showAlert(result.msg);
+            }
+        })
+
     };
 
 
@@ -262,8 +270,12 @@ export default function Page() {
     };
 
     useEffect(() => {
+        setValue('sDay', days.sDay);
+        setValue('eDay', days.eDay);
 
-    }, []);
+    }, [days]);
+
+
     // 팝업 Content에 표시할 컴포넌트
     const PopupContent = () => {
         return (
@@ -325,18 +337,9 @@ export default function Page() {
                 <div className={'flex my-3'}>
                     <div className={'w-[110px]'}>보험기간 <span className="text-red-500">*</span></div>
                     <div className="flex-1">
-                        <DayTerm type={'day'} onChange={updateDateRange} sDay={watch('sDay') ? new Date(watch('sDay')) : new Date()}
+                        <DayTerm type={'day'} setDays={setDays} sDay={watch('sDay') ? new Date(watch('sDay')) : new Date()}
                                  eDay={watch('eDay') ? new Date(watch('eDay')) : new Date()}
-                                 allowFutureEndDate={true} disabled={true}/>
-                        {/*<DayTerm
-                            setParam={(newParams: Partial<InsuFormData>) => updateDateRange({
-                                sDay: newParams.sDay,
-                                eDay: newParams.eDay,
-                            })}
-                            sDay={watch('sDay') ? new Date(watch('sDay')) : new Date()}
-                            eDay={watch('eDay') ? new Date(watch('eDay')) : new Date()}
-                            allowFutureEndDate={true}
-                        />*/}
+                                 allowFutureEndDate={true}/>
                         {(!watch('sDay') || !watch('eDay')) && (
                             <p className="text-red-500 text-sm mt-1">보험기간을 선택해주세요</p>
                         )}
@@ -411,7 +414,7 @@ export default function Page() {
                 {insuranceList.map((insurance, index) => {
                     const isExpired = new Date(insurance.eDay) < today;
                     const daysLeft = daysUntilExpiration(insurance.eDay);
-                    const useYNull = insurance.useYNull === 'Y' ? true : false;
+                    const useYNull = insurance.useYNull === 'Y';
                     const showWarning = !isExpired && daysLeft <= 30 && useYNull;
                     const status = getInsuranceStatus(insurance.eDay);
                     const formattedEndDate = formatDate(insurance.eDay);

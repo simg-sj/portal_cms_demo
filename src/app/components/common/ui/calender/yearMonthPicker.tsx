@@ -83,20 +83,18 @@ const StyledSelectIcon = styled.img`
 
 interface YearMonthPickerProps {
     maxDate?: Date;
-    type : string;
     minDate?: Date;
-    sDay: Date | null;
-    eDay: Date | null;
+    select: Date | null;
     onChange: (date: Date | null) => void;
     disabled ?: boolean;
 }
 
-const YearMonthPicker = ({type, maxDate, minDate, onChange, sDay, eDay, disabled}: YearMonthPickerProps) => {
+const YearMonthPicker = ({maxDate, minDate, onChange, select, disabled}: YearMonthPickerProps) => {
     return (
         <PickerWrapper>
             <CustomPicker>
                 <DatePicker
-                    selected={type === 'sDay' ? sDay : eDay}
+                    selected={select}
                     onChange={onChange}
                     dateFormat="yyyy년 MM월"
                     showMonthYearPicker

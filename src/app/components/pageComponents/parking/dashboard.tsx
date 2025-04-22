@@ -71,6 +71,23 @@ export default function DashboardComponent({
         sDay: dayjs().subtract(5, 'month').format('YYYY-MM'),
         eDay: dayjs().format('YYYY-MM')
     })
+    const [days, setDays] = useState([
+        {
+            type : 'contract',
+            sDay: dayjs().subtract(5, 'month').format('YYYY-MM'),
+            eDay: dayjs().format('YYYY-MM')
+        },
+        {
+            type : 'top',
+            sDay: dayjs().subtract(5, 'month').format('YYYY-MM'),
+            eDay: dayjs().format('YYYY-MM')
+        },
+        {
+            type : 'month',
+            sDay: dayjs().subtract(5, 'month').format('YYYY-MM'),
+            eDay: dayjs().format('YYYY-MM')
+        }
+    ]);
     const handleParam = async (type: string) => {
         let code = await updateTableData(param, type);
         if(code === '401'){
@@ -291,7 +308,7 @@ export default function DashboardComponent({
                     <div className={'w-full'}>
                         <div className={"flex justify-end mb-4 text-lg"}>
                             <div className={'border w-fit px-5 py-1 rounded-lg flex items-center'}>
-                                <DayTerm type="month" sDay={new Date(param.sDay)} eDay={new Date(param.eDay)} setParam={setParam}></DayTerm>
+                                <DayTerm type="month" condition={'contract'} sDay={new Date(days[0].sDay)} eDay={new Date(days[0].eDay)} setDays={setDays} setParam={setParam}></DayTerm>
                                 <button onClick={() => handleParam('contract')}>
                                     <Image src={Search} alt={"검색"} width={22} height={20} className={'cursor-pointer ml-3'}></Image>
                                 </button>
@@ -334,8 +351,6 @@ export default function DashboardComponent({
                                 </thead>
                                 <tbody>
                                 <EmptyDataWrapper data={tableData.changeGraphData}>
-                                <tr>
-                                </tr>
                                 {tableData.changeData.map((changeData, index) => (
                                     <tr key={index}>
                                         <td>{index + 1}</td>
@@ -394,7 +409,7 @@ export default function DashboardComponent({
                         <div className={'text-lg font-light mb-6'}>Top 5</div>
                         <div className={"flex justify-end mb-4 text-lg"}>
                             <div className={'border w-fit px-5 py-1 rounded-lg flex items-center'}>
-                                <DayTerm type="month" sDay={new Date(param.sDay)} eDay={new Date(param.eDay)} setParam={setParam}></DayTerm>
+                                <DayTerm type="month" condition={'top'} sDay={new Date(days[1].sDay)} eDay={new Date(days[1].eDay)} setDays={setDays} setParam={setParam}></DayTerm>
                                 <button onClick={() => handleParam('top')}>
                                     <Image src={Search} alt={"검색"} width={22} height={20}
                                            className={'cursor-pointer ml-3'}></Image>
@@ -411,7 +426,7 @@ export default function DashboardComponent({
                             <div className={'text-lg font-light mb-6'}>월별 사고접수현황</div>
                             <div className={"flex justify-end mb-4 text-lg"}>
                                 <div className={'border w-fit px-5 py-1 rounded-lg flex items-center'}>
-                                    <DayTerm type="month" allowFutureEndDate={false} sDay={new Date(param.sDay)} eDay={new Date(param.eDay)} setParam={setParam}></DayTerm>
+                                    <DayTerm type="month" condition={'month'} sDay={new Date(days[2].sDay)} eDay={new Date(days[2].eDay)} setDays={setDays} setParam={setParam}></DayTerm>
                                     <button onClick={() => handleParam('month')}>
                                         <Image src={Search} alt={"검색"} width={22} height={20}
                                                className={'cursor-pointer ml-3'}></Image>
@@ -440,7 +455,6 @@ export default function DashboardComponent({
                                     </thead>
                                     <tbody>
                                     <EmptyDataWrapper data={tableData.monthAccidentData}>
-                                    <tr></tr>
                                     {tableData.monthAccidentData.map((month, index) => (
                                         <tr key={index}>
                                             <td>{month.changeDay}</td>

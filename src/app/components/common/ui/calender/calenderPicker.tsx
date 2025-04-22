@@ -12,12 +12,9 @@ import dayjs from "dayjs";
 interface CalenderPickerProps {
     maxDate?: Date;
     minDate?: Date;
-    sDay: Date | null;
-    eDay: Date | null;
+    select: Date | null;
     allowDate ?: boolean;
-    type: string;
     onChange: (date: Date | null) => void;
-    disabled ?: boolean;
 }
 
 const Range = (start: number, end: number, step: number): number[] => {
@@ -120,7 +117,7 @@ const PickerWrapper = styled.div`
     position: relative;
 `;
 
-const CalenderPicker = ({ maxDate, allowDate ,minDate, sDay,eDay, type, onChange, disabled }: CalenderPickerProps) => {
+const CalenderPicker = ({ maxDate, allowDate ,minDate, select, onChange }: CalenderPickerProps) => {
 
 
     const years = Range(2000, getYear(new Date()) + 20, 1);
@@ -205,9 +202,8 @@ const CalenderPicker = ({ maxDate, allowDate ,minDate, sDay,eDay, type, onChange
                     shouldCloseOnSelect
                     maxDate={allowDate ? maxDate : new Date()}
                     minDate={minDate}
-                    selected={type === 'sDay' ? sDay : eDay}
+                    selected={select}
                     onChange={onChange}
-                    disabled={disabled}
                     onFocus={(e) => {
                         const target = e.target as HTMLInputElement;
                         target.readOnly = true;
