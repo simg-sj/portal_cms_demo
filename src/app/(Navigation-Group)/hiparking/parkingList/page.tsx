@@ -190,7 +190,7 @@ export default function Page() {
                         'outdoor': formData.outdoor.checked ? formData.outdoor.value : '-',
                         'mechanical': formData.mechanical.checked ? formData.mechanical.value : '-',
                         'carLift': formData.carLift.checked ? formData.carLift.value : '-',
-                        'faceCount': formData.faceCount,
+                        'faceCount': formData.faceCount ? formData.faceCount : '-',
                         'detailHistory': formData.detailHistory,
                         'coInsured': formData.coInsured
                     };

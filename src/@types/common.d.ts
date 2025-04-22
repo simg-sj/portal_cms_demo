@@ -302,7 +302,7 @@ interface ParkingRowType {
     pklName?: string;
     pklAddress?: string;
     form?: string;
-    faceCount?: number;
+    faceCount?: string | number;
     detailHistory?: string;
     indoor?: string;                   // 실내 여부
     outdoor?: string;                  // 실외 여부
@@ -372,7 +372,7 @@ interface UptClaim extends ClaimRowType {
 
 interface UptParking extends ParkingRowType {
     job: string;
-    gbn : string;
+    gbn ?: string;
     table : string;
     irpk : number;
     bpk : number;

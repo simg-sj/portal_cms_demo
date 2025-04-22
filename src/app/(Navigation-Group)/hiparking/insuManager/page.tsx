@@ -95,7 +95,7 @@ export default function Page() {
     // Form 설정
     const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<InsuFormData>({
         defaultValues: {
-            bpk : 0,
+            bpk : 2,
             productName: "",
             pNo: "",
             insurer: "",
@@ -225,8 +225,10 @@ export default function Page() {
             title = '추가하시겠습니까?';
             // 추가 모드: 새 항목 추가
             updatedInsurance  = {
-                ...data
+                ...data,
             };
+
+            console.log(updatedInsurance)
             setInsuranceList(prevList => [...prevList, updatedInsurance]);
             updatedInsurance.job = 'Policy';
             updatedInsurance.gbn = 'ADD';

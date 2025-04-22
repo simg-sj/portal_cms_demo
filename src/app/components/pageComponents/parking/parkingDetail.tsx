@@ -22,6 +22,7 @@ const HiparkingList = ({isEditing, rowData, onSave }: ListProps) => {
 
     //필드값 변경시 formdata 업데이트
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        console.log(e.target.name, e.target.value);
         setEditData((prev) => {
             return {...prev, [e.target.name]: e.target.value};
         });
@@ -33,7 +34,7 @@ const HiparkingList = ({isEditing, rowData, onSave }: ListProps) => {
             ...changed,
             bpk: rowData.bpk,
             irpk: rowData.irpk,
-            pNo : rowData.pNo
+            pNo : editData.pNo
         };
         if (JSON.stringify(editData) !== JSON.stringify(rowData)) {
 
@@ -121,11 +122,12 @@ const HiparkingList = ({isEditing, rowData, onSave }: ListProps) => {
                                         <select
                                             defaultValue={rowData.status}
                                             onChange={handleChange}
+                                            name='pNo'
                                             className="w-full p-1 border rounded"
                                         >
                                             <option value="">선택하세요</option>
                                             {pNoList?.map(option => (
-                                                <option key={option.irpk} value={option}>{option.nickName+ '['+option.pNo+']'}</option>
+                                                <option key={option.irpk} value={option.pNo}>{option.nickName+ '['+option.pNo+']'}</option>
                                             ))}
                                         </select>
                                     </td>
