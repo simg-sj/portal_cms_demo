@@ -10,7 +10,7 @@ export default function Page() {
     //스탭
     const [currentStep, setCurrentStep] = useState(1);
     const [formData, setFormData] = useState<rcAccidentRowType>({
-        rcPk: 0,
+        irpk: 0,
         bpk : 4,
         partnerName: '',
         carNum: '',
@@ -37,7 +37,7 @@ export default function Page() {
     const handleReset = () => {
         setCurrentStep(1);
         setFormData({
-            rcPk : 0,
+            irpk : 0,
             bpk : 4,
             partnerName: '',
             carNum: '',

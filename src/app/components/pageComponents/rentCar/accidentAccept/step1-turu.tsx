@@ -75,7 +75,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
     }, [data]);
     return (
         <>
-            <div className={'text-lg font-light my-6 px-[100px] text-gray-700'}>트루카 사고접수 페이지입니다. 사고접수 내용을 입력하여
+            <div className={'text-lg font-light my-6 px-[100px] text-gray-700'}>투루카 사고접수 페이지입니다. 사고접수 내용을 입력하여
                 접수해주세요.
             </div>
             <div className={'text-xl my-[50px] stepOne'}>
@@ -93,7 +93,7 @@ const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
                                     제휴사를 선택하세요
                                 </option>
                                 <option value="투루카">
-                                    투푸카
+                                    투루카
                                 </option>
                                 <option value="partnerNameA">
                                     제휴사A
