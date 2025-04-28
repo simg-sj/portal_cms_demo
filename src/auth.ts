@@ -42,7 +42,9 @@ export const {
                     auth: data.auth,
                     authLevel: data.authLevel,
                     service: data.service,
-                    subYn: data.subYn,
+                    subYn : data.subYn,
+                    subBpk : data.subBpk,
+                    subIdYn: data.subIdYn,
                 };
             },
         }),
@@ -80,6 +82,8 @@ export const {
                 auth: token.auth as string,
                 authLevel: token.authLevel as number,
                 service: token.service as string,
+                subIdYn: token.subIdYn as string,
+                subBpk : token.subBpk as number,
                 subYn: token.subYn as string
             };
             return session;

@@ -3,40 +3,53 @@
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import Loading from "@/app/(Navigation-Group)/loading";
-import type {UserType} from "@/@types/common";
+import type { UserType} from "@/@types/common";
 import MyPageContainer from "@/app/components/pageComponents/mypqge/myPageContainer";
+import {getUserData} from "@/app/(Navigation-Group)/action";
 
 
 export default function Page() {
     const { data, status } = useSession();
-    const [userInfo, setUserInfo] = useState<UserType>();  // 초기값을 null로 설정
 
+    const fetchUser = async (pk : number, infoId : string) => {
+        try{
+            const result = await getUserData(pk, '', 'SELECT', infoId);
+            const {bpk,userId, uCell, bName, uAuth, authLevel, platform, uMail, uName, work, subIdYn, subYn} = result[0];
+
+            setUserInfo({
+                upk: 0,
+                bpk : bpk,
+                irpk : 1,
+                auth: uAuth ,
+                name:  uName,
+                bName : bName,
+                subYn : subYn,
+                subIdYn : subIdYn,
+                userId: userId,
+                email: uMail,
+                phone : uCell,
+                platform: platform,
+                work : work,
+                authLevel: authLevel,
+            })
+        }catch(e){
+
+        }
+    }
+    const [userInfo, setUserInfo] = useState<UserType>();  // 초기값을 null로 설정
     useEffect(() => {
         if (data && data.user) {
-            setUserInfo({
-                index: 0,
-                name: data.user.name ,
-                bpk : data.user.bpk,
-                email: data.user.email,
-                auth: data.user.auth ,
-                bName: data.user.bName,
-                platform : data.user.platform,
-                userId: data.user.id ,
-                password: data.user.password,
-                phone: data.user.phone,
-                authLevel: data.user.authLevel,
-                work: data.user.work
-            });
+            const {bpk, userId} = data.user;
+            fetchUser(bpk, userId);
         }
     }, [data]);
-
     return (
         <>
             {
                 status === "loading" || !userInfo ?
                     <Loading/>
                     :
-                    <MyPageContainer userInfo={userInfo} />
+                    <MyPageContainer userInfo={userInfo} setUserInfo={setUserInfo} fetchUser={fetchUser} />
             }
         </>
     )

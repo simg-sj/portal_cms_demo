@@ -111,7 +111,7 @@ export default function EditUser({ userInfo, setUserInfo, onReload }: EditUserPr
         <div className="relative pb-20">
             <div className='mt-8 flex flex-col text-xl space-y-4'>
                 <div>
-                    <h2 className='leading-[40px] text-gray-500 text-lg border-b mb-2'>권한</h2>
+                    <h2 className='leading-[40px] text-gray-500 text-lg border-b mb-2'>아이디</h2>
                     <div className="px-2 py-1">{userInfo.userId}</div>
                 </div>
                 {renderField('성함', 'uName')}

@@ -7,15 +7,17 @@ import Pagination from "@/app/components/common/ui/pagination";
 import CenterPopup from "@/app/components/popup/CenterPopup";
 import AddUser, {AddUserRef} from "@/app/components/pageComponents/parking/addUser";
 import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContainer";
-import {SearchParams, UserCudType, UserListType, UserUpk} from "@/@types/common";
-import {authText} from "@/config/data";
+import {PlatformList, SearchParams, UserCudType, UserListType, UserUpk} from "@/@types/common";
+import {authText } from "@/config/data";
 import {userService} from "@/app/(Navigation-Group)/action";
-import {convertUserToUserUpt, getChangedFields, getPaginatedData} from "@/app/lib/common";
+import {convertUserToUserUpt, getChangedFields} from "@/app/lib/common";
 import {useNotifications} from "@/context/NotificationContext";
+import {useSession} from "next-auth/react";
 
 
-export default function UserList({ userList, onSearch }: { userList: UserListType[], onSearch : (param : SearchParams) => void}) {
+export default function UserList({ userList, onSearch, platformList }: { userList: UserListType[], onSearch : (param : SearchParams) => void, platformList : PlatformList[]}) {
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
+    const {data} = useSession()
     const columns = [{header : '이름',key:"uName"}, {header : '연락처',key:"uCell"}, {header : '이메일',key:"uMail"}, {header : '아이디',key:"userId"}, {header : '권한',key:"uAuth"}];
     const addUserRef = useRef<AddUserRef>(null);
     const [selectedRow, setSelectedRow] = useState<number | null>(null);
@@ -36,7 +38,7 @@ export default function UserList({ userList, onSearch }: { userList: UserListTyp
         uAuth: 'all',
         searchCondition: 'userId',
         searchKeyword: '',
-        bpk : '2'
+        bpk : data.user.bpk
     });
     // pagination 페이지
     const [displayedUsers, setDisplayUsers] = useState<UserListType[]>(userList.slice(0, itemsPerPage));
@@ -286,6 +288,7 @@ export default function UserList({ userList, onSearch }: { userList: UserListTyp
         ];
     };
 
+
     return (
         <>
             <div className={'border border-gray-100 p-6 rounded-lg bg-white flex items-center justify-between'}>
@@ -347,7 +350,7 @@ export default function UserList({ userList, onSearch }: { userList: UserListTyp
                 isOpen={isOpen}
                 onClose={handleClose}
                 title={mode === 'add' ? "사용자 추가" : "사용자 수정"}
-                Content={() => <AddUser ref={addUserRef}/>}
+                Content={() => <AddUser ref={addUserRef} platformList={platformList}/>}
                 buttons={getPopupButtons()}/>
             <div className={'mt-4'}>
                 <CheckboxContainer

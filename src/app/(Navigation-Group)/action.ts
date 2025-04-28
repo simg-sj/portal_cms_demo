@@ -20,7 +20,7 @@ import {
     ParamType,
     ParkingParamType,
     ParkingRowType,
-    ParkingType,
+    ParkingType, PlatformList,
     rcAccidentRowType,
     rcAccidentType,
     resultCode,
@@ -476,4 +476,6 @@ export async function getPolicyList(bpk :  number) : Promise<InsuranceItem[] | [
         throw new Error(`Failed to rcAccident: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
 }
+
+
 

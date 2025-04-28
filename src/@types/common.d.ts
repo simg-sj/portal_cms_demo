@@ -1,5 +1,13 @@
 import {StaticImageData} from "next/image";
 import React from "react";
+import {
+    FieldErrors,
+    UseFormGetValues,
+    UseFormHandleSubmit,
+    UseFormRegister,
+    UseFormSetValue,
+    UseFormWatch
+} from "react-hook-form";
 
 
 interface MenuItemType {
@@ -118,6 +126,8 @@ interface UserType {
     platform?: string,
     work?: string,
     authLevel: number,
+    subIdYn ?: string
+    subYn ?: string
 }
 
 interface UserUpk {
@@ -132,7 +142,7 @@ interface SearchParams {
     searchKeyword: string;
     gbn : string;
     job : string;
-    bpk : string;
+    bpk : number;
 }
 
 interface resultCode {
@@ -158,10 +168,12 @@ interface UserListType {
     platform ?: string;
     bName ?: string;
     gbn?: string;
+    subYn ?: string;
     authLevel ?: number;
     code ?: string;
     work ?: string;
-    subContractYn ?: string;
+    subIdYn ?: string;
+    subBpk ?: number;
 }
 
 interface UserCudType extends UserListType{
@@ -335,6 +347,14 @@ interface rcAccidentType {
 }
 
 
+interface PlatformList{
+    bName : string;
+    inCargeName : string;
+    inCargePhone : string;
+    reCompany : string;
+    bpk : number;
+}
+
 interface ButtonConfig {
     label: string;
     onClick: () => void;
@@ -423,8 +443,11 @@ interface dutyRowType extends dutyType {
 
 interface Step1Props {
     onNext: () => void;
-    formData: rcAccidentRowType | dutyType;
-    setFormData: React.Dispatch<React.SetStateAction<rcAccidentRowType | dutyType>>;
+    register: UseFormRegister<any>;
+    errors: FieldErrors;
+    handleSubmit: UseFormHandleSubmit<any>;
+    setValue: UseFormSetValue<any>;
+    watch: UseFormWatch<any>;
 }
 
 interface Step2PropsDT {
@@ -436,11 +459,13 @@ interface Step2PropsDT {
 interface Step2PropsLC {
     onNext: () => void;
     onPrev: () => void;
-    param: dutyType;
+    getValues : UseFormGetValues<any>;
+    register: UseFormRegister<any>;
 }
 
 interface Step3Props {
     onReset: () => void;
+    reset ?: UseFormReset<any>;
 }
 
 //카카오 보험대시보드

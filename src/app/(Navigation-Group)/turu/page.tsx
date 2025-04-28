@@ -4,26 +4,33 @@ import Step1 from "@/app/components/pageComponents/rentCar/accidentAccept/step1-
 import Step2 from "@/app/components/pageComponents/rentCar/accidentAccept/step2-turu";
 import Step3 from "@/app/components/pageComponents/rentCar/accidentAccept/step3";
 import { rcAccidentRowType} from "@/@types/common";
+import {useForm} from "react-hook-form";
 
 
 export default function Page() {
     //스탭
     const [currentStep, setCurrentStep] = useState(1);
-    const [formData, setFormData] = useState<rcAccidentRowType>({
-        irpk: 0,
-        bpk : 4,
-        partnerName: '',
-        carNum: '',
-        accidentDate: '',
-        accidentTime: '12:00',
-        accidentDateTime : '',
-        arrivalETA: '' ,
-        propDamage: '',
-        persInjury: '',
-        etc: '',
-        accidentDetail: '',
-        isConfirmed: '',
-        confirmedBy: ''
+
+    // Form 설정
+    const { register, reset, getValues, setValue, handleSubmit, watch, formState: { errors } } = useForm({
+        defaultValues: {
+            bpk : 0,
+            partnerName: "",
+            wName : "",
+            confirmation : "",
+            reCompany : "",
+            inCargeName: "",
+            inCargePhone: "",
+            vCarNum: "",
+            accidentDate: "",
+            accidentTime: "",
+            arrivalETA: "",
+            accidentDetail: "",
+            damagedImages : null,
+            estimate: null,
+            privacy : "N",
+            thirdParty : 'N'
+        },
     });
 
     const handleNext = () => {
@@ -34,34 +41,24 @@ export default function Page() {
         setCurrentStep(prev => Math.max(prev - 1, 1));
     };
 
-    const handleReset = () => {
-        setCurrentStep(1);
-        setFormData({
-            irpk : 0,
-            bpk : 4,
-            partnerName: '',
-            carNum: '',
-            accidentDate: '',
-            accidentTime: '',
-            accidentDateTime : '',
-            arrivalETA: '',
-            propDamage: '',
-            persInjury: '',
-            etc: '',
-            accidentDetail: '',
-            isConfirmed: '',
-            confirmedBy: ''
-        });
+    const onSubmit = async (data: any) => {
+        if(data){
+            handleNext();
+        }else {
+            return;
+        }
     };
+
+
 
     const renderStep = () => {
         switch (currentStep) {
             case 1:
-                return <Step1 onNext={handleNext} formData={formData} setFormData={setFormData}/>;
+                return <Step1 onNext={handleNext} watch={watch} setValue={setValue} handleSubmit={handleSubmit} errors={errors} register={register} />;
             case 2:
-                return <Step2 onNext={handleNext} onPrev={handlePrev} param={formData}/>;
+                return <Step2 onNext={handleNext} onPrev={handlePrev} getValues={getValues} register={register}/>;
             case 3:
-                return <Step3 onReset={handleReset}/>;
+                return <Step3 onReset={reset}/>;
             default:
                 return null;
         }

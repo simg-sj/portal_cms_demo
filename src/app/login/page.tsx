@@ -48,11 +48,11 @@ export default function LoginPage() {
 
     useEffect(() => {
         if (status === "authenticated" && session?.user) {
-            const { platform } = session.user as any;
-            if (platform) {
-                router.push(`/${platform}`);
+            const { service } = session.user as any;
+            if (service) {
+                router.push(`/${service}`);
             } else {
-                console.error("플랫폼 정보가 없습니다.");
+                setError("플랫폼 정보가 없습니다.");
             }
         }
     }, [session, status, router]);

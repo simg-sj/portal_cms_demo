@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import EditUser from "@/app/components/pageComponents/mypqge/editUser";
-import {SearchParams, UserListType, UserType} from "@/@types/common";
+import {PlatformList, SearchParams, UserListType, UserType} from "@/@types/common";
 import { tabs } from "@/config/data";
 import UserList from '@/app/components/pageComponents/mypqge/userList';
 
@@ -40,12 +40,13 @@ function GetList({ userList }: { userList: UserListType[] }) {
 interface MypageType {
     userInfo: UserType;
     userList: UserListType[]; // userList 기본값을 빈 배열로 설정
+    platformList : PlatformList[];
     onSearchClick : (param : any) => void;
     onReload : (pk : number, infoId : string) => Promise<void>;
     setUserInfo : React.Dispatch<React.SetStateAction<UserType>>;
 }
 
-export default function MyPageTabs({ userInfo, userList = [], onSearchClick, setUserInfo, onReload }: MypageType) {
+export default function MyPageTabs({ userInfo, userList = [], onSearchClick, setUserInfo, onReload, platformList }: MypageType) {
     const [activeTab, setActiveTab] = useState(0);
 
     return (
@@ -72,7 +73,7 @@ export default function MyPageTabs({ userInfo, userList = [], onSearchClick, set
                     activeTab === 0 ?
                         <EditUser userInfo={userInfo} setUserInfo={setUserInfo} onReload={onReload}/>
                         :
-                        userInfo.auth === 'admin' ? <UserList userList={userList}  onSearch={onSearchClick}/>  : <GetList userList={userList} />
+                        userInfo.auth === 'admin' ? <UserList userList={userList}  onSearch={onSearchClick} platformList={platformList}/>  : <GetList userList={userList} />
                 }
             </div>
         </div>

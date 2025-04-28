@@ -14,7 +14,9 @@ declare module "next-auth" {
         bNo : string;
         authLevel : number;
         phone : string;
-        subYn : string;
+        subYn: string;
+        subIdYn: string;
+        subBpk : number;
         service : string;
         emailVerified?: Date | null;
         // 다른 필드들도 추가 가능
@@ -37,6 +39,8 @@ declare module "next-auth" {
         phone: string;
         email: string;
         subYn: string;
+        subIdYn: string;
+        subBpk : number;
         service: string;
     }
 }

@@ -1,283 +1,182 @@
 import React, {useEffect, useState} from "react";
 import Button from "@/app/components/common/ui/button/button";
-import type {rcAccidentRowType, Step1Props} from "@/@types/common";
+import {PlatformList, Step1Props} from "@/@types/common";
 import {useSession} from "next-auth/react";
 import TimePicker from "@/app/components/common/ui/input/timePicker";
+import {getPlatform} from "@/app/(Navigation-Group)/turu/action";
+import AdminFormSection from "@/app/components/pageComponents/rentCar/accidentAccept/adminFormSection";
+import Loading from "@/app/(Navigation-Group)/loading";
 
-const Step1 = ({onNext, formData, setFormData}: Step1Props) => {
+const Step1 = ({onNext, watch, setValue, handleSubmit,errors, register }: Step1Props) => {
     const {data} = useSession();
-    const [errors, setErrors] = useState<{ [key: string]: string }>({});
-    const [isFormValid, setIsFormValid] = useState(false);
-    const [confirmation, setConfirmation] = useState<'Y' | 'N' | null>(null);
     const isAdmin = data?.user?.auth === 'admin';
+    const [platformList, setPlatformList] = useState<PlatformList[]>([])
+    const [loading, setLoading] = useState(true);
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const {name, value} = e.target;
-        setFormData((prev: rcAccidentRowType) => ({...prev, [name]: value}));
-    };
+
+
+    const minETA = watch('accidentDate');
+
 
     const handleTimeChange = (timeString: string) => {
-        setFormData(prev => ({...prev, accidentTime: timeString}));
+        setValue('accidentTime', timeString);
     };
 
-    const handleConfirmationChange = (value: 'Y' | 'N') => {
-        setConfirmation(value);
-        if (value === 'N') {
-            setFormData((prev: rcAccidentRowType) => ({...prev, confirmedBy: ''}));
+
+    const fetchPlatform = async (bpk  : number) => {
+        try {
+            const result: PlatformList[] = await getPlatform(bpk);
+            setPlatformList(result);
+        } finally {
+            setLoading(false); // 데이터 로딩 종료
         }
-    };
+    }
 
-    const validateForm = () => {
-        const newErrors: { [key: string]: string } = {};
-
-        if (!formData.partnerName) newErrors.partnerName = "제휴사명을 선택해주세요.";
-        const carNumRegex = /^\d{2,3}[가-힣]\d{4}$/;
-        if (!formData.carNum) {
-            newErrors.carNum = "차량번호를 입력해주세요. 차량번호입력시 차종이 자동입력됩니다.";
-        } else if (!carNumRegex.test(formData.carNum)) {
-            newErrors.carNum = "차량번호 형식이 올바르지 않습니다. 형식: 12가3456 또는 123가4567 으로 입력해주세요.";
-        }
-        if (!formData.accidentDate) newErrors.accidentDate = "사고일시를 선택해주세요.";
-        if (!formData.accidentTime) newErrors.accidentTime = "사고시간을 선택해주세요.";
-        if (!formData.arrivalETA) newErrors.arrivalETA = "예상입고일정을 선택해주세요.";
-        if (!formData.propDamage && !formData.persInjury && !formData.etc) newErrors.damage = "피해규모를 입력해주세요"
-        if (!formData.accidentDetail) newErrors.accidentDetail = "사고내용을 입력해주세요";
-        if (isAdmin) {
-            if (confirmation === null) {
-                newErrors.confirmation = "컨펌여부를 선택해주세요";
-            }
-            if (confirmation === 'Y' && !formData.confirmedBy) {
-                newErrors.confirmedBy = "담당자를 선택해주세요";
-            }
-        }
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-
-    useEffect(() => {
-        setIsFormValid(validateForm());
-    }, [formData]);
-
-    const handleNext = () => {
-        if (isFormValid) {
+    const onSubmit =  (data) => {
+        if(data){
             onNext();
-        } else {
-            alert("모든 필수 항목을 입력해주세요.");
+        }else {
+            return;
         }
     };
 
     useEffect(() => {
-        if(data && data.user){
-            if(!isAdmin){
-                setFormData((prev: rcAccidentRowType) => ({...prev, partnerName : data.user.bName}));
+        if (data?.user?.bpk) {
+            if (!isAdmin) {
+                setValue('platform', data.user.platform);
+                setLoading(false); // 비관리자면 바로 로딩 끝
+            } else {
+                fetchPlatform(data.user.bpk);
+                setValue('wName', data.user.name);
+                setValue('bpk', data.user.bpk);
             }
         }
     }, [data]);
+
+
     return (
         <>
             <div className={'text-lg font-light my-6 px-[100px] text-gray-700'}>투루카 사고접수 페이지입니다. 사고접수 내용을 입력하여
                 접수해주세요.
             </div>
-            <div className={'text-xl my-[50px] stepOne'}>
-                <div className={'flex px-[100px] py-5 items-center'}>
-                    <div className={'font-medium w-[300px] mr-1'}>제휴사명 <span className={'text-red-500'}>*</span></div>
+            <form className={'text-xl my-[50px] stepOne'}>
+                {/*관리자만 보이는 Form 컨펌여부*/}
                     {
-                        isAdmin ?
-                            <select
-                                name="partnerName"
-                                className={'w-[800px]'}
-                                onChange={handleInputChange}
-                                defaultValue={''}
-                            >
-                                <option value="" disabled>
-                                    제휴사를 선택하세요
-                                </option>
-                                <option value="투루카">
-                                    투루카
-                                </option>
-                                <option value="partnerNameA">
-                                    제휴사A
-                                </option>
-                                <option value="partnerNameB">
-                                    제휴사B
-                                </option>
-                            </select>
+                        isAdmin ? (
+                            loading ? (
+                                    <Loading/>
+                                ) :
+                            (
+                                <AdminFormSection
+                                    platformList={platformList}
+                                    register={register}
+                                    errors={errors}
+                                    setValue={setValue}
+                                    watch={watch}
+                                />
+                            )
+                        )
                             :
+                    (
+                        <div className={'flex px-[100px] py-5 items-center'}>
+                            <div className={'font-medium w-[300px] mr-1'}>제휴사명 <span className={'text-red-500'}>*</span>
+                            </div>
                             <input
                                 type={'text'}
-                                name="partnerName"
-                                defaultValue={formData.partnerName || ''}
-                                onChange={handleInputChange}
+                                name="platform"
+                                readOnly={true}
+                                {...register("platform")}
                                 className={'w-[800px]'}
                             />
+                        </div>
+                    )
 
-                    }
-
-                </div>
-                {errors.partnerName &&
-                    <div className="text-red-500 pl-[100px] text-base error">{errors.partnerName}</div>}
+                }
                 <div className={'flex px-[100px] py-5 items-center'}>
                     <div className={'font-medium w-[300px] mr-1'}>차량번호 <span className={'text-red-500'}>*</span>
                     </div>
                     <input
                         type={'text'}
-                        name="carNum"
-                        defaultValue={formData.carNum || ''}
-                        onChange={handleInputChange}
+                        name="vCarNum"
+                        {...register("vCarNum", { required: "차량번호를 입력해주세요." })}
                         className={'w-[800px]'}
                     />
                 </div>
-                {errors.carNum && <div className="text-red-500 pl-[100px] text-base error">{errors.carNum}</div>}
+                {errors.vCarNum && typeof errors.vCarNum.message === 'string' && <div className="text-red-500 pl-[100px] text-base error">{errors.vCarNum.message}</div>}
                 <div className={'flex px-[100px] py-5 items-center'}>
                     <div className={'font-medium w-[300px] mr-1'}>사고일자 <span className={'text-red-500'}>*</span>
                     </div>
                     <input
                         type={'date'}
                         name="accidentDate"
-                        defaultValue={formData.accidentDate || ''}
-                        onChange={handleInputChange}
+                        {...register("accidentDate", { required: "사고일자를 선택해주세요" })}
                         className={'w-[800px]'}
                     />
                 </div>
-                {errors.accidentDate &&
-                    <div className="text-red-500 pl-[100px] text-base error">{errors.accidentDate}</div>}
+                {errors.accidentDate && typeof errors.accidentDate.message === 'string' &&
+                    <div className="text-red-500 pl-[100px] text-base error">{errors.accidentDate.message}</div>}
                 <div className={'flex px-[100px] py-5 items-center'}>
                     <div className={'font-medium w-[300px] mr-1'}>사고시간 <span className={'text-red-500'}>*</span>
                     </div>
                     <TimePicker
-                        initialTime={formData.accidentTime}
                         onChange={handleTimeChange}
                     />
-                    {/*<input
-                        type={'time'}
-                        name="accidentTime"
-                        value={formData.accidentTime || ''}
-                        onChange={handleInputChange}
-                        className={'w-[800px]'}
-                    />*/}
                 </div>
-                {errors.accidentTime &&
-                    <div className="text-red-500 pl-[100px] text-base error">{errors.accidentTime}</div>}
+                {errors.accidentTime && typeof errors.accidentTime.message === 'string' &&
+                    <div className="text-red-500 pl-[100px] text-base error">{errors.accidentTime.message}</div>}
                 <div className={'flex px-[100px] py-5 items-center'}>
                     <div className={'font-medium w-[300px] mr-1'}>예상입고일정 <span className={'text-red-500'}>*</span>
                     </div>
                     <input
                         type={'date'}
                         name="arrivalETA"
-                        defaultValue={formData.arrivalETA || ''}
-                        onChange={handleInputChange}
-                        min={formData.accidentDate}
+                        {...register("arrivalETA", { required: "예상입고일정을 선택해주세요" })}
+                        min={minETA}
                         className={'w-[800px]'}
                     />
                 </div>
                 {
-                    errors.arrivalETA &&
-                    <div className="text-red-500 pl-[100px] text-base error">{errors.arrivalETA}</div>
+                    errors.arrivalETA && typeof errors.arrivalETA.message === 'string' &&
+                    <div className="text-red-500 pl-[100px] text-base error">{errors.arrivalETA.message}</div>
                 }
-                <div className={'flex px-[100px] py-5 items-center'}>
-                    <div className={'font-medium w-[300px] mr-1'}>피해규모 <span className={'text-red-500'}>*</span></div>
-                    <div className={'flex justify-between w-[800px]'}>
-                        <div className={'flex items-center w-1/3 mr-5'}>
-                            <div className={'text-base'}>대물</div>
-                            <input
-                                type={'text'}
-                                name="propDamage"
-                                defaultValue={formData.propDamage}
-                                onChange={handleInputChange}
-                                className={'mx-3 w-[140px]'}
-                            />
-                            <div className={'text-base'}>대</div>
-                        </div>
-                        <div className={'flex items-center w-1/3 mr-5'}>
-                            <div className={'text-base'}>대인</div>
-                            <input
-                                type={'text'}
-                                name="persInjury"
-                                defaultValue={formData.persInjury}
-                                onChange={handleInputChange}
-                                className={'mx-3 w-[140px]'}
-                            />
-                            <div className={'text-base'}>인</div>
-                        </div>
-                        <div className={'flex items-center w-1/3'}>
-                            <div className={'text-base'}>기타</div>
-                            <input
-                                type={'text'}
-                                name="etc"
-                                defaultValue={formData.etc}
-                                onChange={handleInputChange}
-                                className={'mx-3 w-[140px]'}
-                            />
-                            <div className={'text-base'}>기</div>
-                        </div>
-                    </div>
-                </div>
-                <div className={'flex'}>
-                    {errors.damage && <div className="text-red-500 pl-[100px] text-base error">{errors.damage}</div>}
-                </div>
+
                 <div className={'flex px-[100px] py-5 items-center'}>
                     <div className={'font-medium w-[300px] mr-1'}>사고내용 <span className={'text-red-500'}>*</span>
                     </div>
                     <textarea rows={3}
                               className={'h-20 resize-none w-[800px]'}
                               name="accidentDetail"
-                              defaultValue={formData.accidentDetail}
-                              onChange={handleInputChange}>
+                              {...register("accidentDetail", { required: "사고내용을 입력해주세요." })}
+                              >
                     </textarea>
                 </div>
-                {errors.accidentDetail &&
-                    <div className="text-red-500 pl-[100px] text-base error">{errors.accidentDetail}</div>}
+                {errors.accidentDetail && typeof errors.accidentDetail.message === 'string' &&
+                    <div className="text-red-500 pl-[100px] text-base error">{errors.accidentDetail.message}</div>}
 
-                {/*관리자만 보이는 Form 컨펌여부*/}
-                {isAdmin && (
-                    <>
-                        <div className={'flex px-[100px] py-5 items-center'}>
-                            <div className={'font-medium w-[300px] mr-1'}>컨펌여부 <span className={'text-red-500'}>*</span>
-                            </div>
-                            <div className={'flex items-center'}>
-                                <label className={'flex items-center mr-10'}>
-                                    <input
-                                        type="radio"
-                                        name="confirmation"
-                                        className={'mr-3'}
-                                        checked={confirmation === 'Y'}
-                                        onChange={() => handleConfirmationChange('Y')}
-                                    />
-                                    <span>예</span>
-                                </label>
-                                <label className={'flex items-center'}>
-                                    <input
-                                        type="radio"
-                                        name="confirmation"
-                                        className={'mr-3'}
-                                        checked={confirmation === 'N'}
-                                        onChange={() => handleConfirmationChange('N')}
-                                    />
-                                    <span>아니오</span>
-                                </label>
-                                {confirmation === 'Y' && (
-                                    <select
-                                        className={'ml-20 w-[560px]'}
-                                        value={formData.confirmedBy || ''}
-                                        name="confirmedBy"
-                                        onChange={handleInputChange}
-                                    >
-                                        <option value="" disabled>담당자를 선택하세요</option>
-                                        <option value="A">담당자A</option>
-                                        <option value="B">담당자B</option>
-                                    </select>
-                                )}
-                            </div>
-                        </div>
-                        {errors.confirmation &&
-                            <div className="text-red-500 pl-[100px] text-base error">{errors.confirmation}</div>}
-                        {errors.confirmedBy &&
-                            <div className="text-red-500 pl-[100px] text-base error">{errors.confirmedBy}</div>}
-                    </>
-                )}
-            </div>
+                <div className={'flex px-[100px] py-5 items-center'}>
+                    <div className={'font-medium w-[300px] mr-1'}>파손사진</div>
+                    <input
+                        name='damagedImages'
+                        type={'file'}
+                        {...register('damagedImages')}
+                        accept="image/*"
+                        multiple={true}
+                    />
+                </div>
+
+                <div className={'flex px-[100px] py-5 items-center'}>
+                    <div className={'font-medium w-[300px] mr-1'}>견적서</div>
+                    <input
+                        name='estimate'
+                        type={'file'}
+                        {...register('estimate')}
+                        accept="image/*"
+                        multiple={true}
+                    />
+                </div>
+            </form>
             <div className={'flex my-10 mx-[100px]'}>
-                <Button color={"main"} fill={true} onClick={handleNext} textSize={18} width={1100} height={60}>확인</Button>
+                <Button color={"main"} fill={true} onClick ={handleSubmit(onSubmit)} textSize={18} width={1100} height={60}>확인</Button>
             </div>
         </>
     );
