@@ -9,7 +9,7 @@ import Loading from "@/app/(Navigation-Group)/loading";
 
 const Step1 = ({onNext, watch, setValue, handleSubmit,errors, register }: Step1Props) => {
     const {data} = useSession();
-    const isAdmin = data?.user?.auth === 'admin';
+    const isSub = data?.user?.subIdYn === 'N';
     const [platformList, setPlatformList] = useState<PlatformList[]>([])
     const [loading, setLoading] = useState(true);
 
@@ -42,7 +42,7 @@ const Step1 = ({onNext, watch, setValue, handleSubmit,errors, register }: Step1P
 
     useEffect(() => {
         if (data?.user?.bpk) {
-            if (!isAdmin) {
+            if (!isSub) {
                 setValue('platform', data.user.platform);
                 setLoading(false); // 비관리자면 바로 로딩 끝
             } else {
@@ -62,7 +62,7 @@ const Step1 = ({onNext, watch, setValue, handleSubmit,errors, register }: Step1P
             <form className={'text-xl my-[50px] stepOne'}>
                 {/*관리자만 보이는 Form 컨펌여부*/}
                     {
-                        isAdmin ? (
+                        isSub ? (
                             loading ? (
                                     <Loading/>
                                 ) :

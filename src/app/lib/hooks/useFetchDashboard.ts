@@ -1,5 +1,16 @@
 import { useState, useEffect } from 'react';
-import { DashboardData, MonthCumulativeData, ParamDashType2, CounselData, ChangeCounselData, TopBusinessData, TopCounselData, ChangeGraph, MonthAccidentData } from "@/@types/common";
+import {
+    DashboardData,
+    MonthCumulativeData,
+    ParamDashType2,
+    CounselData,
+    ChangeCounselData,
+    TopBusinessData,
+    TopCounselData,
+    ChangeGraph,
+    MonthAccidentData,
+    ErrorData
+} from "@/@types/common";
 import { getDashBoard } from "@/app/(Navigation-Group)/action";
 import dayjs from "dayjs";
 import {useNotifications} from "@/context/NotificationContext";
@@ -42,13 +53,15 @@ const useFetchDashboard = (bpk: number) => {
             // 데이터 구조에 맞게 테이블 데이터 설정
             const dashboardData: DashboardData = {
                 counselData: result[0] as CounselData[],
-                changeData: result[1] as ChangeCounselData[],
+                changeData: result[1] as ChangeCounselData[] | ErrorData[],
                 topBusinessData: result[2] as TopBusinessData[],
                 topCounselData: result[3] as TopCounselData[],
                 monthAccidentData: result[4] as MonthAccidentData[],
                 changeGraphData: result[5] as ChangeGraph[],
                 monthCumulativeData: monthCumulativeData
             };
+
+            console.log('dash', dashboardData.changeData);
             // 테이블 데이터 업데이트
             setTableData(dashboardData);
 

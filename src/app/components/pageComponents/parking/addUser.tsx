@@ -12,10 +12,11 @@ export interface AddUserRef {
 
 export interface AddUserProps {
     platformList : PlatformList[];
+    mode : string;
 }
 
 
-const AddUser = forwardRef<AddUserRef, AddUserProps>(({platformList}, ref) => {
+const AddUser = forwardRef<AddUserRef, AddUserProps>(({platformList, mode}, ref) => {
     const { data } = useSession();
 
     const {
@@ -27,13 +28,13 @@ const AddUser = forwardRef<AddUserRef, AddUserProps>(({platformList}, ref) => {
         formState: { errors },
     } = useForm<UserCudType>({
         defaultValues: {
-            uAuth: '',
+            uAuth: 'placeholder',
             uName: '',
             platform: '',
             userPwd: '',
             bpk : data.user.bpk,
             userId: '',
-            subBpk : data.user.subIdYn !== 'Y' ? data.user.bpk : data.user.subBpk,
+            subBpk : mode === 'add' ? 0 : (data.user.subYn === 'Y' ? data.user.subBpk : data.user.bpk),
             uMail: '',
             uCell: '',
             work: '',
@@ -42,7 +43,6 @@ const AddUser = forwardRef<AddUserRef, AddUserProps>(({platformList}, ref) => {
         }
     });
 
-    console.log(getValues());
 
     const clearForm = () => {
         reset();
@@ -159,7 +159,7 @@ const AddUser = forwardRef<AddUserRef, AddUserProps>(({platformList}, ref) => {
                         </div>
 
                         <div className={'flex my-3'}>
-                            <div className={'w-[150px]'}>플랫폼 <span className={'text-red-500'}>*</span></div>
+                            <div className={'w-[150px]'}>제휴사 <span className={'text-red-500'}>*</span></div>
                             <div className="flex-1 h-[50px]">
                                 {
                                     data.user.subYn === 'Y' ?
@@ -178,7 +178,7 @@ const AddUser = forwardRef<AddUserRef, AddUserProps>(({platformList}, ref) => {
                                                     <option key={index} value={state.bpk}>{state.bName}</option>
                                                 ))}
                                             </select>
-                                            {errors.platform && (<p className={'text-red-500 text-sm mt-1'}>{errors.platform.message}</p>)}
+                                            {errors.subBpk && (<p className={'text-red-500 text-sm mt-1'}>{errors.subBpk.message}</p>)}
                                         </>
                                         :
                                         <>

@@ -14,7 +14,7 @@ import {
     CargoInsuType,
     ClaimRowType,
     DashboardData, DeleteType,
-    dutyType, InsuFormData,
+    dutyType, ErrorType, InsuFormData,
     InsuranceItem,
     ParamDashType2,
     ParamType,
@@ -82,6 +82,29 @@ export async function getClaim(param: ParamType): Promise<ClaimRowType[]> {
     } catch (error) {
         console.error('Failed to fetch claims:', error);
         throw new Error(`Failed to fetch claims: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+}
+
+export async function getError(param: ParamType): Promise<ErrorType[]> {
+    try {
+        const response = await fetch(`https://center-api.simg.kr/api/portal/getError`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(param)
+        });
+
+        if (!response.ok) {
+            // 에러 핸들링: 상태 코드와 메시지를 포함한 에러
+            const errorDetails = await response.text();
+            throw new Error(`Error ${response.status}: ${response.statusText} - ${errorDetails}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Failed to fetch error:', error);
+        throw new Error(`Failed to fetch error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
 }
 

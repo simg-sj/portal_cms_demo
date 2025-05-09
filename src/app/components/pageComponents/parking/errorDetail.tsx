@@ -1,37 +1,64 @@
 "use client"
 import React, {useState} from "react";
-import {ParkingRowType} from "@/@types/common";
+import {ErrorType, ParkingRowType, UptParking} from "@/@types/common";
 import Button from "@/app/components/common/ui/button/button";
+import {convertClaimToUptParking, getChangedFields} from "@/app/lib/common";
+import dayjs from "dayjs";
+import {PARKING_STATUS} from "@/config/data";
+import useFetchPnoList from "@/app/lib/hooks/useFetchPnoList";
+
+
 
 interface ListProps {
     isEditing: boolean;
-    rowData : ParkingRowType;
-    onSave: (data: ParkingRowType) => void;
+    onSave: (data: ErrorType) => void;
+    rowData : ErrorType;
+    isNew : boolean
 }
 
-const ParkingDetailList = ({isEditing, rowData, onSave }: ListProps) => {
-    const [editData, setEditData] = useState<ParkingRowType | ''>(rowData || '');
+const ErrorDetail = ({isEditing, rowData, onSave, isNew }: ListProps) => {
 
+    const [editData, setEditData] = useState<ErrorType>(rowData);
+
+    //필드값 변경시 formdata 업데이트
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        setEditData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+        console.log(e.target.name, e.target.value);
+        setEditData((prev) => {
+            return {...prev, [e.target.name]: e.target.value};
+        });
     };
 
-    const handleSave = (e : React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-        onSave(editData);
+    const handleSave = () => {
+        /*const changed = getChangedFields(editData, rowData);
+        const merged = {
+            ...changed,
+            bpk: rowData.bpk,
+            irpk: rowData.irpk,
+        };
+        if (JSON.stringify(editData) !== JSON.stringify(rowData)) {
+
+            onSave(convertClaimToUptParking(merged));
+        }else {
+            alert('변경된 정보가 없습니다.');
+            return;
+        }*/
     }
 
     //입력필드 타입
-    const renderField = (key: string, value: any, type: 'text' | 'select' | 'textarea' = 'text', options?: string[]) => {
+    const renderField = (key: string, value: any, type: 'text' | 'date' | 'select' | 'textarea' = 'text', options?: string[]) => {
         if (!isEditing) {
-            return <span>{value || '-'}</span>;
+            if (type === 'date') {
+                return <span>{value ? dayjs(value).format('YYYY-MM-DD') : ''}</span>;
+            }else {
+                return <span>{value || '-'}</span>;
+            }
         }
         switch (type) {
             case 'select':
                 return (
                     <select
                         name={key}
-                        value={editData[key] || ''}
+                        defaultValue={value}
                         onChange={handleChange}
                         className="w-full p-1 border rounded"
                     >
@@ -45,8 +72,8 @@ const ParkingDetailList = ({isEditing, rowData, onSave }: ListProps) => {
                 return (
                     <textarea
                         name={key}
-                        value={editData[key] || ''}
-                        onChange={handleChange}
+                        defaultValue={value}
+                        onChange={() =>handleChange}
                         className={"w-full p-1 border rounded h-[100px]"}
                     />
                 );
@@ -55,7 +82,7 @@ const ParkingDetailList = ({isEditing, rowData, onSave }: ListProps) => {
                     <input
                         type="text"
                         name={key}
-                        value={editData[key] || ''}
+                        defaultValue={value}
                         onChange={handleChange}
                         className="w-full p-1 border rounded"
                     />
@@ -69,7 +96,7 @@ const ParkingDetailList = ({isEditing, rowData, onSave }: ListProps) => {
                 {isEditing
                     &&
                     <div className='absolute top-[32px] right-[272px] z-10'>
-                        <Button color={"blue"} fill={true} height={35} width={100} onClick={handleSave}>
+                        <Button color={"blue"} fill={true} height={35} width={100} onClick={() => handleSave()}>
                             저장
                         </Button>
                     </div>
@@ -87,25 +114,23 @@ const ParkingDetailList = ({isEditing, rowData, onSave }: ListProps) => {
                     </colgroup>
                     <tbody>
                     <tr>
+                        <th>주차장코드</th>
+                        <td colSpan={3}>{renderField('PJTcode', rowData.PJTcode, 'text')}</td>
+                    </tr>
+                    <tr>
                         <th>주차장명</th>
-                        <td colSpan={3}>{renderField('pklName', editData.pklName, 'text')}</td>
+                        <td colSpan={3}>{renderField('pklName', rowData.pklName, 'text')}</td>
                     </tr>
                     <tr>
                         <th>소재지</th>
-                        <td colSpan={3}>{renderField('pklAddress', editData.pklAddress, 'text')}</td>
+                        <td colSpan={3}>{renderField('pklAddress', rowData.pklAddress, 'text')}</td>
 
-                    </tr>
-                    <tr>
-                        <th>형태</th>
-                        <td colSpan={3}>
-                            {renderField('form', editData.form, 'text')}
-                        </td>
                     </tr>
                     </tbody>
                 </table>
                 <div className={'w-full font-semibold text-[17px] mx-2 py-3 flex items-center mt-8'}>
                     <div className={'bg-main w-1.5 h-4 mr-2'}></div>
-                    주차장 상세정보
+                    상세정보
                 </div>
                 <table className={'colTable text-[15px]'}>
                     <colgroup>
@@ -119,32 +144,24 @@ const ParkingDetailList = ({isEditing, rowData, onSave }: ListProps) => {
                     </colgroup>
                     <tbody>
                     <tr>
-                        <th>면수</th>
-                        <td colSpan={3}>{renderField('faceCount', editData.faceCount, 'text')}</td>
+                        <th>접수일</th>
+                        <td>{renderField('createdYMD', dayjs(rowData.createdYMD).toDate(), 'date')}</td>
                     </tr>
                     <tr>
-                        <th>옥외</th>
-                        <td colSpan={3}>{renderField('outdoor', editData.outdoor, 'text')}</td>
+                        <th>장애구분</th>
+                        <td colSpan={3}>{renderField('errorType', rowData.errorType ? rowData.errorType : '-', 'text')}</td>
                     </tr>
                     <tr>
-                        <th>옥내</th>
-                        <td colSpan={3}>{renderField('indoor', editData.indoor, 'text')}</td>
+                        <th>발생위치</th>
+                        <td colSpan={3}>{renderField('errorLocation', rowData.errorLocation ? rowData.errorLocation : '-', 'text')}</td>
                     </tr>
                     <tr>
-                        <th>기계식(면)</th>
-                        <td colSpan={3}>{renderField('mechanical', editData.mechanical, 'text')}</td>
+                        <th>상새내용</th>
+                        <td colSpan={3}>{renderField('detail', rowData.detail ? rowData.detail : '-', 'text')}</td>
                     </tr>
                     <tr>
-                        <th>카리프트(대)</th>
-                        <td colSpan={3}>{renderField('carLift', editData.carLift, 'text')}</td>
-                    </tr>
-                    <tr>
-                        <th>세부 내역</th>
-                        <td colSpan={3}>{renderField('detailHistory', editData.detailHistory, 'text')}</td>
-                    </tr>
-                    <tr>
-                        <th>공동피보험자</th>
-                        <td colSpan={3}>{renderField('memo', editData.memo, 'textarea')}</td>
+                        <th>현장조치사항</th>
+                        <td colSpan={3}>{renderField('resultType', rowData.resultType ? rowData.resultType : '-', 'text')}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -152,6 +169,6 @@ const ParkingDetailList = ({isEditing, rowData, onSave }: ListProps) => {
         </>
     )
         ;
-}
+};
 
-export default ParkingDetailList
+export default ErrorDetail;

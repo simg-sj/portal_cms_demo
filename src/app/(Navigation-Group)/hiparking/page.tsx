@@ -68,7 +68,7 @@ export default function Page() {
             {loading ? (
                 <Loading />
             ) : (
-                <Dashboard chartData={chartData} tableData={tableData} setDoughnutValue={setDoughnutValue}  updateTableData={updateTableData} />
+                <Dashboard bpk={2} chartData={chartData} tableData={tableData} setDoughnutValue={setDoughnutValue}  updateTableData={updateTableData} />
             )}
         </>
     );

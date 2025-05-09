@@ -10,15 +10,16 @@ import dayjs from "dayjs";
 import {
     deleteClaimData,
     deleteGroup,
-    getClaim,
+    getClaim, getError,
     updateCommon
 } from "@/app/(Navigation-Group)/action";
 import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContainer";
-import {ButtonConfig, ClaimRowType, UptClaim, ParamType} from "@/@types/common";
+import {ButtonConfig, ClaimRowType, UptClaim, ParamType, ErrorType} from "@/@types/common";
 import AccidentDetailList from "@/app/components/pageComponents/parking/accidentDetail";
 import {hiparkingAccidentColumns, initRowData} from "@/config/data";
 import {onClickExcel} from "@/app/lib/onClickExcel";
 import {useNotifications} from "@/context/NotificationContext";
+import ErrorDetail from "@/app/components/pageComponents/parking/errorDetail";
 
 interface ColumnDefinition<T> {
     key: keyof T;
@@ -33,10 +34,10 @@ export default function Page() {
     const [isOpen, setIsOpen] = useState(false);
     const [isNew, setIsNew] = useState(false);
     const [selectedRow, setSelectedRow] = useState<number | null>(null);
-    const [data, setData] = useState<ClaimRowType[]>([]);
+    const [data, setData] = useState<ErrorType[]>([]);
     const {showAlert, showConfirm, resetNotiThen } = useNotifications();
     const [currentPage, setCurrentPage] = useState(0);
-    const [rowData, setRowData] = useState<ClaimRowType>(initRowData);
+    const [rowData, setRowData] = useState<ErrorType>(initRowData);
     const [totalPages, setTotalPages] = useState(0);
     const [param, setParam] = useState<ParamType>({
         bpk: 1,
@@ -74,7 +75,7 @@ export default function Page() {
                     console.log(data);
                     let result = await updateCommon(data);
                     if (result.code === "200") {
-                        const reload = await getClaim(param);
+                        const reload = await getError(param);
                         setData(reload || []);
 
                         resetNotiThen(() => {
@@ -156,7 +157,7 @@ export default function Page() {
             let result = await deleteGroup(param2);
             if(result.code === '200') {
                 setSelectedItems([]);
-                let reload = await getClaim(param);
+                let reload = await getError(param);
                 setData(reload);
 
                 resetNotiThen(() => {
@@ -179,7 +180,7 @@ export default function Page() {
                 console.log(rowData)
                 let result = await deleteClaimData(rowData);
                 if(result.code === '200'){
-                    let reload = await getClaim(param);
+                    let reload = await getError(param);
                     setData(reload);
                     resetNotiThen(() => {
                         showAlert("삭제되었습니다.", () => {
@@ -201,7 +202,7 @@ export default function Page() {
 
 
     const onSearchClick = async () => {
-        const result = await getClaim(param);
+        const result = await getError(param);
 
         setData(result || []);
         setCurrentPage(0);
@@ -210,40 +211,35 @@ export default function Page() {
         onSearchClick();
     }, []);
     // 사고접수 리스트 컬럼
-    const columns: ColumnDefinition<ClaimRowType>[] = [
+    const columns: ColumnDefinition<ErrorType>[] = [
         {
-            key: 'pNo',
-            header: '증권번호',
-            defaultValue: '-'
-        },
-        {
-            key: 'insuNum',
-            header: '접수번호'
-        },
-        {
-            key: 'requestDate',
-            header: '접수일',
-        },
-        {
-            key: 'total',
-            header: '지급보험금',
+            key: 'PJTcode',
+            header: '주차장코드',
         },
         {
             key: 'pklName',
-            header: '사고장소'
+            header: '주차장명'
         },
         {
             key: 'wName',
-            header: '피해자'
+            header: '접수자',
         },
         {
             key: 'wCell',
-            header: '피해자연락처'
+            header: '연락처',
         },
         {
             key: 'vCarNum',
             header: '차량번호'
         },
+        {
+            key: 'errorType',
+            header: '장애구분'
+        },
+        {
+            key: 'errorLocation',
+            header: '발생위치'
+        }
     ];
 
     return (
@@ -319,7 +315,7 @@ export default function Page() {
                     title={isNew ? "신규 등록" : "상세보기"}
                     rowData={rowData}
                     onDelete={handleDelete}
-                    Content={(props) => <AccidentDetailList {...props} isNew={isNew} rowData={rowData} onSave={handleSave}/>}
+                    Content={(props) => <ErrorDetail {...props} isNew={isNew} rowData={rowData} onSave={handleSave}/>}
                     buttons={popupButtons.map(button => ({ ...button}))}
                 />
                 <div className={'mt-4'}>

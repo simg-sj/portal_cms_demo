@@ -120,7 +120,7 @@ const HiparkingList = ({isEditing, rowData, onSave }: ListProps) => {
                             isEditing ?
                                     <td colSpan={3}>
                                         <select
-                                            defaultValue={rowData.status}
+                                            defaultValue={rowData.pNo}
                                             onChange={handleChange}
                                             name='pNo'
                                             className="w-full p-1 border rounded"

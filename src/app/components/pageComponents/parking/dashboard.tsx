@@ -26,6 +26,8 @@ import cn from "classnames";
 import {useNotifications} from "@/context/NotificationContext";
 import Notifications from "@/app/components/popup/Notifications";
 import EmptyDataWrapper from "@/app/components/common/ui/input/EmptyDataWrapper";
+import ContractComponent from "@/app/components/pageComponents/parking/contractChange";
+import ErrorChart from "@/app/components/pageComponents/parking/errorChart";
 
 interface DashboardProps {
     chartData: {
@@ -37,6 +39,7 @@ interface DashboardProps {
         pieCounsel: any;
         pieAccident: any;
     };
+    bpk : number;
     tableData: DashboardData;
     setDoughnutValue : React.Dispatch<SetStateAction<number | null>>;
     updateTableData : (param : ParamDashType2, type : string) => Promise<string>;
@@ -50,6 +53,7 @@ interface DoughnutValueType {
 export default function DashboardComponent({
                                                chartData,
                                                tableData,
+                                               bpk,
                                                updateTableData,
                                                setDoughnutValue,
                                            }: DashboardProps) {
@@ -65,7 +69,7 @@ export default function DashboardComponent({
 
     const [param, setParam] = useState<ParamDashType2>({
         job: 'dash',
-        bpk: 2,
+        bpk: bpk,
         gbn: '',
         pNo : '',
         sDay: dayjs().subtract(5, 'month').format('YYYY-MM'),
@@ -88,8 +92,10 @@ export default function DashboardComponent({
             eDay: dayjs().format('YYYY-MM')
         }
     ]);
-    const handleParam = async (type: string) => {
+    const handleParam = async (type: string, param : ParamDashType2) => {
+        console.log(type, param);
         let code = await updateTableData(param, type);
+
         if(code === '401'){
             showAlert('데이터가 없습니다.');
         }
@@ -129,73 +135,14 @@ export default function DashboardComponent({
                 pNo: maxLossItem.pNo,
             }));
         }
+
     }, []);
 
     useEffect(() => {
         updateTableData(param, 'init');
     }, [param.pNo]);
 
-    //양방향막대 옵션
-    const optionTwowayBar = {
-        responsive: true,
-        scales: {
-            x: {
-                stacked: true
-            },
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    stepSize: 5,
-                },
-                grid: {
-                    display: false,
-                },
-            },
-        },
-        plugins: {
-            legend: {
-                display: true,
-                position: 'left',
-                align: 'end'
-            },
-            tooltip: {
-                backgroundColor: 'white',
-                titleColor: 'black',
-                bodyColor: 'black',
-                borderWidth: 1,
-                borderColor: '#e7e7e7',
-                bodyAlign: 'center' as const,
-                titleAlign: 'center' as const,
-                position: 'average' as const,
-                yAlign: 'bottom' as const,
-                callbacks: {
-                    label: (context: TooltipItem<'bar'>) => {
-                        const dataIndex = context.dataIndex;
-                        const datasetIndex = context.datasetIndex;
-                        if (tableData.changeGraphData[dataIndex]) {
-                            if (datasetIndex === 0) {
-                                return [
-                                    `추가 사업장: ${tableData.changeGraphData[dataIndex].pAdd}`,
-                                    `추가 보험금: ${tableData.changeGraphData[dataIndex].AddAmt.toLocaleString()} 원`,
-                                ];
-                            } else {
-                                return [
-                                    `종료 사업장: ${tableData.changeGraphData[dataIndex].pEnd}`,
-                                    `감소 보험금: ${tableData.changeGraphData[dataIndex].EndAmt.toLocaleString()} 원`,
-                                ];
-                            }
-                        }
-                        return (
-                            <div className={'flex items-centers justify-center my-[150px]'}>
-                                <Image src={Error} alt={'에러'} width={30} height={30} className={'mr-5'}/>
-                                <div className={'text-gray-700 text-lg'}>데이터가 없습니다.</div>
-                            </div>
-                        )
-                    },
-                },
-            },
-        },
-    };
+
 
 
     const tabs = [
@@ -253,7 +200,7 @@ export default function DashboardComponent({
                                 <colgroup>
                                     <col style={{width: ""}}/>
                                     <col style={{width: ""}}/>
-                                    <col style={{width: "150px"}}/>
+                                    <col style={{width: "300px"}}/>
                                     <col style={{width: "100px"}}/>
                                     <col style={{width: "200px"}}/>
                                     <col style={{width: "200px"}}/>
@@ -298,87 +245,14 @@ export default function DashboardComponent({
                 </div>
             </div>
             <div className={'px-8 py-6 bg-white rounded-xl my-5'}>
-                <div className={'text-lg font-light mb-6'}>계약변경현황</div>
-                <div className={'flex'}>
-                    <div className={'w-[1000px] mr-16'}>
-                        <div
-                            className={'mb-5 font-medium text-[16px]'}>{`최근 ${tableData.changeGraphData.length}개월 계약변경현황`}</div>
-                        <BarTwowayChart data={chartData.twowayBar} options={optionTwowayBar}/>
-                    </div>
-                    <div className={'w-full'}>
-                        <div className={"flex justify-end mb-4 text-lg"}>
-                            <div className={'border w-fit px-5 py-1 rounded-lg flex items-center'}>
-                                <DayTerm type="month" condition={'contract'} sDay={new Date(days[0].sDay)} eDay={new Date(days[0].eDay)} setDays={setDays} setParam={setParam}></DayTerm>
-                                <button onClick={() => handleParam('contract')}>
-                                    <Image src={Search} alt={"검색"} width={22} height={20} className={'cursor-pointer ml-3'}></Image>
-                                </button>
-                            </div>
-                        </div>
-                        <div className={'max-h-[260px] overflow-y-auto'}>
-                            <table className={'w-full relative'}>
-                                <colgroup>
-                                    <col style={{width: ""}}/>
-                                    <col style={{width: ""}}/>
-                                    <col style={{width: ""}}/>
-                                    <col style={{width: "80px"}}/>
-                                    <col style={{width: "80px"}}/>
-                                    {isHiparkingRoute && (
-                                        <>
-                                            <col style={{width: "200px"}}/>
-                                            <col style={{width: "200px"}}/>
-                                        </>)}
-                                </colgroup>
-                                <thead className={'sticky left-0 top-0'}>
-                                <tr>
-                                    <th rowSpan={2}>No</th>
-                                    <th rowSpan={2}>변경일</th>
-                                    <th rowSpan={2}>증권번호</th>
-                                    <th colSpan={2}>사업장수</th>
-                                    {isHiparkingRoute && (
-                                        <>
-                                            <th colSpan={2}>변경보험료</th>
-                                        </>)}
-                                </tr>
-                                <tr>
-                                    <th>추가</th>
-                                    <th>종료</th>
-                                    {isHiparkingRoute && (
-                                        <>
-                                            <th>추가</th>
-                                            <th>종료</th>
-                                        </>)}
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <EmptyDataWrapper data={tableData.changeGraphData}>
-                                {tableData.changeData.map((changeData, index) => (
-                                    <tr key={index}>
-                                        <td>{index + 1}</td>
-                                        <td>{changeData.cDay}</td>
-                                        <td>{changeData.pNo}</td>
-                                        <td>
-                                            {changeData.pAdd}
-                                        </td>
-                                        <td>
-                                            {changeData.pEnd}
-                                        </td>
-                                        {isHiparkingRoute && (
-                                            <>
-                                                <td className={'text-right'}>
-                                                    {changeData.AddAmt > 0 ? FormatNumber(changeData.AddAmt) : 0}원
-                                                </td>
-                                                <td className={'text-right'}>
-                                                    {changeData.EndAmt > 0 ? FormatNumber(changeData.EndAmt) : 0}원
-                                                </td>
-                                            </>)}
-                                    </tr>
-                                ))}
-                                </EmptyDataWrapper>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                {
+                    bpk === 2 &&
+                    <ContractComponent chartData={chartData} tableData={tableData} handleParam={handleParam} bpk={bpk}  param={param} setParam={setParam}/>
+                }
+                {
+                    bpk === 1 &&
+                    <ErrorChart chartData={chartData} tableData={tableData} handleParam={handleParam} bpk={bpk}  param={param} setParam={setParam}/>
+                }
             </div>
 
             <div className={'flex'}>
@@ -410,7 +284,7 @@ export default function DashboardComponent({
                         <div className={"flex justify-end mb-4 text-lg"}>
                             <div className={'border w-fit px-5 py-1 rounded-lg flex items-center'}>
                                 <DayTerm type="month" condition={'top'} sDay={new Date(days[1].sDay)} eDay={new Date(days[1].eDay)} setDays={setDays} setParam={setParam}></DayTerm>
-                                <button onClick={() => handleParam('top')}>
+                                <button onClick={() => handleParam('top', param)}>
                                     <Image src={Search} alt={"검색"} width={22} height={20}
                                            className={'cursor-pointer ml-3'}></Image>
                                 </button>
@@ -427,7 +301,7 @@ export default function DashboardComponent({
                             <div className={"flex justify-end mb-4 text-lg"}>
                                 <div className={'border w-fit px-5 py-1 rounded-lg flex items-center'}>
                                     <DayTerm type="month" condition={'month'} sDay={new Date(days[2].sDay)} eDay={new Date(days[2].eDay)} setDays={setDays} setParam={setParam}></DayTerm>
-                                    <button onClick={() => handleParam('month')}>
+                                    <button onClick={() => handleParam('month', param)}>
                                         <Image src={Search} alt={"검색"} width={22} height={20}
                                                className={'cursor-pointer ml-3'}></Image>
                                     </button>

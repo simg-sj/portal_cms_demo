@@ -6,12 +6,11 @@ import useFetchDashboard from "@/app/lib/hooks/useFetchDashboard";
 import Loading from "@/app/(Navigation-Group)/loading";
 
 export default function Page() {
-    const { tableData, doughnutValue, loading, error, updateParams } = useFetchDashboard('3');
+    const { tableData, doughnutValue, setDoughnutValue, loading, error, updateTableData } = useFetchDashboard(1);
 
     if (error) {
-        return <div>Error: {error.message}</div>;
+        return <div>서비스 오류입니다.</div>;
     }
-
     // 도넛 차트 데이터
     const dataDoughnut = {
         datasets: [
@@ -22,22 +21,17 @@ export default function Page() {
         ],
     };
 
-    // 양방향 막대 데이터
+    // 막대 데이터
     const dataTwowayBar = loading
         ? { labels: [], datasets: [] }
         : {
             labels: tableData?.changeGraphData?.map((d) => d.cDay) || [],
             datasets: [
                 {
-                    label: '추가 사업장',
+                    label: '접수건',
                     data: tableData?.changeGraphData?.map((d) => d.pAdd) || [],
                     backgroundColor: '#b2c7f3',
-                },
-                {
-                    label: '종료 사업장',
-                    data: tableData?.changeGraphData?.map((d) => -d.pEnd) || [],
-                    backgroundColor: '#d3d3d3',
-                },
+                }
             ],
         };
 
@@ -58,6 +52,8 @@ export default function Page() {
                 values: tableData?.topBusinessData?.map((d) => d.count) || [],
                 color: '#d3d3d3',
             },
+            pieCounsel: [],  // 추가
+            pieAccident: [], // 추가
         };
 
     return (
@@ -65,7 +61,7 @@ export default function Page() {
             {loading ? (
                 <Loading />
             ) : (
-                <Dashboard chartData={chartData} tableData={tableData} setParam={updateParams}/>
+                <Dashboard bpk={1} chartData={chartData} tableData={tableData} setDoughnutValue={setDoughnutValue}  updateTableData={updateTableData} />
             )}
         </>
     );

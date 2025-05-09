@@ -46,6 +46,7 @@ const themeConfigs: ThemeConfig = {
         menuItems: [
             {title: "dashboard", icon: DashboardIcon, label: "대시보드", link: "/kmpark" , authLevel : 1},
             {title: "accidentList", icon: ListIcon, label: "사고리스트", link: "/kmpark/accidentList", authLevel : 1},
+            {title: "errorList", icon: AccidentIcon, label: "장애리스트", link: "/kmpark/errorList" , authLevel : 1},
             {title: "parkingList", icon: CarIcon, label: "사업장관리", link: "/kmpark/parkingList" , authLevel : 1},
             {title: "insuManager", icon: ScheduleIcon, label: "보험관리", link: "/kmpark/insuManager" , authLevel : 1},
             {title: "mypage", icon: UserIcon, label: `님`, link: "/kmpark/mypage", authLevel : 1}

@@ -42,7 +42,7 @@ interface CounselData {
 
 type DashboardData = {
     counselData: CounselData[];
-    changeData: ChangeCounselData[];
+    changeData: ChangeCounselData[] | ErrorData [];
     topBusinessData: TopBusinessData[];
     topCounselData: TopCounselData[];
     monthAccidentData: MonthAccidentData[];
@@ -51,8 +51,8 @@ type DashboardData = {
     code ? : string;
 };
 
-//주차장대시보드 계약변경현황
-interface ChangeCounselData {
+//주차장대시보드 장애접수
+interface ErrorData {
     cNo: number;
     cDay: string;
     pNo: string;
@@ -60,6 +60,17 @@ interface ChangeCounselData {
     pEnd: number;
     AddAmt: number;
     EndAmt: number;
+}
+
+//주차장대시보드 계약변경현황
+interface ChangeCounselData {
+    cNo: number;
+    cDay: string;
+    total: number;
+    itemDefect : number;
+    subscriptionPass : number;
+    refundStatus : number;
+    etcReason : number;
 }
 
 //주차장대시보드 계약변경현황 그래프
@@ -131,7 +142,7 @@ interface UserType {
 }
 
 interface UserUpk {
-    upks : string;
+    irpks : string;
     gbn : string;
     job : string;
 }
@@ -256,6 +267,24 @@ interface ClaimRowType {
     useYNull?: string | null;           // 사용 여부
     createdYMD?: Date | null;           // 생성일자 (datetime)
 }
+
+// 주차장 사고 접수 타입
+interface ErrorType {
+    irpk: number;                       // Primary key, auto-increment
+    bpk?: number | null;                // 업체키
+    wName?: string | null;              // 접수자 이름
+    wCell?: string | null;              // 접수자 휴대폰번호
+    pklName ?: string | null;
+    pklAddress ?: string | null;
+    PJTcode?: string | null;            // 프로젝트 코드
+    vCarNum?: string | null;            // 피해 차량 번호
+    errorType?: string | null;       // 사고 유형
+    errorLocation?: string | null; // 사고 세부 유형
+    detail?: string | null;     // 사고 상세 내용
+    resultType?: string | null;        // 접수일
+    createdYMD?: Date | null;           // 생성일자 (datetime)
+}
+
 
 // 주차장 타입
 interface ParkingType {

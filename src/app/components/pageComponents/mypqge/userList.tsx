@@ -60,6 +60,7 @@ export default function UserList({ userList, onSearch, platformList }: { userLis
         }
     }, [isOpen, mode, selectedUser]);
 
+
     // 사용자 생성
     const handleAdd = async () => {
         if (!addUserRef.current) return;
@@ -75,6 +76,14 @@ export default function UserList({ userList, onSearch, platformList }: { userLis
             showConfirm(confirmMessage, async () => {
                 formData.job = "CUD";
                 formData.gbn = "ADD";
+
+                console.log(formData)
+                if(formData.subYn) {
+                    formData.platform = platformList.find((state => state.bpk === Number(formData.subBpk))).bName;
+                }else {
+                    formData.platform = data.user.platform;
+                }
+
 
                 let result = await userService(formData);
 
@@ -152,7 +161,7 @@ export default function UserList({ userList, onSearch, platformList }: { userLis
         }
         showConfirm(`선택한 ${selectedItems.length}개의 항목을 삭제하시겠습니까?`, async () => {
             let param : UserUpk = {
-                upks : selectedItems.join(','),
+                irpks : selectedItems.join(','),
                 job : 'CUD',
                 gbn : 'MDEL'
             };
@@ -180,6 +189,7 @@ export default function UserList({ userList, onSearch, platformList }: { userLis
             showConfirm(`${formData.uName} ${authText[formData.uAuth]} 를 삭제하시겠습니까?`, async () => {
                 formData.gbn = 'DEL'
                 formData.job = 'CUD';
+
                 let result = await userService(formData);
 
                 if ("code" in result) {
@@ -350,7 +360,7 @@ export default function UserList({ userList, onSearch, platformList }: { userLis
                 isOpen={isOpen}
                 onClose={handleClose}
                 title={mode === 'add' ? "사용자 추가" : "사용자 수정"}
-                Content={() => <AddUser ref={addUserRef} platformList={platformList}/>}
+                Content={() => <AddUser ref={addUserRef} platformList={platformList} mode={mode}/>}
                 buttons={getPopupButtons()}/>
             <div className={'mt-4'}>
                 <CheckboxContainer

@@ -53,7 +53,7 @@ export default function Page() {
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [param, setParam] = useState<ParkingParamType>({
-        bpk : 3,
+        bpk : 1,
         condition: "pklName",
         text : '',
         status : 'ALL'
@@ -210,7 +210,7 @@ export default function Page() {
                 // bpk 컬럼 추가
                 const addBpkData = excelData.map((row) => ({
                     ...row,
-                    bpk: 3, // bpk 컬럼 추가 및 값 설정
+                    bpk: 1, // bpk 컬럼 추가 및 값 설정
                 }));
                 let res = await addExcelParking(addBpkData);
                 if(res.status ==='200'){

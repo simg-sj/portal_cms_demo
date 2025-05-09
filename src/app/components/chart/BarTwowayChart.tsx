@@ -29,7 +29,7 @@ interface BarTwowayChartProps {
 
 const BarTwowayChart = ({data, options}: BarTwowayChartProps) => {
     if (!data) {
-        console.error("data prop is required.");
+        console.error("데이터가 없습니다.");
         return(
             <div className={'flex items-centers justify-center my-[150px]'}>
                 <Image src={Error.src} alt={'에러'} width={30} height={30} className={'mr-5'}/>
