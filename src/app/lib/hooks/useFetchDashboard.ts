@@ -9,11 +9,10 @@ import {
     TopCounselData,
     ChangeGraph,
     MonthAccidentData,
-    ErrorData
+    ErrorData, TopErrorData
 } from "@/@types/common";
 import { getDashBoard } from "@/app/(Navigation-Group)/action";
 import dayjs from "dayjs";
-import {useNotifications} from "@/context/NotificationContext";
 
 const useFetchDashboard = (bpk: number) => {
     const [tableData, setTableData] = useState<DashboardData | null>(null);
@@ -47,7 +46,6 @@ const useFetchDashboard = (bpk: number) => {
             setLoading(true);
             const result = await getDashBoard(initDash);
 
-
             const monthCumulativeData = Array.isArray(result[6]) && result[6].length > 0 ? result[6] : emptyMonth;
 
             // 데이터 구조에 맞게 테이블 데이터 설정
@@ -58,10 +56,10 @@ const useFetchDashboard = (bpk: number) => {
                 topCounselData: result[3] as TopCounselData[],
                 monthAccidentData: result[4] as MonthAccidentData[],
                 changeGraphData: result[5] as ChangeGraph[],
+                topErrorData : result[7] as TopErrorData[],
                 monthCumulativeData: monthCumulativeData
             };
 
-            console.log('dash', dashboardData.changeData);
             // 테이블 데이터 업데이트
             setTableData(dashboardData);
 
@@ -100,7 +98,8 @@ const useFetchDashboard = (bpk: number) => {
                         setTableData((prev) => ({
                             ...prev,
                             topBusinessData: result[0],  // result를 changeData에 할당
-                            topCounselData : result[1]
+                            topCounselData : result[1],
+                            topErrorData : result[2],
                         }));
                         break;
                     case 'contract' :
@@ -124,7 +123,9 @@ const useFetchDashboard = (bpk: number) => {
                             topCounselData: result[3] as TopCounselData[],
                             monthAccidentData: result[4] as MonthAccidentData[],
                             changeGraphData: result[5] as ChangeGraph[],
+                            topErrorData : result[7] as TopErrorData[],
                             monthCumulativeData: monthCumulativeData
+
                         }));
                     break;
                 }

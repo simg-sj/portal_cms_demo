@@ -12,10 +12,10 @@ import {
     STATE_OPTIONS
 } from "@/config/data";
 
-import {ClaimRowType, ImageType, UptClaim, UptParking} from "@/@types/common";
+import {ClaimRowType, ImageType, InsuranceItem, UptClaim, UptParking} from "@/@types/common";
 import Button from "@/app/components/common/ui/button/button";
 import FormatNumber from "@/app/components/common/ui/formatNumber";
-import {getImage} from "@/app/(Navigation-Group)/action";
+import {getImage, getPolicyList} from "@/app/(Navigation-Group)/action";
 import cn from 'classnames';
 import {convertClaimToUptClaim, getChangedFields} from "@/app/lib/common";
 import {useNotifications} from "@/context/NotificationContext";
@@ -32,10 +32,16 @@ interface ListProps {
 const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListProps) => {
     const [images, setImages] = useState<ImageType[]>([]);
     const {showAlert} = useNotifications();
-
+    const [pnoList, setPnoList] = useState<InsuranceItem[]>([]);
     // 초기에 rowData를 UptClaim으로 변환해서 editData로 설정
     const [editData, setEditData] = useState<ClaimRowType>(rowData);
 
+    const getPnoList = async (bpk : number) => {
+
+        let result = await getPolicyList(bpk);
+
+        setPnoList(result);
+    }
 
     const fetchImageData = useCallback(async (irpk: number) => {
         try {
@@ -52,15 +58,19 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
         // 이미지 데이터를 처음 로드하거나 irpk가 변경될 때만 호출
         if (!isNew && rowData.irpk) {
             fetchImageData(rowData.irpk);
+            getPnoList(rowData.bpk);
         }
 
     }, [rowData]);
 
     // 필드값 변경시 formdata 업데이트
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-       console.log(e.target.name)
+        let {name, value} = e.target;
+
+        let deleteCommaValue = value.replaceAll(',','');
+
         setEditData((prev) => {
-            return {...prev, [e.target.name]: e.target.value};
+            return {...prev, [e.target.name]: deleteCommaValue};
         });
     };
     const handleSave = () => {
@@ -184,7 +194,9 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                     <tbody>
                     <tr>
                         <th>접수번호</th>
-                        <td colSpan={3}>{renderField('insuNum', rowData.insuNum, 'text')}</td>
+                        <td>{renderField('insuNum', rowData.insuNum, 'text')}</td>
+                        <th>손조비용</th>
+                        <td>{ renderField('repairAmt', rowData.repairAmt ? FormatNumber(Number(rowData.repairAmt))+'원' : '-', 'text')}</td>
                     </tr>
                     <tr>
                         <th>상태</th>
@@ -337,7 +349,24 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                     <tbody>
                     <tr>
                         <th>증권번호</th>
-                        <td>{rowData.pNo}</td>
+                        {
+                            isEditing ?
+                                <td>
+                                    <select
+                                        name={'pNo'}
+                                        defaultValue={editData.pNo}
+                                        onChange={handleChange}
+                                        className="w-full p-1 border rounded"
+                                    >
+                                        <option value="">선택하세요</option>
+                                        {pnoList.map((state) => (
+                                            <option key={state.irpk} value={state.pNo}>{state.pNo}</option>
+                                        ))}
+                                    </select>
+                                </td>
+                                :
+                                <td>{editData.pNo}</td>
+                        }
                         <th>보험기간</th>
                         <td>{rowData.sDay} ~ {rowData.eDay}</td>
                     </tr>

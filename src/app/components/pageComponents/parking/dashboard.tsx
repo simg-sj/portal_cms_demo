@@ -3,7 +3,6 @@ import Button from "@/app/components/common/ui/button/button";
 import Excel from "@/assets/images/icon/excel-icon.png";
 import "react-datepicker/dist/react-datepicker.css";
 import DoughnutChart from "@/app/components/chart/DoughnutChart";
-import BarTwowayChart from "@/app/components/chart/BarTwowayChart";
 import FormatNumber from "@/app/components/common/ui/formatNumber";
 import Tab from "@/app/components/common/ui/tab";
 import Image from "next/image";
@@ -13,15 +12,12 @@ import BarHorizonChart from "@/app/components/chart/BarHorizonChart";
 import DayTerm from "@/app/components/common/ui/calender/dayTerm";
 import { DashboardData,ParamDashType2,} from "@/@types/common";
 import CountUp from "@/app/components/common/ui/countUp";
-import {TooltipItem} from "chart.js";
-import Error from "@/assets/images/icon/error-icon.png";
 import React, {SetStateAction, useEffect, useState} from "react";
-import {usePathname} from "next/navigation";
 import CountCard from "@/app/components/common/CountCard";
 import Search from "@/assets/images/icon/detail-icon.png"
 import dayjs from "dayjs";
 import {onClickExcel} from "@/app/lib/onClickExcel";
-import {monthColumns, policyColumns} from "@/config/data";
+import {monthColumns, platformList, policyColumns} from "@/config/data";
 import cn from "classnames";
 import {useNotifications} from "@/context/NotificationContext";
 import Notifications from "@/app/components/popup/Notifications";
@@ -36,6 +32,7 @@ interface DashboardProps {
         twowayBar: any;
         topCounsel: any;
         topBusiness: any;
+        topError: any;
         pieCounsel: any;
         pieAccident: any;
     };
@@ -58,9 +55,7 @@ export default function DashboardComponent({
                                                setDoughnutValue,
                                            }: DashboardProps) {
     //업체별 라우팅 옵션
-    const pathname = usePathname();
     const {showAlert} = useNotifications();
-    const isHiparkingRoute = pathname.includes('/hiparking')
     const { renewals } = useNotifications(); // 알림 데이터 가져오기
     const [donutValues, setDounutValues] = useState<DoughnutValueType>({
         lossRatio: tableData.counselData.at(-1).lossRatio,
@@ -93,7 +88,6 @@ export default function DashboardComponent({
         }
     ]);
     const handleParam = async (type: string, param : ParamDashType2) => {
-        console.log(type, param);
         let code = await updateTableData(param, type);
 
         if(code === '401'){
@@ -119,8 +113,9 @@ export default function DashboardComponent({
     useEffect(() => {
         if (tableData?.counselData?.length > 0) {
             const maxLossItem = tableData.counselData.reduce((prev, curr) =>
-                curr.lossRatio > prev.lossRatio ? curr : prev
+                curr.total > prev.total ? curr : prev
             );
+
 
             // 상태 업데이트
             setDounutValues({
@@ -145,26 +140,63 @@ export default function DashboardComponent({
 
 
 
-    const tabs = [
-        {
-            label: '지급보험금',
-            content: (
-                <>
-                    <div className={'my-5 font-medium text-lg'}>지급보험금 TOP 5</div>
-                    <BarHorizonChart data={chartData.topCounsel}/>
-                </>
-            ),
-        },
-        {
-            label: '사고발생업소',
-            content: (
-                <>
-                    <div className={'my-5 font-medium text-lg'}>사고발생업소 TOP 5</div>
-                    <BarHorizonChart data={chartData.topBusiness}/>
-                </>
-            ),
-        },
-    ]
+    const tabs = {
+        'hiparking' :
+            [
+                {
+                    label: '지급보험금',
+                    content: (
+                        <>
+                            <div className={'my-5 font-medium text-lg'}>지급보험금 TOP 5</div>
+                            <BarHorizonChart data={chartData.topCounsel}/>
+                        </>
+                    ),
+                },
+                {
+                    label: '사고발생업소',
+                        content :
+                    (
+                        <>
+                            <div className={'my-5 font-medium text-lg'}>사고발생업소 TOP 5</div>
+                            <BarHorizonChart data={chartData.topBusiness}/>
+                        </>
+                    ),
+                }
+        ],
+        'kmpark' :
+            [
+                {
+                    label: '지급보험금',
+                    content: (
+                        <>
+                            <div className={'my-5 font-medium text-lg'}>지급보험금 TOP 5</div>
+                            <BarHorizonChart data={chartData.topCounsel}/>
+                        </>
+                    ),
+                },
+                {
+                    label: '사고발생업소',
+                    content :
+                        (
+                            <>
+                                <div className={'my-5 font-medium text-lg'}>사고발생업소 TOP 5</div>
+                                <BarHorizonChart data={chartData.topBusiness}/>
+                            </>
+                        ),
+                },
+                {
+                    label: '장애발생업소',
+                    content:
+                        (
+                            <>
+                                <div className={'my-5 font-medium text-lg'}>장애발생업소 TOP 5</div>
+                                <BarHorizonChart data={chartData.topError}/>
+                            </>
+                        ),
+                },
+            ],
+
+}
 
     return (
         <>
@@ -291,7 +323,7 @@ export default function DashboardComponent({
                             </div>
                         </div>
                     </div>
-                    <Tab tabs={tabs}/>
+                    <Tab tabs={tabs[platformList[bpk]]}/>
                 </div>
 
                 <div className={'px-8 py-6 bg-white rounded-xl my-5 w-1/2'}>

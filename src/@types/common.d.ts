@@ -48,6 +48,7 @@ type DashboardData = {
     monthAccidentData: MonthAccidentData[];
     changeGraphData: ChangeGraph[];
     monthCumulativeData: MonthCumulativeData[] | [];
+    topErrorData : TopErrorData[] | [];
     code ? : string;
 };
 
@@ -103,6 +104,14 @@ interface TopBusinessData {
     pklName: string;
     count: number;
 }
+
+//주차장대시보드 사고발생업소 top5
+interface TopErrorData {
+    pklName: string;
+    count: number;
+}
+
+
 //주차장대시보드 월별사고접수현황
 interface MonthAccidentData {
     changeDay: string;

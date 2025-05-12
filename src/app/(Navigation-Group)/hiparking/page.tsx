@@ -57,6 +57,11 @@ export default function Page() {
                 values: tableData?.topBusinessData?.map((d) => d.count) || [],
                 color: '#8e52fd',
             },
+            topError: {
+                labels: [],
+                values: [],
+                color: '#8e52fd',
+            },
             pieCounsel: [],  // 추가
             pieAccident: [], // 추가
         };
