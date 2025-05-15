@@ -266,6 +266,7 @@ export default function Page() {
                         <option value={'wCell'}>피해자 연락처</option>
                         <option value={'vCarNum'}>피해 차량번호</option>
                         <option value={'pklName'}>주차장명</option>
+                        <option value={'insuNum'}>접수번호</option>
                     </select>
                     <input
                         type={'text'}
