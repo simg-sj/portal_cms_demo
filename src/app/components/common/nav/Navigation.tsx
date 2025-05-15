@@ -27,6 +27,29 @@ export default function Navigation() {
     const [addOpen, setAddOpen] = useState(false);
     const errorRef = useRef<ErrorReceptionRef>(null);
 
+    const supportMenuRef = useRef<HTMLDivElement | null>(null);
+    const supportButtonRef = useRef<HTMLDivElement | null>(null);
+
+    // 외부 클릭 시 메뉴 닫기
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                showSupportMenu &&
+                supportMenuRef.current &&
+                !supportMenuRef.current.contains(event.target as Node) &&
+                supportButtonRef.current &&
+                !supportButtonRef.current.contains(event.target as Node)
+            ) {
+                setShowSupportMenu(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [showSupportMenu]);
+
 
     const fetchRenewals = async (bpk: number) => {
         try {
@@ -99,6 +122,7 @@ export default function Navigation() {
 
     const toggleSupportMenu = () => {
         setShowSupportMenu(!showSupportMenu);
+
     };
 
     //오류접수 팝업
@@ -167,6 +191,7 @@ export default function Navigation() {
                     </div>
                 ))}
                 <div
+                    ref={supportButtonRef}
                     className={`px-1 py-2 flex flex-col items-center my-5 cursor-pointer rounded-md ${showSupportMenu ? 'bg-white bg-opacity-30' : 'hover:bg-white hover:bg-opacity-30'}`}
                     onClick={toggleSupportMenu}
                 >
@@ -176,7 +201,8 @@ export default function Navigation() {
                     </button>
                 </div>
                 {showSupportMenu && (
-                <div className={'space-y-2 absolute left-[110px] bottom-[210px] bg-white rounded-lg shadow-lg font-medium'}>
+                <div ref={supportMenuRef}
+                     className={'space-y-2 absolute left-[110px] bottom-[230px] bg-white rounded-lg shadow-lg font-medium'}>
                         <div className={'px-8 py-5 w-[220px] cursor-pointer hover:bg-main-lighter'}>사용자정의서 다운로드</div>
                         {/*<div className={'px-8 py-5 w-[220px] cursor-pointer hover:bg-main-lighter'} onClick={() => setAddOpen(true)}>시스템 오류접수</div>*/}
                 </div>
