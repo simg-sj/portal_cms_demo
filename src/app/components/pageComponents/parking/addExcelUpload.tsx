@@ -229,7 +229,7 @@ const AddExcelUpload = ({setExcelData}: AddProps) => {
                 <Button color={"green"} height={30} width={180} className={'ml-5'}
                         params={{bpk: BSN_CODE[data.user.bName].bpk, type: 'down'}}
                         fileName={BSN_CODE[data.user.bName].fileName} use={'down'}>
-                    <Image src={ExcelDown.src} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
+                    <Image src={ExcelDown} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
                     엑셀 샘플 다운로드
                 </Button>
             </div>

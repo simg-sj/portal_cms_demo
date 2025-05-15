@@ -50,6 +50,38 @@ export default function Navigation() {
         };
     }, [showSupportMenu]);
 
+    const handleUserGuide = async (e: React.MouseEvent<HTMLDivElement>) => {
+        try {
+            e.preventDefault();
+
+            const response = await fetch('https://center-api.simg.kr/api/portal/DownLoadUserGuide', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data.user),
+            });
+
+            if (!response.ok) {
+                const errorDetails = await response.text();
+                throw new Error(`Error ${response.status}: ${response.statusText} - ${errorDetails}`);
+            }
+
+            const blob = await response.blob(); // 응답 데이터를 Blob으로 변환
+            const downloadUrl = window.URL.createObjectURL(blob);
+
+            // 가상의 링크 생성 및 클릭 트리거
+            const a = document.createElement("a");
+            a.href = downloadUrl;
+            a.download = '사용자메뉴얼'; // 다운로드될 파일 이름
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        } catch (error) {
+            console.error("파일 다운로드 실패:", error);
+            alert("파일 다운로드에 실패했습니다.");
+        }
+    };
 
     const fetchRenewals = async (bpk: number) => {
         try {
@@ -203,7 +235,7 @@ export default function Navigation() {
                 {showSupportMenu && (
                 <div ref={supportMenuRef}
                      className={'space-y-2 absolute left-[110px] bottom-[230px] bg-white rounded-lg shadow-lg font-medium'}>
-                        <div className={'px-8 py-5 w-[220px] cursor-pointer hover:bg-main-lighter'}>사용자정의서 다운로드</div>
+                        <div className={'px-8 py-5 w-[220px] cursor-pointer hover:bg-main-lighter'} onClick={(e) => handleUserGuide(e)}>사용자정의서 다운로드</div>
                         {/*<div className={'px-8 py-5 w-[220px] cursor-pointer hover:bg-main-lighter'} onClick={() => setAddOpen(true)}>시스템 오류접수</div>*/}
                 </div>
                     )}
