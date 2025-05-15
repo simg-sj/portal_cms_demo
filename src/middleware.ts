@@ -18,7 +18,7 @@ const platformUrls = {
         { path: '/kmpark/*', minAuthLevel: 1 },
     ],
     turu: [
-        { path: '/turu', minAuthLevel: 1 },
+        { path: '/turu', minAuthLevel: 4 },
         { path: '/turu/*', minAuthLevel: 1 },
     ],
     starpickers: [
@@ -36,7 +36,7 @@ const excludeMatchers = [
     '/api/auth/*',
     '/_next/static/*',
     '/favicon.ico',
-    '.*\\.(png|jpg|jpeg|gif|ico|svg|webp)$', // 이미지 파일
+    '.*\\.(png|jpg|jpeg|gif|ico|svg|webp)$',
 ];
 
 // 경로 매칭 함수
@@ -59,32 +59,43 @@ function isAuthorized(pathname: string, urls: { path: string; minAuthLevel: numb
 export const signOutWithForm = async () => {
     try {
         await signOut({
-            redirectTo: '/login', // 로그아웃 후 '/login'으로 리다이렉트
-            redirect: true,      // 자동 리다이렉트 활성화
+            redirectTo: '/login',
+            redirect: true,
         });
     } catch (error) {
-        console. error('로그아웃 중 에러 발생:', error);
+        console.error('로그아웃 중 에러 발생:', error);
     }
 };
 
 // 미들웨어
 export async function middleware(request: NextRequest) {
-    const userInfo = await auth(); // 사용자 인증 정보 가져오기
-
+    const userInfo = await auth();
     const { pathname } = request.nextUrl;
 
-    // 사용자 플랫폼 및 허용 경로
     const userPlatform = userInfo?.user?.service || '';
     const userAccessUrls = platformUrls[userPlatform] || [];
     const allowedPaths = userAccessUrls.map((url) => url.path).filter((path): path is string => typeof path === 'string');
-    const userHomeUrl = `/${userPlatform}`; // 사용자 플랫폼 루트 경로
 
-    // 1. 예외 경로 처리
+    const userAuthLevel = userInfo?.user?.authLevel || 0;
+
+    // ✅ 권한에 따라 루트 경로 분기
+    let userHomeUrl = `/${userPlatform}`;
+    if (userAuthLevel <= 4) {
+        switch (userPlatform) {
+            case 'turu':
+                userHomeUrl = '/turu/insuRequest';
+                break;
+            default:
+                userHomeUrl = `/${userPlatform}`;
+        }
+    }
+
+    // 1. 예외 경로
     if (isPathMatch(pathname, excludeMatchers)) {
         return NextResponse.next();
     }
 
-    // 2. 루트 경로 처리
+    // 2. 루트 ('/')
     if (pathname === '/') {
         if (userInfo) {
             return NextResponse.redirect(new URL(userHomeUrl, request.url));
@@ -93,28 +104,27 @@ export async function middleware(request: NextRequest) {
         }
     }
 
-    // 3. 로그인 페이지 접근 처리
+    // 3. 로그인 페이지
     if (pathname === '/login') {
         if (userInfo) {
             return NextResponse.redirect(new URL(userHomeUrl, request.url));
         }
-        return NextResponse.next(); // 비로그인 사용자는 로그인 페이지 접근 허용
+        return NextResponse.next();
     }
 
-    // 4. 로그아웃 요청 처리
+    // 4. 로그아웃 요청은 통과
     if (pathname === '/logout') {
-        return NextResponse.next(); // 로그아웃 경로는 예외 처리
+        return NextResponse.next();
     }
 
-    // 5. 플랫폼별 경로 접근 제한
+    // 5. 플랫폼 경로 접근 제한
     if (!isPathMatch(pathname, allowedPaths)) {
-        return NextResponse.redirect(new URL(userHomeUrl, request.url)); // 플랫폼 루트로 리다이렉트
+        return NextResponse.redirect(new URL(userHomeUrl, request.url));
     }
 
     // 6. 권한 검사
-    const userAuthLevel = userInfo?.user?.authLevel || 0;
     if (!isAuthorized(pathname, userAccessUrls, userAuthLevel)) {
-        return NextResponse.redirect(new URL(userHomeUrl, request.url)); // 권한 부족 시에도 플랫폼 루트로 리다이렉트
+        return NextResponse.redirect(new URL(userHomeUrl, request.url));
     }
 
     return NextResponse.next();

@@ -36,8 +36,9 @@ const themeConfigs: ThemeConfig = {
     turu: {
         logoSrc: HiparkingLogo,
         menuItems: [
-            {title: "main", icon: AccidentIcon, label: "사고접수", link: "/turu", authLevel : 1},
-            /*{title: "accidentList", icon: ListIcon, label: "사고리스트", link: "/turu/accidentList", authLevel : 4},*/
+            {title: "dashboard", icon: DashboardIcon, label: "대시보드", link: "/turu" , authLevel : 4},
+            {title: "main", icon: AccidentIcon, label: "사고접수", link: "/insuRequest", authLevel : 1},
+            {title: "accidentList", icon: ListIcon, label: "사고리스트", link: "/turu/accidentList", authLevel : 4},
             {title: "mypage", icon: UserIcon, label: `님`, link: "/turu/mypage", authLevel : 1}
         ]
     },
@@ -55,6 +56,7 @@ const themeConfigs: ThemeConfig = {
     starpickers: {
         logoSrc: StarPickerLogo,
         menuItems: [
+            {title: "dashboard", icon: DashboardIcon, label: "대시보드", link: "/dashboard" , authLevel : 4},
             {title: "main", icon: MotocycleIcon, label: "보험접수", link: "/starpickers", authLevel : 1},
             {title: "underwriteList", icon: ListIcon, label: "접수현황", link: "/starpickers/underwriteList", authLevel : 4},
             {title: "mypage", icon: UserIcon, label: `님`, link: "/starpickers/mypage", authLevel : 1}

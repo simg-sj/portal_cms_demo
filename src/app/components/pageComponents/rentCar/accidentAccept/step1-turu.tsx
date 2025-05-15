@@ -30,6 +30,7 @@ const Step1 = ({onNext, watch, setValue, handleSubmit,errors, register }: Step1P
             // 공통으로 공업사, 담당자 이름, 성명 세팅
             if(!isSub){
                 setValue('subYN', 'Y');
+                setValue('platform', data.user.platform);
                 setValue('partnerName', data.user.platform);
                 setValue('subBpk', filterPlatform.bpk);
                 setValue('inCargeName', filterPlatform.inCargeName);

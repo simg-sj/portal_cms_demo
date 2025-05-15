@@ -55,7 +55,7 @@ export default function Page() {
             topError: {
                 labels: tableData?.topErrorData?.map((d) => d.pklName) || [],
                 values: tableData?.topErrorData?.map((d) => d.count) || [],
-                color: '#d3d3d3',
+                color: '#ff6d6d',
             },
             pieCounsel: [],  // 추가
             pieAccident: [], // 추가
