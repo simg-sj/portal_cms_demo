@@ -205,7 +205,6 @@ const AddUser = forwardRef<AddUserRef, AddUserProps>(({platformList, mode}, ref)
                                 >
                                     <option disabled={true} hidden={true} value={'placeholder'}>권한을 선택해주세요</option>
                                     <option value={'user'}>사용자</option>
-                                    <option value={'admin'}>관리자</option>
                                 </select>
                                 {errors.uAuth && (
                                     <p className={'text-red-500 text-sm mt-1'}>{errors.uAuth.message}</p>
