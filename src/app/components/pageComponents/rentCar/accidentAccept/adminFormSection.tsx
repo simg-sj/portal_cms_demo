@@ -91,44 +91,7 @@ const AdminFormSection = ({
             {errors.partnerName && typeof errors.partnerName.message === "string" && (
                 <div className="text-red-500 pl-[100px] text-base error">{errors.partnerName.message}</div>
             )}
-            <div className="flex px-[100px] py-5 items-center">
-                <div className="font-medium w-[300px] mr-1">담당자 성명 <span className="text-red-500">*</span></div>
-                <input
-                    type="text"
-                    name="inCargeName"
-                    {...register("inCargeName", { required: "담당자 성명을 입력해주세요." })}
-                    className="w-[800px]"
-                />
-            </div>
-            {errors.inCargeName && typeof errors.inCargeName.message === "string" && (
-                <div className="text-red-500 pl-[100px] text-base error">{errors.inCargeName.message}</div>
-            )}
-            <div className="flex px-[100px] py-5 items-center">
-                <div className="font-medium w-[300px] mr-1">담당자 연락처 <span className="text-red-500">*</span></div>
-                <input
-                    type="text"
-                    name="inCargePhone"
-                    {...register("inCargePhone", { required: "담당자 연락처를 입력해주세요." })}
-                    className="w-[800px]"
-                />
-            </div>
-            {errors.inCargePhone && typeof errors.inCargePhone.message === "string" && (
-                <div className="text-red-500 pl-[100px] text-base error">{errors.inCargePhone.message}</div>
-            )}
 
-            <div className="flex px-[100px] py-5 items-center">
-                <div className="font-medium w-[300px] mr-1">공업사 <span className="text-red-500">*</span></div>
-                <input
-                    type="text"
-                    name="reCompany"
-                    placeholder={'공업사 명 (공업사 주소)를 입력해주세요.'}
-                    {...register("reCompany", { required: "공업사 정보를를 입력해주세요." })}
-                    className="w-[800px]"
-                />
-            </div>
-            {errors.reCompany && typeof errors.reCompany.message === "string" && (
-                <div className="text-red-500 pl-[100px] text-base error">{errors.reCompany.message}</div>
-            )}
 
         </>
     );

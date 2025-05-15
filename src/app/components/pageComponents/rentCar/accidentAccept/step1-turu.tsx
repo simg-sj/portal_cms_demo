@@ -14,7 +14,6 @@ const Step1 = ({onNext, watch, setValue, handleSubmit,errors, register }: Step1P
     const [loading, setLoading] = useState(true);
 
 
-
     const minETA = watch('accidentDate');
 
 
@@ -26,7 +25,21 @@ const Step1 = ({onNext, watch, setValue, handleSubmit,errors, register }: Step1P
     const fetchPlatform = async (bpk  : number) => {
         try {
             const result: PlatformList[] = await getPlatform(bpk);
-            setPlatformList(result);
+            let filterPlatform = result.find(element => element.bName === data.user.platform);
+
+            // 공통으로 공업사, 담당자 이름, 성명 세팅
+            if(!isSub){
+                setValue('subYN', 'Y');
+                setValue('partnerName', data.user.platform);
+                setValue('subBpk', filterPlatform.bpk);
+                setValue('inCargeName', filterPlatform.inCargeName);
+                setValue('confirmation', 'N');
+                setValue('inCargePhone', filterPlatform.inCargePhone);
+            }else {
+                setValue('wName', data.user.name);
+                setValue('subYN', 'N');
+                setPlatformList(result);
+            }
         } finally {
             setLoading(false); // 데이터 로딩 종료
         }
@@ -42,14 +55,8 @@ const Step1 = ({onNext, watch, setValue, handleSubmit,errors, register }: Step1P
 
     useEffect(() => {
         if (data?.user?.bpk) {
-            if (!isSub) {
-                setValue('platform', data.user.platform);
-                setLoading(false); // 비관리자면 바로 로딩 끝
-            } else {
-                fetchPlatform(data.user.bpk);
-                setValue('wName', data.user.name);
-                setValue('bpk', data.user.bpk);
-            }
+            setValue('bpk', data.user.bpk);
+            fetchPlatform(data.user.bpk);
         }
     }, [data]);
 
@@ -92,6 +99,45 @@ const Step1 = ({onNext, watch, setValue, handleSubmit,errors, register }: Step1P
                     )
 
                 }
+                <div className="flex px-[100px] py-5 items-center">
+                    <div className="font-medium w-[300px] mr-1">담당자 성명 <span className="text-red-500">*</span></div>
+                    <input
+                        type="text"
+                        name="inCargeName"
+                        {...register("inCargeName", { required: "담당자 성명을 입력해주세요." })}
+                        className="w-[800px]"
+                    />
+                </div>
+                {errors.inCargeName && typeof errors.inCargeName.message === "string" && (
+                    <div className="text-red-500 pl-[100px] text-base error">{errors.inCargeName.message}</div>
+                )}
+                <div className="flex px-[100px] py-5 items-center">
+                    <div className="font-medium w-[300px] mr-1">담당자 연락처 <span className="text-red-500">*</span></div>
+                    <input
+                        type="text"
+                        name="inCargePhone"
+                        {...register("inCargePhone", { required: "담당자 연락처를 입력해주세요." })}
+                        className="w-[800px]"
+                    />
+                </div>
+                {errors.inCargePhone && typeof errors.inCargePhone.message === "string" && (
+                    <div className="text-red-500 pl-[100px] text-base error">{errors.inCargePhone.message}</div>
+                )}
+
+                <div className="flex px-[100px] py-5 items-center">
+                    <div className="font-medium w-[300px] mr-1">공업사 <span className="text-red-500">*</span></div>
+                    <input
+                        type="text"
+                        name="reCompany"
+                        placeholder={'공업사 명 (공업사 주소)를 입력해주세요.'}
+                        {...register("reCompany", { required: "공업사 정보를를 입력해주세요." })}
+                        className="w-[800px]"
+                    />
+                </div>
+                {errors.reCompany && typeof errors.reCompany.message === "string" && (
+                    <div className="text-red-500 pl-[100px] text-base error">{errors.reCompany.message}</div>
+                )}
+
                 <div className={'flex px-[100px] py-5 items-center'}>
                     <div className={'font-medium w-[300px] mr-1'}>차량번호 <span className={'text-red-500'}>*</span>
                     </div>
@@ -154,26 +200,30 @@ const Step1 = ({onNext, watch, setValue, handleSubmit,errors, register }: Step1P
                     <div className="text-red-500 pl-[100px] text-base error">{errors.accidentDetail.message}</div>}
 
                 <div className={'flex px-[100px] py-5 items-center'}>
-                    <div className={'font-medium w-[300px] mr-1'}>파손사진</div>
+                    <div className={'font-medium w-[300px] mr-1'}>파손사진 <span className={'text-red-500'}>*</span></div>
                     <input
                         name='damagedImages'
                         type={'file'}
-                        {...register('damagedImages')}
+                        {...register('damagedImages', {required : '파손사진을 업로드해주세요.'})}
                         accept="image/*"
                         multiple={true}
                     />
                 </div>
+                {errors.damagedImages && typeof errors.damagedImages.message === 'string' &&
+                    <div className="text-red-500 pl-[100px] text-base error">{errors.damagedImages.message}</div>}
 
                 <div className={'flex px-[100px] py-5 items-center'}>
-                    <div className={'font-medium w-[300px] mr-1'}>견적서</div>
+                    <div className={'font-medium w-[300px] mr-1'}>견적서 <span className={'text-red-500'}>*</span></div>
                     <input
                         name='estimate'
                         type={'file'}
-                        {...register('estimate')}
+                        {...register('estimate', {required : '견적서를 업로드해주세요.'})}
                         accept="image/*"
                         multiple={true}
                     />
                 </div>
+                {errors.estimate && typeof errors.estimate.message === 'string' &&
+                    <div className="text-red-500 pl-[100px] text-base error">{errors.estimate.message}</div>}
             </form>
             <div className={'flex my-10 mx-[100px]'}>
                 <Button color={"main"} fill={true} onClick ={handleSubmit(onSubmit)} textSize={18} width={1100} height={60}>확인</Button>

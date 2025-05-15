@@ -37,7 +37,7 @@ const themeConfigs: ThemeConfig = {
         logoSrc: HiparkingLogo,
         menuItems: [
             {title: "main", icon: AccidentIcon, label: "사고접수", link: "/turu", authLevel : 1},
-            {title: "accidentList", icon: ListIcon, label: "사고리스트", link: "/turu/accidentList", authLevel : 4},
+            /*{title: "accidentList", icon: ListIcon, label: "사고리스트", link: "/turu/accidentList", authLevel : 4},*/
             {title: "mypage", icon: UserIcon, label: `님`, link: "/turu/mypage", authLevel : 1}
         ]
     },

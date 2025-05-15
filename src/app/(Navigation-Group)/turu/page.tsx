@@ -3,7 +3,6 @@ import React, {useState} from 'react';
 import Step1 from "@/app/components/pageComponents/rentCar/accidentAccept/step1-turu";
 import Step2 from "@/app/components/pageComponents/rentCar/accidentAccept/step2-turu";
 import Step3 from "@/app/components/pageComponents/rentCar/accidentAccept/step3";
-import { rcAccidentRowType} from "@/@types/common";
 import {useForm} from "react-hook-form";
 
 
@@ -17,19 +16,21 @@ export default function Page() {
             bpk : 0,
             partnerName: "",
             wName : "",
+            subBpk : "",
+            subYN : "",
             confirmation : "",
             reCompany : "",
             inCargeName: "",
             inCargePhone: "",
             vCarNum: "",
             accidentDate: "",
-            accidentTime: "",
+            accidentTime: "12:30",
             arrivalETA: "",
             accidentDetail: "",
-            damagedImages : null,
-            estimate: null,
-            privacy : "N",
-            thirdParty : 'N'
+            damagedImages : [],
+            estimate: [],
+            privacy : '',
+            thirdParty : ''
         },
     });
 
@@ -50,6 +51,12 @@ export default function Page() {
     };
 
 
+    const handleReset = () => {
+        setCurrentStep(1);
+        reset();
+    };
+
+
 
     const renderStep = () => {
         switch (currentStep) {
@@ -58,7 +65,7 @@ export default function Page() {
             case 2:
                 return <Step2 onNext={handleNext} onPrev={handlePrev} getValues={getValues} register={register}/>;
             case 3:
-                return <Step3 onReset={reset}/>;
+                return <Step3 onReset={handleReset}/>;
             default:
                 return null;
         }

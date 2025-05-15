@@ -135,3 +135,29 @@ export const getChangedFields = (
     return changed;
 };
 
+export function appendToFormData(formData: FormData, data: Record<string, any>) {
+    Object.entries(data).forEach(([key, val]) => {
+        if (val instanceof File) {
+            formData.append(key, val);
+        } else if (val instanceof FileList) {
+            Array.from(val).forEach(file => {
+                formData.append(key, file);
+            });
+        } else if (Array.isArray(val) && val[0] instanceof File) {
+            val.forEach(file => {
+                formData.append(key, file);
+            });
+        } else if (
+            typeof val === 'string' ||
+            typeof val === 'number' ||
+            typeof val === 'boolean'
+        ) {
+            formData.append(key, val.toString());
+        } else if (val !== null && typeof val === 'object') {
+            formData.append(key, JSON.stringify(val));
+        } else if (val !== undefined && val !== null) {
+            formData.append(key, val);
+        }
+    });
+}
+

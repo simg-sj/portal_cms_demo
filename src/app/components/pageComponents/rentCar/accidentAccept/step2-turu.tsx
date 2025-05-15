@@ -1,6 +1,8 @@
 import React, {useState} from "react";
 import Button from "@/app/components/common/ui/button/button";
 import {Step2PropsLC} from "@/@types/common";
+import {turuApi1001} from "@/app/(Navigation-Group)/turu/action";
+import {appendToFormData} from "@/app/lib/common";
 
 
 
@@ -11,12 +13,17 @@ const Step2= ({onNext, onPrev, getValues, register} : Step2PropsLC) =>  {
         try {
             let privacy = getValues('privacy');
             let thirdParty = getValues('thirdParty');
-            console.log(privacy, thirdParty);
-            if (privacy === 'Y' && thirdParty === 'Y') {
+            const formData = new FormData();
+
+            if (privacy  && thirdParty ) {
                 let value = getValues();
 
-                console.log(value);
+                appendToFormData(formData, value);
 
+                const result = await turuApi1001(formData);
+                if(result.code === '200'){
+                    onNext();
+                }
             } else {
                 alert("모든 약관에 동의해주세요.");
             }
@@ -39,7 +46,6 @@ const Step2= ({onNext, onPrev, getValues, register} : Step2PropsLC) =>  {
                 <input
                     type="checkbox"
                     name="privacy"
-                    value={'Y'}
                     {...register("privacy", { required: "개인정보수집 및 이용방침에 동의해주세요." })}
                     className={'mr-3 w-4'}
                 />
@@ -63,7 +69,6 @@ const Step2= ({onNext, onPrev, getValues, register} : Step2PropsLC) =>  {
                 <input
                     type="checkbox"
                     name="thirdParty"
-                    value={'Y'}
                     {...register("thirdParty", { required: "개인정보 제3자 제공에 동의해주세요." })}
                     className={'mr-3 w-4'}
                 />

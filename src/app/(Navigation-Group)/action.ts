@@ -20,7 +20,7 @@ import {
     ParamType,
     ParkingParamType,
     ParkingRowType,
-    ParkingType, PlatformList,
+    ParkingType,
     rcAccidentRowType,
     rcAccidentType,
     resultCode,
