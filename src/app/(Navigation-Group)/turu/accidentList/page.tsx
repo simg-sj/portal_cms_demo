@@ -185,8 +185,8 @@ export default function Page() {
     // 사고접수 리스트 컬럼
     const columns: ColumnDefinition<rcAccidentType>[] = [
         {
-            key: 'rcPk',
-            header: '고유키',
+            key: 'insuNum',
+            header: '접수번호',
         },
         {
             key: 'partnerName',
@@ -197,16 +197,20 @@ export default function Page() {
             header: '차량번호'
         },
         {
-            key: 'carType',
-            header: '차종',
-        },
-        {
             key: 'accidentDate',
             header: '사고일시',
             render: (item) => item.accidentDate
                 ? dayjs(item.accidentDate).format('YYYY-MM-DD HH:mm')
                 : '-'
         },
+        {
+            key: 'isConfirmed',
+            header: '컨펌여부',
+        },
+        {
+            key: 'statusCode',
+            header: '상태여부',
+        }
     ];
 
 

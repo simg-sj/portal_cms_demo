@@ -276,16 +276,6 @@ export default function DashboardComponent({
                     </div>
                 </div>
             </div>
-            <div className={'px-8 py-6 bg-white rounded-xl my-5'}>
-                {
-                    bpk === 2 &&
-                    <ContractComponent chartData={chartData} tableData={tableData} handleParam={handleParam} bpk={bpk}  param={param} setParam={setParam}/>
-                }
-                {
-                    bpk === 1 &&
-                    <ErrorChart chartData={chartData} tableData={tableData} handleParam={handleParam} bpk={bpk}  param={param} setParam={setParam}/>
-                }
-            </div>
 
             <div className={'flex'}>
                 <div className={'px-8 py-6 bg-white rounded-xl my-5 w-1/6'}>

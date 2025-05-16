@@ -65,6 +65,16 @@ export function CheckboxContainer<T>({
                 return dayjs(value).format('YYYY-MM-DD')
             }
         }
+        if(column === 'accidentDate') {
+            if(item[column]) {
+                return dayjs(value).format('YYYY-MM-DD hh:mm')
+            }
+        }
+        if(column === 'isConfirmed') {
+            if(item[column]) {
+                return value === 'Y' ? '승인' : '미승인';
+            }
+        }
         if (value === null || value === undefined) {
             return "-";
         }

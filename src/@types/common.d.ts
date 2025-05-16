@@ -366,7 +366,7 @@ interface ParkingRowType {
 
 // 트루카 책임보험 사고 타입 정의
 interface rcAccidentType {
-    irpk: number;
+    rcPk: number;
     bpk: number; // 업체키
     insuNum?: string;
     partnerName: string; // 제휴사명
@@ -380,8 +380,16 @@ interface rcAccidentType {
     isConfirmed: string; // 컨펌 여부 (nullable)
     confirmedBy: string | null; // 컨펌 담당자 (nullable)
     statusCode?: string;
+    accidentTime: string;
+    accidentDateTime: string;
     memo?: string;
     createdYMD?: string; // 생성일
+}
+
+// 트루카
+interface rcAccidentRowType extends rcAccidentType {
+    gbn?: string;
+    job?: string;
 }
 
 
@@ -436,13 +444,7 @@ interface UptParking extends ParkingRowType {
     bpk : number;
 }
 
-// 트루카
-interface rcAccidentRowType extends rcAccidentType {
-    gbn?: string;
-    job?: string;
-    accidentTime: string;
-    accidentDateTime: string;
-}
+
 
 
 // 책임보험 타입 정의
