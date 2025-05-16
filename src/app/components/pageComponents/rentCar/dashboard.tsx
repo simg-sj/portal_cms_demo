@@ -29,7 +29,6 @@ interface DashboardProps {
     chartData: {
         doughnut: any;
         doughnutValue: number;
-        twowayBar: any;
         topCounsel: any;
         topBusiness: any;
         topError: any;

@@ -316,7 +316,7 @@ export default function Page() {
                         조회
                     </Button>
                 </div>
-                <Button color={"green"} height={32} width={120} className={'ml-5'} onClick={()  => onClickExcel(hiparkingAccidentColumns,'accident', data, '하이파킹_사고_리스트.xlsx')}>
+                <Button color={"green"} height={32} width={120} className={'ml-5'} onClick={()  => onClickExcel(hiparkingAccidentColumns,'accident', data, '투루카_사고_리스트.xlsx')}>
                     <Image src={Excel} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
                     엑셀다운
                 </Button>

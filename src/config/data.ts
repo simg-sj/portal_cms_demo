@@ -148,7 +148,7 @@ export const initRcRowData : rcAccidentRowType = {
     reCompany: "",
     repairAmt: "",
     sDay: "",
-    total: "",
+    total: 0,
     wCell: "",
     irpk: 0,
     bpk: 0, // 업체키
@@ -166,7 +166,7 @@ export const initRcRowData : rcAccidentRowType = {
     statusCode: '', // 선택사항
     accidentTime: '', // 사고 시간 (예: '14:30')
     accidentDateTime: '', // 사고 일시+시간 (예: '2025-05-16 14:30')
-    memo: '', // 메모
+    wOpinion: '', // 메모
     createdYMD: '', // 생성일 (예: '2025-05-16')
     gbn: '', // 구분값
     job: '' // 작업 유형

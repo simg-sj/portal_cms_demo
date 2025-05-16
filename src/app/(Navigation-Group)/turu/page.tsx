@@ -21,24 +21,6 @@ export default function Page() {
         ],
     };
 
-    // 양방향 막대 데이터
-    const dataTwowayBar = loading
-        ? { labels: [], datasets: [] }
-        : {
-            labels: tableData?.changeGraphData?.map((d) => d.cDay) || [],
-            datasets: [
-                {
-                    label: '추가 사업장',
-                    data: tableData?.changeGraphData?.map((d) => d.pAdd) || [],
-                    backgroundColor: '#fdae68',
-                },
-                {
-                    label: '종료 사업장',
-                    data: tableData?.changeGraphData?.map((d) => -d.pEnd) || [],
-                    backgroundColor: '#8e52fd',
-                },
-            ],
-        };
 
     // 차트 데이터
     const chartData = loading
@@ -46,7 +28,6 @@ export default function Page() {
         : {
             doughnut: dataDoughnut,
             doughnutValue: doughnutValue || 0,
-            twowayBar: dataTwowayBar,
             topCounsel: {
                 labels: tableData?.topCounselData?.map((d) => d.pklName) || [],
                 values: tableData?.topCounselData?.map((d) => d.total_sum) || [],
