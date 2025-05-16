@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import Dashboard from "@/app/components/pageComponents/rentCar/dashboard";
+import Dashboard from "@/app/components/pageComponents/parking/dashboard";
 import useFetchDashboard from "@/app/lib/hooks/useFetchDashboard";
 import Loading from "@/app/(Navigation-Group)/loading";
 
@@ -73,7 +73,7 @@ export default function Page() {
             {loading ? (
                 <Loading />
             ) : (
-                <Dashboard bpk={4} chartData={chartData} tableData={tableData} setDoughnutValue={setDoughnutValue}  updateTableData={updateTableData} />
+                <Dashboard bpk={2} chartData={chartData} tableData={tableData} setDoughnutValue={setDoughnutValue}  updateTableData={updateTableData} />
             )}
         </>
     );
