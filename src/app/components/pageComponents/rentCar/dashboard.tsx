@@ -10,7 +10,7 @@ import CarIcon from '@/assets/images/icon/car-icon.png'
 import ChargeIcon from '@/assets/images/icon/charge-icon.png'
 import BarHorizonChart from "@/app/components/chart/BarHorizonChart";
 import DayTerm from "@/app/components/common/ui/calender/dayTerm";
-import { DashboardData,ParamDashType2,} from "@/@types/common";
+import {DashboardData, ParamDashType2,} from "@/@types/common";
 import CountUp from "@/app/components/common/ui/countUp";
 import React, {SetStateAction, useEffect, useState} from "react";
 import CountCard from "@/app/components/common/CountCard";
@@ -36,15 +36,15 @@ interface DashboardProps {
         pieCounsel: any;
         pieAccident: any;
     };
-    bpk : number;
+    bpk: number;
     tableData: DashboardData;
-    setDoughnutValue : React.Dispatch<SetStateAction<number | null>>;
-    updateTableData : (param : ParamDashType2, type : string) => Promise<string>;
+    setDoughnutValue: React.Dispatch<SetStateAction<number | null>>;
+    updateTableData: (param: ParamDashType2, type: string) => Promise<string>;
 }
 
 interface DoughnutValueType {
     lossRatio: number
-    closingAmt : number
+    closingAmt: number
 }
 
 export default function DashboardComponent({
@@ -56,7 +56,7 @@ export default function DashboardComponent({
                                            }: DashboardProps) {
     //업체별 라우팅 옵션
     const {showAlert} = useNotifications();
-    const { renewals } = useNotifications(); // 알림 데이터 가져오기
+    const {renewals} = useNotifications(); // 알림 데이터 가져오기
     const [donutValues, setDounutValues] = useState<DoughnutValueType>({
         lossRatio: tableData.counselData.at(-1).lossRatio,
         closingAmt: tableData.counselData.at(-1).closingAmt,
@@ -66,31 +66,31 @@ export default function DashboardComponent({
         job: 'dash',
         bpk: bpk,
         gbn: '',
-        pNo : '',
+        pNo: '',
         sDay: dayjs().subtract(5, 'month').format('YYYY-MM'),
         eDay: dayjs().format('YYYY-MM')
     })
     const [days, setDays] = useState([
         {
-            type : 'contract',
+            type: 'contract',
             sDay: dayjs().subtract(5, 'month').format('YYYY-MM'),
             eDay: dayjs().format('YYYY-MM')
         },
         {
-            type : 'top',
+            type: 'top',
             sDay: dayjs().subtract(5, 'month').format('YYYY-MM'),
             eDay: dayjs().format('YYYY-MM')
         },
         {
-            type : 'month',
+            type: 'month',
             sDay: dayjs().subtract(5, 'month').format('YYYY-MM'),
             eDay: dayjs().format('YYYY-MM')
         }
     ]);
-    const handleParam = async (type: string, param : ParamDashType2) => {
+    const handleParam = async (type: string, param: ParamDashType2) => {
         let code = await updateTableData(param, type);
 
-        if(code === '401'){
+        if (code === '401') {
             showAlert('데이터가 없습니다.');
         }
     };
@@ -138,72 +138,13 @@ export default function DashboardComponent({
     }, [param.pNo]);
 
 
-
-
-    const tabs = {
-        'hiparking' :
-            [
-                {
-                    label: '지급보험금',
-                    content: (
-                        <>
-                            <div className={'my-5 font-medium text-lg'}>지급보험금 TOP 5</div>
-                            <BarHorizonChart data={chartData.topCounsel}/>
-                        </>
-                    ),
-                },
-                {
-                    label: '사고발생업소',
-                        content :
-                    (
-                        <>
-                            <div className={'my-5 font-medium text-lg'}>사고발생업소 TOP 5</div>
-                            <BarHorizonChart data={chartData.topBusiness}/>
-                        </>
-                    ),
-                }
-        ],
-        'kmpark' :
-            [
-                {
-                    label: '지급보험금',
-                    content: (
-                        <>
-                            <div className={'my-5 font-medium text-lg'}>지급보험금 TOP 5</div>
-                            <BarHorizonChart data={chartData.topCounsel}/>
-                        </>
-                    ),
-                },
-                {
-                    label: '사고발생업소',
-                    content :
-                        (
-                            <>
-                                <div className={'my-5 font-medium text-lg'}>사고발생업소 TOP 5</div>
-                                <BarHorizonChart data={chartData.topBusiness}/>
-                            </>
-                        ),
-                },
-                {
-                    label: '장애발생업소',
-                    content:
-                        (
-                            <>
-                                <div className={'my-5 font-medium text-lg'}>장애발생업소 TOP 5</div>
-                                <BarHorizonChart data={chartData.topError}/>
-                            </>
-                        ),
-                },
-            ],
-
-}
-
     return (
         <>
             <div className={'px-8 py-6 bg-white rounded-xl'}>
                 <div className={'flex justify-between items-start'}>
                     <div className={'text-lg font-light mb-6'}>계약현황</div>
-                    <Button color={"green"} height={32} width={120} onClick={()  => onClickExcel(policyColumns,'policy', tableData.counselData, '증권별_손해자료.xlsx')}>
+                    <Button color={"green"} height={32} width={120}
+                            onClick={() => onClickExcel(policyColumns, 'policy', tableData.counselData, '증권별_손해자료.xlsx')}>
                         <Image src={Excel} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
                         엑셀다운
                     </Button>
@@ -253,7 +194,8 @@ export default function DashboardComponent({
                                 </thead>
                                 <tbody className={'colTable'}>
                                 {tableData.counselData.map((counsel, index) => (
-                                    <tr key={index}  onClick={() => handleDoughnut(counsel)} className={cn('cursor-pointer hover:bg-main-lighter',{'bg-main-lighter' : param.pNo === counsel.pNo})}>
+                                    <tr key={index} onClick={() => handleDoughnut(counsel)}
+                                        className={cn('cursor-pointer hover:bg-main-lighter', {'bg-main-lighter': param.pNo === counsel.pNo})}>
                                         <td>{counsel.pNo}</td>
                                         <td className={'break-keep'}>{counsel.nickName}</td>
                                         <td className={'break-keep'}>{counsel.sDay + ' ~ ' + counsel.eDay}</td>
@@ -277,7 +219,7 @@ export default function DashboardComponent({
                 </div>
             </div>
 
-            <div className={'flex'}>
+            <div className={'flex space-x-8'}>
                 <div className={'px-8 py-6 bg-white rounded-xl my-5 w-1/6'}>
                     <div className={'text-lg font-light mb-6'}>월 누적 현황</div>
                     <div>
@@ -300,28 +242,15 @@ export default function DashboardComponent({
                     </div>
                 </div>
 
-                <div className={'px-8 py-6 bg-white rounded-xl my-5 w-2/6 mx-8'}>
-                    <div className={'flex justify-between'}>
-                        <div className={'text-lg font-light mb-6'}>Top 5</div>
-                        <div className={"flex justify-end mb-4 text-lg"}>
-                            <div className={'border w-fit px-5 py-1 rounded-lg flex items-center'}>
-                                <DayTerm type="month" condition={'top'} sDay={new Date(days[1].sDay)} eDay={new Date(days[1].eDay)} setDays={setDays} setParam={setParam}></DayTerm>
-                                <button onClick={() => handleParam('top', param)}>
-                                    <Image src={Search} alt={"검색"} width={22} height={20}
-                                           className={'cursor-pointer ml-3'}></Image>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className={'px-8 py-6 bg-white rounded-xl my-5 w-1/2'}>
+                <div className={'px-8 py-6 bg-white rounded-xl my-5 w-5/6'}>
                     <div>
                         <div className={'flex justify-between'}>
                             <div className={'text-lg font-light mb-6'}>월별 사고접수현황</div>
                             <div className={"flex justify-end mb-4 text-lg"}>
                                 <div className={'border w-fit px-5 py-1 rounded-lg flex items-center'}>
-                                    <DayTerm type="month" condition={'month'} sDay={new Date(days[2].sDay)} eDay={new Date(days[2].eDay)} setDays={setDays} setParam={setParam}></DayTerm>
+                                    <DayTerm type="month" condition={'month'} sDay={new Date(days[2].sDay)}
+                                             eDay={new Date(days[2].eDay)} setDays={setDays}
+                                             setParam={setParam}></DayTerm>
                                     <button onClick={() => handleParam('month', param)}>
                                         <Image src={Search} alt={"검색"} width={22} height={20}
                                                className={'cursor-pointer ml-3'}></Image>
@@ -331,7 +260,8 @@ export default function DashboardComponent({
                         </div>
                         <div className={'w-full'}>
                             <div className={"flex justify-end mb-4"}>
-                                <Button color={"green"} height={32} width={120} onClick={()  => onClickExcel(monthColumns,'month', tableData.monthAccidentData, '월별_사고접수_현황.xlsx')}>
+                                <Button color={"green"} height={32} width={120}
+                                        onClick={() => onClickExcel(monthColumns, 'month', tableData.monthAccidentData, '월별_사고접수_현황.xlsx')}>
                                     <Image src={Excel} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
                                     엑셀다운
                                 </Button>
@@ -350,16 +280,16 @@ export default function DashboardComponent({
                                     </thead>
                                     <tbody>
                                     <EmptyDataWrapper data={tableData.monthAccidentData}>
-                                    {tableData.monthAccidentData.map((month, index) => (
-                                        <tr key={index}>
-                                            <td>{month.changeDay}</td>
-                                            <td>{month.acceptNum}</td>
-                                            <td>{month.endNum}</td>
-                                            <td>{month.estimateNum}</td>
-                                            <td>{month.disclaimerNum}</td>
-                                            <td>{month.total}</td>
-                                        </tr>
-                                    ))}
+                                        {tableData.monthAccidentData.map((month, index) => (
+                                            <tr key={index}>
+                                                <td>{month.changeDay}</td>
+                                                <td>{month.acceptNum}</td>
+                                                <td>{month.endNum}</td>
+                                                <td>{month.estimateNum}</td>
+                                                <td>{month.disclaimerNum}</td>
+                                                <td>{month.total}</td>
+                                            </tr>
+                                        ))}
                                     </EmptyDataWrapper>
                                     </tbody>
                                 </table>
@@ -371,6 +301,39 @@ export default function DashboardComponent({
                     renewals.length > 0 &&
                     <Notifications/>
                 }
+            </div>
+
+            <div className={'flex space-x-8'}>
+                <div className={'px-8 py-6 bg-white rounded-xl my-5 w-1/2'}>
+                    <div className={'flex justify-between'}>
+                        <div className={'text-lg font-light mb-6'}>지금보험금 Top 5</div>
+                        <div className={"flex justify-end mb-4 text-lg"}>
+                            <div className={'border w-fit px-5 py-1 rounded-lg flex items-center'}>
+                                <DayTerm type="month" condition={'top'} sDay={new Date(days[1].sDay)}
+                                         eDay={new Date(days[1].eDay)} setDays={setDays} setParam={setParam}></DayTerm>
+                                <button onClick={() => handleParam('top', param)}>
+                                    <Image src={Search} alt={"검색"} width={22} height={20}
+                                           className={'cursor-pointer ml-3'}></Image>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className={'px-8 py-6 bg-white rounded-xl my-5 w-1/2'}>
+                    <div className={'flex justify-between'}>
+                        <div className={'text-lg font-light mb-6'}>사고발생업소 Top 5</div>
+                        <div className={"flex justify-end mb-4 text-lg"}>
+                            <div className={'border w-fit px-5 py-1 rounded-lg flex items-center'}>
+                                <DayTerm type="month" condition={'top'} sDay={new Date(days[1].sDay)}
+                                         eDay={new Date(days[1].eDay)} setDays={setDays} setParam={setParam}></DayTerm>
+                                <button onClick={() => handleParam('top', param)}>
+                                    <Image src={Search} alt={"검색"} width={22} height={20}
+                                           className={'cursor-pointer ml-3'}></Image>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </>
     )
