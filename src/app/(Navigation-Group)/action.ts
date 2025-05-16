@@ -38,7 +38,7 @@ interface ImageType {
     location : string;
 }
 
-export async function getImage(irpk : number): Promise<ImageType[]> {
+export async function getImage(irpk : string): Promise<ImageType[]> {
     try {
         const response = await fetch(`https://center-api.simg.kr/api/portal/getImage`, {
             method: 'POST',
@@ -84,6 +84,8 @@ export async function getClaim(param: ParamType): Promise<ClaimRowType[]> {
         throw new Error(`Failed to fetch claims: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
 }
+
+
 
 export async function getError(param: ParamType): Promise<ErrorType[]> {
     try {

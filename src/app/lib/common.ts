@@ -1,7 +1,7 @@
 // ClaimRowType 데이터를 UptClaim으로 변환
 import {
     ClaimRowType,
-    ParkingRowType,
+    ParkingRowType, rcAccidentRowType,
     resultCode,
     UptClaim,
     UptParking,
@@ -10,6 +10,7 @@ import {
     UserType
 } from "@/@types/common";
 import React from "react";
+import {tableMap} from "@/config/data";
 
 export const convertClaimToUptClaim = (
     data: Partial<ClaimRowType> & { bpk: number; irpk: number }
@@ -18,6 +19,16 @@ export const convertClaimToUptClaim = (
         ...data, // ✅ changed된 필드 + bpk, irpk 포함
         job: "UPT",
         table: "claimRequest",
+    };
+};
+
+export const convertClaimToUptClaimRc = (
+    data: Partial<rcAccidentRowType> & { bpk: number; irpk: number }
+): UptClaim => {
+    return {
+        ...data, // ✅ changed된 필드 + bpk, irpk 포함
+        job: "UPT",
+        table: "rcAccident",
     };
 };
 

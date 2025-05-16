@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import {ClaimRowType, UptClaim} from "@/@types/common";
+import {ClaimRowType, rcAccidentRowType, UptClaim} from "@/@types/common";
 
 export const ClosingCode= {
     '00' : '확인중',
@@ -79,7 +79,11 @@ export const tabs = {
     'user': [{'label': '마이페이지' , 'Yn' : 'Y'}, {'label': '관리자 정보', 'Yn' : 'Y'}, {'listType' : 'adminList' , 'Yn' : 'N'}],
     'admin': [{'label': '마이페이지' , 'Yn' : 'Y'}, {'label': '사용자 목록' , 'Yn' : 'Y'}, {'listType' : 'userList' , 'Yn' : 'N'}]
 }
-
+export const tableMap = {
+    1 : "claimRequest",
+    2 : "claimRequest",
+    4: "rcAccident",
+};
 export const initRowData : ClaimRowType = {
     irpk: 0,                      // Primary key, auto-increment
     bpk: null,                     // 업체키
@@ -131,6 +135,42 @@ export const initRowData : ClaimRowType = {
     useYNull: null,                // 사용 여부
     createdYMD: null,              // 생성일자 (datetime)
 };
+
+export const initRcRowData : rcAccidentRowType = {
+    bNumber: "",
+    eDay: "",
+    estimateAmt: "",
+    inCargeName: "",
+    inCargePhone: "",
+    pNo: "",
+    pk: "",
+    platform: "",
+    reCompany: "",
+    repairAmt: "",
+    sDay: "",
+    total: "",
+    wCell: "",
+    irpk: 0,
+    bpk: 0, // 업체키
+    insuNum: '', // 선택사항: undefined도 가능
+    partnerName: '', // 제휴사명
+    carNum: '', // 차량번호
+    accidentDate: '', // 사고 일시 (예: '2025-05-16')
+    arrivalETA: '', // 예상 입고 일정 (nullable → '' 또는 null 가능)
+    propDamage: null, // 대물
+    persInjury: null, // 대인
+    etc: null, // 기타
+    accidentDetail: '', // 사고내용
+    isConfirmed: '', // 컨펌 여부 (nullable)
+    confirmedBy: null, // 컨펌 담당자
+    statusCode: '', // 선택사항
+    accidentTime: '', // 사고 시간 (예: '14:30')
+    accidentDateTime: '', // 사고 일시+시간 (예: '2025-05-16 14:30')
+    memo: '', // 메모
+    createdYMD: '', // 생성일 (예: '2025-05-16')
+    gbn: '', // 구분값
+    job: '' // 작업 유형
+}
 
 
 export const hiparkingAccidentColumns = [

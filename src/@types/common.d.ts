@@ -210,6 +210,17 @@ interface ParamType {
     text: string | null;
 }
 
+// 투루카 사고접수 타입
+interface RcParamType {
+    bpk: number
+    startDate: string;
+    endDate: string;
+    condition: string;
+    text: string | null;
+    statusCode : string;
+    isConfirmed : string;
+}
+
 // 주차장 검색 조건 타입
 interface ParkingParamType {
     bpk: number;
@@ -366,8 +377,9 @@ interface ParkingRowType {
 
 // 트루카 책임보험 사고 타입 정의
 interface rcAccidentType {
-    rcPk: number;
+    irpk: number;
     bpk: number; // 업체키
+    pk : string;
     insuNum?: string;
     partnerName: string; // 제휴사명
     carNum: string; // 차량번호
@@ -382,8 +394,22 @@ interface rcAccidentType {
     statusCode?: string;
     accidentTime: string;
     accidentDateTime: string;
-    memo?: string;
-    createdYMD?: string; // 생성일
+    estimateAmt : string;
+    repairAmt : string;
+    total : number;
+    inCargeName : string;
+    inCargePhone : string;
+    reCompany : string;
+    wCell : string;
+    pNo : string;
+    sDay : string;
+    eDay : string;
+    platform : string;
+    bNumber : string;
+    wOpinion?: string;
+    createdYMD?: DATE; // 생성일
+    gbn?: string;
+    job?: string;
 }
 
 // 트루카
@@ -414,11 +440,6 @@ interface ButtonConfig {
 }
 
 
-interface DashBoardType {
-    length: number;
-    counselData: CounselData[];
-    changeCounselData: ChangeCounselData[];
-}
 
 interface ParamDashType2 {
     job: string;

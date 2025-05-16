@@ -8,17 +8,17 @@ import SlidePopup from "@/app/components/popup/SlidePopup";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
 import {
+    deleteClaimData,
     deleteGroup,
-    getRcAccidentList,
-    rcPortalRoute,
+    updateCommon
 } from "@/app/(Navigation-Group)/action";
 import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContainer";
-import {
-    ButtonConfig,
-    ParamType,
-    rcAccidentType, rcAccidentRowType,
-} from "@/@types/common";
-import RcAccidentDetailList from "@/app/components/pageComponents/rentCar/rcAccidentDetail";
+import {ButtonConfig, UptClaim, rcAccidentType, rcAccidentRowType, RcParamType} from "@/@types/common";
+import AccidentDetailList from "@/app/components/pageComponents/rentCar/rcAccidentDetail";
+import {hiparkingAccidentColumns, initRcRowData} from "@/config/data";
+import {onClickExcel} from "@/app/lib/onClickExcel";
+import {useNotifications} from "@/context/NotificationContext";
+import {turuApi1002} from "@/app/(Navigation-Group)/turu/action";
 
 interface ColumnDefinition<T> {
     key: keyof T;
@@ -33,21 +33,25 @@ export default function Page() {
     const [isOpen, setIsOpen] = useState(false);
     const [isNew, setIsNew] = useState(false);
     const [selectedRow, setSelectedRow] = useState<number | null>(null);
-    const [data, setData] = useState<rcAccidentType[]>([]);
-    const [rowData, setRowData] = useState<rcAccidentRowType | null>();
+    const [data, setData] = useState<rcAccidentRowType[]>([]);
+    const {showAlert, showConfirm, resetNotiThen } = useNotifications();
     const [currentPage, setCurrentPage] = useState(0);
+    const [rowData, setRowData] = useState<rcAccidentRowType>(initRcRowData);
     const [totalPages, setTotalPages] = useState(0);
-    const [param, setParam] = useState<ParamType>({
+    const [param, setParam] = useState<RcParamType>({
         bpk: 4,
-        condition: "partnerName",
+        condition: "insuNum",
         endDate: dayjs().format('YYYY-MM-DD'),
-        startDate: dayjs().format('YYYY-MM-DD'),
-        text: ''
+        startDate: dayjs().subtract(7, 'days').format('YYYY-MM-DD'),
+        text: '',
+        statusCode : 'all',
+        isConfirmed : 'all'
     });
 
     const getPaginatedData = () => {
         const startIndex = currentPage * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
+
         return data.slice(startIndex, endIndex);
     }
 
@@ -57,34 +61,36 @@ export default function Page() {
         }
     }, [data]);
 
-    const handlePageChange = (page: number) => {
-        setCurrentPage(page);
-    }
-
     const closePopup = () => {
         setIsOpen(false);
         setSelectedRow(null);
         document.body.style.removeProperty('overflow');
     };
 
-    const handleSave = async (data: rcAccidentRowType) => {
-       try {
-                if(window.confirm('저장하시겠습니까?')){
-                    data.job = 'UPT';
-                    data.accidentDate = dayjs(data.accidentDate).format('YYYY-MM-DD HH:mm:ss');
-                    data.arrivalETA = dayjs(data.arrivalETA).format('YYYY-MM-DD');
-                    let result = await rcPortalRoute(data);
-                    if (result.code === '200') {
-                        let reload = await getRcAccidentList(param);
+    const handleSave = async (data: UptClaim) => {
+        try {
+            if (isNew) {
+                window.confirm('등록하시겠습니까?')
+            } else {
+                showConfirm("수정하시겠습니까?", async () => {
+                    let result = await updateCommon(data);
+                    if (result.code === "200") {
+                        const reload = await turuApi1002(param);
                         setData(reload || []);
-                        closePopup();
-                    } else {
-                        alert('서비스 오류')
-                    }
-                }else {
-                    return;
-                }
 
+                        resetNotiThen(() => {
+                            showAlert("수정되었습니다.", () => {
+                                closePopup();
+                            });
+                        })
+                    } else {
+                        resetNotiThen(() => {
+                            showAlert("서비스 오류입니다.", () => {
+                            });
+                        })
+                    }
+                })
+            }
         } catch (e) {
             console.log(e);
         }
@@ -131,57 +137,72 @@ export default function Page() {
 
     const handleDeleteGroup = async () => {
         if (selectedItems.length === 0) {
-            alert('삭제할 항목을 선택해주세요.');
+            showAlert('삭제할 항목을 선택해주세요.');
             return;
         }
-        if (window.confirm(`선택한 ${selectedItems.length}개의 항목을 삭제하시겠습니까?`)) {
-            try {
-                let result = await deleteGroup(Array.from(selectedItems));
-                if (result?.code === '200') {
-                    setSelectedItems([]); // 초기화
-                    let reload = await getRcAccidentList(param);
-                    setData(reload); // 데이터 업데이트
-                    closePopup();
-                } else {
-                    alert("서비스 오류입니다.");
-                }
-            } catch (error) {
-                console.error("Error during deleteGroup:", error);
-                alert("서비스 처리 중 오류가 발생했습니다.");
+        showConfirm(`선택한 ${selectedItems.length}개의 항목을 삭제하시겠습니까?`, async () => {
+            let param2 = {
+                bpk : 4,
+                table : 'rcAccident',
+                job : 'DEL_LIST',
+                irpkList : selectedItems
             }
-        }
-    };
-
-    //삭제버튼 클릭
-    const handleDelete = async (rowData : rcAccidentRowType) => {
-        try{
-            rowData.accidentDate = dayjs(rowData.accidentDate).format('YYYY-MM-DD HH:mm:ss');
-            rowData.arrivalETA = dayjs(rowData.arrivalETA).format('YYYY-MM-DD');
-            rowData.job = 'DELETE';
-            let result = await rcPortalRoute(rowData);
-            if(result.code === '200'){
-                let reload = await getRcAccidentList(param);
+            let result = await deleteGroup(param2);
+            if(result.code === '200') {
+                setSelectedItems([]);
+                let reload = await turuApi1002(param);
                 setData(reload);
+
+                resetNotiThen(() => {
+                    showAlert(result.msg, () => {
+                        closePopup();
+                    });
+                })
+
                 closePopup();
             }else {
                 alert("서비스 오류입니다.");
             }
-        }catch(e){
+        });
+    };
+// 삭제버튼 클릭
+    async function handleDelete<T extends UptClaim>(rowData: T): Promise<void> {
+        try {
+            showConfirm('삭제하시겠습니까?', async () => {
+                rowData.table = 'rcAccident';
+                console.log(rowData)
+                let result = await deleteClaimData(rowData);
+                if(result.code === '200'){
+                    let reload = await turuApi1002(param);
+                    setData(reload);
+                    resetNotiThen(() => {
+                        showAlert("삭제되었습니다.", () => {
+                            closePopup();
+                        });
+                    })
+                }else {
+                    resetNotiThen(() => {
+                        showAlert("서비스 오류입니다..", () => {
+                            closePopup();
+                        });
+                    })
+                }
+            });
+        } catch (e) {
             console.log(e);
         }
-    };
+    }
+
 
     const onSearchClick = async () => {
-        const result = await getRcAccidentList(param);
+        const result = await turuApi1002(param);
+
         setData(result || []);
         setCurrentPage(0);
     }
     useEffect(() => {
         onSearchClick();
     }, []);
-
-
-
     // 사고접수 리스트 컬럼
     const columns: ColumnDefinition<rcAccidentType>[] = [
         {
@@ -218,31 +239,70 @@ export default function Page() {
         <>
             <div className={'border border-gray-100 p-6 rounded-lg bg-white flex items-center justify-between'}>
                 <div className={'flex items-center'}>
-                    <div className={'text-gray-700 font-medium pt-1 mr-2'}>기간</div>
+                    <div className={'text-gray-700 font-medium pt-1 mr-2'}>컨펌여부</div>
+                    <select
+                        className={'w-[200px]'}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                            setParam((prev: RcParamType) => ({
+                                ...prev,
+                                isConfirmed: e.target.value,
+                            }))
+                        }
+                        }
+                    >
+                        <option value={'all'}>전체</option>
+                        <option value={'Y'}>승인</option>
+                        <option value={'N'}>미승인</option>
+                    </select>
+                    <div className={'text-gray-700 font-medium pt-1 ml-2 mr-2'}>상태</div>
+                    <select
+                        className={'w-[200px]'}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                            setParam((prev: RcParamType) => ({
+                                ...prev,
+                                statusCode: e.target.value,
+                            }))
+                        }
+                        }
+                    >
+                        <option value={'all'}>전체</option>
+                        <option value={'접수'}>접수</option>
+                        <option value={'추산'}>추산</option>
+                        <option value={'면제'}>면제</option>
+                        <option value={'종결'}>종결</option>
+                        <option value={'취소'}>취소</option>
+                    </select>
+                    <div className={'text-gray-700 font-medium pt-1 ml-2 mr-5'}>기간</div>
                     <DayTerm type={'day'} setParam={setParam} sDay={new Date(param.startDate)} eDay={new Date(param.endDate)}/>
                     <div className={'text-gray-700 font-medium pt-1 ml-2 mr-5'}>검색조건</div>
                     <select
                         className={'w-[200px]'}
                         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                            setParam((prev: ParamType) => ({
+                            setParam((prev: RcParamType) => ({
                                 ...prev,
                                 condition: e.target.value,
                             }))
                         }
                         }
                     >
-                        <option value={'partherName'}>제휴사명</option>
-                        <option value={'carNum'}>차량번호</option>
+                        <option value={'insuNum'}>접수번호</option>
+                        <option value={'inCargePhone'}>피해자 연락처</option>
+                        <option value={'carNum'}>피해 차량번호</option>
                     </select>
                     <input
                         type={'text'}
                         placeholder={'검색조건 설정 후 검색해주세요'}
                         className={'w-[300px] h-[35px] rounded-tr-none rounded-br-none ml-5'}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                            setParam((prev: ParamType) => ({
+                            setParam((prev: RcParamType) => ({
                                 ...prev,
                                 text: e.target.value,
                             }))
+                        }}
+                        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                            if (e.key === 'Enter') {
+                                onSearchClick(); // 엔터키를 누르면 onSearchClick 실행
+                            }
                         }}
                     />
                     <Button
@@ -256,8 +316,8 @@ export default function Page() {
                         조회
                     </Button>
                 </div>
-                <Button color={"green"} height={32} width={120} className={'ml-5'}>
-                    <Image src={Excel.src} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
+                <Button color={"green"} height={32} width={120} className={'ml-5'} onClick={()  => onClickExcel(hiparkingAccidentColumns,'accident', data, '하이파킹_사고_리스트.xlsx')}>
+                    <Image src={Excel} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
                     엑셀다운
                 </Button>
             </div>
@@ -269,6 +329,10 @@ export default function Page() {
                         <Button color={"red"} fill={false} height={32} width={120} onClick={handleDeleteGroup}>
                             삭제
                         </Button>
+                        {/*<Button color={"main"} fill height={32} width={120} onClick={handleNewEntry}>
+                            <Image src={Plus} alt={'추가'} width={16} height={16} className={'mr-1'}/>
+                            신규등록
+                        </Button>*/}
                     </div>
                 </div>
                 <SlidePopup
@@ -277,20 +341,20 @@ export default function Page() {
                     title={isNew ? "신규 등록" : "상세보기"}
                     rowData={rowData}
                     onDelete={handleDelete}
-                    Content={(props) => <RcAccidentDetailList {...props} isNew={isNew} rowData={rowData} onSave={handleSave}/>}
-                    buttons={popupButtons}
+                    Content={(props) => <AccidentDetailList {...props} isNew={isNew} rowData={rowData} onSave={handleSave}/>}
+                    buttons={popupButtons.map(button => ({ ...button}))}
                 />
                 <div className={'mt-4'}>
                     <CheckboxContainer
                         items={getPaginatedData()}
-                        getItemId={(item) => item.rcPk}
+                        getItemId={(item) => item.irpk}
                         columns={columns}
                         selectedRow={selectedRow}
                         selectedItems={selectedItems}
                         onSelectionChange={setSelectedItems}
                         onRowClick={(item) => {
                             setIsNew(false);
-                            setSelectedRow(item.rcPk);
+                            setSelectedRow(item.irpk);
                             setIsOpen(true);
                             setRowData(item);
                             document.body.style.overflow = 'hidden';
