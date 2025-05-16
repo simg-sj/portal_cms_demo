@@ -32,7 +32,6 @@ interface DashboardProps {
         twowayBar: any;
         topCounsel: any;
         topBusiness: any;
-        topError: any;
         pieCounsel: any;
         pieAccident: any;
     };
@@ -318,6 +317,7 @@ export default function DashboardComponent({
                             </div>
                         </div>
                     </div>
+                    <BarHorizonChart data={chartData.topCounsel}/>
                 </div>
                 <div className={'px-8 py-6 bg-white rounded-xl my-5 w-1/2'}>
                     <div className={'flex justify-between'}>
@@ -333,6 +333,7 @@ export default function DashboardComponent({
                             </div>
                         </div>
                     </div>
+                    <BarHorizonChart data={chartData.topBusiness}/>
                 </div>
             </div>
         </>

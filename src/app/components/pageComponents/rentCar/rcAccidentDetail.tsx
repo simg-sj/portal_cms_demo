@@ -176,7 +176,11 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
                     <tr>
                         <th>접수번호</th>
                         <td>{renderField('insuNum', rowData.insuNum ? rowData.insuNum : '-', 'text')}</td>
-                        <th>추산비용 / 손조비용</th>
+                    </tr>
+                    <tr>
+                        <th>추산비용</th>
+                        <td>{ renderField('repairAmt', rowData.repairAmt ? FormatNumber(Number(rowData.repairAmt))+'원' : '-', 'text')}</td>
+                        <th>손조비용</th>
                         <td>{ renderField('repairAmt', rowData.repairAmt ? FormatNumber(Number(rowData.repairAmt))+'원' : '-', 'text')}</td>
                     </tr>
                     <tr>
