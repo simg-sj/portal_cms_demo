@@ -45,7 +45,7 @@ const useFetchDashboard = (bpk: number) => {
 
             setLoading(true);
             const result = await getDashBoard(initDash);
-
+            console.log(result);
             const monthCumulativeData = Array.isArray(result[6]) && result[6].length > 0 ? result[6] : emptyMonth;
 
             // 데이터 구조에 맞게 테이블 데이터 설정

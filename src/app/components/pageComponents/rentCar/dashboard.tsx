@@ -323,7 +323,6 @@ export default function DashboardComponent({
                             </div>
                         </div>
                     </div>
-                    <Tab tabs={tabs[platformList[bpk]]}/>
                 </div>
 
                 <div className={'px-8 py-6 bg-white rounded-xl my-5 w-1/2'}>

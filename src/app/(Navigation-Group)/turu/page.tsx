@@ -5,8 +5,8 @@ import useFetchDashboard from "@/app/lib/hooks/useFetchDashboard";
 import Loading from "@/app/(Navigation-Group)/loading";
 
 export default function Page() {
-    const { tableData, doughnutValue, setDoughnutValue, loading, error, updateTableData } = useFetchDashboard(2);
-
+    const { tableData, doughnutValue, setDoughnutValue, loading, error, updateTableData } = useFetchDashboard(4);
+    console.log(tableData)
     if (error) {
         return <div>Error: {error.message}</div>;
     }
