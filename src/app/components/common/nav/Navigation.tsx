@@ -112,6 +112,9 @@ export default function Navigation() {
             const { service, authLevel,bpk } = data.user; // data.user가 존재하는지 확인
             const config = getThemeConfig(service);
             let authPage = [];
+            authPage = config.menuItems.filter((item) =>
+                item.visibleRoles?.includes(authLevel)
+            );
 
             // 마이페이지 이름 추가, 권한 별 보이기
             if(Array.isArray(config.menuItems)){
@@ -120,7 +123,7 @@ export default function Navigation() {
                         ? { ...item, label: `${data.user.name}님` }
                         : item);
             }
-            authPage = authPage.filter((item) => item.authLevel <= authLevel);
+
 
             setThemeConfig({
                 ...config,
@@ -202,15 +205,18 @@ export default function Navigation() {
         <div className="bg-main h-screen fixed w-[90px] p-3 flex flex-col justify-between z-50">
             <div>
                 <Image src={themeConfig.logoSrc} alt="업체로고" height={35} className="mt-5 mb-14" priority={true} />
-                {themeConfig.menuItems.slice(0, -1).map((item, index) => (
-                    <div key={index}>
-                        <MenuItem
-                            {...item}
-                            isActive={activeLink === item.link}
-                            onClick={() => setActiveLink(item.link)}
-                        />
-                    </div>
-                ))}
+                {themeConfig.menuItems
+                    .filter(item => item.visibleRoles.includes(data.user.authLevel)) // 권한 필터링
+                    .slice(0, -1) // 마이페이지 제외
+                    .map((item, index) => (
+                        <div key={index}>
+                            <MenuItem
+                                {...item}
+                                isActive={activeLink === item.link}
+                                onClick={() => setActiveLink(item.link)}
+                            />
+                        </div>
+                    ))}
             </div>
             <div>
                 {themeConfig.menuItems.slice(-1).map((item, index) => (

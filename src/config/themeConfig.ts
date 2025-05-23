@@ -10,6 +10,9 @@ import ListIcon from "@/assets/images/icon/list-icon.png";
 import UserIcon from "@/assets/images/icon/user-icon.png";
 import CarIcon from "@/assets/images/icon/parking-icon.png";
 import ScheduleIcon from "@/assets/images/icon/schedule-icon.png";
+import ApplicationIcon from '@/assets/images/icon/application-icon.png';
+import WorkPlaceIcon from '@/assets/images/icon/workplace-icon.png';
+import Simg1DayLogo from '@/assets/images/logo/simg1day-logo.png';
 import {Theme, ThemeConfig} from "@/@types/common";
 
 
@@ -18,57 +21,60 @@ const themeConfigs: ThemeConfig = {
     hiparking: {
         logoSrc: HiparkingLogo,
         menuItems: [
-            {title: "dashboard", icon: DashboardIcon, label: "대시보드", link: "/hiparking", authLevel : 1},
-            {title: "accidentList", icon: ListIcon, label: "사고리스트", link: "/hiparking/accidentList", authLevel : 1},
-            {title: "parkingList", icon: CarIcon, label: "사업장관리", link: "/hiparking/parkingList", authLevel : 1},
-            {title: "insuManager", icon: ScheduleIcon, label: "보험관리", link: "/hiparking/insuManager", authLevel : 1},
-            {title: "mypage", icon: UserIcon, label: `님`, link: "/hiparking/mypage", authLevel : 1}
+            {title: "dashboard", icon: DashboardIcon, label: "대시보드", link: "/hiparking", visibleRoles : [1,4]},
+            {title: "accidentList", icon: ListIcon, label: "사고리스트", link: "/hiparking/accidentList", visibleRoles : [1,4]},
+            {title: "parkingList", icon: CarIcon, label: "사업장관리", link: "/hiparking/parkingList", visibleRoles : [1,4]},
+            {title: "insuManager", icon: ScheduleIcon, label: "보험관리", link: "/hiparking/insuManager", visibleRoles : [1,4]},
+            {title: "mypage", icon: UserIcon, label: `님`, link: "/hiparking/mypage", visibleRoles : [1,4]}
         ]
     },
-    simg: {
-        logoSrc: SimgLogo,
+    onetimeConsignMent: {
+        logoSrc: Simg1DayLogo,
         menuItems: [
-            {title: "main", icon: AccidentIcon, label: "사고접수", link: "/simg", authLevel : 1},
-            {title: "accidentList", icon: ListIcon, label: "사고리스트", link: "/simg/accidentList", authLevel : 1},
-            {title: "mypage", icon: UserIcon, label: `님`, link: "/simg/mypage", authLevel : 1}
+            {title: "insuList", icon: ListIcon, label: "신청현황", link: "/onetimeConsignMent", visibleRoles : [4]},
+            {title: "insuRequest", icon: ApplicationIcon, label: "보험신청", link: "/insuRequest", visibleRoles : [1]},
+            {title: "insuList", icon: ListIcon, label: "신청현황", link: "/onetimeConsignMent/insuList", visibleRoles : [1]},
+            {title: "depositHistoryList", icon: ScheduleIcon, label: "예치금관리", link: "/onetimeConsignMent/depositHistoryList", visibleRoles : [4]},
+            {title: "CompanyListPage", icon: WorkPlaceIcon, label: "업체관리", link: "/onetimeConsignMent/CompanyListPage", visibleRoles : [4]},
+            {title: "mypage", icon: UserIcon, label: `님`, link: "/onetimeConsignMent/mypage", visibleRoles : [1,4]}
         ]
     },
     turu: {
         logoSrc: HiparkingLogo,
         menuItems: [
-            {title: "dashboard", icon: DashboardIcon, label: "대시보드", link: "/turu" , authLevel : 4},
-            {title: "main", icon: AccidentIcon, label: "사고접수", link: "/insuRequest", authLevel : 1},
-            {title: "accidentList", icon: ListIcon, label: "사고리스트", link: "/turu/accidentList", authLevel : 4},
-            {title: "mypage", icon: UserIcon, label: `님`, link: "/turu/mypage", authLevel : 1}
+            {title: "dashboard", icon: DashboardIcon, label: "대시보드", link: "/turu" , visibleRoles : [4]},
+            {title: "main", icon: AccidentIcon, label: "사고접수", link: "/insuRequest", visibleRoles : [1,4]},
+            {title: "accidentList", icon: ListIcon, label: "사고리스트", link: "/turu/accidentList", visibleRoles : [4]},
+            {title: "mypage", icon: UserIcon, label: `님`, link: "/turu/mypage", visibleRoles : [1,4]}
         ]
     },
     kmpark: {
         logoSrc: KmparkLogo,
         menuItems: [
-            {title: "dashboard", icon: DashboardIcon, label: "대시보드", link: "/kmpark" , authLevel : 1},
-            {title: "accidentList", icon: ListIcon, label: "사고리스트", link: "/kmpark/accidentList", authLevel : 1},
-            {title: "errorList", icon: AccidentIcon, label: "장애리스트", link: "/kmpark/errorList" , authLevel : 1},
-            {title: "parkingList", icon: CarIcon, label: "사업장관리", link: "/kmpark/parkingList" , authLevel : 1},
-            {title: "insuManager", icon: ScheduleIcon, label: "보험관리", link: "/kmpark/insuManager" , authLevel : 1},
-            {title: "mypage", icon: UserIcon, label: `님`, link: "/kmpark/mypage", authLevel : 1}
+            {title: "dashboard", icon: DashboardIcon, label: "대시보드", link: "/kmpark" , visibleRoles : [1,4]},
+            {title: "accidentList", icon: ListIcon, label: "사고리스트", link: "/kmpark/accidentList", visibleRoles : [1,4]},
+            {title: "errorList", icon: AccidentIcon, label: "장애리스트", link: "/kmpark/errorList" , visibleRoles : [1,4]},
+            {title: "parkingList", icon: CarIcon, label: "사업장관리", link: "/kmpark/parkingList" , visibleRoles : [1,4]},
+            {title: "insuManager", icon: ScheduleIcon, label: "보험관리", link: "/kmpark/insuManager" , visibleRoles : [1,4]},
+            {title: "mypage", icon: UserIcon, label: `님`, link: "/kmpark/mypage", visibleRoles : [1,4]}
         ]
     },
     starpickers: {
         logoSrc: StarPickerLogo,
         menuItems: [
-            {title: "dashboard", icon: DashboardIcon, label: "대시보드", link: "/dashboard" , authLevel : 4},
-            {title: "main", icon: MotocycleIcon, label: "보험접수", link: "/starpickers", authLevel : 1},
-            {title: "underwriteList", icon: ListIcon, label: "접수현황", link: "/starpickers/underwriteList", authLevel : 4},
-            {title: "mypage", icon: UserIcon, label: `님`, link: "/starpickers/mypage", authLevel : 1}
+            {title: "dashboard", icon: DashboardIcon, label: "대시보드", link: "/dashboard" , visibleRoles : [1,4]},
+            {title: "main", icon: MotocycleIcon, label: "보험접수", link: "/starpickers", visibleRoles : [1,4]},
+            {title: "underwriteList", icon: ListIcon, label: "접수현황", link: "/starpickers/underwriteList", visibleRoles : [1,4]},
+            {title: "mypage", icon: UserIcon, label: `님`, link: "/starpickers/mypage", visibleRoles : [1,4]}
         ]
     },
     kakao: {
         logoSrc: KakaoLogo,
         menuItems: [
-            {title: "dashboard", icon: DashboardIcon, label: "대시보드", link: "/kakao", authLevel : 1},
-            {title: "accidentList", icon: ListIcon, label: "사고리스트", link: "/kakao/accidentList", authLevel : 1},
-            {title: "insurancePay", icon: ScheduleIcon, label: "보험료관리", link: "/kakao/payManager", authLevel : 1},
-            {title: "mypage", icon: UserIcon, label: `님`, link: "/kakao/mypage", authLevel : 1}
+            {title: "dashboard", icon: DashboardIcon, label: "대시보드", link: "/kakao", visibleRoles : [1,4]},
+            {title: "accidentList", icon: ListIcon, label: "사고리스트", link: "/kakao/accidentList", visibleRoles : [1,4]},
+            {title: "insurancePay", icon: ScheduleIcon, label: "보험료관리", link: "/kakao/payManager", visibleRoles : [1,4]},
+            {title: "mypage", icon: UserIcon, label: `님`, link: "/kakao/mypage", visibleRoles : [1,4]}
         ]
     },
 };

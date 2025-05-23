@@ -173,7 +173,6 @@ const AddUser = forwardRef<AddUserRef, AddUserProps>(({platformList, mode}, ref)
                                                 })}
                                             >
                                                 <option disabled value={0}>제휴사를 선택해주세요</option>
-                                                <option value={4}>투루카</option>
                                                 {platformList.map((state, index) => (
                                                     <option key={index} value={state.bpk}>{state.bName}</option>
                                                 ))}

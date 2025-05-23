@@ -15,7 +15,7 @@ interface MenuItemType {
     title: string;
     label: string;
     link: string;
-    authLevel: number;
+    visibleRoles : number[];
 }
 
 interface MenuItemProps extends MenuItemType {
@@ -425,6 +425,47 @@ interface PlatformList{
     inCargePhone : string;
     reCompany : string;
     bpk : number;
+}
+
+// SIMG 1일 책임보험(중고차)
+interface Simg1DayType {
+    bpk : string;
+    partnerName : string;
+    inCargePhone : string;
+    insuNum : string;
+    carType : string;
+    vin : string;
+    carNum : string;
+    insuTerm : string;
+    pNo : string;
+    status : string;
+    premium : string;
+    policy : string;
+}
+
+interface Simg1DayPlatform {
+    bpk : string;
+    bName : string;
+    bNumber : string;
+    inCargePhone : string;
+    inCargeName : string;
+    insuNum : string;
+    carType : string;
+    totalFee : string;
+    carNum : string;
+    insuTerm : string;
+    userId : string;
+    password : string;
+}
+
+interface Simg1DayDeposit {
+    insuNum : string;
+    bpk : string;
+    bName : string;
+    bNumber : string;
+    addDeposit : string;
+    status : string;
+    requestDate : Date;
 }
 
 interface ButtonConfig {

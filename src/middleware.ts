@@ -9,9 +9,9 @@ const platformUrls = {
         { path: '/hiparking/*', minAuthLevel: 1 },
         { path: '/hiparking', minAuthLevel: 1 },
     ],
-    simg: [
-        { path: '/simg', minAuthLevel: 1 },
-        { path: '/simg/*', minAuthLevel: 1 },
+    onetimeConsignMent: [
+        { path: '/onetimeConsignMent', minAuthLevel: 4 },
+        { path: '/onetimeConsignMent/*', minAuthLevel: 1 },
     ],
     kmpark: [
         { path: '/kmpark', minAuthLevel: 1 },
@@ -85,6 +85,8 @@ export async function middleware(request: NextRequest) {
         switch (userPlatform) {
             case 'turu':
                 userHomeUrl = '/turu/insuRequest';
+            case 'onetimeConsignMent' :
+                userHomeUrl = '/onetimeConsignMent/insuRequest';
                 break;
             default:
                 userHomeUrl = `/${userPlatform}`;
