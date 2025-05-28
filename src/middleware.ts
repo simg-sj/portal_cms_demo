@@ -80,11 +80,12 @@ export async function middleware(request: NextRequest) {
 
     // ✅ 권한에 따라 루트 경로 분기
     let userHomeUrl = `/${userPlatform}`;
-
+    console.log(userPlatform);
     if (userAuthLevel <= 4) {
         switch (userPlatform) {
             case 'turu':
-                userHomeUrl = '/turu/insuRequest';
+                userHomeUrl = '/turu/insuRequest'
+                break;
             case 'onetimeConsignMent' :
                 userHomeUrl = '/onetimeConsignMent/insuRequest';
                 break;

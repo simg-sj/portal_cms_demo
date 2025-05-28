@@ -443,6 +443,16 @@ interface Simg1DayType {
     policy : string;
 }
 
+// SIMG 1일 책임보험(중고차) - 예치금 조회
+interface Simg1DaySearch {
+    bpk: number
+    startDate: string;
+    endDate: string;
+    condition: string;
+    text: string | null;
+    statusCode : string;
+}
+
 interface Simg1DayPlatform {
     bpk : string;
     bName : string;

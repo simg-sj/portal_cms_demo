@@ -20,7 +20,7 @@ import {
     rcAccidentRowType,
     RcParamType,
     Simg1DayType,
-    Simg1DayDeposit
+    Simg1DayDeposit, Simg1DaySearch
 } from "@/@types/common";
 import AccidentDetailList from "@/app/components/pageComponents/rentCar/rcAccidentDetail";
 import {hiparkingAccidentColumns, initRcRowData} from "@/config/data";
@@ -28,6 +28,7 @@ import {onClickExcel} from "@/app/lib/onClickExcel";
 import {useNotifications} from "@/context/NotificationContext";
 import {turuApi1002} from "@/app/(Navigation-Group)/turu/action";
 import {useSession} from "next-auth/react";
+import {simg1TimeDeposit} from "@/app/(Navigation-Group)/onetimeConsignMent/action";
 
 interface ColumnDefinition<T> {
     key: keyof T;
@@ -48,14 +49,13 @@ export default function Page() {
     const [currentPage, setCurrentPage] = useState(0);
     const [rowData, setRowData] = useState<rcAccidentRowType>(initRcRowData);
     const [totalPages, setTotalPages] = useState(0);
-    const [param, setParam] = useState<RcParamType>({
+    const [param, setParam] = useState<Simg1DaySearch>({
         bpk: 0,
-        condition: "insuNum",
+        condition: "bName",
         endDate: dayjs().format('YYYY-MM-DD'),
         startDate: dayjs().subtract(7, 'days').format('YYYY-MM-DD'),
         text: '',
         statusCode : 'all',
-        isConfirmed : 'all'
     });
 
     const getPaginatedData = () => {
@@ -77,7 +77,7 @@ export default function Page() {
         document.body.style.removeProperty('overflow');
     };
 
-    const handleSave = async (data: UptClaim) => {
+    /*const handleSave = async (data: UptClaim) => {
         try {
             if (isNew) {
                 window.confirm('등록하시겠습니까?')
@@ -104,7 +104,7 @@ export default function Page() {
         } catch (e) {
             console.log(e);
         }
-    };
+    };*/
 
 
     const popupButtons: ButtonConfig[] = isNew
@@ -160,7 +160,7 @@ export default function Page() {
             let result = await deleteGroup(param2);
             if(result.code === '200') {
                 setSelectedItems([]);
-                let reload = await turuApi1002(param);
+                let reload = await simg1TimeDeposit(param);
                 setInsuData(reload);
 
                 resetNotiThen(() => {
@@ -176,7 +176,7 @@ export default function Page() {
         });
     };
 // 삭제버튼 클릭
-    async function handleDelete<T extends UptClaim>(rowData: T): Promise<void> {
+   /* async function handleDelete<T extends UptClaim>(rowData: T): Promise<void> {
         try {
             showConfirm('삭제하시겠습니까?', async () => {
                 rowData.table = 'rcAccident';
@@ -201,11 +201,11 @@ export default function Page() {
         } catch (e) {
             console.log(e);
         }
-    }
+    }*/
 
 
     const onSearchClick = async () => {
-        const result = await turuApi1002(param);
+        const result = await simg1TimeDeposit(param);
 
         setInsuData(result || []);
         setCurrentPage(0);
@@ -276,9 +276,8 @@ export default function Page() {
                     >
                         <option value={'all'}>전체</option>
                         <option value={'READY'}>접수</option>
-                        <option value={'ACCEPTED'}>승인</option>
-                        <option value={'REJECTED'}>거절</option>
-                        <option value={'ERROR'}>에러</option>
+                        <option value={'COMPLETED'}>승인</option>
+                        <option value={'CANCEL'}>취소</option>
                     </select>
                     <div className={'text-gray-700 font-medium pt-1 ml-2 flex items-center space-x-4'}>
                         <div>기간</div>
@@ -343,7 +342,7 @@ export default function Page() {
                         </Button>*/}
                     </div>
                 </div>
-                <SlidePopup
+                {/*<SlidePopup
                     isOpen={isOpen}
                     onClose={closePopup}
                     title={"상세보기"}
@@ -351,7 +350,7 @@ export default function Page() {
                     onDelete={handleDelete}
                     Content={(props) => <AccidentDetailList {...props} isNew={isNew} rowData={rowData} onSave={handleSave}/>}
                     buttons={popupButtons.map(button => ({ ...button}))}
-                />
+                />*/}
                 <div className={'mt-4'}>
                     <CheckboxContainer
                         items={getPaginatedData()}
