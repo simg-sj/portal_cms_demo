@@ -252,6 +252,14 @@ export default function Page() {
                     {
                         data?.user?.subIdYn === 'Y' ?
                             <>
+                                <div className="flex items-center justify-between px-4 py-2 bg-gray-50 rounded-lg shadow-sm min-w-[220px] ml-2">
+                                    <div>
+                                        <p className="text-sm text-gray-500">예치금 잔액</p>
+                                        <p className="text-md font-semibold text-gray-900">100,000원</p>
+                                    </div>
+                                    <Button color={"main"} fill={true} onClick={() => setIsOpen(true)} textSize={14} width={50}
+                                            height={32}>충전</Button>
+                                </div>
                                 <div>
                                     예치금 잔액 : 100,000원
                                 </div>
