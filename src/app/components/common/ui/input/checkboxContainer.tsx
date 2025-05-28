@@ -3,7 +3,7 @@ import Checkbox from '@/app/components/common/ui/input/checkbox';
 import Image from "next/image";
 import Error from "@/assets/images/icon/error-icon.png";
 import {ClaimRowType, ExtendedClaimRowType, UserListType, UserType} from "@/@types/common";
-import {authText} from "@/config/data";
+import {authText, SimgDeposit} from "@/config/data";
 import dayjs from "dayjs";
 interface ColumType {
     key : string;
@@ -60,16 +60,37 @@ export function CheckboxContainer<T>({
                 return Number(value).toLocaleString() + '원'
             }
         }
+        if(column === 'reqDeposit') {
+            if(item[column]) {
+                return Number(value).toLocaleString() + '원'
+            }
+        }
         if(column === 'requestDate') {
             if(item[column]) {
                 return dayjs(value).format('YYYY-MM-DD')
             }
         }
-        if(column === 'accidentDate') {
+        if(column === 'accidentDate' ) {
             if(item[column]) {
                 return dayjs(value).format('YYYY-MM-DD hh:mm')
             }
         }
+        if(column === 'createdYMD' ) {
+            if(item[column]) {
+                return dayjs(value).format('YYYY-MM-DD hh:mm')
+            }
+        }
+        if(column === 'status' ) {
+            if(item[column]) {
+                return SimgDeposit[value]
+            }
+        }
+        if(column === 'isConfirmed') {
+            if(item[column]) {
+                return value === 'Y' ? '승인' : '미승인';
+            }
+        }
+
         if(column === 'isConfirmed') {
             if(item[column]) {
                 return value === 'Y' ? '승인' : '미승인';

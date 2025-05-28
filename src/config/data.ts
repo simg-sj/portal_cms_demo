@@ -272,6 +272,13 @@ export const modeString = {
     'add' : '추가',
     'reNew' : '갱신'
 }
+
+export const SimgDeposit = {
+    'COMPLETED' : '승인',
+    'CANCEL' : '취소',
+    'READY' : '신청'
+}
+
 export const parkingColumnsAll = [
     { title: '순번', col: 'row' },
     { title: '사업장명', col: 'pklName' },

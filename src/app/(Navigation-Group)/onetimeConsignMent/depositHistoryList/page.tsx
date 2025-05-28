@@ -15,18 +15,13 @@ import {
 import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContainer";
 import {
     ButtonConfig,
-    UptClaim,
-    rcAccidentType,
     rcAccidentRowType,
-    RcParamType,
-    Simg1DayType,
     Simg1DayDeposit, Simg1DaySearch
 } from "@/@types/common";
 import AccidentDetailList from "@/app/components/pageComponents/rentCar/rcAccidentDetail";
 import {hiparkingAccidentColumns, initRcRowData} from "@/config/data";
 import {onClickExcel} from "@/app/lib/onClickExcel";
 import {useNotifications} from "@/context/NotificationContext";
-import {turuApi1002} from "@/app/(Navigation-Group)/turu/action";
 import {useSession} from "next-auth/react";
 import {simg1TimeDeposit} from "@/app/(Navigation-Group)/onetimeConsignMent/action";
 
@@ -42,7 +37,7 @@ const itemsPerPage = 15;
 export default function Page() {
     const [isOpen, setIsOpen] = useState(false);
     const [isNew, setIsNew] = useState(false);
-    const {data} = useSession();
+    const {data : session, status} = useSession();
     const [selectedRow, setSelectedRow] = useState<number | null>(null);
     const [insuData, setInsuData] = useState<rcAccidentRowType[]>([]);
     const {showAlert, showConfirm, resetNotiThen } = useNotifications();
@@ -50,13 +45,49 @@ export default function Page() {
     const [rowData, setRowData] = useState<rcAccidentRowType>(initRcRowData);
     const [totalPages, setTotalPages] = useState(0);
     const [param, setParam] = useState<Simg1DaySearch>({
-        bpk: 0,
+        job : 'LIST',
+        bpk: session?.user?.bpk || 0, // 초기값 세팅
+        id: session?.user?.id || '',
+        listType : 'depositRequest',
         condition: "bName",
         endDate: dayjs().format('YYYY-MM-DD'),
         startDate: dayjs().subtract(7, 'days').format('YYYY-MM-DD'),
         text: '',
         statusCode : 'all',
     });
+
+    // 사고접수 리스트 컬럼
+    const columns: ColumnDefinition<Simg1DayDeposit>[] = [
+        {
+            key: 'pspk',
+            header: '접수번호',
+        },
+        {
+            key: 'bName',
+            header: '업체명',
+        },
+        {
+            key: 'bNumber',
+            header: '사업자번호',
+        },
+        {
+            key: 'createdYMD',
+            header: '신청일자',
+        },
+        {
+            key: 'reqDeposit',
+            header: '신청 금액'
+        },
+        {
+            key: 'status',
+            header: '신청 현황',
+        },
+        {
+            key: 'status',
+            header: '예치금 승인',
+        }
+    ];
+
 
     const getPaginatedData = () => {
         const startIndex = currentPage * itemsPerPage;
@@ -69,7 +100,7 @@ export default function Page() {
         if (insuData.length > 0) {
             setTotalPages(Math.ceil(insuData.length / itemsPerPage));
         }
-    }, [data]);
+    }, [session]);
 
     const closePopup = () => {
         setIsOpen(false);
@@ -210,53 +241,22 @@ export default function Page() {
         setInsuData(result || []);
         setCurrentPage(0);
     }
-    useEffect(() => {
-        onSearchClick();
-    }, []);
 
     useEffect(() => {
-        if (data?.user?.bpk) {
-            setParam((prev: RcParamType) => ({
-                ...prev,
-                bpk : data?.user?.bpk
-            }))
+        if (status === 'authenticated' && session?.user) {
+            console.log(session.user);
+            if (session.user.bpk && session.user.id) {
+                setParam((prev: Simg1DaySearch) => ({
+                    ...prev,
+                    bpk: session.user.bpk,
+                    id: session.user.id,
+                }));
+                onSearchClick();
+            }
         }
-    }, [data]);
-    
-    // 사고접수 리스트 컬럼
-    const columns: ColumnDefinition<Simg1DayDeposit>[] = [
-        {
-            key: 'insuNum',
-            header: '접수번호',
-        },
-        {
-            key: 'bName',
-            header: '업체명',
-        },
-        {
-            key: 'bNumber',
-            header: '사업자번호',
-        },
-        {
-            key: 'requestDate',
-            header: '신청일자',
-            render: (item) => item.requestDate
-                ? dayjs(item.requestDate).format('YYYY-MM-DD')
-                : '-'
-        },
-        {
-            key: 'addDeposit',
-            header: '신청 금액'
-        },
-        {
-            key: 'status',
-            header: '신청 현황',
-        },
-        {
-            key: 'status',
-            header: '예치금 승인',
-        }
-    ];
+    }, [status, session]);
+
+
 
 
     return (
@@ -267,7 +267,7 @@ export default function Page() {
                     <select
                         className={'w-[200px]'}
                         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                            setParam((prev: RcParamType) => ({
+                            setParam((prev: Simg1DaySearch) => ({
                                 ...prev,
                                 statusCode: e.target.value,
                             }))
@@ -287,7 +287,7 @@ export default function Page() {
                     <select
                         className={'w-[200px]'}
                         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                            setParam((prev: RcParamType) => ({
+                            setParam((prev: Simg1DaySearch) => ({
                                 ...prev,
                                 condition: e.target.value,
                             }))
@@ -301,7 +301,7 @@ export default function Page() {
                         placeholder={'검색조건 설정 후 검색해주세요'}
                         className={'w-[300px] h-[35px] rounded-tr-none rounded-br-none ml-5'}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                            setParam((prev: RcParamType) => ({
+                            setParam((prev: Simg1DaySearch) => ({
                                 ...prev,
                                 text: e.target.value,
                             }))

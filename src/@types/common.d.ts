@@ -443,8 +443,21 @@ interface Simg1DayType {
     policy : string;
 }
 
+// SIMG 1일 책임보험(중고차) - 예치금 충전
+interface SimgDepositType {
+    job : string;
+    gbn : string;
+    bpk : number;
+    id : string;
+    bNumber : string;
+    amount : string;
+}
+
 // SIMG 1일 책임보험(중고차) - 예치금 조회
 interface Simg1DaySearch {
+    job : string;
+    listType : string;
+    id : string;
     bpk: number
     startDate: string;
     endDate: string;
@@ -469,13 +482,13 @@ interface Simg1DayPlatform {
 }
 
 interface Simg1DayDeposit {
-    insuNum : string;
+    pspk : string;
     bpk : string;
     bName : string;
     bNumber : string;
-    addDeposit : string;
+    reqDeposit : string;
     status : string;
-    requestDate : Date;
+    createdYMD : Date;
 }
 
 interface ButtonConfig {

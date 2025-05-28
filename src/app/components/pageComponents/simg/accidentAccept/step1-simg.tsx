@@ -160,7 +160,7 @@ const Step1 = ({onNext, setValue, handleSubmit,errors, register }: Step1Props) =
             </div>
             {
                 isOpen &&
-                <DepositPopup setIsOpen={setIsOpen}/>
+                <DepositPopup setIsOpen={setIsOpen} data={data.user}/>
             }
         </div>
     );

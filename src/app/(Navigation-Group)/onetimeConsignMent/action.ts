@@ -1,7 +1,7 @@
 // 사고리스트 조회
-import {Simg1DaySearch} from "@/@types/common";
+import {Simg1DaySearch, SimgDepositType} from "@/@types/common";
 
-export async function simg1TimeDeposit(param : Simg1DaySearch){
+export async function simg1TimeDeposit(param : Simg1DaySearch | SimgDepositType){
     try {
         const response = await fetch(`https://center-api.simg.kr/api/portal/simg1TimeDepositList`, {
             method: 'POST',
@@ -21,7 +21,7 @@ export async function simg1TimeDeposit(param : Simg1DaySearch){
 
 
     } catch (error) {
-        console.error('Failed to getUserList:', error);
-        throw new Error(`Failed to rcAccident: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        console.error('Failed to simg1TimeDeposit:', error);
+        throw new Error(`Failed to simg1TimeDeposit: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
 }
