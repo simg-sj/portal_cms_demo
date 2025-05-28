@@ -260,12 +260,6 @@ export default function Page() {
                                     <Button color={"main"} fill={true} onClick={() => setIsOpen(true)} textSize={14} width={50}
                                             height={32}>충전</Button>
                                 </div>
-                                <div>
-                                    예치금 잔액 : 100,000원
-                                </div>
-                                <Button color={"main"} fill height={32} width={120} onClick={() => setIsOpen(true)}>
-                                    충전하기
-                                </Button>
                             </>
                             :
                             <Button color={"green"} height={32} width={120} className={'ml-5'} onClick={()  => onClickExcel(hiparkingAccidentColumns,'accident', insuData, '투루카_사고_리스트.xlsx')}>
