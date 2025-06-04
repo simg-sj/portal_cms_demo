@@ -21,7 +21,7 @@ export default async function DepositPage() {
 
     return (
         <Providers>
-            <DepositList bpk={bpk} id={id} subIdYn = {subIdYn} balance={data[0].balance}/>
+            <DepositList bpk={bpk} id={id} subIdYn = {subIdYn} balance={data[0] ? data[0].balance : 0}/>
         </Providers>
     );
 }
