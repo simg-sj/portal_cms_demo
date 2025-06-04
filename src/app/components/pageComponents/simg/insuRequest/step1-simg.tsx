@@ -59,7 +59,7 @@ const Step1 = ({onNext,watch, refetch, handleSubmit,errors, register }: Step1Pro
                     <div className="text-red-500 pl-[100px] text-base error">{errors.contractor.message}</div>}
 
                 <div className={'flex px-[100px] py-5 items-center'}>
-                    <div className={'font-medium w-[300px] mr-1'}>사업자번호 <span className={'text-red-500'}>*</span>
+                    <div className={'font-medium w-[300px] mr-1'}>법인사업자번호 <span className={'text-red-500'}>*</span>
                     </div>
                     <input
                         type={'text'}
