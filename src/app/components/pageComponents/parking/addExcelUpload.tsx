@@ -74,7 +74,8 @@ interface AddProps {
     setExcelData: React.Dispatch<React.SetStateAction<ParkingType[]>>;
 }
 
-const ExcelGuide = () => {
+// 엑셀가이드 내용 (하이파킹)
+const ExcelGuideHiparking = () => {
     return(
         <>
             <div className={'font-bold mb-3'}>엑셀업로드 가이드</div>
@@ -113,6 +114,57 @@ const ExcelGuide = () => {
                 <tr className={'!h-[30px]'}>
                     <th className={'!py-2 !bg-gray-100'}>공동피보험자</th>
                     <td className={'!py-2'}>공동피보험자 사업장, 사업자번호 작성</td>
+                </tr>
+                </tbody>
+            </table>
+            <div className={'text-sm font-semibold my-3 text-gray-800'}>3 ) 엑셀파일을 업로드한 후 확인을 눌러 업로드합니다.</div>
+        </>
+    )
+}
+
+const ExcelGuideKmpark = () => {
+    return(
+        <>
+            <div className={'font-bold mb-3'}>엑셀업로드 가이드</div>
+            <div className={'text-sm font-semibold my-3 text-gray-800'}>1 ) 엑셀샘플을 다운로드 합니다.</div>
+            <div className={'text-sm font-semibold my-3 text-gray-800'}>2 ) 다운로드한 파일에 하단 예시를 참고하여 작성합니다.</div>
+            <table className="colTable text-[14px]">
+                <tbody>
+                <tr className={'!h-[30px]'}>
+                    <th className={'!py-2 !bg-gray-100'}>No</th>
+                    <td className={'!py-2'}>상단부터 1,2,3 순서로 작성</td>
+                </tr>
+                <tr className={'!h-[30px]'}>
+                    <th className={'!py-2 !bg-gray-100'}>구분</th>
+                    <td className={'!py-2'}>추가일 경우 'NEW' 삭제일 경우 'EXP' 작성</td>
+                </tr>
+                <tr className={'!h-[30px]'}>
+                    <th className={'!py-2 !bg-gray-100'}>사업장명</th>
+                    <td className={'!py-2'}>사업장명 작성</td>
+                </tr>
+                <tr className={'!h-[30px]'}>
+                    <th className={'!py-2 !bg-gray-100'}>PJT코드</th>
+                    <td className={'!py-2'}>코드명 작성 ex) GSP0000000</td>
+                </tr>
+                <tr className={'!h-[30px]'}>
+                    <th className={'!py-2 !bg-gray-100'}>보험적용</th>
+                    <td className={'!py-2'}>적용보험 명 작성 ex) 영업배상책임보험 외</td>
+                </tr>
+                <tr className={'!h-[30px]'}>
+                    <th className={'!py-2 !bg-gray-100'}>면적</th>
+                    <td className={'!py-2'}>숫자 입력</td>
+                </tr>
+                <tr className={'!h-[30px]'}>
+                    <th className={'!py-2 !bg-gray-100'}>고정자산가액</th>
+                    <td className={'!py-2'}>숫자 입력</td>
+                </tr>
+                <tr className={'!h-[30px]'}>
+                    <th className={'!py-2 !bg-gray-100'}>주차장형태</th>
+                    <td className={'!py-2'}>옥내, 옥외, 기계식, 카리프트, 기타 중 작성</td>
+                </tr>
+                <tr className={'!h-[30px]'}>
+                    <th className={'!py-2 !bg-gray-100'}>주차장형태</th>
+                    <td className={'!py-2'}>사업장 주소 작성</td>
                 </tr>
                 </tbody>
             </table>
@@ -224,7 +276,7 @@ const AddExcelUpload = ({setExcelData}: AddProps) => {
             <div className={'flex justify-between space-x-4'}>
                 <div className={'flex items-center'}>
                     간편 엑셀업로드
-                    <Tooltip content={<ExcelGuide/>} width={600}/>
+                    <Tooltip content={<ExcelGuideHiparking/>} width={600}/>
                 </div>
                 <Button color={"green"} height={30} width={180} className={'ml-5'}
                         params={{bpk: BSN_CODE[data.user.bName].bpk, type: 'down'}}
