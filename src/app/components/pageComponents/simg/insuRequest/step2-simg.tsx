@@ -4,6 +4,7 @@ import {Step2PropsLC} from "@/@types/common";
 import {turuApi1001} from "@/app/(Navigation-Group)/turu/action";
 import {appendToFormData} from "@/app/lib/common";
 import {useNotifications} from "@/context/NotificationContext";
+import {simg1TimeDeposit} from "@/app/(Navigation-Group)/onetimeConsignMent/action";
 
 
 
@@ -19,13 +20,10 @@ const Step2= ({onNext, onPrev, getValues, register} : Step2PropsLC) =>  {
             if (privacy  && thirdParty ) {
                 let value = getValues();
                 console.log(value);
-                /*appendToFormData(formData, value);
-
-                const result = await turuApi1001(formData);
+                const result = await simg1TimeDeposit(value);
                 if(result.code === '200'){
                     onNext();
-                }*/
-                showAlert(('서비스 준비중입니다.'))
+                }
             } else {
                 alert("모든 약관에 동의해주세요.");
             }

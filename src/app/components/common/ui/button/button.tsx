@@ -10,11 +10,12 @@ interface Button extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     fontWeight?: "font-medium" | "font-bold";
     width?: number;
     height?: number;
+    disabled ?: boolean;
     params ?: Record<string, string>;
     fileName ?: string;
     use ?: string;
     style?: React.CSSProperties;
-    onClick ?: () => void;
+    onClick ?: (e : any) => void;
 }
 
 const bgColor: { [key in colorType]: string } = {
@@ -70,6 +71,7 @@ function Button({
                     fill = false,
                     color,
                     fontWeight,
+                    disabled,
                     width,
                     height,
                     className = "",
@@ -130,6 +132,7 @@ function Button({
 
     return (
         <button
+            disabled={disabled}
             {...props}
             type={type}
             onClick={use === 'down' ? handleDownload : onClick}

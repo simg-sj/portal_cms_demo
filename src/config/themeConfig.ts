@@ -34,7 +34,7 @@ const themeConfigs: ThemeConfig = {
             {title: "insuList", icon: ListIcon, label: "신청현황", link: "/onetimeConsignMent", visibleRoles : [4]},
             {title: "insuRequest", icon: ApplicationIcon, label: "보험신청", link: "/insuRequest", visibleRoles : [1]},
             {title: "insuList", icon: ListIcon, label: "신청현황", link: "/onetimeConsignMent/insuList", visibleRoles : [1]},
-            {title: "depositHistoryList", icon: ScheduleIcon, label: "예치금관리", link: "/onetimeConsignMent/depositHistoryList", visibleRoles : [4]},
+            {title: "depositHistoryList", icon: ScheduleIcon, label: "예치금관리", link: "/onetimeConsignMent/depositHistoryList", visibleRoles : [1,4]},
             {title: "CompanyListPage", icon: WorkPlaceIcon, label: "업체관리", link: "/onetimeConsignMent/CompanyListPage", visibleRoles : [4]},
             {title: "mypage", icon: UserIcon, label: `님`, link: "/onetimeConsignMent/mypage", visibleRoles : [1,4]}
         ]

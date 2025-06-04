@@ -8,11 +8,10 @@ import {
     ACCIDENT_DETAIL_TYPE_OPTIONS,
     ACCIDENT_TYPE_OPTIONS,
     APPROVAL_OPTIONS,
-    ClosingCode,
     STATE_OPTIONS
 } from "@/config/data";
 
-import {ClaimRowType, ImageType, InsuranceItem, UptClaim, UptParking} from "@/@types/common";
+import {ClaimRowType, ImageType, InsuranceItem, UptClaim} from "@/@types/common";
 import Button from "@/app/components/common/ui/button/button";
 import FormatNumber from "@/app/components/common/ui/formatNumber";
 import {getImage, getPolicyList} from "@/app/(Navigation-Group)/action";

@@ -1,10 +1,10 @@
 // 팝업 Content에 표시할 컴포넌트
 import {useForm} from "react-hook-form";
-import {InsuFormData, SimgDepositType} from "@/@types/common";
+import {SimgDepositType} from "@/@types/common";
 import Image from "next/image";
 import Close from "@/assets/images/icon/close-icon.png";
 import Button from "@/app/components/common/ui/button/button";
-import React, {SetStateAction} from "react";
+import React, {SetStateAction, useEffect, useState} from "react";
 import {useNotifications} from "@/context/NotificationContext";
 import Tooltip from "@/app/components/common/ui/tooltip";
 import {User} from "next-auth";
@@ -12,7 +12,8 @@ import {simg1TimeDeposit} from "@/app/(Navigation-Group)/onetimeConsignMent/acti
 
 interface DepositPopupType {
     setIsOpen : React.Dispatch<SetStateAction<boolean>>
-    data : User
+    data : User;
+    balance : number ;
 }
 
 const DepositGuide = () => {
@@ -40,38 +41,37 @@ const DepositGuide = () => {
 };
 
 
-const DepositPopup = ({setIsOpen, data} : DepositPopupType) => {
-    const { register,watch,getValues, formState: { errors } } = useForm<SimgDepositType>({
+const DepositPopup = ({ setIsOpen, data, balance }: DepositPopupType) => {
+    const { register, watch, getValues, setValue, formState: { errors } } = useForm<SimgDepositType>({
         defaultValues: {
-            job : 'DEPOSIT',
-            gbn : 'D_REQ',
-            bpk : data.bpk,
-            amount: "",
+            job: 'DEPOSIT',
+            gbn: 'D_REQ',
+            bpk: data.bpk,
+            selectAmount: '',
+            amount: 0,
             bNumber: data.bNo,
-            id : data.id,
+            id: data.id,
         },
     });
 
+    const { showAlert, resetNotiThen } = useNotifications();
+    const selectAmount = watch('selectAmount');
+    const amount = Number(watch('amount') || 0); // ✅ 실시간 값 추적
 
-    // 알림창
-    const {showAlert, resetNotiThen} = useNotifications();
+    useEffect(() => {
+        if (selectAmount !== '기타') {
+            setValue('amount', Number(selectAmount));
+        }
+    }, [selectAmount, setValue]);
 
     const onSubmit = async () => {
-        let param = getValues();
-
+        const param = getValues();
         const result = await simg1TimeDeposit(param);
-        if(result[0].code ==='200'){
-            resetNotiThen(() => {
-                showAlert(result[0]._msg, () => {
-                    setIsOpen(false);
-                });
-            })
-        }else {
-            resetNotiThen(() => {
-                showAlert(result[0]._msg, () => {
-                    return;
-                });
-            })
+
+        if (result.code === '200') {
+            resetNotiThen(() => showAlert(result.msg, () => setIsOpen(false)));
+        } else {
+            resetNotiThen(() => showAlert(result.msg));
         }
     };
 
@@ -79,91 +79,65 @@ const DepositPopup = ({setIsOpen, data} : DepositPopupType) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white rounded-xl shadow-lg min-w-[500px] max-w-[800px]">
                 <div className="flex justify-between items-center px-8 py-6">
-                    <div className={'flex'}>
+                    <div className="flex">
                         <h2 className="text-lg font-semibold">예치금 충전하기</h2>
-                        <Tooltip content={<DepositGuide/>} width={400}/>
+                        <Tooltip content={<DepositGuide />} width={400} />
                     </div>
-                    <Image src={Close.src} alt={'닫기'} width={16} height={16} className={'mr-1 cursor-pointer'}
-                           onClick={()=>setIsOpen(false)}/>
+                    <Image src={Close.src} alt={'닫기'} width={16} height={16} className={'mr-1 cursor-pointer'} onClick={() => setIsOpen(false)} />
                 </div>
                 <div className="py-3">
                     <form className="space-y-4">
                         <div className="p-4 bg-gray-50 rounded-xl shadow-sm mb-4 mx-8">
-                            <div className={'flex items-center justify-between mb-3'}>
+                            <div className="flex items-center justify-between mb-3">
                                 <div className="text-md text-gray-500">예치금 잔액</div>
-                                <div className="text-lg font-semibold text-gray-900">100,000원</div>
+                                <div className="text-lg font-semibold text-gray-900">{balance.toLocaleString()}원</div>
                             </div>
-                            <div className={'flex items-center justify-between mb-5'}>
+
+                            <div className="flex items-center justify-between mb-5">
                                 <div className="text-md text-gray-500">충전 금액</div>
-                                    <select className={'w-[250px] border rounded px-2 py-1 text-right'} {...register("amount", { required: "충전금액을 선택하세요." })}>
-                                        <option value={50000}>
-                                            50,000원
-                                        </option>
-                                        <option value={100000}>
-                                            100,000원
-                                        </option>
-                                        <option value={150000}>
-                                            150,000원
-                                        </option>
-                                        <option value={200000}>
-                                            200,000원
-                                        </option>
-                                        <option value={250000}>
-                                            250,000원
-                                        </option>
-                                        <option value={300000}>
-                                            300,000원
-                                        </option>
-                                        <option value={'기타'}>
-                                            기타
-                                        </option>
-                                    </select>
+                                <select
+                                    className="w-[250px] border rounded px-2 py-1 text-right"
+                                    {...register("selectAmount", { required: "충전금액을 선택하세요." })}
+                                >
+                                    <option value={''} disabled>선택</option>
+                                    <option value={50000}>50,000원</option>
+                                    <option value={100000}>100,000원</option>
+                                    <option value={150000}>150,000원</option>
+                                    <option value={200000}>200,000원</option>
+                                    <option value={250000}>250,000원</option>
+                                    <option value={300000}>300,000원</option>
+                                    <option value={'기타'}>기타</option>
+                                </select>
                             </div>
-                            {
-                                watch('amount') === '기타' &&
-                                <div className={'flex items-center'}>
+
+                            {selectAmount === '기타' && (
+                                <div className="flex items-center justify-end mb-3">
                                     <input
                                         type="number"
                                         {...register("amount", { required: "충전금액을 입력하세요" })}
-                                        placeholder={'충전할 금액을 입력하세요'}
-                                        className={'w-[250px] border rounded px-2 py-1 text-right'}
+                                        placeholder="충전할 금액을 입력하세요"
+                                        className="w-[225px] border rounded px-2 py-1 text-right"
                                     />
-                                    <div className={'text-lg text-gray-900 font-semibold ml-2'}>원</div>
+                                    <div className="text-lg text-gray-900 font-semibold ml-2">원</div>
                                 </div>
-                            }
-                            <div className={'flex items-center justify-between mb-3 border-t-2 pt-3'}>
+                            )}
+
+                            <div className="flex items-center justify-between mb-3 border-t-2 pt-3">
                                 <div className="text-md text-gray-700 font-semibold">충전 후 잔액</div>
-                                <div className="text-xl font-semibold text-gray-900">100,000원</div>
+                                <div className="text-xl font-semibold text-gray-900">{(balance + amount).toLocaleString()}원</div>
                             </div>
-                            {errors.amount && <p className="text-red-500 text-sm mt-1">{errors.amount.message} 하이</p>}
+
+                            {errors.amount && <p className="text-red-500 text-sm mt-1">{errors.amount.message}</p>}
                         </div>
                     </form>
                 </div>
                 <div className="flex justify-center px-8 py-5 space-x-10">
-                    <Button
-                        onClick={() => setIsOpen(false)}
-                        color={'gray'}
-                        fill={false}
-                        width={130}
-                        height={40}
-                    >
-                        취소
-                    </Button>
-                    <Button
-                        onClick={() => onSubmit()}
-                        color={'main'}
-                        fill={true}
-                        width={130}
-                        height={40}
-                    >
-                        신청
-                    </Button>
+                    <Button onClick={() => setIsOpen(false)} color="gray" fill={false} width={130} height={40}>취소</Button>
+                    <Button onClick={onSubmit} color="main" fill={true} width={130} height={40}>신청</Button>
                 </div>
             </div>
         </div>
-
     );
 };
-
 
 export default DepositPopup;

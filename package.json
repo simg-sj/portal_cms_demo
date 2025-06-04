@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.77.2",
     "@types/react-datepicker": "^7.0.0",
     "chart.js": "^4.4.4",
     "chartjs-plugin-datalabels": "^2.2.0",
@@ -26,6 +27,7 @@
     "react-datepicker": "^7.4.0",
     "react-dom": "^18",
     "react-hook-form": "^7.54.2",
+    "react-query": "^3.39.3",
     "react-time-picker": "^7.0.0",
     "sharp": "^0.33.5",
     "styled-components": "^6.1.13",

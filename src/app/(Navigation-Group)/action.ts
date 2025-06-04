@@ -38,7 +38,7 @@ interface ImageType {
     location : string;
 }
 
-export async function getImage(irpk : string): Promise<ImageType[]> {
+export async function getImage(irpk : number): Promise<ImageType[]> {
     try {
         const response = await fetch(`https://center-api.simg.kr/api/portal/getImage`, {
             method: 'POST',

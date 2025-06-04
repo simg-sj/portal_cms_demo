@@ -36,7 +36,7 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
     // 초기에 rowData를 UptClaim으로 변환해서 editData로 설정
     const [editData, setEditData] = useState<rcAccidentRowType>(rowData);
 
-    const fetchImageData = useCallback(async (irpk: string) => {
+    const fetchImageData = useCallback(async (irpk: number) => {
         try {
             const fetchedImage = await getImage(irpk);
             setImages(fetchedImage);
@@ -50,7 +50,7 @@ const AccidentDetailList = ({isEditing, isNew = false, rowData, onSave }: ListPr
     useEffect(() => {
         // 이미지 데이터를 처음 로드하거나 irpk가 변경될 때만 호출
         if (!isNew && rowData.pk) {
-            fetchImageData(rowData.pk);
+            fetchImageData(rowData.irpk);
         }
 
     }, [rowData]);

@@ -8,6 +8,7 @@ import {
     UseFormSetValue,
     UseFormWatch
 } from "react-hook-form";
+import {DepositListResponseItem} from "@/app/lib/simg1DayApi/deposit/types";
 
 
 interface MenuItemType {
@@ -172,7 +173,7 @@ interface resultCode {
 
 // 유니언 타입
 type ExtendedParamType = ParamDashType2 | ParamType | BaseParamType;
-type ExtendedClaimRowType = ClaimRowType | rcAccidentRowType | dutyRowType | ParkingRowType;
+type ExtendedClaimRowType = ClaimRowType | rcAccidentRowType | dutyRowType | ParkingRowType | DepositListResponseItem;
 
 
 
@@ -449,8 +450,10 @@ interface SimgDepositType {
     gbn : string;
     bpk : number;
     id : string;
+    irpk ?: number;
     bNumber : string;
-    amount : string;
+    selectAmount ?: string;
+    amount : number;
 }
 
 // SIMG 1일 책임보험(중고차) - 예치금 조회
@@ -482,11 +485,12 @@ interface Simg1DayPlatform {
 }
 
 interface Simg1DayDeposit {
-    pspk : string;
+    pspk : number;
     bpk : string;
-    bName : string;
-    bNumber : string;
+    userId : string;
+    uName : string;
     reqDeposit : string;
+    statusYn : string;
     status : string;
     createdYMD : Date;
 }
@@ -569,9 +573,9 @@ interface dutyRowType extends dutyType {
 interface Step1Props {
     onNext: () => void;
     register: UseFormRegister<any>;
+    getValues : UseFormGetValues<any>;
     errors: FieldErrors;
     handleSubmit: UseFormHandleSubmit<any>;
-    setValue: UseFormSetValue<any>;
     watch: UseFormWatch<any>;
 }
 
@@ -713,4 +717,11 @@ interface InsuFormData {
 
 interface InsuranceItem extends InsuFormData {
     irpk: string; // 고유 식별자
+}
+
+interface ColumnDefinition<T> {
+    key: keyof T;
+    header: string;
+    defaultValue?: string;
+    render?: (item: T) => string | number;
 }

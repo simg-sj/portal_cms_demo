@@ -7,12 +7,12 @@ import {deleteClaimData, getClaim} from "@/app/(Navigation-Group)/action";
 
 interface SlidePopupProps {
     isOpen: boolean;
-    onClose: (data?: ClaimRowType | ParkingRowType | CargoInsuType) => void;
+    onClose: () => void;
     title: string;
     Content: React.ComponentType<{ isEditing: boolean, onSave?: (data: any) => void }>;
     buttons: ButtonConfig[];
     rowData : ExtendedClaimRowType;
-    onDelete: (data: ExtendedClaimRowType) => Promise<void>;
+    onDelete?: (data: ExtendedClaimRowType) => Promise<void>;
 }
 
 interface ButtonConfig {
@@ -103,7 +103,7 @@ const SlidePopup = ({isOpen, onClose, title, Content, buttons, onDelete, rowData
                     </div>
                 </div>
                 <div className="px-8 pb-8">
-                    <Content isEditing={isEditing}  />
+                    <Content isEditing={isEditing}/>
                 </div>
             </div>
         </div>

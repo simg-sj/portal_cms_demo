@@ -4,7 +4,8 @@ import "@/styles/common.css";
 import React, { Suspense } from "react";
 import AuthWrapper from "@/app/auth_wrapper";
 import Loading from "@/app/(Navigation-Group)/loading";
-import { NotificationProvider } from "@/context/NotificationContext"; // 알림 Context 추가
+import { NotificationProvider } from "@/context/NotificationContext";
+import {Providers} from "@/app/Providers"; // 알림 Context 추가
 
 const pretendard = localFont({
     src: "./fonts/PretendardVariable.woff2",
@@ -32,11 +33,14 @@ export default function RootLayout({
             <title>SIMG PORTAL CMS</title>
         </head>
         <body className={pretendard.className}>
-        <NotificationProvider> {/* NotificationProvider를 여기에 추가 */}
-            <AuthWrapper>
-                <Suspense fallback={<Loading />} />
-                {children}
-            </AuthWrapper>
+        <NotificationProvider>
+            <Providers>
+                <AuthWrapper>
+                    <Suspense fallback={<Loading />}>
+                        {children}
+                    </Suspense>
+                </AuthWrapper>
+            </Providers>
         </NotificationProvider>
         </body>
         </html>

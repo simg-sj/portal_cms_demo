@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
 import Checkbox from '@/app/components/common/ui/input/checkbox';
 import Image from "next/image";
 import Error from "@/assets/images/icon/error-icon.png";
-import {ClaimRowType, ExtendedClaimRowType, UserListType, UserType} from "@/@types/common";
 import {authText, SimgDeposit} from "@/config/data";
 import dayjs from "dayjs";
+import Button from "@/app/components/common/ui/button/button";
 interface ColumType {
     key : string;
     header : string;
 }
-interface CheckboxContainerProps<T> {
+interface CheckboxContainerProps<T extends { status?: string }> {
     items: T[];
     columns: ColumType[];
     getItemId: (item: T) => number;
     withCheckbox?: boolean;
     onSelectionChange?: (selectedIds: number[]) => void;
     onRowClick?: (item: T) => void;
+    handleConfirm?: (item : T) => void;
     selectedRow?: number | null;
     selectedItems: number[];
 }
@@ -26,9 +26,10 @@ export function CheckboxContainer<T>({
                                       getItemId,
                                       withCheckbox = true,
                                       onSelectionChange,
+                                      handleConfirm,
                                       onRowClick,
                                       selectedRow,
-                                      selectedItems
+                                      selectedItems,
                                   }: CheckboxContainerProps<T>) {
     const toggleSelectAll = (event : boolean) => {
         if (!withCheckbox) return;
@@ -52,6 +53,7 @@ export function CheckboxContainer<T>({
     const handleRowClick = (item: T) => {
         onRowClick?.(item);
     };
+
 
     const safeRenderValue = (column: string, item: T) => {
         let value = item[column];
@@ -90,12 +92,6 @@ export function CheckboxContainer<T>({
                 return value === 'Y' ? '승인' : '미승인';
             }
         }
-
-        if(column === 'isConfirmed') {
-            if(item[column]) {
-                return value === 'Y' ? '승인' : '미승인';
-            }
-        }
         if (value === null || value === undefined) {
             return "-";
         }
@@ -109,6 +105,7 @@ export function CheckboxContainer<T>({
 
     const isAllSelected = selectedItems.length === items.length;
     const isSomeSelected = selectedItems.length > 0 && selectedItems.length < items.length;
+
 
     return (
         <table className="w-full">
@@ -160,9 +157,20 @@ export function CheckboxContainer<T>({
                                     />
                                 </td>
                             )}
-                            {columns.map((column, colIndex) => (
-                                <td key={colIndex}>{safeRenderValue(column.key, item)}</td>
-                            ))}
+                            {
+                                columns.map((column, colIndex) => (
+                                    <td key={colIndex}>
+                                        {column.key === 'statusYn' && (item as any).status === 'READY' ? (
+                                            <Button fill={true} color={'main'} width={80} onClick={(e)=> {
+                                                e.stopPropagation();
+                                                handleConfirm(item)
+                                            }}>승인</Button>
+                                        ) : (
+                                            safeRenderValue(column.key, item)
+                                        )}
+                                    </td>
+                                ))
+                            }
                         </tr>
                     );
                 })
