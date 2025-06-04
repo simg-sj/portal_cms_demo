@@ -4,7 +4,7 @@ import DayTerm from "@/app/components/common/ui/calender/dayTerm";
 import Button from "@/app/components/common/ui/button/button";
 import Image from "next/image";
 import Excel from "@/assets/images/icon/excel-icon.png";
-import SlidePopup from "@/app/components/popup/SlidePopup";
+import ReFresh from '@/assets/images/icon/refresh-icon.png';
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
 import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContainer";
@@ -21,11 +21,12 @@ import cn from "classnames";
 import {InsuListResponseItem, InsuListType, InsuranceListRequest} from "@/app/lib/simg1DayApi/insu/types";
 import {useInsuList} from "@/app/lib/hooks/simg1Day/insu/useInsuList";
 import {InsuListColumn} from "@/app/components/pageComponents/simg/insuList/config";
+import {useDepositBalance} from "@/app/lib/hooks/simg1Day/deposit/useDepositBalance";
 
 
 
 
-export default function InsuListPage({ bpk, id, subIdYn, balance }: InsuListType) {
+export default function InsuListPage({ bpk, id, subIdYn }: InsuListType) {
     const {data : session} = useSession();
     const [isOpen, setIsOpen] = useState(false);
     const [param, setParam] = useState<InsuranceListRequest>({
@@ -48,7 +49,8 @@ export default function InsuListPage({ bpk, id, subIdYn, balance }: InsuListType
 
     // ✅ React Query 데이터 패칭
     const { data, refetch } = useInsuList(param);
-    console.log(data)
+    const {data : balance, refetch : refetchBalance} = useDepositBalance(bpk, id);
+
     // ✅ 공통 handleConfirm 함수 생성
     const { handleConfirm } = useConfirmAction({
         refetch,
@@ -149,6 +151,9 @@ export default function InsuListPage({ bpk, id, subIdYn, balance }: InsuListType
                     <Button color="main" width={100} height={35} fill className={cn(subIdYn === 'N' ? "rounded-tl-none rounded-bl-none" : "ml-4")} onClick={() => onSearchClick()}>
                         조회
                     </Button>
+                    <button className='ml-4' onClick={() => refetch()}>
+                        <Image src={ReFresh} alt={'새로고침'} width={20} />
+                    </button>
                 </div>
                 <div className='flex space-x-4 items-center'>
                     {
@@ -156,8 +161,13 @@ export default function InsuListPage({ bpk, id, subIdYn, balance }: InsuListType
                             <>
                                 <div className="flex items-center justify-between px-4 py-2 bg-gray-50 rounded-lg shadow-sm min-w-[220px] ml-2">
                                     <div>
-                                        <p className="text-sm text-gray-500">예치금 잔액</p>
-                                        <p className="text-md font-semibold text-gray-900">{balance.toLocaleString()}원</p>
+                                        <div className='flex space-x-2 items-center'>
+                                            <p className="text-sm text-gray-500">예치금 잔액</p>
+                                            <button type={'button'} onClick={() => refetchBalance()}>
+                                                <Image src={ReFresh} alt={'새로고침'} width={20} />
+                                            </button>
+                                        </div>
+                                        <p className="text-md font-semibold text-gray-900">{Number(balance).toLocaleString()}원</p>
                                     </div>
                                     <Button color={"main"} fill={true} onClick={() => setIsOpen(true)} textSize={14} width={50}
                                             height={32}>충전</Button>
@@ -176,14 +186,14 @@ export default function InsuListPage({ bpk, id, subIdYn, balance }: InsuListType
             <div className={'border border-gray-100 p-6 rounded-lg bg-white mt-5'}>
                 <CheckboxContainer
                     items={getPaginatedData()}
-                    getItemId={(item) => item.pspk}
+                    getItemId={(item) => item.impk}
                     columns={InsuListColumn}
                     selectedRow={selectedRow}
                     selectedItems={selectedItems}
                     handleConfirm={(item)=> handleConfirm({item, userId : session.user.id})}
                     onSelectionChange={setSelectedItems}
                     onRowClick={(item) => {
-                        setSelectedRow(item.pspk);
+                        setSelectedRow(item.impk);
                         if(subIdYn !== 'Y') setIsOpen(true);
                         setRowData(item);
                         document.body.style.overflow = 'hidden';

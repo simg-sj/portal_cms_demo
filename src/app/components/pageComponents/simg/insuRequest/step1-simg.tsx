@@ -3,10 +3,13 @@ import Button from "@/app/components/common/ui/button/button";
 import { Step1Props} from "@/@types/common";
 import {useSession} from "next-auth/react";
 import DepositPopup from "@/app/components/pageComponents/simg/depositPopup";
+import Image from "next/image";
+import ReFresh from "@/assets/images/icon/refresh-icon.png";
 
-const Step1 = ({onNext,getValues, handleSubmit,errors, register }: Step1Props) => {
+const Step1 = ({onNext,watch, refetch, handleSubmit,errors, register }: Step1Props) => {
     const {data} = useSession();
     const [isOpen, setIsOpen] = useState(false);
+
     const onSubmit =  (data) => {
         if(data){
             onNext();
@@ -14,7 +17,7 @@ const Step1 = ({onNext,getValues, handleSubmit,errors, register }: Step1Props) =
             return;
         }
     };
-
+    console.log(watch('balance'))
     return (
         <div>
             <div className={'text-lg font-light my-6 px-[100px] text-gray-700'}>SIMG 1일 책임보험 접수 페이지입니다. 예치금 잔액 확인 후 충전하기 버튼을 클릭하여 충전 후 신청이 가능합니다.
@@ -22,14 +25,20 @@ const Step1 = ({onNext,getValues, handleSubmit,errors, register }: Step1Props) =
             <form className={'text-xl my-[50px] stepOne'}>
                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl shadow-sm mb-4 mx-[90px]">
                     <div>
-                        <p className="text-sm text-gray-500">예치금 잔액</p>
-                        <p className="text-2xl font-semibold text-gray-900">{Number(getValues('balance')).toLocaleString()}원</p>
+                        <div className='flex space-x-2 items-center'>
+                            <p className="text-sm text-gray-500">예치금 잔액</p>
+                            <button type={'button'} onClick={() => refetch()}>
+                                <Image src={ReFresh} alt={'새로고침'} width={20} />
+                            </button>
+                        </div>
+                        <p className="text-2xl font-semibold text-gray-900">{Number(watch('balance')).toLocaleString()}원</p>
                     </div>
-                    <Button color={"main"} fill={true} onClick={() => setIsOpen(true)} textSize={16} width={90}
-                            height={40}>충전하기</Button>
+                        <Button color={"main"} fill={true} onClick={() => setIsOpen(true)} textSize={16} width={90}
+                                height={40}>충전하기
+                        </Button>
                 </div>
                 {
-                    getValues('balance') < 50000 &&
+                    watch('balance') < 50000 &&
                     <div className="text-red-500 pl-[100px] text-base my-8 error">예치금 잔액이 부족합니다.</div>
                 }
 
@@ -84,7 +93,7 @@ const Step1 = ({onNext,getValues, handleSubmit,errors, register }: Step1Props) =
                         type={'text'}
                         name="viNumer"
                         placeholder={'차대번호를 입력해주세요.'}
-                        {...register("viNumer", {required: "차대번호를 입력해주세요."})}
+                        {...register("viNumber", {required: "차대번호를 입력해주세요."})}
                         className={'w-[800px]'}
                     />
                 </div>
@@ -162,12 +171,12 @@ const Step1 = ({onNext,getValues, handleSubmit,errors, register }: Step1Props) =
             </form>
 
             <div className={'flex my-10 mx-[100px]'}>
-                <Button color={getValues('balance') < 50000 ? 'gray' : 'main'} disabled={getValues('balance') < 50000 && true } fill={true} onClick={handleSubmit(onSubmit)} textSize={18} width={1100}
+                <Button color={watch('balance') < 50000 ? 'gray' : 'main'} disabled={watch('balance') < 50000 && true } fill={true} onClick={handleSubmit(onSubmit)} textSize={18} width={1100}
                         height={60}>확인</Button>
             </div>
             {
                 isOpen &&
-                <DepositPopup setIsOpen={setIsOpen} data={data.user} balance={getValues('balance')}/>
+                <DepositPopup setIsOpen={setIsOpen} data={data.user} balance={watch('balance')}/>
             }
         </div>
     );

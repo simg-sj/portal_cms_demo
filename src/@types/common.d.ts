@@ -572,8 +572,8 @@ interface dutyRowType extends dutyType {
 
 interface Step1Props {
     onNext: () => void;
+    refetch : () => void;
     register: UseFormRegister<any>;
-    getValues : UseFormGetValues<any>;
     errors: FieldErrors;
     handleSubmit: UseFormHandleSubmit<any>;
     watch: UseFormWatch<any>;

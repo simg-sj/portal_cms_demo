@@ -19,10 +19,12 @@ const Step2= ({onNext, onPrev, getValues, register} : Step2PropsLC) =>  {
 
             if (privacy  && thirdParty ) {
                 let value = getValues();
-                console.log(value);
                 const result = await simg1TimeDeposit(value);
+                console.log("@@@", result)
                 if(result.code === '200'){
                     onNext();
+                }else{
+                    showAlert(result.msg)
                 }
             } else {
                 alert("모든 약관에 동의해주세요.");
