@@ -171,4 +171,3 @@ export function appendToFormData(formData: FormData, data: Record<string, any>) 
         }
     });
 }
-

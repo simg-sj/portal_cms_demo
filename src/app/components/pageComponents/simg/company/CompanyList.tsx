@@ -36,7 +36,6 @@ export default function CompanyList({ bpk, id, subIdYn }: CompanyListProps) {
         startDate: dayjs().subtract(7, 'days').format('YYYY-MM-DD'),
         endDate: dayjs().format('YYYY-MM-DD'),
     });
-    const { showAlert, resetNotiThen } = useNotifications();
     const [currentPage, setCurrentPage] = useState(0);
     const [selectedRow, setSelectedRow] = useState<number | null>(null);
     const [selectedItems, setSelectedItems] = useState<number[]>([]);

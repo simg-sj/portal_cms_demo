@@ -17,7 +17,8 @@ const Step1 = ({onNext,watch, refetch, handleSubmit,errors, register }: Step1Pro
             return;
         }
     };
-    console.log(watch('balance'))
+
+
     return (
         <div>
             <div className={'text-lg font-light my-6 px-[100px] text-gray-700'}>SIMG 1일 책임보험 접수 페이지입니다. 예치금 잔액 확인 후 충전하기 버튼을 클릭하여 충전 후 신청이 가능합니다.
@@ -63,8 +64,11 @@ const Step1 = ({onNext,watch, refetch, handleSubmit,errors, register }: Step1Pro
                     <input
                         type={'text'}
                         name="bNumber"
-                        placeholder={'사업자번호를 입력해주세요.'}
-                        {...register("bNumber" , {required: "사업자번호를 입력해주세요."})}
+                        placeholder={'법인사업자번호를 입력해주세요.'}
+                        {...register("bNumber" , {required: "사업자번호를 입력해주세요.",pattern: {
+                                value: /^\d{3}(81|82|85|86|87|88)\d{5}$/,
+                                message: "법인사업자번호 형식이 아닙니다."
+                            }})}
                         className={'w-[800px]'}
                     />
                 </div>
@@ -78,7 +82,10 @@ const Step1 = ({onNext,watch, refetch, handleSubmit,errors, register }: Step1Pro
                         type={'text'}
                         name="contractCell"
                         placeholder={'-없이 입력해주세요.'}
-                        {...register("contractCell", {required : '담당자 전화번호를 입력해주세요.'})}
+                        {...register("contractCell", {required : '담당자 전화번호를 입력해주세요.',pattern: {
+                                value: /^(01[0|1|6|7|8|9]|02|0[3-9][0-9])\-?\d{3,4}\-?\d{4}$/,
+                                message: "유효한 전화번호 형식이 아닙니다."
+                            }})}
                         className={'w-[800px]'}
                     />
                 </div>
@@ -107,7 +114,10 @@ const Step1 = ({onNext,watch, refetch, handleSubmit,errors, register }: Step1Pro
                         type={'text'}
                         name="carNumber"
                         placeholder={'차량번호를 입력해주세요.'}
-                        {...register("carNumber", {required: "차량번호를 입력해주세요."})}
+                        {...register("carNumber", {required: "차량번호를 입력해주세요.", pattern: {
+                                value: /^\d{2,3}[가-힣]{1}\d{4}$/,
+                                message: "유효한 차량번호 형식이 아닙니다."
+                            }})}
                         className={'w-[800px]'}
                     />
                 </div>

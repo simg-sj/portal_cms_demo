@@ -21,7 +21,6 @@ export default function InsuRequestPage({ bpk, id }: InsuRequestType) {
     // ✅ Form 초기화
     const {
         register,
-        reset,
         setValue,
         getValues,
         handleSubmit,
