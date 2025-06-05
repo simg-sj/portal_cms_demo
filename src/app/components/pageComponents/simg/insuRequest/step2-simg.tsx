@@ -34,7 +34,7 @@ const Step2= ({onNext, onPrev, getValues, register} : Step2PropsLC) =>  {
         }
     };
     return (
-        <div className={'text-xl my-[70px] mx-[100px] stepTwo'}>
+        <div className={'text-xl my-[70px] stepTwo break-keep'}>
             <div className={'text-lg font-light my-6 text-gray-700'}>개인정보 수집 및 이용에 동의하시고 사고접수를 완료해주세요.
             </div>
             <div className={'mb-10 text-2xl font-bold'}>개인정보 수집 및 이용동의</div>
@@ -76,9 +76,9 @@ const Step2= ({onNext, onPrev, getValues, register} : Step2PropsLC) =>  {
                 />
                 <div className={'text-lg text-gray-700'}> 위와 같이 개인정보 제3자 제공에 동의합니다.</div>
             </label>
-            <div className={'flex justify-center my-10'}>
-                <Button color={"gray"} onClick={onPrev} textSize={18} width={540} height={60} className={'mr-[20px]'}>취소</Button>
-                <Button color={"main"} fill={true} onClick={handleSubmit} textSize={18} width={540} height={60} >접수하기</Button>
+            <div className={'flex justify-center my-10 space-x-5'}>
+                <Button color={"gray"} onClick={onPrev} textSize={18} width={540} height={60} className={'!w-1/2'}>취소</Button>
+                <Button color={"main"} fill={true} onClick={handleSubmit} textSize={18} width={540} height={60} className={'!w-1/2'} >접수하기</Button>
             </div>
         </div>
     );
