@@ -9,7 +9,7 @@ const Step3 = ({onReset}: Step3Props) => {
             <div>보험신청 되었습니다.</div>
             <div className={'mt-5 mb-[200px]'}>감사합니다</div>
             <div className={'mt-10'}>
-                <Button color={"main"} fill={true} onClick={onReset} textSize={18} width={1100} height={60} >확인</Button>
+                <Button color={"main"} fill={true} onClick={onReset} textSize={18} width={1100} height={60} className={'!w-full'} >확인</Button>
             </div>
         </div>
     );

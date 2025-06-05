@@ -67,23 +67,23 @@ export default function InsuRequestPage({ bpk, id }: InsuRequestType) {
         switch (currentStep) {
             case 1:
                 return (
-                    <Step1
-                        refetch={refetch}
-                        onNext={handleNext}
-                        watch={watch}
-                        handleSubmit={handleSubmit}
-                        errors={errors}
-                        register={register}
-                    />
+                  <Step1
+                    refetch={refetch}
+                    onNext={handleNext}
+                    watch={watch}
+                    handleSubmit={handleSubmit}
+                    errors={errors}
+                    register={register}
+                  />
                 );
             case 2:
                 return (
-                    <Step2
-                        onNext={handleNext}
-                        onPrev={handlePrev}
-                        getValues={getValues}
-                        register={register}
-                    />
+                  <Step2
+                    onNext={handleNext}
+                    onPrev={handlePrev}
+                    getValues={getValues}
+                    register={register}
+                  />
                 );
             case 3:
                 return <Step3 onReset={handleReset} />;
@@ -93,40 +93,26 @@ export default function InsuRequestPage({ bpk, id }: InsuRequestType) {
     };
 
     return (
-        <div className={'flex justify-center'}>
-            <div className={'px-8 py-6 bg-white rounded-xl w-full flex justify-center min-h-[calc(100vh-50px)]'}>
-                <div>
-                    <div className="flex mx-[100px] mb-[50px] text-main-light font-bold text-2xl step mt-5">
-                        {[1, 2, 3].map((step) => (
-                            <React.Fragment key={step}>
-                                <div
-                                    className={`border-main-light border-2 rounded-full px-[25px] py-[15px] ${
-                                        currentStep === step ? 'bg-main-light text-white' : ''
-                                    }`}
-                                >
-                                    {step}
-                                </div>
-                                {step < 3 && <div className="w-[50px] h-[4px] bg-main-light mt-7" />}
-                            </React.Fragment>
-                        ))}
-                    </div>
-                    {renderStep()}
-                </div>
-            </div>
-            <div className="mt-7 h-[4px] w-[50px] bg-main-light"></div>
-            <div
-              className={`rounded-full border-2 border-main-light px-[25px] py-[15px] ${currentStep === 2 ? "bg-main-light text-white" : ""}`}
-            >
-              2
-            </div>
-            <div className="mt-7 h-[4px] w-[50px] bg-main-light"></div>
-            <div
-              className={`rounded-full border-2 border-main-light px-[25px] py-[15px] ${currentStep === 3 ? "bg-main-light text-white" : ""}`}
-            >
-              3
-            </div>
+      <div className={'flex justify-center'}>
+          <div className={'px-8 py-6 bg-white rounded-xl w-full flex justify-center min-h-[calc(100vh-50px)]'}>
+              <div>
+                  <div className="flex mb-[50px] text-main-light font-bold text-2xl step mt-5">
+                      {[1, 2, 3].map((step) => (
+                        <React.Fragment key={step}>
+                            <div
+                              className={`border-main-light border-2 rounded-full px-[25px] py-[15px] ${
+                                currentStep === step ? 'bg-main-light text-white' : ''
+                              }`}
+                            >
+                                {step}
+                            </div>
+                            {step < 3 && <div className="w-[50px] h-[4px] bg-main-light mt-7" />}
+                        </React.Fragment>
+                      ))}
+                  </div>
+                  {renderStep()}
+              </div>
           </div>
-          {renderStep()}
-        </div>
+      </div>
     );
 }
