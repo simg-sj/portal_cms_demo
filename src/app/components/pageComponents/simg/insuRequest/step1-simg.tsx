@@ -34,11 +34,11 @@ const Step1 = ({
 
   return (
     <div>
-      <div className={"my-6 text-lg font-light text-gray-700"}>
+      <div className={"my-6 md:text-lg text-md font-light text-gray-700"}>
         SIMG 1일 책임보험 접수 페이지입니다. 예치금 잔액 확인 후 충전하기 버튼을
         클릭하여 충전 후 신청이 가능합니다.
       </div>
-      <form className={"stepOne my-[50px] text-xl"}>
+      <form className={"stepOne my-[50px] text-lg md:text-xl"}>
         <div className="mb-4 flex items-center justify-between rounded-xl bg-gray-50 p-4 shadow-sm">
           <div>
             <div className="flex items-center space-x-2">
@@ -52,7 +52,7 @@ const Step1 = ({
                 />
               </button>
             </div>
-            <p className="text-2xl font-semibold text-gray-900">
+            <p className="text-xl md:text-2xl font-semibold text-gray-900">
               {Number(watch("balance")).toLocaleString()}원
             </p>
           </div>
@@ -63,6 +63,7 @@ const Step1 = ({
             textSize={16}
             width={90}
             height={40}
+            className={"md:!text-[16px] !text-sm !w-[70px] md:!w-[90px]"}
           >
             충전하기
           </Button>
