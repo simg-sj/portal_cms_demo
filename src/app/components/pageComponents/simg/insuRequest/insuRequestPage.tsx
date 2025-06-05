@@ -113,6 +113,20 @@ export default function InsuRequestPage({ bpk, id }: InsuRequestType) {
                     {renderStep()}
                 </div>
             </div>
+            <div className="mt-7 h-[4px] w-[50px] bg-main-light"></div>
+            <div
+              className={`rounded-full border-2 border-main-light px-[25px] py-[15px] ${currentStep === 2 ? "bg-main-light text-white" : ""}`}
+            >
+              2
+            </div>
+            <div className="mt-7 h-[4px] w-[50px] bg-main-light"></div>
+            <div
+              className={`rounded-full border-2 border-main-light px-[25px] py-[15px] ${currentStep === 3 ? "bg-main-light text-white" : ""}`}
+            >
+              3
+            </div>
+          </div>
+          {renderStep()}
         </div>
     );
 }
