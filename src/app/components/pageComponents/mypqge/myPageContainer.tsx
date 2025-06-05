@@ -3,7 +3,7 @@ import Image from "next/image";
 import UserIcon from "@/assets/images/icon/user-icon.png";
 import MyPageTabs from "@/app/components/common/MyPageTabs";
 import {PlatformList, resultCode, SearchParams, UserListType, UserType} from "@/@types/common";
-import { authText, tabs } from "@/config/data";
+import { authText, tabsAdmin } from "@/config/data";
 import {getUserData, userService} from "@/app/(Navigation-Group)/action";
 import {useNotifications} from "@/context/NotificationContext";
 import {getPlatform} from "@/app/(Navigation-Group)/turu/action";
@@ -14,7 +14,7 @@ export default function MyPageContainer({ userInfo, setUserInfo, fetchUser }: { 
     const [platformList, setPlatformList] = useState<PlatformList[]>([])
 
     const onReload = async () => {
-        const result = await getUserData(userInfo.bpk, tabs[userInfo.auth]?.[2]?.listType, 'LIST');
+        const result = await getUserData(userInfo.bpk, tabsAdmin[userInfo.auth]?.[2]?.listType, 'LIST');
 
         setUserList(result || []);
     }

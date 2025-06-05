@@ -71,5 +71,4 @@ export interface DepositListProps {
     bpk: number;
     id: string;
     subIdYn : string;
-    balance : number;
 }

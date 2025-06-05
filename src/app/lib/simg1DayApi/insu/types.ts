@@ -56,15 +56,10 @@ export interface InsuListColumnType {
 }
 
 
-export interface InsuListShowUser {
-
-}
-
 export interface InsuListType {
     bpk: number;
     id: string;
     subIdYn : string;
-    balance : number;
 }
 
 export interface InsuListSuccessResponse {
