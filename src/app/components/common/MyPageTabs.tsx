@@ -50,10 +50,17 @@ export default function MyPageTabs({
                                    }: MypageType) {
     const rawTabs = tabsAdmin[userInfo.auth] || [];
 
-    const filteredTabs =
-        userInfo.bpk === 3 && userInfo.auth === "user"
-            ? rawTabs.filter((tab) => tab.key === "mypage" || tab.key === "manager")
-            : rawTabs.filter((tab) => tab.Yn === "Y");
+    const filteredTabs = (() => {
+        if (userInfo.bpk === 3) {
+            if (userInfo.auth === "user") {
+                return rawTabs.filter((tab) => tab.key === "mypage" || tab.key === "manager");
+            }
+            if (userInfo.auth === "admin") {
+                return rawTabs.filter((tab) => tab.key !== "userlist" && tab.Yn === "Y");
+            }
+        }
+        return rawTabs.filter((tab) => tab.Yn === "Y");
+    })();
 
     const [activeTabKey, setActiveTabKey] = useState(filteredTabs[0]?.key || "mypage");
 

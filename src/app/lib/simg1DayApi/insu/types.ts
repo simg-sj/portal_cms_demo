@@ -43,7 +43,7 @@ export interface InsuListResponseItem {
 }
 
 export interface InsuListColumnType {
-    impk : number;
+    contractId : number;
     bNumber : string;
     contractor : string;
     contractCell: string;

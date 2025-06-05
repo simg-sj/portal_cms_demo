@@ -4,7 +4,7 @@ import {InsuListColumnType} from "@/app/lib/simg1DayApi/insu/types";
 
 export const InsuListColumn: ColumnDefinition<InsuListColumnType>[] = [
     {
-        key: 'impk',
+        key: 'contractId',
         header: '접수번호',
     },
     {

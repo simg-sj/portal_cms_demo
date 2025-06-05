@@ -42,7 +42,7 @@ export default function DepositPage({ bpk, id, subIdYn }: DepositListProps) {
         bpk,
         id,
         listType: 'depositRequest',
-        condition: 'uName',
+        condition: 'uCell',
         text: '',
         statusCode: 'all',
         startDate: dayjs().subtract(7, 'days').format('YYYY-MM-DD'),
@@ -106,7 +106,7 @@ export default function DepositPage({ bpk, id, subIdYn }: DepositListProps) {
         refetch();
         setCurrentPage(0);
     };
-
+    console.log(data)
     return (
         <>
             <div className={'border border-gray-100 p-6 rounded-lg bg-white flex items-center justify-between'}>
@@ -134,7 +134,6 @@ export default function DepositPage({ bpk, id, subIdYn }: DepositListProps) {
                             <select
                                 className={'w-[200px]'}
                                 onChange={(e) => setParam((prev) => ({...prev, condition: e.target.value}))}>
-                                <option value={'uName'}>성명</option>
                                 <option value={'uCell'}>연락처</option>
                             </select>
                             <input
