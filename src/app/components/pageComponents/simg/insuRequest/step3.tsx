@@ -5,7 +5,7 @@ import type {Step3Props} from "@/@types/common";
 
 const Step3 = ({onReset}: Step3Props) => {
     return (
-        <div className={'text-3xl font-semibold my-[150px] text-center'}>
+        <div className={'text-2xl md:text-3xl font-semibold my-[150px] text-center'}>
             <div>보험신청 되었습니다.</div>
             <div className={'mt-5 mb-[200px]'}>감사합니다</div>
             <div className={'mt-10'}>

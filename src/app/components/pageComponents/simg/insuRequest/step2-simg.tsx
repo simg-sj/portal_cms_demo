@@ -34,7 +34,7 @@ const Step2= ({onNext, onPrev, getValues, register} : Step2PropsLC) =>  {
         }
     };
     return (
-        <div className={'text-xl my-[70px] stepTwo break-keep'}>
+        <div className={'text-xl md:text-2xl my-[70px] stepTwo break-keep'}>
             <div className={'text-lg font-light my-6 text-gray-700'}>개인정보 수집 및 이용에 동의하시고 사고접수를 완료해주세요.
             </div>
             <div className={'mb-10 text-2xl font-bold'}>개인정보 수집 및 이용동의</div>

@@ -61,13 +61,13 @@ export default function LoginPage() {
         <div className="w-screen h-screen flex justify-center items-center bg-gray-50">
             <form
                 onSubmit={handleSubmit}
-                className="w-[670px] px-12 py-36 bg-white flex flex-col items-center shadow-md"
+                className="w-[670px] px-5 md:px-12 py-36 bg-white flex flex-col items-center shadow-md"
             >
                 <Image src={RoundLogo} alt={"SIMG 로고"} width={80} height={80} className="mb-10" />
-                <div className="text-gray-500 text-center py-3">
+                <div className="text-gray-500 text-center py-3 break-keep">
                     에스아이엠지 업체 관리자 페이지입니다. <br /> 회원가입 및 아이디 비밀번호 찾기는 관리자에게 문의해주세요.
                 </div>
-                <div className="w-[80%] my-5">
+                <div className="md:w-[80%] w-full my-5">
                     <label className="text-lg mt-3 block">ID</label>
                     <input
                         type="text"
@@ -88,7 +88,7 @@ export default function LoginPage() {
                         {error}
                     </div>
                 )}
-                <button className="text-xl text-white px-10 py-3 rounded-xl bg-blue-500 mt-5 w-[80%] font-medium">
+                <button className="text-lg md:text-xl text-white px-10 py-3 rounded-xl bg-blue-500 mt-5 w-full md:w-[80%] font-medium">
                     로그인
                 </button>
             </form>
