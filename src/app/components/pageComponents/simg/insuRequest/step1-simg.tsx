@@ -3,8 +3,7 @@ import Button from "@/app/components/common/ui/button/button";
 import { Step1Props } from "@/@types/common";
 import { useSession } from "next-auth/react";
 import DepositPopup from "@/app/components/pageComponents/simg/depositPopup";
-import Image from "next/image";
-import ReFresh from "@/assets/images/icon/refresh-icon.png";
+import RefreshButton from '@/app/components/common/ui/refresh';
 
 const Step1 = ({
   onNext,
@@ -16,12 +15,9 @@ const Step1 = ({
 }: Step1Props) => {
   const { data } = useSession();
   const [isOpen, setIsOpen] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const handleRefresh = async () => {
-    setIsRefreshing(true);
     await refetch();
-    setTimeout(() => setIsRefreshing(false), 1000); // 1초 후 회전 종료
   };
 
   const onSubmit = (data) => {
@@ -43,14 +39,9 @@ const Step1 = ({
           <div>
             <div className="flex items-center space-x-2">
               <p className="text-sm text-gray-500">예치금 잔액</p>
-              <button type={"button"} onClick={handleRefresh}>
-                <Image
-                  src={ReFresh}
-                  alt={"새로고침"}
-                  width={20}
-                  className={`${isRefreshing ? "animate-spin" : ""} transition-transform duration-500`}
-                />
-              </button>
+              <RefreshButton
+                onClick={handleRefresh}
+              />
             </div>
             <p className="text-xl md:text-2xl font-semibold text-gray-900">
               {Number(watch("balance")).toLocaleString()}원

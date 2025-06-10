@@ -12,6 +12,7 @@ interface DayTermProps {
     setDays?: React.Dispatch<React.SetStateAction<DayRange[] | DayRange>>;
     setParam?: React.Dispatch<React.SetStateAction<ExtendedParamType>>;
     allowFutureEndDate?: boolean;
+    className?: string;
 }
 
 const DayTerm = ({
@@ -22,6 +23,7 @@ const DayTerm = ({
                      setDays,
                      setParam,
                      allowFutureEndDate,
+                     className,
                  }: DayTermProps) => {
     const [startDate, setStartDate] = useState<Date | null>(sDay || new Date());
     const [endDate, setEndDate] = useState<Date | null>(eDay || new Date());
@@ -125,6 +127,7 @@ const DayTerm = ({
                 select={startDate}
                 minDate={undefined}
                 onChange={handleStartDateChange}
+                className={className}
             />
             <div className="font-bold mx-2">~</div>
             <DatePickerComponent
@@ -133,6 +136,7 @@ const DayTerm = ({
                 minDate={undefined}
                 allowDate={allowFutureEndDate}
                 onChange={handleEndDateChange}
+                className={className}
             />
         </div>
     );
