@@ -5,9 +5,10 @@ interface CheckboxProps {
     checked: boolean;
     indeterminate?: boolean;
     onChange: (checked: boolean) => void;
+    className?: string;
 }
 
-const Checkbox = ({checked, indeterminate, onChange}: CheckboxProps) => {
+const Checkbox = ({checked, indeterminate, onChange,className}: CheckboxProps) => {
     const checkboxRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -22,6 +23,7 @@ const Checkbox = ({checked, indeterminate, onChange}: CheckboxProps) => {
             ref={checkboxRef}
             type="checkbox"
             onChange={(e) => onChange(e.target.checked)}
+            className={className}
         />
     );
 };
