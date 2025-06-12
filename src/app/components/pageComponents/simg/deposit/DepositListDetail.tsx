@@ -68,7 +68,7 @@ const DepositListDetail = ({isEditing, rowData, handleConfirm, onSave, onClose }
             <div>
                         {
                             (isEditing)  &&
-                            <div className={cn("z-10", isEditing ? "absolute top-[32px] right-[272px]" : "absolute top-[32px] right-[160px]")}>
+                            <div className={cn("z-10", isEditing ? "absolute top-[32px] right-[153px]" : "absolute top-[32px] right-[160px]")}>
                                 <Button color={"blue"} fill={true} height={35} width={100}>
                                     저장
                                 </Button>
