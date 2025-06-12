@@ -86,7 +86,6 @@ export default function InsuListPage({ bpk, id, subIdYn }: InsuListType) {
     return [];
   })();
 
-
   // ✅ 페이지네이션 데이터 추출
   const getPaginatedData = () => {
     const startIndex = currentPage * itemsPerPage; // currentPage를 그대로 사용 (0부터 시작)
@@ -109,11 +108,11 @@ export default function InsuListPage({ bpk, id, subIdYn }: InsuListType) {
     <div className={"space-y-3"}>
       {/* 헤더 섹션 */}
       <div className="flex min-h-20 items-center justify-between rounded-lg border border-gray-100 bg-white px-6">
-        <div className="text-lg font-semibold">신청현황</div>
+        <div className="text-base font-semibold lg:text-lg">신청현황</div>
         <div className="flex items-center space-x-4">
           {subIdYn === "Y" ? (
             <>
-              <div className="ml-2 flex min-w-[250px] items-center justify-between rounded-lg bg-gray-50 px-4 py-2 shadow-sm">
+              <div className="ml-2 flex min-w-[220px] items-center justify-between rounded-lg bg-gray-50 px-4 py-2 shadow-sm lg:min-w-[250px]">
                 <div>
                   <div className="flex items-center space-x-2">
                     <p className="text-sm text-gray-500">예치금 잔액</p>
@@ -212,7 +211,10 @@ export default function InsuListPage({ bpk, id, subIdYn }: InsuListType) {
                     className="h-[35px] w-full rounded border border-gray-300 px-3 lg:w-[200px]"
                     value={param.condition}
                     onChange={(e) =>
-                      setParam((prev) => ({ ...prev, condition: e.target.value }))
+                      setParam((prev) => ({
+                        ...prev,
+                        condition: e.target.value,
+                      }))
                     }
                   >
                     <option value={"contractor"}>피보험자</option>
@@ -226,7 +228,7 @@ export default function InsuListPage({ bpk, id, subIdYn }: InsuListType) {
                   <input
                     type="text"
                     placeholder="검색항목 설정 후 검색"
-                    className="h-[35px] flex-1 rounded-l border border-gray-300 px-3 rounded-r-none"
+                    className="h-[35px] flex-1 rounded-l rounded-r-none border border-gray-300 px-3"
                     value={param.text}
                     onChange={(e) =>
                       setParam((prev) => ({ ...prev, text: e.target.value }))
@@ -259,7 +261,7 @@ export default function InsuListPage({ bpk, id, subIdYn }: InsuListType) {
                   height={35}
                   fill
                   onClick={onSearchClick}
-                  className={'!w-full lg:!w-[100px]'}
+                  className={"!w-full lg:!w-[100px]"}
                 >
                   조회
                 </Button>

@@ -54,29 +54,29 @@ export default function MyPageContainer({ userInfo, setUserInfo, fetchUser }: { 
 
 
     return (
-        <div className="flex justify-between w-full h-full">
-            <div className="basis-1/3 flex flex-col items-center bg-white p-16 mr-10 shadow-sm rounded-lg">
+        <div className="flex flex-col lg:flex-row justify-between w-full h-full">
+            <div className="basis-1/3 flex flex-col items-center bg-white lg:p-16 p-7 lg:mr-10 lg:mb-0 mb-5 shadow-sm rounded-lg">
                 <div className="flex flex-col items-center">
-                    <div className="w-[240px] h-[240px] rounded-full flex justify-center items-center bg-main-light">
+                    <div className="w-[240px] h-[240px] rounded-full justify-center items-center bg-main-light hidden lg:flex">
                         <Image src={UserIcon} alt={"유저 이미지"} width={120} height={120} />
                     </div>
-                    <div className="text-3xl tracking-[4px] mt-20 mb-3">{userInfo.name} 님</div>
+                    <div className="lg:text-3xl text-2xl tracking-[4px] lg:mt-20 mt-0 mb-3">{userInfo.name} 님</div>
                     <div className={"text-gray-500 tracking-widest"}>
                         {userInfo.bName} {userInfo.auth === "admin" ? "관리자" : ""}
                     </div>
                 </div>
-                <div className="flex flex-col mt-32 w-[360px]">
-                    <div className="flex flex-col text-xl">
-                        <h2 className="leading-[40px] text-gray-500 text-lg border-b mb-2">업체명</h2>
-                        <h2 className={"text-xl"}>{userInfo.platform}</h2>
-                        <h2 className="leading-[40px] text-gray-500 text-lg border-b mb-2 mt-14">권한</h2>
-                        <h2 className={"text-xl"}>{authText[userInfo.auth]}</h2>
-                        <h2 className="leading-[40px] text-gray-500 text-lg border-b mb-2 mt-14">성함</h2>
-                        <h2 className={"text-xl"}>{userInfo.name}</h2>
+                <div className="flex flex-col lg:mt-32 mt-12 w-full text:base">
+                    <div className="flex flex-col lg:text-lg">
+                        <h2 className="leading-[40px] text-gray-500 border-b mb-2">업체명</h2>
+                        <h2 className={"lg:text-xl"}>{userInfo.platform}</h2>
+                        <h2 className="leading-[40px] text-gray-500 border-b mb-2 lg:mt-14 mt-4">권한</h2>
+                        <h2 className={"lg:text-xl"}>{authText[userInfo.auth]}</h2>
+                        <h2 className="leading-[40px] text-gray-500 border-b mb-2 lg:mt-14 mt-4">성함</h2>
+                        <h2 className={"lg:text-xl"}>{userInfo.name}</h2>
                     </div>
                 </div>
             </div>
-            <div className="basis-2/3 bg-white p-16 shadow-sm rounded-lg">
+            <div className="basis-2/3 bg-white lg:p-16 p-7 shadow-sm rounded-lg">
                 <MyPageTabs
                     userInfo={userInfo}
                     userList={userList}

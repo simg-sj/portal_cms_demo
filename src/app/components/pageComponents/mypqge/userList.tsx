@@ -13,6 +13,9 @@ import {userService} from "@/app/(Navigation-Group)/action";
 import {convertUserToUserUpt, getChangedFields} from "@/app/lib/common";
 import {useNotifications} from "@/context/NotificationContext";
 import {useSession} from "next-auth/react";
+import RefreshButton from '@/app/components/common/ui/refresh';
+import DayTerm from '@/app/components/common/ui/calender/dayTerm';
+import { ListContainer } from '@/app/components/common/ui/input/listContainer';
 
 
 export default function UserList({ userList, onSearch, platformList }: { userList: UserListType[], onSearch : (param : SearchParams) => void, platformList : PlatformList[]}) {
@@ -301,50 +304,62 @@ export default function UserList({ userList, onSearch, platformList }: { userLis
 
     return (
         <>
-            <div className={'border border-gray-100 p-6 rounded-lg bg-white flex items-center justify-between'}>
-                <div className={'flex items-center'}>
-                    <div className={'text-gray-700 font-medium pt-1 mr-5'}>권한</div>
-                    <select
-                        className={'w-[200px]'}
-                        value={searchParams.uAuth}
-                        onChange={(e) => handleParamChange('uAuth', e.target.value)}
-                    >
-                        <option value={'all'}>전체</option>
-                        <option value={'admin'}>관리자</option>
-                        <option value={'user'}>사용자</option>
-                    </select>
-                    <div className={'text-gray-700 font-medium pt-1 ml-7 mr-5'}>검색조건</div>
-                    <select
-                        className={'w-[200px]'}
-                        value={searchParams.searchCondition}
-                        onChange={(e) => handleParamChange('searchCondition', e.target.value)}
-                    >
-                        <option value={'userId'}>아이디</option>
-                        <option value={'uName'}>이름</option>
-                        <option value={'uCell'}>연락처</option>
-                    </select>
-                    <input
-                        type={'text'}
-                        placeholder={'검색조건 설정 후 검색해주세요'}
-                        className={'w-[300px] h-[35px] rounded-tr-none rounded-br-none ml-5'}
-                        value={searchParams.searchKeyword}
-                        onChange={(e) => handleParamChange('searchKeyword', e.target.value)}
-                        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                            if (e.key === 'Enter') {
-                                onSearchClick(); // 엔터키를 누르면 onSearchClick 실행
-                            }
-                        }}
-                    />
-                    <Button
-                        color={'main'}
-                        width={100}
-                        height={35}
-                        fill
-                        className={'rounded-tl-none rounded-bl-none'}
-                        onClick={onSearchClick}
-                    >
-                        조회
-                    </Button>
+            <div className={'border border-gray-100 p-6 rounded-lg bg-white'}>
+                <div className="space-y-4 lg:space-y-0">
+                    {/* 상태, 기간 */}
+                    <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:gap-5">
+                        <div className="space-y-1">
+                            <div className="text-sm">권한</div>
+                            <select
+                              className="h-[35px] w-full rounded border border-gray-300 px-3 lg:w-[200px]"
+                              value={searchParams.uAuth}
+                              onChange={(e) => handleParamChange('uAuth', e.target.value)}
+                            >
+                                <option value={'all'}>전체</option>
+                                <option value={'admin'}>관리자</option>
+                                <option value={'user'}>사용자</option>
+                            </select>
+                        </div>
+                        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:gap-4">
+                            <div className="space-y-1">
+                                <div className="text-sm">검색항목</div>
+                                <select
+                                  className="h-[35px] w-full rounded border border-gray-300 px-3 lg:w-[200px]"
+                                  value={searchParams.searchCondition}
+                                  onChange={(e) => handleParamChange('searchCondition', e.target.value)}
+                                >
+                                    <option value={'userId'}>아이디</option>
+                                    <option value={'uName'}>이름</option>
+                                    <option value={'uCell'}>연락처</option>
+                                </select>
+                            </div>
+                            <div className="flex flex-1 lg:max-w-[400px]">
+                                <input
+                                  type="text"
+                                  placeholder="검색항목 설정 후 검색"
+                                  className="h-[35px] flex-1 rounded-l border border-gray-300 px-3 rounded-r-none"
+                                  value={searchParams.searchKeyword}
+                                  onChange={(e) => handleParamChange('searchKeyword', e.target.value)}
+                                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                                      if (e.key === 'Enter') {
+                                          onSearchClick(); // 엔터키를 누르면 onSearchClick 실행
+                                      }
+                                  }}
+                                />
+                                <Button
+                                  color="main"
+                                  width={100}
+                                  height={35}
+                                  fill
+                                  className="rounded-l-none rounded-r"
+                                  onClick={onSearchClick}
+                                >
+                                    조회
+                                </Button>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
             <div className={'flex justify-end space-x-4 mt-4'}>
@@ -363,10 +378,11 @@ export default function UserList({ userList, onSearch, platformList }: { userLis
                 Content={() => <AddUser ref={addUserRef} platformList={platformList} mode={mode}/>}
                 buttons={getPopupButtons()}/>
             <div className={'mt-4'}>
-                <CheckboxContainer
+                <ListContainer
                     items={displayedUsers}
                     getItemId={(item) => item.irpk}
                     columns={columns}
+                    withCheckbox={true}
                     selectedItems={selectedItems}
                     onRowClick={handleRowClick}
                     onSelectionChange={setSelectedItems}
