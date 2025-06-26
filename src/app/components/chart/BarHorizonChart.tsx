@@ -1,6 +1,15 @@
-import React from 'react';
-import {Bar} from 'react-chartjs-2';
-import {Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, ChartOptions, Chart} from 'chart.js';
+import React, { useEffect, useState } from 'react';
+import { Bar } from 'react-chartjs-2';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    ChartOptions,
+    Chart,
+} from 'chart.js';
 import Image from "next/image";
 import Error from '@/assets/images/icon/error-icon.png';
 
@@ -17,23 +26,46 @@ interface BarHorizonChartProps {
     options?: ChartOptions<'bar'>;
 }
 
-const BarHorizonChart = ({data, options}: BarHorizonChartProps) => {
+const BarHorizonChart = ({ data, options }: BarHorizonChartProps) => {
+    const [categoryPercentage, setCategoryPercentage] = useState(0.6);
+    const [fontSize, setFontSize] = useState(15);
+
+    useEffect(() => {
+        const handleResize = () => {
+            const width = window.innerWidth;
+            if (width < 640) {
+                setCategoryPercentage(0.3);
+                setFontSize(11);
+            } else if (width < 1024) {
+                setCategoryPercentage(0.45);
+                setFontSize(13);
+            } else {
+                setCategoryPercentage(0.6);
+                setFontSize(15);
+            }
+        };
+        handleResize();
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
     if (!data || !data.values || data.values.length === 0 || data.values.every(value => value === 0)) {
-        return(
-            <div className={'flex items-centers justify-center my-[150px]'}>
-                <Image src={Error.src} alt={'에러'} width={30} height={30} className={'mr-5'}/>
-                <div className={'text-gray-700 text-lg'}>데이터가 없습니다.</div>
-            </div>
-            )
+        return (
+          <div className="flex items-center justify-center my-[150px]">
+              <Image src={Error.src} alt="에러" width={30} height={30} className="mr-5" />
+              <div className="text-gray-700 text-lg">데이터가 없습니다.</div>
+          </div>
+        );
     }
+
     const chartData = {
         labels: data.labels,
         datasets: [
             {
                 data: data.values,
                 backgroundColor: data.color,
-                barThickness: 30,
-                categoryPercentage: 0.5,
+                categoryPercentage: categoryPercentage,
+                barPercentage: 0.6,
             },
         ],
     };
@@ -50,6 +82,7 @@ const BarHorizonChart = ({data, options}: BarHorizonChartProps) => {
                     const meta = chart.getDatasetMeta(0);
                     const y = meta.data[index].y;
                     ctx.fillStyle = 'black';
+                    ctx.font = `${fontSize}px sans-serif`;
                     ctx.textAlign = 'left';
                     ctx.textBaseline = 'middle';
                     ctx.fillText(value.toLocaleString(), meta.data[index].x + 10, y);
@@ -58,50 +91,38 @@ const BarHorizonChart = ({data, options}: BarHorizonChartProps) => {
         },
     }];
 
-    const defaultOptions = {
-        indexAxis: 'y' as const,
+    const defaultOptions: ChartOptions<'bar'> = {
+        indexAxis: 'y',
         responsive: true,
         plugins: {
-            legend: {
-                display: false,
-            },
-            tooltip: {
-                enabled: false,
-            },
+            legend: { display: false },
+            tooltip: { enabled: false },
         },
         scales: {
             x: {
                 beginAtZero: true,
-                grid: {
-                    display: false,
-                },
-                ticks: {
-                    display: false,
-                },
+                grid: { display: false },
+                ticks: { display: false },
             },
             y: {
-                grid: {
-                    display: false,
-                },
+                grid: { display: false },
                 ticks: {
                     font: {
-                        size: 15,
+                        size: fontSize,
                     },
                 },
             },
         },
         layout: {
             padding: {
-                right: 120,
+                right: 100,
             },
         },
-        cutout: '75%',
-    }
+    };
 
-    const mergedOptions = {...defaultOptions, ...options};
+    const mergedOptions = { ...defaultOptions, ...options };
 
-
-    return <Bar data={chartData} options={mergedOptions} plugins={plugins}/>;
+    return <Bar data={chartData} options={mergedOptions} plugins={plugins} />;
 };
 
 export default BarHorizonChart;

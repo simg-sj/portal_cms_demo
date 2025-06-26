@@ -12,8 +12,8 @@ import fileUpload from "@/app/components/common/ui/input/fileUpload";
 import Tooltip from "@/app/components/common/ui/tooltip";
 
 const StyledFile = styled.label`
-    width: 430px;
-    height: 150px;
+    width: 100%;
+    height: 170px;
     margin: 15px auto;
     background-color: #fff;
     border-radius: 5px;
@@ -273,12 +273,12 @@ const AddExcelUpload = ({setExcelData}: AddProps) => {
 
     return (
         <>
-            <div className={'flex justify-between space-x-4'}>
+            <div className={'flex justify-between space-x-0 sm:space-x-4 flex-col sm:flex-row'}>
                 <div className={'flex items-center'}>
                     간편 엑셀업로드
-                    <Tooltip content={<ExcelGuideHiparking/>} width={600}/>
+                    <Tooltip content={<ExcelGuideHiparking/>}/>
                 </div>
-                <Button color={"green"} height={30} width={180} className={'ml-5'}
+                <Button color={"green"} height={30} width={180} className={'ml-5 mt-2 sm:mt-0'}
                         params={{bpk: BSN_CODE[data.user.bName].bpk, type: 'down'}}
                         fileName={BSN_CODE[data.user.bName].fileName} use={'down'}>
                     <Image src={ExcelDown} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
@@ -301,7 +301,7 @@ const AddExcelUpload = ({setExcelData}: AddProps) => {
                     onChange={handleFileInputChange}
                 />
                 <Image src={ExcelUpload.src} alt={'엑셀업로드'} width={40} height={40}/>
-                <p className="mt-3 text-gray-800">클릭 혹은 엑셀파일을 이곳에 드롭하세요.</p>
+                <p className="mt-3 text-gray-800 text-center break-keep">클릭 혹은 엑셀파일을 이곳에 드롭하세요.</p>
             </StyledFile>
             <div className={'max-h-[500px] overflow-y-auto'}>
                 {uploadedFiles.map((file, index) => (

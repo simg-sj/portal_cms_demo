@@ -282,8 +282,8 @@ export default function Page() {
     const PopupContent = () => {
         return (
             <form className="space-y-4">
-                <div className={'flex my-3'}>
-                    <div className={'w-[110px]'}>별칭 <span className="text-red-500">*</span></div>
+                <div className={'flex my-3 sm:flex-row flex-col'}>
+                    <div className={'w-[110px] mb-1 sm:mb-0'}>별칭 <span className="text-red-500">*</span></div>
                     <div className="flex-1">
                         <input
                             type="text"
@@ -295,8 +295,8 @@ export default function Page() {
                     </div>
                 </div>
 
-                <div className={'flex my-3'}>
-                    <div className={'w-[110px]'}>보험명 <span className="text-red-500">*</span></div>
+                <div className={'flex my-3 sm:flex-row flex-col'}>
+                    <div className={'w-[110px] mb-1 sm:mb-0'}>보험명 <span className="text-red-500">*</span></div>
                     <div className="flex-1">
                         <input
                             type="text"
@@ -308,8 +308,8 @@ export default function Page() {
                     </div>
                 </div>
 
-                <div className={'flex my-3'}>
-                    <div className={'w-[110px]'}>증권번호 <span className="text-red-500">*</span></div>
+                <div className={'flex my-3 sm:flex-row flex-col'}>
+                    <div className={'w-[110px] mb-1 sm:mb-0'}>증권번호 <span className="text-red-500">*</span></div>
                     <div className="flex-1">
                         <input
                             type="text"
@@ -321,8 +321,8 @@ export default function Page() {
                     </div>
                 </div>
 
-                <div className={'flex my-3'}>
-                    <div className={'w-[110px]'}>보험사 <span className="text-red-500">*</span></div>
+                <div className={'flex my-3 sm:flex-row flex-col'}>
+                    <div className={'w-[110px] mb-1 sm:mb-0'}>보험사 <span className="text-red-500">*</span></div>
                     <div className="flex-1">
                         <input
                             type="text"
@@ -336,8 +336,8 @@ export default function Page() {
 
 
 
-                <div className={'flex my-3'}>
-                    <div className={'w-[110px]'}>보험기간 <span className="text-red-500">*</span></div>
+                <div className={'flex my-3 sm:flex-row flex-col'}>
+                    <div className={'w-[110px] mb-1 sm:mb-0'}>보험기간 <span className="text-red-500">*</span></div>
                     <div className="flex-1">
                         <DayTerm type={'day'} setDays={setDays} sDay={watch('sDay') ? new Date(watch('sDay')) : new Date()}
                                  eDay={watch('eDay') ? new Date(watch('eDay')) : new Date()}
@@ -348,8 +348,8 @@ export default function Page() {
                     </div>
                 </div>
 
-                <div className={'flex my-3'}>
-                    <div className={'w-[110px]'}>보험료 <span className="text-red-500">*</span></div>
+                <div className={'flex my-3 sm:flex-row flex-col'}>
+                    <div className={'w-[110px] mb-1 sm:mb-0'}>보험료 <span className="text-red-500">*</span></div>
                     <div className="flex-1">
                         <input
                             type="number"
@@ -382,7 +382,7 @@ export default function Page() {
                     <Tooltip
                         content={"보험관리 추가 버튼으로 현재 가입되어 있는 보험을 추가하여 해당 페이지에서 모든 보험을 관리할 수 있으며, 갱신 예정인 보험을 1달전에 알림으로 알려드립니다. 갱신 정보는 보험관리추가 버튼을 통해 추가할 수 있습니다."}/>
                 </div>
-                <div className={'flex justify-between space-x-10'}>
+                <div className="flex flex-col lg:flex-row gap-2 lg:gap-6">
                     <CountCard
                         icon={AlarmIcon.src}
                         title={'갱신예정 보험'}
@@ -404,7 +404,7 @@ export default function Page() {
                 </div>
             </div>
             <div className={'p-6 rounded-lg bg-white my-5'}>
-                <div className={'flex justify-between'}>
+                <div className="flex justify-between items-center mb-4">
                     <div className={'text-lg font-light mb-6'}>보험리스트</div>
                     <Button color={"main"} fill height={32} width={132} onClick={openAddPopup}>
                         <Image src={Plus.src} alt={'추가'} width={14} height={14} className={'mr-1'}/>
@@ -423,7 +423,7 @@ export default function Page() {
 
                     return (
                         <div className={'rounded-xl border border-gray-200 my-3'} key={index}>
-                            <div className={'flex justify-between items-start px-7 pt-5 mb-5'}>
+                            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center px-4 sm:px-7 pt-5 mb-5 gap-2">
                                 <div>
                                     <Button
                                         color={isExpired ? "gray" : "main"}
@@ -440,7 +440,7 @@ export default function Page() {
                                         <div>{insurance.nickName}</div>
                                     </div>
                                 </div>
-                                <div className={'flex items-center space-x-4'}>
+                                <div className={'flex items-center space-x-4 self-end sm:self-auto'}>
                                     {/* 만료 예정 경고 섹션 */}
                                     {showWarning && (
                                         <div className='flex space-x-2 items-center'>
@@ -476,7 +476,7 @@ export default function Page() {
                                 </div>
                             </div>
 
-                            <div className={'flex justify-between items-end px-7 mb-5'}>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 px-4 sm:px-7 mb-5">
                                 <div className={'w-[300px]'}>
                                     <div className={'text-gray-600 mb-2 text-sm'}>증권번호</div>
                                     <div>{insurance.pNo}</div>

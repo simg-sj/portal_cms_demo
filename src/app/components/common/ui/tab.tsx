@@ -16,7 +16,7 @@ const Tab = ({ tabs }: TabProps | undefined) => {
                 {tabs.map((tab, index) => (
                     <button
                         key={index}
-                        className={`px-4 py-2 ${
+                        className={`sm:px-4 px-2 py-2 text-sm sm:text-base ${
                             activeTab === index
                                 ? 'text-main font-semibold border-b-4 border-main'
                                 : 'text-gray-700'
