@@ -45,6 +45,7 @@ const themeConfigs: ThemeConfig = {
             {title: "dashboard", icon: DashboardIcon, label: "대시보드", link: "/turu" , visibleRoles : [4]},
             {title: "main", icon: AccidentIcon, label: "사고접수", link: "/insuRequest", visibleRoles : [1,4]},
             {title: "accidentList", icon: ListIcon, label: "사고리스트", link: "/turu/accidentList", visibleRoles : [4]},
+            {title: "test", icon: ListIcon, label: "test", link: "/turu/test", visibleRoles : [4]},
             {title: "mypage", icon: UserIcon, label: `님`, link: "/turu/mypage", visibleRoles : [1,4]}
         ]
     },

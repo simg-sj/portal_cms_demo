@@ -1,11 +1,9 @@
 import {StaticImageData} from "next/image";
-import React from "react";
 import {
     FieldErrors,
     UseFormGetValues,
     UseFormHandleSubmit,
     UseFormRegister,
-    UseFormSetValue,
     UseFormWatch
 } from "react-hook-form";
 import {DepositListResponseItem} from "@/app/lib/simg1DayApi/deposit/types";
