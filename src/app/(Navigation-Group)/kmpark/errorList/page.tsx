@@ -20,6 +20,7 @@ import {hiparkingAccidentColumns, initRowData} from "@/config/data";
 import {onClickExcel} from "@/app/lib/onClickExcel";
 import {useNotifications} from "@/context/NotificationContext";
 import ErrorDetail from "@/app/components/pageComponents/parking/errorDetail";
+import { ListContainer } from '@/app/components/common/ui/input/listContainer';
 
 interface ColumnDefinition<T> {
     key: keyof T;
@@ -243,8 +244,75 @@ export default function Page() {
     ];
 
     return (
-        <>
-            <div className={'border border-gray-100 p-6 rounded-lg bg-white flex items-center justify-between'}>
+      <div className={"space-y-3"}>
+          <div className="flex min-h-20 items-center justify-between rounded-lg border border-gray-100 bg-white px-6">
+              <div className="text-base font-semibold lg:text-lg">장애리스트</div>
+              <div className="flex items-center space-x-4">
+                  <Button color={"green"} height={32} width={120} className={'ml-5'} onClick={()  => onClickExcel(hiparkingAccidentColumns,'accident', data, '케이엠파크_장애_리스트.xlsx')}>
+                      <Image src={Excel} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
+                      엑셀다운
+                  </Button>
+              </div>
+          </div>
+          <div className={"rounded-lg border border-gray-100 bg-white p-6"}>
+              <div className="space-y-4 lg:space-y-0">
+                  {/* 기간, 검색항목 */}
+                  <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:gap-5">
+                      <div className="space-y-1">
+                          <div className="text-sm">기간</div>
+                          <DayTerm type={'day'} setParam={setParam} sDay={new Date(param.startDate)} eDay={new Date(param.endDate)} className={"w-full lg:w-[200px]"}/>
+                      </div>
+                      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:gap-4">
+                          <div className="space-y-1">
+                              <div className="text-sm">검색항목</div>
+                              <select
+                                className="h-[35px] w-full rounded border border-gray-300 px-3 lg:w-[200px]"
+                                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                                    setParam((prev: ParamType) => ({
+                                        ...prev,
+                                        condition: e.target.value,
+                                    }))
+                                }
+                                }
+                              >
+                                  <option value={'wCell'}>피해자 연락처</option>
+                                  <option value={'vCarNum'}>피해 차량번호</option>
+                                  <option value={'pklName'}>주차장명</option>
+                              </select>
+                          </div>
+                          <div className="flex flex-1 lg:max-w-[400px]">
+                              <input
+                                type="text"
+                                placeholder="검색항목 설정 후 검색"
+                                className="h-[35px] flex-1 rounded-l rounded-r-none border border-gray-300 px-3"
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                    setParam((prev: ParamType) => ({
+                                        ...prev,
+                                        text: e.target.value,
+                                    }))
+                                }}
+                                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                                    if (e.key === 'Enter') {
+                                        onSearchClick(); // 엔터키를 누르면 onSearchClick 실행
+                                    }
+                                }}
+                              />
+                              <Button
+                                color={"main"}
+                                width={100}
+                                height={35}
+                                fill
+                                className="rounded-l-none rounded-r"
+                                onClick={onSearchClick}
+                              >
+                                  조회
+                              </Button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+            {/*<div className={'border border-gray-100 p-6 rounded-lg bg-white flex items-center justify-between'}>
                 <div className={'flex items-center'}>
                     <div className={'text-gray-700 font-medium pt-1 mr-2'}>기간</div>
                     <DayTerm type={'day'} setParam={setParam} sDay={new Date(param.startDate)} eDay={new Date(param.endDate)}/>
@@ -295,11 +363,9 @@ export default function Page() {
                     엑셀다운
                 </Button>
             </div>
-
+*/}
             <div className={'border border-gray-100 p-6 rounded-lg bg-white mt-5'}>
-                <div className={'flex justify-between'}>
-                    <div className={'text-lg font-light mb-6'}>사고리스트</div>
-                    <div className={'flex justify-end space-x-4'}>
+                <div className={'flex justify-end'}>
                         <Button color={"red"} fill={false} height={32} width={120} onClick={handleDeleteGroup}>
                             삭제
                         </Button>
@@ -307,7 +373,6 @@ export default function Page() {
                             <Image src={Plus} alt={'추가'} width={16} height={16} className={'mr-1'}/>
                             신규등록
                         </Button>*/}
-                    </div>
                 </div>
                 <SlidePopup
                     isOpen={isOpen}
@@ -319,10 +384,11 @@ export default function Page() {
                     buttons={popupButtons.map(button => ({ ...button}))}
                 />
                 <div className={'mt-4'}>
-                    <CheckboxContainer
+                    <ListContainer
                         items={getPaginatedData()}
                         getItemId={(item) => item.irpk}
                         columns={columns}
+                        withCheckbox={true}
                         selectedRow={selectedRow}
                         selectedItems={selectedItems}
                         onSelectionChange={setSelectedItems}
@@ -343,6 +409,6 @@ export default function Page() {
                     )}
                 </div>
             </div>
-        </>
+        </div>
     )
 }

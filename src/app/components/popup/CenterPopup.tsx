@@ -47,8 +47,8 @@ const CenterPopup = ({isOpen, onClose, title, Content, buttons, onConfirm, onDel
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white rounded-xl shadow-lg min-w-[500px] max-w-[800px]">
-                <div className="flex justify-between items-center px-8 py-6">
+            <div className="bg-white rounded-xl shadow-lg w-[90vw] max-w-[600px] sm:min-w-[500px] sm:max-w-[800px]">
+                <div className="flex justify-between items-center sm:px-8 px-4 py-4 sm:py-6">
                     <h2 className="text-lg font-semibold">{title}</h2>
                     <Image src={Close.src} alt={'닫기'} width={16} height={16} className={'mr-1 cursor-pointer'}
                            onClick={onClose}/>

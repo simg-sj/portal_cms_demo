@@ -13,6 +13,11 @@ const CustomPicker = styled.div`
         width: 160px;
         cursor: pointer;
         background: none;
+        @media (max-width: 768px) {
+            width: 100px;
+            font-size: 14px;
+            padding: 0 3px;
+        }
     }
 
     .react-datepicker__input-container > input[readonly] {
@@ -79,6 +84,10 @@ const StyledSelectIcon = styled.img`
     right: 20px;
     top: 12px;
     z-index: 1;
+    @media (max-width: 768px) {
+        right: 4px;
+        top: 14px;
+    }
 `;
 
 interface YearMonthPickerProps {

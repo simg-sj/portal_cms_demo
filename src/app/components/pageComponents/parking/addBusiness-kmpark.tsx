@@ -119,8 +119,8 @@ const AddBusinessKmpark = forwardRef<AddBusinessRef>((props, ref) => {
 
     return (
         <form className="space-y-4">
-            <div className={'flex my-3'}>
-                <div className={'w-[110px]'}>주차장명 <span className={'text-red-500'}>*</span></div>
+            <div className={'sm:flex-row flex-col flex my-3'}>
+            <div className={'w-[110px]'}>주차장명 <span className={'text-red-500'}>*</span></div>
                 <div className="flex-1">
                     <input
                         type="text"
@@ -136,8 +136,8 @@ const AddBusinessKmpark = forwardRef<AddBusinessRef>((props, ref) => {
                 </div>
             </div>
 
-            <div className={'flex my-3'}>
-                <div className={'w-[110px]'}>주차장주소 <span className={'text-red-500'}>*</span></div>
+            <div className={'sm:flex-row flex-col flex my-3'}>
+            <div className={'w-[110px]'}>주차장주소 <span className={'text-red-500'}>*</span></div>
                 <div className="flex-1">
                     <input
                         type="text"
@@ -153,8 +153,8 @@ const AddBusinessKmpark = forwardRef<AddBusinessRef>((props, ref) => {
                 </div>
             </div>
 
-            <div className={'flex my-3'}>
-                <div className={'w-[110px]'}>주차장코드 <span className={'text-red-500'}>*</span></div>
+            <div className={'sm:flex-row flex-col flex my-3'}>
+            <div className={'w-[110px]'}>주차장코드 <span className={'text-red-500'}>*</span></div>
                 <div className="flex-1">
                     <input
                         type="text"
@@ -170,8 +170,8 @@ const AddBusinessKmpark = forwardRef<AddBusinessRef>((props, ref) => {
                 </div>
             </div>
 
-            <div className={'flex my-3'}>
-                <div className={'w-[150px]'}>주차장구분 <span className={'text-red-500'}>*</span></div>
+            <div className={'sm:flex-row flex-col flex my-3'}>
+            <div className={'w-[150px]'}>주차장구분 <span className={'text-red-500'}>*</span></div>
                 <div className={'flex flex-col w-full space-y-6'}>
                     <div className={'h-[4px]'}>
                     {(!watchIndoor && !watchOutdoor && !watchMechanical && !watchCarLift && !watchForm) && (

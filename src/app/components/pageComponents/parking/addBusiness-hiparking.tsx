@@ -131,8 +131,8 @@ const AddBusinessHiparking = forwardRef<AddBusinessRef>((props, ref) => {
 
     return (
         <form className="space-y-4">
-            <div className={'flex my-3'}>
-                <div className={'w-[110px]'}>주차장명 <span className={'text-red-500'}>*</span></div>
+            <div className={'sm:flex-row flex-col flex my-3'}>
+                <div className={'w-[110px] mb-2 sm:mb-0'}>주차장명 <span className={'text-red-500'}>*</span></div>
                 <div className="flex-1">
                     <input
                         type="text"
@@ -148,8 +148,8 @@ const AddBusinessHiparking = forwardRef<AddBusinessRef>((props, ref) => {
                 </div>
             </div>
 
-            <div className={'flex my-3'}>
-                <div className={'w-[110px]'}>주차장주소 <span className={'text-red-500'}>*</span></div>
+            <div className={'sm:flex-row flex-col flex my-3'}>
+                <div className={'w-[110px] mb-2 sm:mb-0'}>주차장주소 <span className={'text-red-500'}>*</span></div>
                 <div className="flex-1">
                     <input
                         type="text"
@@ -182,8 +182,8 @@ const AddBusinessHiparking = forwardRef<AddBusinessRef>((props, ref) => {
                 </div>
             </div>*/}
 
-            <div className={'flex my-3'}>
-                <div className={'w-[150px]'}>주차장구분 <span className={'text-red-500'}>*</span></div>
+            <div className={'sm:flex-row flex-col flex my-3'}>
+                <div className={'w-[140px] mb-2 sm:mb-0'}>주차장구분 <span className={'text-red-500'}>*</span></div>
                 <div className={'flex flex-col w-full space-y-6'}>
                     <ParkingTypeField
                         label="옥내"
@@ -220,13 +220,13 @@ const AddBusinessHiparking = forwardRef<AddBusinessRef>((props, ref) => {
                 </div>
             </div>
 
-            <div className={'flex my-3'}>
-                <div className={'w-[110px]'}>면수</div>
-                <div className="flex items-center">
+            <div className={'sm:flex-row flex-col flex my-3'}>
+                <div className={'w-[110px] mb-2 sm:mb-0'}>면수</div>
+                <div className="flex-1 flex items-center ">
                     <input
                         type="text"
                         placeholder={'면수를 입력하세요'}
-                        className={'border rounded px-2 py-1 w-[331px]'}
+                        className={'border rounded px-2 py-1 w-full'}
                         {...register('faceCount', {
                             pattern: {
                                 value: /^[0-9]*$/,
@@ -237,8 +237,8 @@ const AddBusinessHiparking = forwardRef<AddBusinessRef>((props, ref) => {
                     <div className={'ml-3'}>면</div>
                 </div>
             </div>
-            <div className={'flex my-3'}>
-                <div className={'w-[110px]'}>세부내역</div>
+            <div className={'sm:flex-row flex-col flex my-3'}>
+                <div className={'w-[110px] mb-2 sm:mb-0'}>세부내역</div>
                 <div className="flex-1">
                     <input
                         type="text"
@@ -249,8 +249,8 @@ const AddBusinessHiparking = forwardRef<AddBusinessRef>((props, ref) => {
                     />
                 </div>
             </div>
-            <div className={'flex my-3'}>
-                <div className={'w-[110px]'}>공동피보험자</div>
+            <div className={'sm:flex-row flex-col flex my-3'}>
+                <div className={'w-[110px] mb-2 sm:mb-0'}>공동피보험자</div>
                 <div className="flex-1">
                     <input
                         type="text"

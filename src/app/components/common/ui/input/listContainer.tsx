@@ -43,7 +43,7 @@ export function ListContainer<T>({
   // 화면 크기 변화에 따른 반응형 처리
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1024) {
+      if (window.innerWidth >= 1536) {
         setViewMode("table");
       } else if (window.innerWidth >= 768) {
         setViewMode("card-horizontal");
@@ -372,7 +372,7 @@ export function ListContainer<T>({
   );
 
   return (
-    <div className="w-full">
+    <div>
       {viewMode === "table" && renderTableView()}
       {viewMode === "card-horizontal" && renderHorizontalCardView()}
       {viewMode === "card-vertical" && renderVerticalCardView()}

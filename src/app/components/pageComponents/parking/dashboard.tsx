@@ -18,12 +18,11 @@ import Search from "@/assets/images/icon/detail-icon.png"
 import dayjs from "dayjs";
 import {onClickExcel} from "@/app/lib/onClickExcel";
 import {monthColumns, platformList, policyColumns} from "@/config/data";
-import cn from "classnames";
 import {useNotifications} from "@/context/NotificationContext";
 import Notifications from "@/app/components/popup/Notifications";
-import EmptyDataWrapper from "@/app/components/common/ui/input/EmptyDataWrapper";
 import ContractComponent from "@/app/components/pageComponents/parking/contractChange";
 import ErrorChart from "@/app/components/pageComponents/parking/errorChart";
+import { ListContainer } from '@/app/components/common/ui/input/listContainer';
 
 interface DashboardProps {
     chartData: {
@@ -198,9 +197,50 @@ export default function DashboardComponent({
 
 }
 
+// 테이블 데이터
+    const insuColumns = [
+        { key: "pNo", header: "증권번호" },
+        { key: "nickName", header: "별칭" },
+        { key: "insurancePeriod", header: "보험기간" },
+        { key: "bCount", header: "사업장수" },
+        { key: "total", header: "총보험료" },
+        { key: "closingAmt", header: "지급보험금" },
+        { key: "repairCost", header: "손조비용" },
+        { key: "lossRatio", header: "손해율" },
+    ];
+    const insuData = tableData.counselData.map((counsel) => ({
+        ...counsel,
+        insurancePeriod: `${counsel.sDay} ~ ${counsel.eDay}`,
+        lossRatio:
+          counsel.lossRatio !== null && counsel.lossRatio !== undefined
+            ? `${counsel.lossRatio}%`
+            : "-",
+    }));
+
+    const accidentColumns = [
+        { key: "changeDay", header: "변경일" },
+        { key: "acceptNum", header: "접수건수" },
+        { key: "endNum", header: "종결건수" },
+        { key: "estimateNum", header: "추산건수" },
+        { key: "disclaimerNum", header: "면책건수" },
+        { key: "total", header: "보험금" },
+    ];
+
+    const accidentData = tableData.monthAccidentData.map((item, index) => ({
+        ...item,
+        id: index,
+        total:
+          typeof item.total === "string"
+            ? Number(item.total.replace(/,/g, ""))
+            : typeof item.total === "number"
+              ? item.total
+              : 0,
+    }));
+
+
     return (
         <>
-            <div className={'px-8 py-6 bg-white rounded-xl'}>
+            <div className={'sm:px-8 sm:py-6 px-4 py-4 bg-white rounded-xl'}>
                 <div className={'flex justify-between items-start'}>
                     <div className={'text-lg font-light mb-6'}>계약현황</div>
                     <Button color={"green"} height={32} width={120} onClick={()  => onClickExcel(policyColumns,'policy', tableData.counselData, '증권별_손해자료.xlsx')}>
@@ -208,9 +248,9 @@ export default function DashboardComponent({
                         엑셀다운
                     </Button>
                 </div>
-                <div className={'flex'}>
-                    <div className={'w-[200px] mr-16'}>
-                        <div className={'relative'}>
+                <div className={'lg:flex'}>
+                    <div className={'lg:w-[200px] w-full lg:mr-16 lg:block flex justify-between items-end mb-5 lg:mb-0 max-h-[300px]'}>
+                        <div className={'relative sm:w-[200px] w-[160px]'}>
                             <DoughnutChart data={chartData.doughnut}></DoughnutChart>
                             <div
                                 className={'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center'}>
@@ -223,10 +263,21 @@ export default function DashboardComponent({
                             <div className={'text-gray-600'}>지급보험금</div>
                             <CountUp
                                 end={donutValues.closingAmt}
-                                duration={2} className={'text-2xl font-semibold'} suffix={'원'}/>
+                                duration={2} className={'sm:text-2xl text-xl font-semibold'} suffix={'원'}/>
                         </div>
                     </div>
-                    <div className={'w-full'}>
+                    <div className={'xl:w-[calc(100%-200px)] w-full max-h-[260px] overflow-y-auto'}>
+                        <ListContainer
+                          items={insuData}
+                          columns={insuColumns}
+                          getItemId={(item) => Number(item.pNo)}
+                          withCheckbox={false}
+                          selectedRow={param.pNo ? Number(param.pNo) : null}
+                          selectedItems={[]}
+                          onRowClick={(item) => handleDoughnut(item)}
+                        />
+                    </div>
+                    {/*<div className={'w-full'}>
                         <div className={'max-h-[250px] overflow-y-auto'}>
                             <table className={'w-full relative'}>
                                 <colgroup>
@@ -273,10 +324,10 @@ export default function DashboardComponent({
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+                    </div>*/}
                 </div>
             </div>
-            <div className={'px-8 py-6 bg-white rounded-xl my-5'}>
+            <div className={'sm:px-8 sm:py-6 px-4 py-4 bg-white rounded-xl my-5'}>
                 {
                     bpk === 2 &&
                     <ContractComponent chartData={chartData} tableData={tableData} handleParam={handleParam} bpk={bpk}  param={param} setParam={setParam}/>
@@ -287,8 +338,8 @@ export default function DashboardComponent({
                 }
             </div>
 
-            <div className={'flex'}>
-                <div className={'px-8 py-6 bg-white rounded-xl my-5 w-1/6'}>
+            <div className={'flex flex-wrap 2xl:flex-nowrap'}>
+                <div className={'sm:px-8 sm:py-6 px-4 py-4 bg-white rounded-xl my-5 2xl:w-1/6 lg:w-1/3 w-full'}>
                     <div className={'text-lg font-light mb-6'}>월 누적 현황</div>
                     <div>
                         <CountCard
@@ -310,8 +361,8 @@ export default function DashboardComponent({
                     </div>
                 </div>
 
-                <div className={'px-8 py-6 bg-white rounded-xl my-5 w-2/6 mx-8'}>
-                    <div className={'flex justify-between'}>
+                <div className={'sm:px-8 sm:py-6 px-4 py-4 bg-white rounded-xl my-5 2xl:w-2/6 lg:w-2/3 w-[calc(100vw-30px)] 2xl:mx-8'}>
+                    <div className={'lg:flex lg:justify-between'}>
                         <div className={'text-lg font-light mb-6'}>Top 5</div>
                         <div className={"flex justify-end mb-4 text-lg"}>
                             <div className={'border w-fit px-5 py-1 rounded-lg flex items-center'}>
@@ -326,9 +377,9 @@ export default function DashboardComponent({
                     <Tab tabs={tabs[platformList[bpk]]}/>
                 </div>
 
-                <div className={'px-8 py-6 bg-white rounded-xl my-5 w-1/2'}>
+                <div className={'sm:px-8 sm:py-6 px-4 py-4 bg-white rounded-xl my-5 2xl:w-1/2 w-full'}>
                     <div>
-                        <div className={'flex justify-between'}>
+                        <div className={'lg:flex lg:justify-between'}>
                             <div className={'text-lg font-light mb-6'}>월별 사고접수현황</div>
                             <div className={"flex justify-end mb-4 text-lg"}>
                                 <div className={'border w-fit px-5 py-1 rounded-lg flex items-center'}>
@@ -340,7 +391,7 @@ export default function DashboardComponent({
                                 </div>
                             </div>
                         </div>
-                        <div className={'w-full'}>
+                        <div>
                             <div className={"flex justify-end mb-4"}>
                                 <Button color={"green"} height={32} width={120} onClick={()  => onClickExcel(monthColumns,'month', tableData.monthAccidentData, '월별_사고접수_현황.xlsx')}>
                                     <Image src={Excel} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
@@ -348,7 +399,7 @@ export default function DashboardComponent({
                                 </Button>
                             </div>
                             <div className={'max-h-[350px] overflow-y-auto'}>
-                                <table className={'w-full relative'}>
+                                {/*<table className={'w-full relative'}>
                                     <thead className={'sticky left-0 top-0'}>
                                     <tr>
                                         <th>변경일</th>
@@ -373,7 +424,14 @@ export default function DashboardComponent({
                                     ))}
                                     </EmptyDataWrapper>
                                     </tbody>
-                                </table>
+                                </table>*/}
+                                <ListContainer
+                                  items={accidentData}
+                                  columns={accidentColumns}
+                                  getItemId={(item) => item.id}
+                                  withCheckbox={false}
+                                  selectedItems={[]}
+                                />
                             </div>
                         </div>
                     </div>
