@@ -4,9 +4,8 @@ import UserIcon from "../../../../../public/images/icon/user-icon.png";
 import MyPageTabs from "@/app/components/common/MyPageTabs";
 import {PlatformList, resultCode, SearchParams, UserListType, UserType} from "@/@types/common";
 import { authText, tabsAdmin } from "@/config/data";
-import {getUserData, userService} from "@/app/(Navigation-Group)/action";
+import { getPlatform, getUserData, userService } from '@/app/(Navigation-Group)/action';
 import {useNotifications} from "@/context/NotificationContext";
-import {getPlatform} from "@/app/(Navigation-Group)/turu/action";
 
 export default function MyPageContainer({ userInfo, setUserInfo, fetchUser }: { userInfo: UserType, setUserInfo: React.Dispatch<React.SetStateAction<UserType>>, fetchUser: (pk : number, infoId : string) => Promise<void> }) {
     const [userList, setUserList] = useState<UserListType[]>([]);
