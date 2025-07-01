@@ -250,7 +250,7 @@ export default function Navigation() {
   return (
     <>
       {/* 모바일 상단 바 */}
-      <div className="fixed left-0 right-0 top-0 z-50 flex w-dvw items-center justify-between bg-main px-10 py-4 text-white lg:hidden">
+      <div className="fixed left-0 right-0 top-0 z-50 flex items-center justify-between bg-main px-10 py-4 text-white lg:hidden">
         <Image src={themeConfig.logoSrc} alt="로고" width={60} height={30} />
         <Image
           src={'/images/icon/menu-icon.png'}
