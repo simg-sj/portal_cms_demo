@@ -205,4 +205,26 @@ tbody tr:last-child {
     공통 css
    ---------------------------------------
 */
+@layer components {
+    .cell-label {
+        @apply bg-gray-50 px-3 py-3 border-b border-gray-200 text-sm font-semibold;
+    }
+
+    .cell-value {
+        @apply px-3 py-3 border-b border-gray-200 text-sm;
+    }
+
+    .grid-section {
+        @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 border-t border-gray-200;
+    }
+
+    .cell-label-col {
+        @apply bg-gray-50 px-3 py-3 border-b border-gray-200 text-sm font-semibold col-span-full md:col-span-1;
+    }
+
+    .cell-value-col {
+        @apply px-3 py-3 border-b border-gray-200 text-sm col-span-full md:col-span-3;
+    }
+}
+
 
