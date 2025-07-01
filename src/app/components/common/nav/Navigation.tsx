@@ -400,7 +400,7 @@ export default function Navigation() {
               </button>
             </form>
             <Image
-              src={'/images/logo/simg-logo.png'}
+              src={'/images/logo/simg-white-logo.png'}
               alt="SIMG로고"
               width={55}
               height={55}
