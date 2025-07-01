@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import cn from 'classnames';
-import RefreshIcon from '@/assets/images/icon/refresh-icon.png';
+import RefreshIcon from '../../../../../public/images/icon/refresh-icon.png';
 
 type RefreshButtonProps = {
   onClick: () => any | Promise<any>;

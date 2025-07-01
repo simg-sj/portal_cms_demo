@@ -1,7 +1,7 @@
 // 공통 컴포넌트 및 유틸 import
 import Checkbox from "@/app/components/common/ui/input/checkbox";
 import Image from "next/image";
-import Error from "@/assets/images/icon/error-icon.png";
+import Error from "../../../../../../public/images/icon/error-icon.png";
 import { authText, SimgDeposit } from "@/config/data";
 import dayjs from "dayjs";
 import Button from "@/app/components/common/ui/button/button";

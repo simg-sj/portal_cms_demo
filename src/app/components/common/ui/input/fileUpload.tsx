@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import Image from "next/image";
-import NoneFile from "@/assets/images/icon/nonefile-icon.png";
-import Upload from "@/assets/images/icon/upload-icon.png";
+import NoneFile from "../../../../../../public/images/icon/nonefile-icon.png";
+import Upload from "../../../../../../public/images/icon/upload-icon.png";
 import { ImageType } from "@/@types/common";
 
 interface ImageUploaderProps {

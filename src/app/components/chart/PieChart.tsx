@@ -3,7 +3,7 @@ import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, ChartOptions, ChartData, Plugin } from "chart.js";
 import ChartDataLabels, {Context} from 'chartjs-plugin-datalabels';
 import Image from "next/image";
-import Error from "@/assets/images/icon/error-icon.png";
+import Error from "../../../../public/images/icon/error-icon.png";
 
 ChartJS.register(ArcElement);
 

@@ -9,14 +9,14 @@ import Tab from "@/app/components/common/ui/tab";
 import BarLineChart from "@/app/components/chart/BarLineChart";
 import BarStandChart from "@/app/components/chart/BarStandChart";
 import Image from "next/image";
-import Search from "@/assets/images/icon/detail-icon.png";
+import Search from "../../../../public/images/icon/detail-icon.png";
 import YearRangePicker from "@/app/components/common/ui/calender/yearTerm";
 import {
     dashboardMonthType, dashboardPolicyType, dashboardYearType,
     kakaoDashboard,
     ParamDashType2
 } from "@/@types/common";
-import Error from "@/assets/images/icon/error-icon.png";
+import Error from "../../../../public/images/icon/error-icon.png";
 
 interface DashboardProps {
     chartData: {

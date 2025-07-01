@@ -1,20 +1,20 @@
 'use client'
 import Button from "@/app/components/common/ui/button/button";
-import Excel from "@/assets/images/icon/excel-icon.png";
+import Excel from "../../../../../public/images/icon/excel-icon.png";
 import "react-datepicker/dist/react-datepicker.css";
 import DoughnutChart from "@/app/components/chart/DoughnutChart";
 import FormatNumber from "@/app/components/common/ui/formatNumber";
 import Tab from "@/app/components/common/ui/tab";
 import Image from "next/image";
-import CarIcon from '@/assets/images/icon/car-icon.png'
-import ChargeIcon from '@/assets/images/icon/charge-icon.png'
+import CarIcon from '../../../../../public/images/icon/car-icon.png'
+import ChargeIcon from '../../../../../public/images/icon/charge-icon.png'
 import BarHorizonChart from "@/app/components/chart/BarHorizonChart";
 import DayTerm from "@/app/components/common/ui/calender/dayTerm";
 import {DashboardData, ParamDashType2,} from "@/@types/common";
 import CountUp from "@/app/components/common/ui/countUp";
 import React, {SetStateAction, useEffect, useState} from "react";
 import CountCard from "@/app/components/common/CountCard";
-import Search from "@/assets/images/icon/detail-icon.png"
+import Search from "../../../../../public/images/icon/detail-icon.png"
 import dayjs from "dayjs";
 import {onClickExcel} from "@/app/lib/onClickExcel";
 import {monthColumns, platformList, policyColumns} from "@/config/data";

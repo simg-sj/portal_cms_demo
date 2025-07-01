@@ -1,5 +1,5 @@
 import { useNotifications } from "@/context/NotificationContext";
-import WarningIcon from "@/assets/images/icon/warning-icon.png";
+import WarningIcon from "../../../../public/images/icon/warning-icon.png";
 import Image from "next/image";
 import React from "react";
 import Button from "@/app/components/common/ui/button/button";

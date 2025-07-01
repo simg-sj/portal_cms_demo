@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession, signIn } from "next-auth/react";
 import Image from "next/image";
-import RoundLogo from "@/assets/images/logo/simg-round-logo.png";
+import RoundLogo from "../../../public/images/logo/simg-round-logo.png";
 
 export default function LoginPage() {
     const errorDiv = useRef<HTMLDivElement | null>(null);

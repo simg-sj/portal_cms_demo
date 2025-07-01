@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import ErrorIcon from "@/assets/images/icon/error-icon.png"; // 에러 이미지 가져오기
+import ErrorIcon from "../../../../../../public/images/icon/error-icon.png"; // 에러 이미지 가져오기
 
 interface EmptyDataWrapperProps {
     data: any[];

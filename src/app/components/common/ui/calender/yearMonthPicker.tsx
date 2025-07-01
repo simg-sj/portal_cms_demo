@@ -2,7 +2,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {ko} from "date-fns/locale";
 import styled from 'styled-components';
-import SelectIcon from '@/assets/images/icon/select-icon.png';
+import SelectIcon from '../../../../../../public/images/icon/select-icon.png';
 
 
 const CustomPicker = styled.div`

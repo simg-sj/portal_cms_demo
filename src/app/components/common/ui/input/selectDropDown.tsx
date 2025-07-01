@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Image from "next/image";
-import SelectIcon from "@/assets/images/icon/select-icon.png";
+import SelectIcon from "../../../../../../public/images/icon/select-icon.png";
 
 interface SelectDropdownProps {
     options: string[];

@@ -11,7 +11,7 @@ import {
     Chart,
 } from 'chart.js';
 import Image from "next/image";
-import Error from '@/assets/images/icon/error-icon.png';
+import Error from '../../../../public/images/icon/error-icon.png';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip);
 

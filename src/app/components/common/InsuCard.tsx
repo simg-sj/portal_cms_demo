@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import Image from 'next/image';
-import EditIcon from "@/assets/images/icon/edit-icon.png";
-import DeleteIcon from "@/assets/images/icon/delete-icon.png";
-import SaveIcon from "@/assets/images/icon/save-icon.png";
-import WarningIcon from "@/assets/images/icon/warning-icon.png";
+import EditIcon from "../../../../public/images/icon/edit-icon.png";
+import DeleteIcon from "../../../../public/images/icon/delete-icon.png";
+import SaveIcon from "../../../../public/images/icon/save-icon.png";
+import WarningIcon from "../../../../public/images/icon/warning-icon.png";
 import Button from "@/app/components/common/ui/button/button";
 import CalenderPicker from "@/app/components/common/ui/calender/calenderPicker";
 import FormatNumber from "@/app/components/common/ui/formatNumber";
-import Plus from "@/assets/images/icon/plus-icon.png";
+import Plus from "../../../../public/images/icon/plus-icon.png";
 
 interface InsuranceItem {
     insuName: string;

@@ -5,7 +5,7 @@ import { ko } from "date-fns/locale";
 import styled from "styled-components";
 import { getYear, getMonth } from "date-fns";
 import Image from "next/image";
-import Calender from "@/assets/images/icon/calender-icon.png";
+import Calender from "../../../../../../public/images/icon/calender-icon.png";
 import { useEffect } from "react";
 import dayjs from "dayjs";
 

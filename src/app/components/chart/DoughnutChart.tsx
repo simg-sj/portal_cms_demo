@@ -2,7 +2,7 @@ import { Doughnut } from 'react-chartjs-2';
 import {Chart as ChartJS, ArcElement, Tooltip, Legend, ChartOptions, ChartData, Chart} from 'chart.js';
 import React from "react";
 import Image from "next/image";
-import Error from "@/assets/images/icon/error-icon.png";
+import Error from "../../../../public/images/icon/error-icon.png";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 

@@ -1,7 +1,7 @@
 'use client'
 import Image from "next/image";
 import React, { useState } from "react";
-import TooltipIcon from "@/assets/images/icon/tooltip-icon.png";
+import TooltipIcon from "../../../../../public/images/icon/tooltip-icon.png";
 
 export type TooltipProps = {
     content: React.ReactNode;

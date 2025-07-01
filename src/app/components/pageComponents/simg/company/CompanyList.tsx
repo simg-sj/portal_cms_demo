@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Button from "@/app/components/common/ui/button/button";
 import Image from "next/image";
-import Excel from "@/assets/images/icon/excel-icon.png";
+import Excel from "../../../../../../public/images/icon/excel-icon.png";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
 import { ButtonConfig } from "@/@types/common";

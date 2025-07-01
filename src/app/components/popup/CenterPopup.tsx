@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from "@/app/components/common/ui/button/button";
 import Image from "next/image";
-import Close from "@/assets/images/icon/close-icon.png";
+import Close from "../../../../public/images/icon/close-icon.png";
 
 interface ButtonConfig {
     label: string;

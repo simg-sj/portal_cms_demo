@@ -1,11 +1,11 @@
 import BarTwowayChart from "@/app/components/chart/BarTwowayChart";
 import DayTerm from "@/app/components/common/ui/calender/dayTerm";
 import Image from "next/image";
-import Search from "@/assets/images/icon/detail-icon.png";
+import Search from "../../../../../public/images/icon/detail-icon.png";
 import FormatNumber from "@/app/components/common/ui/formatNumber";
 import React, { useEffect, useState } from "react";
 import { TooltipItem } from "chart.js";
-import Error from "@/assets/images/icon/error-icon.png";
+import Error from "../../../../../public/images/icon/error-icon.png";
 import dayjs from "dayjs";
 import {
   DashboardData,

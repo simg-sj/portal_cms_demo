@@ -2,7 +2,7 @@
 import {useForm} from "react-hook-form";
 import {SimgDepositType} from "@/@types/common";
 import Image from "next/image";
-import Close from "@/assets/images/icon/close-icon.png";
+import Close from "../../../../../public/images/icon/close-icon.png";
 import Button from "@/app/components/common/ui/button/button";
 import React, {SetStateAction, useEffect, useState} from "react";
 import {useNotifications} from "@/context/NotificationContext";

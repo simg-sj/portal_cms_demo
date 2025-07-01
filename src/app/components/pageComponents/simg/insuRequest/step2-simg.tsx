@@ -76,6 +76,23 @@ const Step2= ({onNext, onPrev, getValues, register} : Step2PropsLC) =>  {
                 />
                 <div className={'text-lg text-gray-700'}> 위와 같이 개인정보 제3자 제공에 동의합니다.</div>
             </label>
+
+            <div className={'mt-10 mb-5 text-2xl font-bold'}>예금자보호 관련 안내사항</div>
+            <div className={'my-3'}>1. 이 보험계약은 「예금자보호법」에 따라 해약환급금(또는 만기 시 보험금)에 기타지급금을 합한 금액이 1인당 5천만원까지 (본 보험회사의 여타 보호상품과 합산) 보호됩니다.</div>
+            <div className={'my-3'}>2. 또한 본 보험회사의 보호상품 중 사고보험금은 별도로 1인당 5천만원까지 보호됩니다.<br/></div>
+            <div className={'my-3'}>3. 보험계약 해지 후 신규계약 체결 시, 보험 인수 거절 / 보험료 인상 / 보장내용 변경 가능성 있습니다.</div>
+            <div className={'my-3'}>4. 보험금 지급은 약관의 지급한도 / 면책사항 등에 따라 제한될 수 있습니다.</div>
+            <div className={' text-md text-gray-800 mb-5'}>* 계약 전 상품설명서 및 약관을 반드시 확인하세요.</div>
+            <label className={'flex items-center mt-10'}>
+              <input
+                type="checkbox"
+                name="privacy"
+                {...register("privacy", { required: "개인정보수집 및 이용방침에 동의해주세요." })}
+                className={'mr-3 w-4'}
+              />
+              <div className={'text-lg text-gray-700'}> 위 예금자보호 관련 사항을 확인하였으며, 이해하고 동의합니다.</div>
+            </label>
+
             <div className={'flex justify-center my-10 space-x-5'}>
                 <Button color={"gray"} onClick={onPrev} textSize={18} width={540} height={60} className={'!w-1/2'}>취소</Button>
                 <Button color={"main"} fill={true} onClick={handleSubmit} textSize={18} width={540} height={60} className={'!w-1/2'} >접수하기</Button>

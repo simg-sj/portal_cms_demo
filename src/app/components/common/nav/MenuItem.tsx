@@ -25,7 +25,7 @@ export default function MenuItem({
       className={`relative my-5 flex cursor-pointer items-center rounded-md px-4 py-4 lg:flex-col lg:px-1 lg:py-2 ${isActive ? "bg-white bg-opacity-30" : "hover:bg-white hover:bg-opacity-30"}`}
       onClick={handleClick}
     >
-      <Image src={icon} alt={label} width={28} />
+      <Image src={icon} alt={label} width={28} height={28}/>
       <div className="ml-5 mt-0 text-[16px] text-white lg:ml-0 lg:mt-2 lg:text-[12px]">
         {label}
       </div>

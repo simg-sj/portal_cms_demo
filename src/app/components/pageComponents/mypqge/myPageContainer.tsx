@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import UserIcon from "@/assets/images/icon/user-icon.png";
+import UserIcon from "../../../../../public/images/icon/user-icon.png";
 import MyPageTabs from "@/app/components/common/MyPageTabs";
 import {PlatformList, resultCode, SearchParams, UserListType, UserType} from "@/@types/common";
 import { authText, tabsAdmin } from "@/config/data";

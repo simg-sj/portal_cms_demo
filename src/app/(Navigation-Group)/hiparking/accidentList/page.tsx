@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import DayTerm from "@/app/components/common/ui/calender/dayTerm";
 import Button from "@/app/components/common/ui/button/button";
 import Image from "next/image";
-import Excel from "@/assets/images/icon/excel-icon.png";
+import Excel from "../../../../../public/images/icon/excel-icon.png";
 import SlidePopup from "@/app/components/popup/SlidePopup";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";

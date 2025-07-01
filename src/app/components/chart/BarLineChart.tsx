@@ -13,7 +13,7 @@ import {
 } from 'chart.js';
 import { Chart } from 'react-chartjs-2';
 import Image from "next/image";
-import Error from "@/assets/images/icon/error-icon.png";
+import Error from "../../../../public/images/icon/error-icon.png";
 
 ChartJS.register(
     CategoryScale,

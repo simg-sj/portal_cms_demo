@@ -1,14 +1,9 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import LogoutIcon from "@/assets/images/icon/logout-icon.png";
-import SupportIcon from "@/assets/images/icon/support-icon.png";
-import SimgLogo from "@/assets/images/logo/simg-white-logo.png";
 import React, { useEffect, useRef, useState } from "react";
 import { getThemeConfig } from "@/config/themeConfig";
 import MenuItem from "@/app/components/common/nav/MenuItem";
-import HamburgerIcon from "@/assets/images/icon/menu-icon.png";
-import CloseIcon from "@/assets/images/icon/close-white-icon.png";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { signOutWithForm } from "@/middleware";
@@ -256,9 +251,9 @@ export default function Navigation() {
     <>
       {/* 모바일 상단 바 */}
       <div className="fixed left-0 right-0 top-0 z-50 flex w-dvw items-center justify-between bg-main px-10 py-4 text-white lg:hidden">
-        <Image src={themeConfig.logoSrc} alt="로고" height={30} />
+        <Image src={themeConfig.logoSrc} alt="로고" width={60} height={30} />
         <Image
-          src={HamburgerIcon}
+          src={'/images/icon/menu-icon.png'}
           alt="Menu"
           width={24}
           height={24}
@@ -278,7 +273,7 @@ export default function Navigation() {
       >
         <div className="mb-5 flex justify-end px-3 py-2 lg:hidden">
           <Image
-            src={CloseIcon}
+            src={'/images/icon/close-white-icon.png'}
             alt="닫기"
             width={24}
             height={24}
@@ -295,6 +290,7 @@ export default function Navigation() {
             <Image
               src={themeConfig.logoSrc}
               alt="업체로고"
+              width={60}
               height={35}
               className="mb-14 mt-5 hidden lg:block"
               priority={true}
@@ -331,7 +327,7 @@ export default function Navigation() {
               >
                 <button className={"flex items-center lg:flex-col"}>
                   <Image
-                    src={SupportIcon}
+                    src={'/images/icon/support-icon.png'}
                     alt={"고객지원"}
                     height={28}
                     width={28}
@@ -351,7 +347,7 @@ export default function Navigation() {
               >
                 <div className="flex items-center">
                   <Image
-                    src={SupportIcon}
+                    src={'/images/icon/support-icon.png'}
                     alt={"고객지원"}
                     height={28}
                     width={28}
@@ -393,7 +389,7 @@ export default function Navigation() {
             >
               <button className={"flex w-full items-center lg:flex-col"}>
                 <Image
-                  src={LogoutIcon}
+                  src={'/images/icon/logout-icon.png'}
                   alt={"로그아웃"}
                   height={28}
                   width={28}
@@ -404,8 +400,9 @@ export default function Navigation() {
               </button>
             </form>
             <Image
-              src={SimgLogo}
+              src={'/images/logo/simg-logo.png'}
               alt="SIMG로고"
+              width={55}
               height={55}
               className="mb-5 ml-1 mt-14"
               priority={true}
@@ -427,6 +424,22 @@ export default function Navigation() {
             "absolute bottom-[230px] left-[110px] space-y-2 rounded-lg bg-white font-medium shadow-lg z-20"
           }
         >
+          <div
+            className={
+              "w-[220px] cursor-pointer px-8 py-5 hover:bg-main-lighter"
+            }
+            onClick={(e) => handleUserGuide(e)}
+          >
+            보험약관
+          </div>
+          <div
+            className={
+              "w-[220px] cursor-pointer px-8 py-5 hover:bg-main-lighter"
+            }
+            onClick={(e) => handleUserGuide(e)}
+          >
+            상품설명서
+          </div>
           <div
             className={
               "w-[220px] cursor-pointer px-8 py-5 hover:bg-main-lighter"

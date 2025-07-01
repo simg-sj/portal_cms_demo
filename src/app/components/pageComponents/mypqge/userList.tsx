@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState} from "react";
 import Button from "@/app/components/common/ui/button/button";
 import Image from "next/image";
-import Plus from "@/assets/images/icon/plus-icon.png";
+import Plus from "../../../../../public/images/icon/plus-icon.png";
 import Pagination from "@/app/components/common/ui/pagination";
 import CenterPopup from "@/app/components/popup/CenterPopup";
 import AddUser, {AddUserRef} from "@/app/components/pageComponents/parking/addUser";

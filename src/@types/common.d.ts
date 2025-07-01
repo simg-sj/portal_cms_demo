@@ -10,7 +10,7 @@ import {DepositListResponseItem} from "@/app/lib/simg1DayApi/deposit/types";
 
 
 interface MenuItemType {
-    icon: StaticImageData | {};
+    icon: string;
     title: string;
     label: string;
     link: string;
@@ -123,7 +123,7 @@ interface MonthAccidentData {
 
 
 interface Theme {
-    logoSrc: StaticImageData | {};
+    logoSrc: string;
     menuItems: MenuItemType[];
 }
 

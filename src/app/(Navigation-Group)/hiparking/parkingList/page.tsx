@@ -2,9 +2,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import Button from "@/app/components/common/ui/button/button";
 import Image from "next/image";
-import Excel from "@/assets/images/icon/excel-icon.png";
-import Plus from "@/assets/images/icon/plus-icon.png";
-import ExcelUpload from "@/assets/images/icon/upload-white-icon.png";
+import Excel from "../../../../../public/images/icon/excel-icon.png";
+import Plus from "../../../../../public/images/icon/plus-icon.png";
+import ExcelUpload from "../../../../../public/images/icon/upload-white-icon.png";
 import SlidePopup from "@/app/components/popup/SlidePopup";
 import ParkingDetailList from "@/app/components/pageComponents/parking/parkingDetail";
 import Pagination from "@/app/components/common/ui/pagination";

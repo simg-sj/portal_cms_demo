@@ -3,7 +3,7 @@
 import React from "react";
 import { NotiState, useNotifications } from "@/context/NotificationContext";
 import Image from "next/image";
-import Close from '@/assets/images/icon/close-icon.png';
+import Close from '../../../../public/images/icon/close-icon.png';
 import Button from "@/app/components/common/ui/button/button";
 
 interface Props {

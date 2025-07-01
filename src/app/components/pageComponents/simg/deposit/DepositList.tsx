@@ -3,7 +3,7 @@ import React, { useState} from "react";
 import DayTerm from "@/app/components/common/ui/calender/dayTerm";
 import Button from "@/app/components/common/ui/button/button";
 import Image from "next/image";
-import Excel from "@/assets/images/icon/excel-icon.png";
+import Excel from "../../../../../../public/images/icon/excel-icon.png";
 import Pagination from "@/app/components/common/ui/pagination";
 import dayjs from "dayjs";
 import {CheckboxContainer} from "@/app/components/common/ui/input/checkboxContainer";
@@ -26,7 +26,7 @@ import {useNotifications} from "@/context/NotificationContext";
 import {useConfirmAction} from "@/app/lib/hooks/simg1Day/deposit/useConfirmAction";
 import cn from "classnames";
 import {AdminColumns, UserColumns} from "@/app/components/pageComponents/simg/deposit/config";
-import ReFresh from "@/assets/images/icon/refresh-icon.png";
+import ReFresh from "../../../../../../public/images/icon/refresh-icon.png";
 import {useDepositBalance} from "@/app/lib/hooks/simg1Day/deposit/useDepositBalance";
 
 
