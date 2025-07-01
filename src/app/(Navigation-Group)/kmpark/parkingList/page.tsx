@@ -30,8 +30,6 @@ import AddBusiness, {
   AddBusinessRef,
 } from "@/app/components/pageComponents/parking/addBusiness-kmpark";
 import AddExcelUpload from "@/app/components/pageComponents/parking/addExcelUpload";
-import { onClickExcel } from "@/app/lib/onClickExcel";
-import { hiparkingAccidentColumns } from "@/config/data";
 import { ListContainer } from '@/app/components/common/ui/input/listContainer';
 
 interface ColumnDefinition<T> {

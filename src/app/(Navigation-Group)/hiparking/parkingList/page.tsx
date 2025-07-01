@@ -392,7 +392,7 @@ export default function Page() {
                 parkingColumns[param.status],
                 "parking",
                 data,
-                "주차장_현황.xlsx",
+                "투루파킹_사업장_리스트.xlsx",
               )
             }
           >

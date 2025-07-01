@@ -267,7 +267,7 @@ export default function Page() {
                 hiparkingAccidentColumns,
                 "accident",
                 data,
-                "하이파킹_사고_리스트.xlsx",
+                "투루파킹_사고_리스트.xlsx",
               )
             }
           >
