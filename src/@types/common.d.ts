@@ -3,9 +3,9 @@ import {
     FieldErrors,
     UseFormGetValues,
     UseFormHandleSubmit,
-    UseFormRegister,
-    UseFormWatch
-} from "react-hook-form";
+    UseFormRegister, UseFormSetValue,
+    UseFormWatch,
+} from 'react-hook-form';
 import {DepositListResponseItem} from "@/app/lib/simg1DayApi/deposit/types";
 
 
@@ -466,6 +466,10 @@ interface Simg1DaySearch {
     text: string | null;
     statusCode : string;
 }
+interface SimgDayCorp {
+    job : string;
+    bNumber : number;
+}
 
 interface Simg1DayPlatform {
     bpk : string;
@@ -571,6 +575,7 @@ interface dutyRowType extends dutyType {
 interface Step1Props {
     onNext: () => void;
     refetch : () => void;
+    setValue : UseFormSetValue<any>;
     register: UseFormRegister<any>;
     errors: FieldErrors;
     handleSubmit: UseFormHandleSubmit<any>;

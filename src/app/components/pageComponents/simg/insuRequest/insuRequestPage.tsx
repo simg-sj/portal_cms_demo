@@ -15,15 +15,14 @@ interface InsuRequestType {
 export default function InsuRequestPage({ bpk, id }: InsuRequestType) {
   const [currentStep, setCurrentStep] = useState(1);
 
-  // ✅ 예치금 가져오기
   const { data: balance = 0, refetch } = useDepositBalance(bpk, id);
 
-  // ✅ Form 초기화
   const {
     register,
     setValue,
     getValues,
     handleSubmit,
+    reset,
     watch,
     formState: { errors },
   } = useForm({
@@ -32,36 +31,38 @@ export default function InsuRequestPage({ bpk, id }: InsuRequestType) {
       gbn: "I_REQ",
       bpk,
       id,
-      balance: 0, // 초기값은 0, 실제 값은 useEffect로 반영
-      bNumber: "",
+      balance: 0,
+      cNumber: "",
+      address : "",
       carNumber: "",
       viNumber: "",
       contractor: "",
-      vType: "",
+      contractName: "",
+      carYear : "",
+      vType : '',
+      carName: "",
       capacity: "",
       contractCell: "",
       contractDay: "",
     },
   });
 
-  // ✅ balance가 변경되면 폼에 반영
   useEffect(() => {
     setValue("balance", balance);
   }, [balance, setValue]);
 
-  // ✅ 단계 이동
   const handleNext = () => setCurrentStep((prev) => Math.min(prev + 1, 3));
   const handlePrev = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
 
   const handleReset = async () => {
     const result = await refetch();
+    reset();
+
     setValue("balance", result.data ?? 0);
     setCurrentStep(1);
   };
 
-  const onSubmit = async (data: any) => {
-    if (data) handleNext();
-  };
+
 
   const renderStep = () => {
     switch (currentStep) {
@@ -69,6 +70,7 @@ export default function InsuRequestPage({ bpk, id }: InsuRequestType) {
         return (
           <Step1
             refetch={refetch}
+            setValue={setValue}
             onNext={handleNext}
             watch={watch}
             handleSubmit={handleSubmit}

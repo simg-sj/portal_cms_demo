@@ -1,24 +1,29 @@
-import React, { useState } from "react";
+"use client"
+
+import React, { useEffect, useState } from 'react';
 import Button from "@/app/components/common/ui/button/button";
 import { Step1Props } from "@/@types/common";
 import { useSession } from "next-auth/react";
 import DepositPopup from "@/app/components/pageComponents/simg/depositPopup";
 import RefreshButton from '@/app/components/common/ui/refresh';
+import { simg1TimeCorp } from '@/app/(Navigation-Group)/onetimeConsignMent/action';
 
 const Step1 = ({
   onNext,
   watch,
   refetch,
+  setValue,
   handleSubmit,
   errors,
   register,
 }: Step1Props) => {
   const { data } = useSession();
   const [isOpen, setIsOpen] = useState(false);
-
+  const bNumber = watch('bNumber');
   const handleRefresh = async () => {
     await refetch();
   };
+
 
   const onSubmit = (data) => {
     if (data) {
@@ -27,6 +32,28 @@ const Step1 = ({
       return;
     }
   };
+
+  const fetchCnumber= async () => {
+     try {
+       let param = {
+         job : 'search',
+         bNumber : bNumber
+       }
+
+       let {data} = await simg1TimeCorp(param);
+       setValue('cNumber', data[0].cNumber);
+       setValue('address', data[0].address);
+       setValue('contractor', data[0].bName);
+     }catch (e){
+       console.log(e);
+     }
+  }
+  useEffect(() => {
+    const pattern = /^\d{10}$/;
+    if(pattern.test(bNumber)){
+      fetchCnumber();
+    }
+  },[bNumber])
 
   return (
     <div>
@@ -65,27 +92,32 @@ const Step1 = ({
           </div>
         )}
 
+
         <div
           className={
             "flex flex-col items-start justify-between space-y-3 py-5 sm:flex-row sm:items-center sm:space-y-0"
           }
         >
           <div className={"mr-1 font-medium"}>
-            피보험자 <span className={"text-red-500"}>*</span>
+            사업자등록번호 <span className={"text-red-500"}>*</span>
           </div>
-          <input
-            type={"text"}
-            name="contractor"
-            placeholder={"피보험자를 입력해주세요."}
-            {...register("contractor", {
-              required: "피보험자를 입력해주세요.",
-            })}
-            className={"w-full sm:w-[300px] lg:w-[500px] xl:w-[600px]"}
-          />
+            <input
+              type={"text"}
+              name="bNumber"
+              placeholder={"사업자등록번호를 입력해주세요."}
+              {...register("bNumber", {
+                required: "사업자등록번호를 입력해주세요.",
+                pattern: {
+                  value: /^\d{10}$/,
+                  message: "올바른 사업자 번호가 아닙니다.",
+                },
+              })}
+              className={"w-full sm:w-[300px] lg:w-[500px] xl:w-[600px]"}
+            />
         </div>
-        {errors.contractor && typeof errors.contractor.message === "string" && (
+        {errors.bNumber && typeof errors.bNumber.message === "string" && (
           <div className="error text-base text-red-500">
-            {errors.contractor.message}
+            {errors.bNumber.message}
           </div>
         )}
 
@@ -97,23 +129,69 @@ const Step1 = ({
           <div className={"mr-1 font-medium"}>
             법인사업자번호 <span className={"text-red-500"}>*</span>
           </div>
+            <input
+              type={"text"}
+              name="cNumber"
+              placeholder={"법인사업자번호를 입력해주세요."}
+              {...register("cNumber", {
+                required: "법인사업자번호를 입력해주세요.",
+                pattern: {
+                  value: /^\d{13}$/,
+                  message: "법인사업자번호 형식이 아닙니다.",
+                },
+              })}
+              className='w-full sm:w-[300px] lg:w-[500px] xl:w-[600px]'
+            />
+        </div>
+        {errors.cNumber && typeof errors.cNumber.message === "string" && (
+          <div className="error text-base text-red-500">
+            {errors.cNumber.message}
+          </div>
+        )}
+
+        <div
+          className={
+            "flex flex-col items-start justify-between space-y-3 py-5 sm:flex-row sm:items-center sm:space-y-0"
+          }
+        >
+          <div className={"mr-1 font-medium"}>
+            주소 <span className={"text-red-500"}>*</span>
+          </div>
           <input
             type={"text"}
-            name="bNumber"
-            placeholder={"법인사업자번호를 입력해주세요."}
-            {...register("bNumber", {
-              required: "사업자번호를 입력해주세요.",
-              pattern: {
-                value: /^\d{3}(81|82|85|86|87|88)\d{5}$/,
-                message: "법인사업자번호 형식이 아닙니다.",
-              },
+            name="address"
+            placeholder={"주소를 입력해주세요."}
+            {...register("address", { required: "주소를 입력해주세요." })}
+            className={"w-full sm:w-[300px] lg:w-[500px] xl:w-[600px]"}
+          />
+        </div>
+        {errors.address && typeof errors.address.message === "string" && (
+          <div className="error text-base text-red-500">
+            {errors.address.message}
+          </div>
+        )}
+
+        <div
+          className={
+            "flex flex-col items-start justify-between space-y-3 py-5 sm:flex-row sm:items-center sm:space-y-0"
+          }
+        >
+          <div className={"mr-1 font-medium"}>
+            담당자 성명 <span className={"text-red-500"}>*</span>
+          </div>
+          <input
+            type={"text"}
+            name="contractName"
+            placeholder={"담당자 성명을 입력해주세요."}
+            {...register("contractName", {
+              required: "담당자 성명을 입력해주세요.",
             })}
             className={"w-full sm:w-[300px] lg:w-[500px] xl:w-[600px]"}
           />
         </div>
-        {errors.bNumber && typeof errors.bNumber.message === "string" && (
+        {errors.contractName && typeof errors.contractName.message === "string" && (
           <div className="error text-base text-red-500">
-            {errors.bNumber.message}
+            {errors.contractName.message}
           </div>
         )}
 
@@ -144,7 +222,8 @@ const Step1 = ({
             <div className="error text-base text-red-500">
               {errors.contractCell.message}
             </div>
-          )}
+        )}
+
 
         <div
           className={
@@ -204,13 +283,15 @@ const Step1 = ({
           <div className={"mr-1 font-medium"}>
             차종 <span className={"text-red-500"}>*</span>
           </div>
-          <input
-            type={"text"}
+          <select
             name="vType"
-            placeholder={"차종을 입력해주세요."}
             {...register("vType", { required: "차종을 입력해주세요." })}
             className={"w-full sm:w-[300px] lg:w-[500px] xl:w-[600px]"}
-          />
+          >
+            <option value=''>선택</option>
+            <option value='SEDAN'>세단</option>
+            <option value='VAN'>밴</option>
+          </select>
         </div>
         {errors.vType && typeof errors.vType.message === "string" && (
           <div className="error text-base text-red-500">
@@ -224,23 +305,82 @@ const Step1 = ({
           }
         >
           <div className={"mr-1 font-medium"}>
-            총 탑승 가능 인원 <span className={"text-red-500"}>*</span>
+            차량명 <span className={"text-red-500"}>*</span>
           </div>
           <input
-            type={"number"}
+            type={"text"}
+            name="carName"
+            placeholder={"차량명을 입력해주세요."}
+            {...register("carName", { required: "차량명을 입력해주세요." })}
+            className={"w-full sm:w-[300px] lg:w-[500px] xl:w-[600px]"}
+          />
+        </div>
+        {errors.carName && typeof errors.carName.message === "string" && (
+          <div className="error text-base text-red-500">
+            {errors.carName.message}
+          </div>
+        )}
+
+        <div
+          className={
+            "flex flex-col items-start justify-between space-y-3 py-5 sm:flex-row sm:items-center sm:space-y-0"
+          }
+        >
+          <div className={"mr-1 font-medium"}>
+            차량연식 <span className={"text-red-500"}>*</span>
+          </div>
+          <input
+            type={"text"}
+            name="carYear"
+            placeholder={"예: 2025"}
+            {...register("carYear", { required: "차량연식을 입력해주세요.", pattern: {
+                value: /^\d{4}$/,
+                message: "4자리 숫자(예: 2025)를 입력해주세요.",
+              }, validate: {
+                validRange: (value) =>
+                  Number(value) >= 1900 && Number(value) <= new Date().getFullYear()
+                  || "연도(예:2025)만 입력해주세요.",
+              },})}
+            className={"w-full sm:w-[300px] lg:w-[500px] xl:w-[600px]"}
+          />
+        </div>
+        {errors.carYear && typeof errors.carYear.message === "string" && (
+          <div className="error text-base text-red-500">
+            {errors.carYear.message}
+          </div>
+        )}
+
+        <div
+          className={
+            "flex flex-col items-start justify-between space-y-3 py-5 sm:flex-row sm:items-center sm:space-y-0"
+          }
+        >
+          <div className={"mr-1 font-medium"}>
+            총 탑승 가능 인원 <span className={"text-red-500"}>*</span>
+          </div>
+          <select
             name="capacity"
-            placeholder={"숫자만 입력해주세요."}
             {...register("capacity", {
               required: "총 탑승 가능 인원을 입력해주세요.",
             })}
             className={"w-full sm:w-[300px] lg:w-[500px] xl:w-[600px]"}
-          />
+          >
+            <option value="">선택</option>
+            {Array.from({ length: 15 }, (_, i) => i + 1).map((num) => (
+              <option key={num} value={num}>
+                {num}명
+              </option>
+            ))}
+          </select>
         </div>
-        {errors.capacity && typeof errors.capacity.message === "string" && (
-          <div className="error text-base text-red-500">
-            {errors.capacity.message}
-          </div>
-        )}
+        {errors.capacity &&
+          typeof errors.capacity.message === "string" && (
+            <div className="error text-base text-red-500">
+              {errors.capacity.message}
+            </div>
+          )}
+
+
 
         <div
           className={

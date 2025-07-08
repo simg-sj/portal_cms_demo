@@ -1,8 +1,6 @@
-import React, {useState} from "react";
+import React from "react";
 import Button from "@/app/components/common/ui/button/button";
 import {Step2PropsLC} from "@/@types/common";
-import {turuApi1001} from "@/app/(Navigation-Group)/turu/action";
-import {appendToFormData} from "@/app/lib/common";
 import {useNotifications} from "@/context/NotificationContext";
 import {simg1TimeDeposit} from "@/app/(Navigation-Group)/onetimeConsignMent/action";
 
@@ -16,11 +14,10 @@ const Step2= ({onNext, onPrev, getValues, register} : Step2PropsLC) =>  {
         try {
             let privacy = getValues('privacy');
             let thirdParty = getValues('thirdParty');
-
-            if (privacy  && thirdParty ) {
+            let depositor = getValues('depositor');
+            if (privacy  && thirdParty && depositor ) {
                 let value = getValues();
                 const result = await simg1TimeDeposit(value);
-                console.log("@@@", result)
                 if(result.code === '200'){
                     onNext();
                 }else{
@@ -86,8 +83,8 @@ const Step2= ({onNext, onPrev, getValues, register} : Step2PropsLC) =>  {
             <label className={'flex items-center mt-10'}>
               <input
                 type="checkbox"
-                name="privacy"
-                {...register("privacy", { required: "개인정보수집 및 이용방침에 동의해주세요." })}
+                name="depositor"
+                {...register("depositor", { required: "개인정보수집 및 이용방침에 동의해주세요." })}
                 className={'mr-3 w-4'}
               />
               <div className={'text-lg text-gray-700'}> 위 예금자보호 관련 사항을 확인하였으며, 이해하고 동의합니다.</div>

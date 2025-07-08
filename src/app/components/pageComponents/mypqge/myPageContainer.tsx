@@ -36,7 +36,6 @@ export default function MyPageContainer({ userInfo, setUserInfo, fetchUser }: { 
     const fetchPlatform = async (bpk  : number) => {
         try {
             const result: PlatformList[] = await getPlatform(bpk);
-            console.log(result);
             setPlatformList(result);
         }catch (e) {
             console.log(e);

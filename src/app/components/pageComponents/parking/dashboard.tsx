@@ -229,10 +229,7 @@ export default function DashboardComponent({
     const accidentData = tableData.monthAccidentData.map((item, index) => ({
         ...item,
         id: index,
-        total:
-          typeof item.total === "string"
-            ? Number(item.total.replace(/,/g, ""))
-            : typeof item.total === "number"
+        total: typeof item.total === "number"
               ? item.total
               : 0,
     }));
