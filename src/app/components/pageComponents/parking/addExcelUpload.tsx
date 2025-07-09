@@ -67,7 +67,7 @@ const FileInfoLabel = styled.span`
     width: 150px;
 `;
 
-const FileInfoValue = styled.span`
+const FileInfoValue = styled.span` 
     color: #666;
 `;
 interface AddProps {
@@ -276,7 +276,11 @@ const AddExcelUpload = ({setExcelData}: AddProps) => {
             <div className={'flex justify-between space-x-0 sm:space-x-4 flex-col sm:flex-row'}>
                 <div className={'flex items-center'}>
                     간편 엑셀업로드
-                    <Tooltip content={<ExcelGuideHiparking/>}/>
+                    <Tooltip   content={
+                        BSN_CODE[data.user.bName].bpk === '01'
+                          ? <ExcelGuideKmpark />
+                          : <ExcelGuideHiparking />
+                    }/>
                 </div>
                 <Button color={"green"} height={30} width={180} className={'ml-5 mt-2 sm:mt-0'}
                         params={{bpk: BSN_CODE[data.user.bName].bpk, type: 'down'}}
