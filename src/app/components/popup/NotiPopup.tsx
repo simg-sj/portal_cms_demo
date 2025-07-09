@@ -19,7 +19,7 @@ export default function NotiPopup({ isOpen, title, noti }: Props) {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white rounded-xl shadow-lg min-w-[500px] max-w-[800px]">
+            <div className="bg-white rounded-xl shadow-lg sm:min-w-[500px] min-w-[360px] max-w-[800px]">
                 <div className="flex justify-between items-center px-8 py-6">
                     <h2 className="text-lg font-semibold">{title}</h2>
                     <Image
