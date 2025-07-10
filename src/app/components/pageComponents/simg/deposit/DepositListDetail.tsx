@@ -1,38 +1,17 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
-import ImageUploader from "@/app/components/common/ui/input/fileUpload";
-import DayTerm from "@/app/components/common/ui/calender/dayTerm";
-import CalenderPicker from "@/app/components/common/ui/calender/calenderPicker";
+import React from "react";
 import dayjs from "dayjs";
-import {
-  ACCIDENT_DETAIL_TYPE_OPTIONS,
-  ACCIDENT_TYPE_OPTIONS,
-  APPROVAL_OPTIONS,
-  ClosingCode,
-  STATE_OPTIONS,
-} from "@/config/data";
 
 import {
-  CargoInsuType,
-  ClaimRowType,
-  ImageType,
-  InsuranceItem,
-  ParkingRowType,
   UptClaim,
-  UptParking,
 } from "@/@types/common";
 import Button from "@/app/components/common/ui/button/button";
 import FormatNumber from "@/app/components/common/ui/formatNumber";
-import { getImage, getPolicyList } from "@/app/(Navigation-Group)/action";
 import cn from "classnames";
-import { convertClaimToUptClaim, getChangedFields } from "@/app/lib/common";
-import { useNotifications } from "@/context/NotificationContext";
 import {
-  DepositListRequest,
   DepositListResponseItem,
 } from "@/app/lib/simg1DayApi/deposit/types";
 import { useForm } from "react-hook-form";
-import { useConfirmAction } from "@/app/lib/hooks/simg1Day/deposit/useConfirmAction";
 
 interface ListProps {
   isEditing: boolean;
