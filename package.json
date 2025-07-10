@@ -25,6 +25,7 @@
     "react": "^18",
     "react-chartjs-2": "^5.2.0",
     "react-datepicker": "^7.4.0",
+    "react-daum-postcode": "^3.2.0",
     "react-dom": "^18",
     "react-hook-form": "^7.54.2",
     "react-query": "^3.39.3",
@@ -47,6 +48,8 @@
     "typescript": "^5"
   },
   "prettier": {
-    "plugins": ["prettier-plugin-tailwindcss"]
+    "plugins": [
+      "prettier-plugin-tailwindcss"
+    ]
   }
 }

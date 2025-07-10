@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import DepositPopup from "@/app/components/pageComponents/simg/depositPopup";
 import RefreshButton from '@/app/components/common/ui/refresh';
 import { simg1TimeCorp } from '@/app/(Navigation-Group)/onetimeConsignMent/action';
+import PostcodeModal from '@/app/components/common/ui/PostcodeModal';
 
 const Step1 = ({
   onNext,
@@ -19,6 +20,7 @@ const Step1 = ({
 }: Step1Props) => {
   const { data } = useSession();
   const [isOpen, setIsOpen] = useState(false);
+  const [isPost, setIsPost] = useState(false);
   const bNumber = watch('bNumber');
   const handleRefresh = async () => {
     await refetch();
@@ -31,6 +33,12 @@ const Step1 = ({
     } else {
       return;
     }
+  };
+
+  const handleComplete = (data: any) => {
+    const fullAddress = data.address;
+    const extraAddress = data.addressType === 'R' ? (data.bname || '') + (data.buildingName ? `, ${data.buildingName}` : '') : '';
+    setValue('address' ,extraAddress ? `${fullAddress} (${extraAddress})` : fullAddress);
   };
 
   const fetchCnumber= async () => {
@@ -54,6 +62,13 @@ const Step1 = ({
       fetchCnumber();
     }
   },[bNumber])
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
 
   return (
     <div>
@@ -127,17 +142,17 @@ const Step1 = ({
           }
         >
           <div className={"mr-1 font-medium"}>
-            법인사업자번호 <span className={"text-red-500"}>*</span>
+            법인등록번호 <span className={"text-red-500"}>*</span>
           </div>
             <input
               type={"text"}
               name="cNumber"
-              placeholder={"법인사업자번호를 입력해주세요."}
+              placeholder={"법인등록번호를 입력해주세요."}
               {...register("cNumber", {
-                required: "법인사업자번호를 입력해주세요.",
+                required: "법인등록번호를 입력해주세요.",
                 pattern: {
                   value: /^\d{13}$/,
-                  message: "법인사업자번호 형식이 아닙니다.",
+                  message: "법인등록번호를 형식이 아닙니다.",
                 },
               })}
               className='w-full sm:w-[300px] lg:w-[500px] xl:w-[600px]'
@@ -157,14 +172,22 @@ const Step1 = ({
           <div className={"mr-1 font-medium"}>
             주소 <span className={"text-red-500"}>*</span>
           </div>
-          <input
-            type={"text"}
-            name="address"
-            placeholder={"주소를 입력해주세요."}
-            {...register("address", { required: "주소를 입력해주세요." })}
-            className={"w-full sm:w-[300px] lg:w-[500px] xl:w-[600px]"}
-          />
+          <div className='flex sm:w-[300px] lg:w-[500px] xl:w-[600px]'>
+            <input
+              type={"text"}
+              name="address"
+              placeholder={"주소를 입력해주세요."}
+              {...register("address", { required: "주소를 입력해주세요." })}
+              className={"w-full"}
+            />
+            <Button  className='ml-4' color={'main'} width={60} height={35} fill={true} onClick={() => setIsPost(true)}>검색</Button>
+          </div>
         </div>
+        {
+          isPost && (
+            <PostcodeModal setValue={setValue} onClose={()=>setIsPost(false)}/>
+          )
+        }
         {errors.address && typeof errors.address.message === "string" && (
           <div className="error text-base text-red-500">
             {errors.address.message}
