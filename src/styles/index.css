@@ -206,6 +206,7 @@ tbody tr:last-child {
    ---------------------------------------
 */
 @layer components {
+    /*슬라이드 팝업 모바일호환*/
     .cell-label {
         @apply bg-gray-50 px-3 py-3 border-b border-gray-200 text-sm font-semibold;
     }
@@ -224,6 +225,13 @@ tbody tr:last-child {
 
     .cell-value-col {
         @apply px-3 py-3 border-b border-gray-200 text-sm col-span-full md:col-span-3;
+    }
+    /*레이아웃 공통*/
+    .box-layout {
+        @apply rounded-xl bg-white px-4 py-4 sm:px-8 sm:py-6;
+    }
+    .title {
+        @apply text-base font-semibold lg:text-lg
     }
 }
 

@@ -157,7 +157,7 @@ const ContractComponent = ({
 
   return (
     <div>
-      <div className={"mb-6 text-lg font-light"}>계약변경현황</div>
+      <div className={"title mb-6"}>계약변경현황</div>
       <div className="block 2xl:flex">
         <div
           className={

@@ -112,7 +112,7 @@ const ErrorChart = ({
 
   return (
     <div>
-      <div className={"mb-6 text-lg font-light"}>장애접수율</div>
+      <div className={"mb-6 title"}>장애접수율</div>
       <div className="block 2xl:flex">
         <div
           className={
