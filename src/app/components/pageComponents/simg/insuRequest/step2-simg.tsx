@@ -31,10 +31,10 @@ const Step2= ({onNext, onPrev, getValues, register} : Step2PropsLC) =>  {
         }
     };
     return (
-        <div className={'text-xl md:text-2xl my-[70px] stepTwo break-keep'}>
+        <div className={'text-md md:text-lg sm:text-xl my-[70px] stepTwo break-keep'}>
             <div className={'text-lg font-light my-6 text-gray-700'}>개인정보 수집 및 이용에 동의하시고 사고접수를 완료해주세요.
             </div>
-            <div className={'mb-10 text-2xl font-bold'}>개인정보 수집 및 이용동의</div>
+            <div className={'mb-10 text-xl sm:text-lg font-bold'}>개인정보 수집 및 이용동의</div>
             <div className={'font-medium my-3'}>1. 개인정보의 수집 및 이용목적</div>
             <div className={'text-gray-800 mb-5'}>보험금지급·심사 및 보험사고 조사(보험사기 조사 포함), 보험금지급관련 민원처리 및 분쟁대응</div>
             <div className={'font-medium my-3'}>2. 수집항목</div>
@@ -52,7 +52,7 @@ const Step2= ({onNext, onPrev, getValues, register} : Step2PropsLC) =>  {
             </label>
 
 
-            <div className={'mt-10 mb-5 text-2xl font-bold'}>개인정보 제3자 제공동의</div>
+            <div className={'mt-10 mb-5 text-xl sm:text-lg font-bold'}>개인정보 제3자 제공동의</div>
             <div className={'font-medium my-3'}>1. 개인정보를 제공받는 자</div>
             <div className={'text-gray-800 mb-5'}>기명 피보험자 : [예정] <br/>보험회사 등 : 하나손해보험</div>
             <div className={'font-medium my-3'}>2. 제공하는 개인정보의 항목</div>
@@ -74,7 +74,7 @@ const Step2= ({onNext, onPrev, getValues, register} : Step2PropsLC) =>  {
                 <div className={'text-lg text-gray-700'}> 위와 같이 개인정보 제3자 제공에 동의합니다.</div>
             </label>
 
-            <div className={'mt-10 mb-5 text-2xl font-bold'}>예금자보호 관련 안내사항</div>
+            <div className={'mt-10 mb-5 text-xl sm:text-lg font-bold'}>예금자보호 관련 안내사항</div>
             <div className={'my-3'}>1. 이 보험계약은 「예금자보호법」에 따라 해약환급금(또는 만기 시 보험금)에 기타지급금을 합한 금액이 1인당 5천만원까지 (본 보험회사의 여타 보호상품과 합산) 보호됩니다.</div>
             <div className={'my-3'}>2. 또한 본 보험회사의 보호상품 중 사고보험금은 별도로 1인당 5천만원까지 보호됩니다.<br/></div>
             <div className={'my-3'}>3. 보험계약 해지 후 신규계약 체결 시, 보험 인수 거절 / 보험료 인상 / 보장내용 변경 가능성 있습니다.</div>
