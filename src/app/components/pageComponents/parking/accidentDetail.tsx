@@ -23,7 +23,6 @@ import { getImage, getPolicyList } from "@/app/(Navigation-Group)/action";
 import cn from "classnames";
 import { convertClaimToUptClaim, getChangedFields } from "@/app/lib/common";
 import { useNotifications } from "@/context/NotificationContext";
-import GridRow from "@/app/components/common/ui/gridTable";
 
 interface ListProps {
   isEditing: boolean;
