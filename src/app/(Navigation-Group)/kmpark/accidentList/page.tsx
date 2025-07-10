@@ -317,58 +317,7 @@ export default function Page() {
                   </div>
               </div>
           </div>
-            {/*<div className={'border border-gray-100 p-6 rounded-lg bg-white flex items-center justify-between'}>
-                <div className={'flex items-center'}>
-                    <div className={'text-gray-700 font-medium pt-1 mr-2'}>기간</div>
-                    <DayTerm type={'day'} setParam={setParam} sDay={new Date(param.startDate)} eDay={new Date(param.endDate)}/>
-                    <div className={'text-gray-700 font-medium pt-1 ml-2 mr-5'}>검색조건</div>
-                    <select
-                        className={'w-[200px]'}
-                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                            setParam((prev: ParamType) => ({
-                                ...prev,
-                                condition: e.target.value,
-                            }))
-                        }
-                        }
-                    >
-                        <option value={'wCell'}>피해자 연락처</option>
-                        <option value={'vCarNum'}>피해 차량번호</option>
-                        <option value={'pklName'}>주차장명</option>
-                        <option value={'insuNum'}>접수번호</option>
-                    </select>
-                    <input
-                        type={'text'}
-                        placeholder={'검색조건 설정 후 검색해주세요'}
-                        className={'w-[300px] h-[35px] rounded-tr-none rounded-br-none ml-5'}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                            setParam((prev: ParamType) => ({
-                                ...prev,
-                                text: e.target.value,
-                            }))
-                        }}
-                        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                            if (e.key === 'Enter') {
-                                onSearchClick(); // 엔터키를 누르면 onSearchClick 실행
-                            }
-                        }}
-                    />
-                    <Button
-                        color={'main'}
-                        width={100}
-                        height={35}
-                        fill
-                        className={'rounded-tl-none rounded-bl-none'}
-                        onClick={onSearchClick}
-                    >
-                        조회
-                    </Button>
-                </div>
-                <Button color={"green"} height={32} width={120} className={'ml-5'} onClick={()  => onClickExcel(hiparkingAccidentColumns,'accident', data, '하이파킹_사고_리스트.xlsx')}>
-                    <Image src={Excel} alt={'다운로드'} width={17} height={17} className={'mr-2'}/>
-                    엑셀다운
-                </Button>
-            </div>*/}
+
           <div className={"mt-5 rounded-lg border border-gray-100 bg-white p-6"}>
           <div className={'flex justify-end'}>
                         <Button color={"red"} fill={false} height={32} width={120} onClick={handleDeleteGroup}>

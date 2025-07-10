@@ -208,7 +208,6 @@ const AccidentDetailList = ({
           </div>
         )}
         {/* 접수현황 */}
-
         <div
           className={
             "mx-2 flex w-full items-center py-3 text-[17px] font-semibold"

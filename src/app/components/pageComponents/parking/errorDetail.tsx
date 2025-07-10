@@ -101,70 +101,42 @@ const ErrorDetail = ({isEditing, rowData, onSave, isNew }: ListProps) => {
                         </Button>
                     </div>
                 }
-                <div className={'w-full font-semibold text-[17px] mx-2 py-3 flex items-center'}>
-                    <div className={'bg-main w-1.5 h-4 mr-2'}></div>
+                <div
+                  className={
+                      "mx-2 flex w-full items-center py-3 text-[17px] font-semibold"
+                  }
+                >
+                    <div className={"mr-2 h-4 w-1.5 bg-main"}></div>
                     주차장 정보
                 </div>
-                <table className={'colTable text-[15px]'}>
-                    <colgroup>
-                        <col style={{width: "200px"}}/>
-                        <col style={{width: "250px"}}/>
-                        <col style={{width: "200px"}}/>
-                        <col style={{width: "250px"}}/>
-                    </colgroup>
-                    <tbody>
-                    <tr>
-                        <th>주차장코드</th>
-                        <td colSpan={3}>{renderField('PJTcode', rowData.PJTcode, 'text')}</td>
-                    </tr>
-                    <tr>
-                        <th>주차장명</th>
-                        <td colSpan={3}>{renderField('pklName', rowData.pklName, 'text')}</td>
-                    </tr>
-                    <tr>
-                        <th>소재지</th>
-                        <td colSpan={3}>{renderField('pklAddress', rowData.pklAddress, 'text')}</td>
-
-                    </tr>
-                    </tbody>
-                </table>
-                <div className={'w-full font-semibold text-[17px] mx-2 py-3 flex items-center mt-8'}>
-                    <div className={'bg-main w-1.5 h-4 mr-2'}></div>
+                <div className="grid-section">
+                        <div className="cell-label-col">주차장코드</div>
+                        <div className="cell-value-col">{renderField('PJTcode', rowData.PJTcode, 'text')}</div>
+                        <div className="cell-label-col">주차장명</div>
+                        <div className="cell-value-col">{renderField('pklName', rowData.pklName, 'text')}</div>
+                        <div className="cell-label-col">소재지</div>
+                        <div className="cell-value-col">{renderField('pklAddress', rowData.pklAddress, 'text')}</div>
+                </div>
+                <div
+                  className={
+                      "mx-2 flex w-full items-center py-3 text-[17px] font-semibold"
+                  }
+                >
+                    <div className={"mr-2 h-4 w-1.5 bg-main"}></div>
                     상세정보
                 </div>
-                <table className={'colTable text-[15px]'}>
-                    <colgroup>
-                        <col style={{width: "200px"}}/>
-                        <col style={{width: "250px"}}/>
-                        <col style={{width: "200px"}}/>
-                        <col style={{width: "200px"}}/>
-                        <col style={{width: "200px"}}/>
-                        <col style={{width: "200px"}}/>
-                        <col style={{width: "200px"}}/>
-                    </colgroup>
-                    <tbody>
-                    <tr>
-                        <th>접수일</th>
-                        <td>{renderField('createdYMD', dayjs(rowData.createdYMD).toDate(), 'date')}</td>
-                    </tr>
-                    <tr>
-                        <th>장애구분</th>
-                        <td colSpan={3}>{renderField('errorType', rowData.errorType ? rowData.errorType : '-', 'text')}</td>
-                    </tr>
-                    <tr>
-                        <th>발생위치</th>
-                        <td colSpan={3}>{renderField('errorLocation', rowData.errorLocation ? rowData.errorLocation : '-', 'text')}</td>
-                    </tr>
-                    <tr>
-                        <th>상새내용</th>
-                        <td colSpan={3}>{renderField('detail', rowData.detail ? rowData.detail : '-', 'text')}</td>
-                    </tr>
-                    <tr>
-                        <th>현장조치사항</th>
-                        <td colSpan={3}>{renderField('resultType', rowData.resultType ? rowData.resultType : '-', 'text')}</td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div className="grid-section">
+                        <div className="cell-label-col">접수일</div>
+                        <div className="cell-value-col">{renderField('createdYMD', dayjs(rowData.createdYMD).toDate(), 'date')}</div>
+                        <div className="cell-label-col">장애구분</div>
+                        <div className="cell-value-col">{renderField('errorType', rowData.errorType ? rowData.errorType : '-', 'text')}</div>
+                        <div className="cell-label-col">발생위치</div>
+                        <div className="cell-value-col">{renderField('errorLocation', rowData.errorLocation ? rowData.errorLocation : '-', 'text')}</div>
+                        <div className="cell-label-col">상새내용</div>
+                        <div className="cell-value-col">{renderField('detail', rowData.detail ? rowData.detail : '-', 'text')}</div>
+                        <div className="cell-label-col">현장조치사항</div>
+                        <div className="cell-value-col">{renderField('resultType', rowData.resultType ? rowData.resultType : '-', 'text')}</div>
+                    </div>
             </div>
         </>
     )
