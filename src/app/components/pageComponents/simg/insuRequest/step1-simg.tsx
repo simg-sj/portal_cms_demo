@@ -93,9 +93,9 @@ const Step1 = ({
             color={"main"}
             fill={true}
             onClick={() => setIsOpen(true)}
-            textSize={16}
             width={90}
             height={40}
+            textSize={16}
             className={"md:!text-[16px] !text-sm !w-[70px] md:!w-[90px]"}
           >
             충전하기
@@ -180,7 +180,7 @@ const Step1 = ({
               {...register("address", { required: "주소를 입력해주세요." })}
               className={"w-full"}
             />
-            <Button  className='ml-4' color={'main'} width={60} height={35} fill={true} onClick={() => setIsPost(true)}>검색</Button>
+            <Button textSize={16} className={"ml-4 md:!text-[16px] !text-sm !w-[70px] md:!w-[90px]"} color={'main'} width={60} height={35} fill={true} onClick={() => setIsPost(true)}>검색</Button>
           </div>
         </div>
         {
